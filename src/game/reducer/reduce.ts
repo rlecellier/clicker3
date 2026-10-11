@@ -5,6 +5,7 @@ import { addGauge } from '@game/period';
 import { sleep } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
+import { buyUpgrade } from '@game/upgrades';
 import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -34,6 +35,9 @@ export const reduce = (state: GameState, action: GameAction): GameState => {
     }
     case 'sellSurplus': {
       return sellSurplus(state);
+    }
+    case 'buyUpgrade': {
+      return buyUpgrade(state, action.id);
     }
   }
 };

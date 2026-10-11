@@ -1,16 +1,16 @@
 import { actionRules, courses } from '@game/data';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
-import { isUnlocked } from '@game/requirements';
 import type { GameState } from '@game/state';
+import { hasCourse } from '@game/upgrades';
 
 export const canStudy = (state: GameState, courseId: string) => {
   const course = courses.find((candidate) => candidate.id === courseId);
   return (
     state.status === 'playing' &&
     course !== undefined &&
-    state.money >= course.cost &&
-    (course.requirement === undefined || isUnlocked(state, course.requirement))
+    hasCourse(state, courseId) &&
+    state.money >= course.cost
   );
 };
 

@@ -7,4 +7,5 @@ export type GameAction =
   | { type: 'sleep' }
   | { type: 'changeJob'; id: string }
   | { type: 'buyCompany'; id: string }
-  | { type: 'sellSurplus' };
+  | { type: 'sellSurplus' }
+  | { type: 'buyUpgrade'; id: string };

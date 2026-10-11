@@ -36,7 +36,10 @@ describe('reduce', () => {
     const worked = reduce(startState, { type: 'work', target: 'job' });
     expect(worked.money).toBeGreaterThan(0);
 
-    const studied = reduce(worked, { type: 'study', courseId: 'metier' });
+    const studied = reduce(
+      { ...worked, upgrades: ['stage-posture'] },
+      { type: 'study', courseId: 'metier' },
+    );
     expect(studied.money).toBeLessThan(worked.money);
 
     const rested = reduce(
@@ -64,5 +67,13 @@ describe('reduce', () => {
     const sold = reduce({ ...startState, stock: 10 }, { type: 'sellSurplus' });
     expect(sold.stock).toBe(0);
     expect(sold.money).toBeGreaterThan(0);
+  });
+
+  it('applique buyUpgrade', () => {
+    const next = reduce(
+      { ...startState, money: 500 },
+      { type: 'buyUpgrade', id: 'cartes-visite' },
+    );
+    expect(next.upgrades).toEqual(['cartes-visite']);
   });
 });
