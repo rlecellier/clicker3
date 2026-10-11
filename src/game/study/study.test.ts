@@ -2,7 +2,7 @@ import { actionRules, courses, startState } from '@game/data';
 import { study } from './study';
 
 const course = courses[0];
-const funded = { ...startState, money: 1000 };
+const funded = { ...startState, money: 1000, upgrades: ['stage-posture'] };
 
 describe('study', () => {
   it('coûte de l’argent et remplit la jauge', () => {
@@ -24,7 +24,12 @@ describe('study', () => {
     expect(study(startState, 'metier')).toBe(startState);
   });
 
-  it('refuse un cursus inconnu ou une condition manquante', () => {
+  it('refuse un cursus dont la formation n’est pas achetée', () => {
+    const untrained = { ...funded, upgrades: [] };
+    expect(study(untrained, 'metier')).toBe(untrained);
+  });
+
+  it('refuse un cursus inconnu', () => {
     expect(study(funded, 'nulle-part')).toBe(funded);
   });
 

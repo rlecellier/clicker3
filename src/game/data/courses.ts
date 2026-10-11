@@ -1,4 +1,3 @@
-import type { Requirement } from '@game/requirements';
 import type { StatId } from '@game/state';
 
 export type Course = {
@@ -8,10 +7,28 @@ export type Course = {
   stat: StatId;
   // Euros dépensés à chaque action d'étude.
   cost: number;
-  requirement?: Requirement;
 };
 
-// Un cursus ouvert au départ ; les autres viennent avec les formations (V1-08).
+// Un cursus est disponible une fois la formation achetée (voir upgrades).
+// Coûts provisoires.
 export const courses: readonly Course[] = [
-  { id: 'metier', name: 'Formation sur le tas', stat: 'metier', cost: 20 },
+  { id: 'metier', name: 'Posture professionnelle', stat: 'metier', cost: 20 },
+  {
+    id: 'gestion',
+    name: 'Gestion des opportunités',
+    stat: 'gestion',
+    cost: 60,
+  },
+  {
+    id: 'intelligence',
+    name: 'Économie appliquée',
+    stat: 'intelligence',
+    cost: 150,
+  },
+  {
+    id: 'endurance',
+    name: 'Dépassement de soi',
+    stat: 'endurance',
+    cost: 300,
+  },
 ];
