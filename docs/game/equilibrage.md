@@ -167,3 +167,12 @@ de 40 à 60 € (≈ 340 € par mois pour 300 € de loyer) et l'emploi 2 de 51
 76 € pour rester meilleur. Un test (`jobs.test.ts`) joue dix ans d'intérim sans
 jamais passer sous 0. Le joueur virtuel garde un quart de mois de dépenses
 fixes en caisse avant d'acheter.
+
+## Vérification de la v1.5 (issue #108)
+
+- 2026-10-11 — v1.5 : sortie du simulateur inchangée. `npm run sim` (graine
+  1999) sur `main` après la dernière MR de la v1.5 (`4d5a5d2`) et sur le
+  dernier commit avant #97 (`e8cd2a1`) donne exactement la même sortie, rapport
+  et courbe CSV (`--csv`) compris : 30 min 37 s de jeu actif, plus longue zone
+  morte 0 min 59 s, 1 837 actions. Une sauvegarde réelle de la v1 (version 5)
+  traverse les migrations jusqu'à la version 7 (`save.test.ts`).
