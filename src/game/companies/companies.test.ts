@@ -24,10 +24,10 @@ describe('données des entreprises', () => {
 
 describe('companyCost', () => {
   it('suit coûtBase × croissance ^ possédés, arrondi', () => {
-    expect(companyCost('atelier', 0)).toBe(200);
-    expect(companyCost('atelier', 1)).toBe(220);
-    expect(companyCost('atelier', 2)).toBe(242);
-    expect(companyCost('atelier', 5)).toBe(322);
+    expect(companyCost('atelier', 0)).toBe(150);
+    expect(companyCost('atelier', 1)).toBe(165);
+    expect(companyCost('atelier', 2)).toBe(182);
+    expect(companyCost('atelier', 5)).toBe(242);
   });
 });
 
@@ -35,17 +35,17 @@ describe('buyCompany', () => {
   it('achète un exemplaire et débite le coût', () => {
     const next = buyCompany(ready, 'atelier');
     expect(next.companies).toEqual({ atelier: 1 });
-    expect(next.money).toBe(1_000_000 - 200);
+    expect(next.money).toBe(1_000_000 - 150);
   });
 
   it('achète plusieurs exemplaires à coût croissant', () => {
     const next = buyCompany(buyCompany(ready, 'atelier'), 'atelier');
     expect(next.companies['atelier']).toBe(2);
-    expect(next.money).toBe(1_000_000 - 200 - 220);
+    expect(next.money).toBe(1_000_000 - 150 - 165);
   });
 
   it('refuse sans assez d’argent', () => {
-    const poor = { ...ready, money: 199 };
+    const poor = { ...ready, money: 149 };
     expect(buyCompany(poor, 'atelier')).toBe(poor);
   });
 

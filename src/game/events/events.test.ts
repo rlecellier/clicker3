@@ -144,7 +144,7 @@ describe('événements répétables', () => {
       {
         ...triggerEvents(startState),
         money: 10_000,
-        companies: { atelier: 20 },
+        companies: { atelier: 40 },
       },
       1,
     );
