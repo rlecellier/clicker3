@@ -67,7 +67,7 @@ zone de contenu défile et la sidebar reste fixe. Le contenu est une colonne de
 `Window` de `40rem` au plus, centrée dans la zone de contenu.
 
 Le courrier non lu se signale par un badge sur l'onglet Courrier (#99) ; la
-popup temporaire (`EventToast`) viendra avec #100, dans le layout.
+popup temporaire (`MailPopup`, #100) est posée par `GamePage`, hors flux.
 
 ### 6. Badges
 
