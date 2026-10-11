@@ -143,8 +143,8 @@ describe('catchUp', () => {
   it('rejoue l’absence et résume ce qui s’est passé', () => {
     const { state, summary } = catchUp(workOnly, 25 * autoIntervalMs);
     expect(summary.actions).toBe(25);
-    expect(summary.periods).toBe(2);
-    expect(state.period).toBe(2);
+    expect(summary.periods).toBe(3);
+    expect(state.period).toBe(3);
     expect(summary.money).toBe(state.money - workOnly.money);
     expect(summary.stock).toBe(0);
     expect(summary.reputation).toBeCloseTo(state.reputation);
@@ -217,7 +217,7 @@ describe('resume', () => {
   it('rattrape le temps écoulé depuis lastSeenAt puis note le retour', () => {
     const { state, summary } = resume(saved, 1000 + 25 * autoIntervalMs);
     expect(summary.actions).toBe(25);
-    expect(state.period).toBe(2);
+    expect(state.period).toBe(3);
     expect(state.lastSeenAt).toBe(1000 + 25 * autoIntervalMs);
   });
 

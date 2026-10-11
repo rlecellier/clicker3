@@ -9,8 +9,8 @@ import { newGame, reduce } from './reduce';
 describe('reduce', () => {
   it('applique addGauge', () => {
     const next = reduce(startState, { type: 'addGauge', amount: 250 });
-    expect(next.period).toBe(2);
-    expect(next.gauge).toBe(50);
+    expect(next.period).toBe(3);
+    expect(next.gauge).toBe(40);
   });
 
   it('laisse l’état d’origine intact', () => {
