@@ -1,5 +1,6 @@
 import { companyById, ownedCount } from '@game/companies';
 import { actionRules, economyRules, jobMarkerStat } from '@game/data';
+import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
@@ -27,7 +28,12 @@ const workAtJob = (state: GameState, jobId: string | null): GameState => {
   }
   const factor = manualFactor(state);
   return gainReputation(
-    { ...state, money: state.money + Math.round(job.salary * factor) },
+    {
+      ...state,
+      money:
+        state.money +
+        Math.round(job.salary * factor * (state.jobSalaryFactors[job.id] ?? 1)),
+    },
     job.reputation * state.workReputationMultiplier * factor,
   );
 };
@@ -60,5 +66,5 @@ export const work = (
     markerChance,
     markerVariance,
   );
-  return addGauge(withMarker, gauge);
+  return addGauge(withMarker, gauge * (1 + activeBonus(state, 'workSlow')));
 };

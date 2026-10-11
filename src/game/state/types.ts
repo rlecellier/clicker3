@@ -6,10 +6,20 @@ export type StatId = 'metier' | 'gestion' | 'intelligence' | 'endurance';
 
 export type LifePhase = (typeof lifePhases)[number];
 
-export type GameEvent = {
-  /** Période à laquelle l'événement s'est produit. */
+// Ligne du journal : un événement survenu, avec son texte final.
+export type JournalEntry = {
   period: number;
   id: string;
+  text: string;
+};
+
+// Effet temporaire d'un événement (ex. bulle internet), jusqu'à une période.
+export type ActiveEffect = {
+  eventId: string;
+  kind: 'sales' | 'workSlow';
+  value: number;
+  // Période à partir de laquelle l'effet n'agit plus.
+  until: number;
 };
 
 // Relevé économique d'une période (suivi détaillé : V1-13).
@@ -24,6 +34,8 @@ export type PeriodStatement = {
   reputationGained: number;
   reputationLost: number;
   unpaid: boolean;
+  // Au moins un commerce n'a pas pu tout servir.
+  stockout: boolean;
 };
 
 export type LifeSpan = {
@@ -97,5 +109,11 @@ export type GameState = {
   districts: string[];
 
   flags: Record<string, boolean>;
-  events: GameEvent[];
+  // Journal des événements (les plus récents, borné).
+  events: JournalEntry[];
+  // Événements uniques déjà survenus.
+  firedEvents: string[];
+  activeEffects: ActiveEffect[];
+  // Facteur de salaire par emploi (1 si absent).
+  jobSalaryFactors: Record<string, number>;
 };

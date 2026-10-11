@@ -108,11 +108,10 @@ describe('chargeExpenses', () => {
     expect(next.lastStatement?.unpaid).toBe(false);
   });
 
-  it('gère l’impayé : paie ce qu’il peut, perd de la réputation, note l’événement', () => {
+  it('gère l’impayé : paie ce qu’il peut et perd de la réputation', () => {
     const next = chargeExpenses(stateWith({ money: 100, reputation: 5 }));
     expect(next.money).toBe(0);
     expect(next.reputation).toBe(5 - economyRules.unpaidPenalty);
-    expect(next.events).toEqual([{ period: 0, id: 'unpaid' }]);
     expect(next.lastStatement?.unpaid).toBe(true);
     expect(next.lastStatement?.expenses).toBe(100);
   });

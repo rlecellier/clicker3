@@ -1,4 +1,5 @@
 import { companies, economyRules } from '@game/data';
+import { activeBonus } from '@game/effects';
 import type { Company } from '@game/data';
 import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState, PeriodStatement } from '@game/state';
@@ -13,6 +14,7 @@ const emptyStatement = (period: number): PeriodStatement => ({
   reputationGained: 0,
   reputationLost: 0,
   unpaid: false,
+  stockout: false,
 });
 
 // Relevé de la période en cours de résolution (créé par l'étape 1).
@@ -62,6 +64,7 @@ export const sellGoods = (state: GameState): GameState => {
   let sold = 0;
   let gained = 0;
   let lost = 0;
+  let isStockout = false;
   for (const company of companies) {
     if (company.kind !== 'commerce') {
       continue;
@@ -81,13 +84,16 @@ export const sellGoods = (state: GameState): GameState => {
     current = gainReputation(current, gain);
     gained += Math.max(gain, 0);
     const before = current.reputation;
+    isStockout ||= units < capacity;
     current =
       units < capacity
         ? loseReputation(current, economyRules.stockoutPenalty)
         : current;
     lost += before - current.reputation;
   }
-  const earned = Math.round(revenue * state.salesMultiplier);
+  const earned = Math.round(
+    revenue * (state.salesMultiplier + activeBonus(state, 'sales')),
+  );
   const statement = statementOf(state);
   return {
     ...current,
@@ -100,6 +106,7 @@ export const sellGoods = (state: GameState): GameState => {
       stockSold: sold,
       reputationGained: gained,
       reputationLost: lost,
+      stockout: isStockout,
     },
   };
 };
@@ -120,7 +127,6 @@ export const chargeExpenses = (state: GameState): GameState => {
   const penalised = loseReputation(paidState, economyRules.unpaidPenalty);
   return {
     ...penalised,
-    events: [...state.events, { period: state.period, id: 'unpaid' }],
     lastStatement: {
       ...statement,
       expenses: paid,
