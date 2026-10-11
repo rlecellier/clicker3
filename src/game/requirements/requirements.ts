@@ -4,6 +4,8 @@ import type { GameState, LifePhase, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { ageOf } from '@game/time';
 
+export type StatementFlag = 'rentPaid' | 'unpaid' | 'stockout' | 'stockFull';
+
 export type Requirement =
   | { type: 'stat'; stat: StatId; tier: number }
   | { type: 'reputation'; min: number }
@@ -17,8 +19,33 @@ export type Requirement =
   | { type: 'period'; min: number }
   | { type: 'company'; id: string; count?: number }
   | { type: 'upgrade'; id: string }
+  | { type: 'dead' }
+  // Drapeau du relevé de la période qui vient de se terminer.
+  | { type: 'statement'; flag: StatementFlag }
   | { type: 'all'; of: Requirement[] }
   | { type: 'any'; of: Requirement[] };
+
+const statementFlag = (state: GameState, flag: StatementFlag) => {
+  const statement = state.lastStatement;
+  // Seul le relevé de la période qui vient de se terminer compte.
+  if (statement === null || statement.period !== state.period - 1) {
+    return false;
+  }
+  switch (flag) {
+    case 'rentPaid': {
+      return statement.expenses > 0;
+    }
+    case 'unpaid': {
+      return statement.unpaid;
+    }
+    case 'stockout': {
+      return statement.stockout;
+    }
+    case 'stockFull': {
+      return statement.stockLost > 0;
+    }
+  }
+};
 
 export const isUnlocked = (
   state: GameState,
@@ -50,6 +77,12 @@ export const isUnlocked = (
     }
     case 'company': {
       return (state.companies[requirement.id] ?? 0) >= (requirement.count ?? 1);
+    }
+    case 'dead': {
+      return state.status === 'dead';
+    }
+    case 'statement': {
+      return statementFlag(state, requirement.flag);
     }
     case 'upgrade': {
       return state.upgrades.includes(requirement.id);
