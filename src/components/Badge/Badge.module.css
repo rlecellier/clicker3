@@ -1,0 +1,21 @@
+.badge {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 0.75rem;
+  border: 1px solid currentcolor;
+}
+
+.neutral {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.info {
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.alert {
+  background: var(--color-alert);
+  color: var(--color-alert-text);
+}

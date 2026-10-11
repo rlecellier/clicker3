@@ -1,0 +1,33 @@
+.window {
+  background: var(--color-surface);
+  box-shadow:
+    var(--bevel-out),
+    2px 2px 0 var(--color-surface-dark);
+  padding: 3px;
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  padding: 2px 6px;
+  min-height: 1.75rem;
+}
+
+.title {
+  font-size: var(--font-size);
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content {
+  padding: var(--space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}

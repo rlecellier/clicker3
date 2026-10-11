@@ -1,0 +1,42 @@
+.button {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 0;
+  box-shadow: var(--bevel-out);
+  cursor: pointer;
+  min-height: 2.25rem;
+  padding: 0.25rem 1rem;
+}
+
+.button:active:not([data-disabled]) {
+  box-shadow: var(--bevel-in);
+  padding: 0.3rem 0.95rem 0.2rem 1.05rem;
+}
+
+.button[data-disabled] {
+  color: var(--color-surface-shadow);
+  text-shadow: 1px 1px 0 var(--color-surface-light);
+  cursor: default;
+}
+
+.primary {
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  font-weight: bold;
+}
+
+.primary[data-disabled] {
+  background: var(--color-surface-shadow);
+  color: var(--color-surface);
+  text-shadow: none;
+}
+
+.danger {
+  background: var(--color-alert);
+  color: var(--color-alert-text);
+}
+
+.large {
+  min-height: 3rem;
+  font-size: 1rem;
+}
