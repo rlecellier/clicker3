@@ -232,7 +232,6 @@ export const useGameScreen = () => {
 
   return {
     isOver,
-    intro: state.period === 0 && state.gauge === 0 ? START_TEXT : null,
     header: {
       name: state.characterName,
       age: formatAge(ageOf(state)),
@@ -268,6 +267,9 @@ export const useGameScreen = () => {
           ? undefined
           : upgradePath(objective.upgradeId),
     },
-    feedback,
+    // Avant la première action, le message d'accueil occupe la place du retour
+    // d'action : rien ne s'affiche ni ne disparaît ailleurs dans la page.
+    feedback:
+      feedback ?? (state.period === 0 && state.gauge === 0 ? START_TEXT : null),
   };
 };
