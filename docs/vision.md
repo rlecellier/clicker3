@@ -24,6 +24,8 @@ en couches et les conventions ; on change de jeu.
 | ----- | -------------------------------------------------------------------- | ------- |
 | 1     | Documentation de la stack ([stack.md](stack.md))                     | fait    |
 | 2     | But du repo (ce document)                                            | fait    |
-| 3     | Recherche game design ([game-design-idle.md](game-design/README.md)) | fait    |
-| 4     | **Choix du thème et des mécaniques** ([game/](game/README.md))       | fait     |
-| 5     | Initialisation du code (Vite, lint, CI…)                             | à faire |
+| 3     | Recherche game design ([game-design/](game-design/README.md))        | fait    |
+| 4     | **Choix du thème et des mécaniques** ([game/](game/README.md))       | fait    |
+| 5     | Initialisation du code (Vite, lint, CI…)                             | fait    |
+
+La suite (développement de la v1) est suivie dans l'issue #29.
