@@ -133,7 +133,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // Le courrier garde les messages reçus ; les comptes, la comptabilité.
   await openTab(page, 'courrier');
   await expect(page.getByText("Bienvenue dans l'euro.").first()).toBeVisible();
-  await page.getByRole('button', { name: 'Fermer' }).click();
   await openTab(page, 'comptes');
   await expect(
     page.getByRole('table', { name: 'Comptes (version simplifiée)' }),

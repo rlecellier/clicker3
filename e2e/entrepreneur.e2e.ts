@@ -51,7 +51,15 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   }
   await openTab(page, 'investir');
   await expect(warehouse).toHaveAccessibleName(/en rupture/);
+  // Le message arrivé en jouant s'annonce par un badge, qui se vide à la visite.
+  const mailLink = page
+    .getByRole('navigation', { name: 'Navigation du jeu' })
+    .getByRole('link', { name: /^Courrier/ });
+  await expect(mailLink).toHaveAccessibleName(
+    /^Courrier, \d+ messages? non lus?$/,
+  );
   await openTab(page, 'courrier');
+  await expect(mailLink).toHaveAccessibleName('Courrier');
   await expect(
     page
       .getByRole('list', { name: 'Courrier' })
