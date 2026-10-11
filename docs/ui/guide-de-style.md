@@ -72,7 +72,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
 | `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?` ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
 | `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
-| `Note`        | `children` ; post-it jaune                                                                                                                          | Message d'ambiance ou rappel                   |
+| `Note`        | `children`, `minLines?` (hauteur réservée) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
 
 ### Page de jeu
 
@@ -82,7 +82,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `onClick`                          | Action de jeu ; l'appui long (`press`) active l'automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
-| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `onAction` | Liste d'éléments achetables ou activables                  |
+| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `EventToast`      | `date`, `text`, `onDismiss` ; `role="status"`                                                                                  | Événement important à signaler                             |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
@@ -108,7 +108,7 @@ distinct ; sinon, composer les existants.
 
 - **Rôles et noms** : `Window` et `ItemList` sont des `section` nommées
   (`aria-label`) ; `EventLog` est une liste nommée ; les tableaux ont une
-  légende (`caption`). Les widgets Base UI (`Tabs`, `Switch`, `Progress`,
+  légende (`caption`). Les widgets Base UI (`Tabs`, `Menu`, `Progress`,
   `Tooltip`) fournissent leurs rôles ARIA et la navigation au clavier.
 - **Clavier** : tout est atteignable et activable au clavier ; ne jamais
   retirer l'outline de focus.
@@ -154,7 +154,7 @@ Les règles ESLint (`unicorn` strict) imposent :
 
 - Pas de `function` déclarée : `const Nom = () => {}`.
 - Types de props nommés `NomProperties` (pas `NomProps`) ; `ref` s'écrit
-  `reference`. L'ADR 0001 mentionne encore `Props` ; ESLint fait foi.
+  `reference`.
 - Booléens préfixés `is`, `has`, `can`, `should` (`isDisabled`, `isPending`,
   `isChecked`).
 - Pas de ternaire imbriqué (extraire un helper) ; `toReversed()` et
@@ -179,7 +179,7 @@ Les règles ESLint (`unicorn` strict) imposent :
 2. Créer `src/components/Nom/` avec `Nom.tsx`, `Nom.module.css`, `index.ts`.
 3. Styler avec des tokens uniquement ; variantes avec `cva`.
 4. Partir d'un composant Base UI pour les widgets interactifs (bouton, onglets,
-   interrupteur…).
+   menu…).
 5. Ne pas écrire de test pour un composant uniquement visuel.
 6. L'ajouter à `/styleguide` seulement s'il illustre la doc ; mettre à jour ce
    guide et le skill.
