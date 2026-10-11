@@ -55,7 +55,7 @@ export const GamePage = () => {
             value={screen.counters.reputationTier}
           />
         </dl>
-        <Note>{screen.objective}</Note>
+        <Note minLines={2}>{screen.objective}</Note>
         <div className={styles.actions}>
           <ActionButton
             label="Travailler"

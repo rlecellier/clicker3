@@ -46,11 +46,13 @@ export const ActionButton = ({
     >
       {label}
     </Button>
-    {isDisabled && reason !== undefined ? (
-      <p className={styles.reason}>{reason}</p>
-    ) : (
-      detail !== undefined && <p className={styles.detail}>{detail}</p>
-    )}
+    <div className={styles.info}>
+      {isDisabled && reason !== undefined ? (
+        <p className={styles.reason}>{reason}</p>
+      ) : (
+        detail !== undefined && <p className={styles.detail}>{detail}</p>
+      )}
+    </div>
     {autoHint === undefined ? null : (
       <p className={styles.detail}>
         {isAuto ? <Badge tone="info">Auto</Badge> : null} {autoHint}

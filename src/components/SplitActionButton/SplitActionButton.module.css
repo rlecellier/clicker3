@@ -76,3 +76,10 @@
 .reason {
   color: var(--color-alert);
 }
+
+/* Deux lignes toujours réservées : le détail ou la raison ne fait pas sauter
+   la page en passant d'une ligne à deux. */
+.info {
+  font-size: 0.75rem;
+  min-height: 2lh;
+}
