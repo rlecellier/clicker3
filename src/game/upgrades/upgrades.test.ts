@@ -181,6 +181,6 @@ describe('effets', () => {
       'directeur-transformation',
     );
     expect(next.productionMultiplier).toBeCloseTo(1 + 1.1 + 0.6 + 3);
-    expect(next.payroll).toBe(230 + 36_000 + 45_000);
+    expect(next.payroll).toBe(230 + 3600 + 45_000);
   });
 });

@@ -166,8 +166,8 @@ export const upgrades: readonly Upgrade[] = [
     id: 'equipe-collaborateurs',
     name: 'Équipe de collaborateurs',
     description: "Ils se sentent écoutés. Ils n'ont pas d'augmentation.",
-    price: 3700,
-    payroll: 36_000,
+    price: 37_000,
+    payroll: 3600,
     requirement: {
       type: 'all',
       of: [stat('gestion', 3), { type: 'reputationTier', tier: 1 }],
