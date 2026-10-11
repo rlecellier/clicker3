@@ -1,6 +1,6 @@
 # Indicateurs d'impact sur la ville
 
-> Statut : à discuter dans une conversation dédiée.
+> Statut : **décidé** ([ADR 0004](../../.claude/adr/0004-indicateurs-d-impact.md)).
 
 Au lieu de « changer le monde », le joueur voit **ce que sa vie fait à la ville**
 ([concept.md](concept.md)). La carte de la ville est le support naturel
@@ -17,18 +17,17 @@ Au lieu de « changer le monde », le joueur voit **ce que sa vie fait à la vil
 
 La liste est à décider.
 
-## À décider
+## Décidé pour la v1
 
-1. **Quels indicateurs** garder en v1 (2 à 4, pour limiter l'équilibrage) ?
-2. **Bilan seul ou rétroaction** : un indicateur n'est qu'un affichage, ou il agit
-   sur le jeu (pollution qui baisse la santé, pauvreté qui réduit les clients) ?
-   La rétroaction fait un vrai système à équilibrer.
-3. **Calcul** : global à la ville ou par quartier ? Dérivé de l'état (pur, testable)
-   ou accumulé au fil du temps ?
-4. **Lien avec la fin** : en v1 l'écran de fin est un simple « You died » ; les
-   indicateurs n'y apparaissent pas encore.
-5. **Lien avec le choix légal / illégal** : l'illégal fait-il monter certains
-   indicateurs plus vite ?
+1. **Indicateurs** : Pollution et Inégalités. Pauvreté et Autonomie sont écartées.
+2. **Rôle** : affichage seul, aucune rétroaction sur le jeu.
+3. **Calcul** : dérivé de l'état (pur, sans accumulation) ; une valeur par
+   quartier débloqué et une valeur globale pour la ville, de 0 à 100.
+4. **Lien avec la fin** : aucun effet sur la fin de partie, mais les indicateurs
+   sont affichés pendant la partie et dans le bilan de fin de partie.
+5. **Lien avec l'illégal** : aucun (hors v1).
+
+Les formules et leurs constantes sont dans l'ADR 0004.
 
 ## Pistes
 

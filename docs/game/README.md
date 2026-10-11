@@ -13,7 +13,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
 | [ameliorations-et-evenements.md](ameliorations-et-evenements.md) | Les ~20 améliorations et les événements de la v1 (décidé) |
 | [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
-| [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville (à discuter)           |
+| [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville : pollution et inégalités (décidé) |
 
 ## Les 8 questions à trancher avant de coder
 
