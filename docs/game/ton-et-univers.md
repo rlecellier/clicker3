@@ -1,6 +1,6 @@
 # Ton et univers de la ville
 
-> Statut : **ton décidé** ; époque, nom, quartiers et personnage restent à discuter.
+> Statut : **ton, époque, lieu et nom décidés** ; quartiers, personnage et textes restent à discuter.
 
 La ville est **inventée** ([concept.md](concept.md)). Ce document fixe son ton et
 son identité avant de nommer les quartiers et les entreprises.
@@ -53,15 +53,35 @@ notification d'appli.
 - La mort est une **clôture de compte**, froide : « Votre exercice est terminé.
   Bilan : 4 entreprises, 0 week-end. » (« You died » reste l'écran final.)
 
+## Époque, lieu et nom (décidés)
+
+**Départ le 1er janvier 1999**, premier jour de l'euro. Le personnage a 18 ans
+(né en 1981) et la vie s'arrête à 75 ans, donc vers 2056 : le jeu traverse la
+bulle internet, le bug de l'an 2000, le passage à l'euro fiduciaire (2002), les
+crises, puis un futur proche qu'on peut pousser à l'absurde.
+
+**Lieu** : un pays européen **jamais nommé**, de la zone euro, à l'esprit
+francophone. Ville moyenne de province, ni capitale ni village.
+
+**Nom de la ville : Sainte-Croissance.** Il sonne comme une vraie commune
+française (Sainte-Foy, Sainte-Maxime) et se lit comme un dogme : la croissance
+est sainte. Le narrateur ne le relève jamais. Slogan municipal sur les panneaux :
+« Sainte-Croissance, ville en mouvement. » Habitants : les Croissantins.
+
+Pistes de textes dans cette veine :
+- Le 1er janvier 1999, la ville affiche « Bienvenue dans l'euro » ; l'argent
+  liquide reste en francs jusqu'en 2002, ce qui donne des prix en deux monnaies.
+- Fin 1999 : un événement « bug de l'an 2000 » dont la gravité est sans rapport
+  avec les faits.
+- Vers 2000 : tout le monde lance une « start-up » sans produit.
+
 ## À décider
 
-1. **Époque et lieu** : contemporain, années 80, futur proche ? Climat, taille,
-   pays imaginaire ou non nommé ?
-2. **Nom de la ville** et identité visuelle (palette, style de la carte).
-3. **Quartiers** : combien en v1 et quel caractère pour chacun (centre d'affaires,
+1. **Identité visuelle** (palette, style de la carte).
+2. **Quartiers** : combien en v1 et quel caractère pour chacun (centre d'affaires,
    quartier populaire, zone industrielle, banlieue…) ?
-4. **Personnage** : nom, histoire de départ (un seul départ en v1).
-5. **Textes** : écrire les premiers événements et écrans dans cette voix.
+3. **Personnage** : nom, histoire de départ (un seul départ en v1).
+4. **Textes** : écrire les premiers événements et écrans dans cette voix.
 
 ## Pistes
 
