@@ -73,7 +73,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
 | `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?` ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
 | `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
-| `GameHeader`  | `money` (texte formaté), `gauge` (`value`, `max`) ; réutilise `Stat` et `ProgressBar`, hauteur fixe sur une ligne | En-tête fixe de l'écran de jeu (argent, jauge de temps) |
+| `GameHeader`  | `money` (texte formaté), `date` (texte formaté), `gauge` (`value`, `max`) ; réutilise `Stat` et `ProgressBar`, hauteur fixe sur une ligne | En-tête fixe de l'écran de jeu (argent, date) |
 | `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
 | `Note`        | `children`, `minLines?` (hauteur réservée) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
 

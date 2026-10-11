@@ -28,8 +28,12 @@ const rows = [
 export const StyleguidePage = () => (
   <main className={styles.page}>
     <Window title="Guide de style" actions={<Badge tone="info">v1</Badge>}>
-      <GameHeader money="1 250 €" gauge={{ value: 6, max: 10 }} />
-      <ProgressBar label="Jauge de temps" value={6} max={10} />
+      <GameHeader
+        money="1 250 €"
+        date="janvier 1999"
+        gauge={{ value: 6, max: 10 }}
+      />
+      <ProgressBar label="Progression" value={6} max={10} />
       <dl className={styles.stats}>
         <Stat label="Argent" value="1 250 €" />
         <Stat label="Âge" value="23 ans" />
