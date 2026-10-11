@@ -11,7 +11,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
-| [ton-et-univers.md](ton-et-univers.md)         | Ton et univers de la ville inventée (à discuter)         |
+| [ton-et-univers.md](ton-et-univers.md)         | Ton (décidé : 50/50 satire/absurde) et univers de la ville |
 | [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville (à discuter)           |
 
 ## Les 8 questions à trancher avant de coder
@@ -20,7 +20,7 @@ Reprises de la [section 8 de la recherche](../game-design/README.md#8-questions-
 
 | #   | Question                                   | Statut    | Décision                                                                                  |
 | --- | ------------------------------------------ | --------- | ----------------------------------------------------------------------------------------- |
-| 1   | Thème et ton                               | **décidé** | La vie d'un personnage dans une ville inventée ([concept.md](concept.md)) ; ton à discuter ([ton-et-univers.md](ton-et-univers.md)) |
+| 1   | Thème et ton                               | **décidé** | La vie d'un personnage dans une ville inventée ([concept.md](concept.md)) ; ton 50/50 réaliste-satirique-absurde, contre tout le système, fin froide ([ton-et-univers.md](ton-et-univers.md)) |
 | 2   | Ressource principale et secondaires        | **décidé** | Argent + une marchandise (stock) + réputation ([v1.md](v1.md#5-économie)) |
 | 3   | Générateurs et améliorations               | **décidé** | 4 emplois, 4 à 6 entreprises, ~20 améliorations ; croissance des coûts 1,07–1,15 ([v1.md](v1.md#5-économie)) |
 | 4   | Rôle du clic après l'automatisation        | **décidé** | **Boost actif** : une action automatique va 2× moins vite et rapporte 2× moins qu'une manuelle |
