@@ -1,0 +1,120 @@
+import { startState } from '@game/data';
+
+// Figer la forme de l'état avec sa version : si ce test échoue, l'état a
+// changé de forme. Monter `startState.version`, ajouter la migration de
+// l'ancienne version dans `migrations` (save.ts), puis mettre cette liste à jour.
+describe('forme de l’état', () => {
+  const keyPaths = (value: unknown, prefix = ''): string[] =>
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.keys(value).length > 0
+      ? Object.entries(value).flatMap(([key, child]) =>
+          keyPaths(child, prefix === '' ? key : `${prefix}.${key}`),
+        )
+      : [prefix];
+
+  const frozen = {
+    version: 1,
+    keys: [
+      'activeEffects',
+      'autoElapsed',
+      'autoSleep',
+      'autoWork',
+      'characterName',
+      'companies',
+      'companyMultipliers',
+      'districts',
+      'events',
+      'firedEvents',
+      'flags',
+      'gauge',
+      'gaugeCapacity',
+      'housingId',
+      'jobId',
+      'jobSalaryFactors',
+      'lastSeenAt',
+      'lastStatement',
+      'ledger.current.otherExpenses',
+      'ledger.current.otherIncome',
+      'ledger.current.payroll',
+      'ledger.current.purchases',
+      'ledger.current.rent',
+      'ledger.current.reputationGained',
+      'ledger.current.reputationLost',
+      'ledger.current.reputationSpent',
+      'ledger.current.sales',
+      'ledger.current.stockLost',
+      'ledger.current.stockProduced',
+      'ledger.current.stockSold',
+      'ledger.current.studies',
+      'ledger.current.surplus',
+      'ledger.current.wages',
+      'ledger.last.otherExpenses',
+      'ledger.last.otherIncome',
+      'ledger.last.payroll',
+      'ledger.last.purchases',
+      'ledger.last.rent',
+      'ledger.last.reputationGained',
+      'ledger.last.reputationLost',
+      'ledger.last.reputationSpent',
+      'ledger.last.sales',
+      'ledger.last.stockLost',
+      'ledger.last.stockProduced',
+      'ledger.last.stockSold',
+      'ledger.last.studies',
+      'ledger.last.surplus',
+      'ledger.last.wages',
+      'ledger.total.otherExpenses',
+      'ledger.total.otherIncome',
+      'ledger.total.payroll',
+      'ledger.total.purchases',
+      'ledger.total.rent',
+      'ledger.total.reputationGained',
+      'ledger.total.reputationLost',
+      'ledger.total.reputationSpent',
+      'ledger.total.sales',
+      'ledger.total.stockLost',
+      'ledger.total.stockProduced',
+      'ledger.total.stockSold',
+      'ledger.total.studies',
+      'ledger.total.surplus',
+      'ledger.total.wages',
+      'life.deathAge',
+      'life.seniorAge',
+      'life.startAge',
+      'life.startMonth',
+      'life.startYear',
+      'markers',
+      'maxMarkers',
+      'money',
+      'payroll',
+      'period',
+      'phase',
+      'productionMultiplier',
+      'rent',
+      'reputation',
+      'reputationEarned',
+      'reputationPerSaleMultiplier',
+      'salesMultiplier',
+      'seed',
+      'sleepMultiplier',
+      'stats.endurance',
+      'stats.gestion',
+      'stats.intelligence',
+      'stats.metier',
+      'status',
+      'stock',
+      'stockCapacity',
+      'upgrades',
+      'version',
+      'workBoosts',
+      'workReputationMultiplier',
+    ],
+  };
+
+  it('ne change pas sans changer de version ni de migration', () => {
+    expect(startState.version).toBe(frozen.version);
+    expect(new Set(keyPaths(startState))).toEqual(new Set(frozen.keys));
+  });
+});
