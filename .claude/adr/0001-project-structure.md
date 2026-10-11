@@ -64,7 +64,7 @@ On suit les conventions standard de React. Pas de `kebab-case`
 | Types, constantes, utils | `camelCase`                  | `types.ts`, `constants.ts`, `format.ts` |
 | CSS Module               | même nom que le composant    | `MonComponent.module.css`               |
 | Tests                    | même nom que l'élément testé | `useGame.test.ts`                       |
-| Props d'un composant     | `<Component>Props`           | `type MoneyCounterProps = { ... }`      |
+| Props d'un composant     | `<Component>Properties`      | `type MoneyCounterProperties = { ... }` |
 
 Le nom du fichier est identique à celui de l'export principal qu'il contient.
 
@@ -146,12 +146,12 @@ Composants, hooks et helpers s'écrivent `const Nom = () => {}`, jamais
 
 ```tsx
 // ✅
-export const MoneyCounter = ({ amount }: MoneyCounterProps) => {
+export const MoneyCounter = ({ amount }: MoneyCounterProperties) => {
   return <p>${amount}</p>;
 };
 
 // ❌
-export function MoneyCounter({ amount }: MoneyCounterProps) {
+export function MoneyCounter({ amount }: MoneyCounterProperties) {
   return <p>${amount}</p>;
 }
 ```
@@ -170,7 +170,8 @@ export function MoneyCounter({ amount }: MoneyCounterProps) {
 - `eslint.config.js` : `unicorn/filename-case` est configurée pour accepter
   `PascalCase` et `camelCase` (et non plus le `kebab-case` par défaut).
 - `unicorn/name-replacements` autorise `props`, `prop` et `ref`, qui sont les
-  noms standard de React.
+  noms standard de React, mais refuse `…Props` dans un nom composé : les types
+  de props se nomment `<Component>Properties`.
 - `no-restricted-imports` interdit `../*` et les imports qui traversent un
   dossier (`./MoneyCounter/MoneyCounter`) : il faut passer par un alias ou par
   le `index.ts` du dossier.
