@@ -3,6 +3,7 @@ import { actionRules, economyRules, jobMarkerStat } from '@game/data';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
+import { manualFactor } from '@game/phases';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 
@@ -21,18 +22,23 @@ export const canWork = (state: GameState, target: string) => {
 // Travailler à son emploi : salaire et réputation de l'emploi.
 const workAtJob = (state: GameState, jobId: string | null): GameState => {
   const job = jobById(jobId);
-  return job === undefined
-    ? state
-    : gainReputation(
-        { ...state, money: state.money + job.salary },
-        job.reputation * state.workReputationMultiplier,
-      );
+  if (job === undefined) {
+    return state;
+  }
+  const factor = manualFactor(state);
+  return gainReputation(
+    { ...state, money: state.money + Math.round(job.salary * factor) },
+    job.reputation * state.workReputationMultiplier * factor,
+  );
 };
 
 // Travailler dans une de ses entreprises : bonus sur la période (voir economy).
 const workAtCompany = (state: GameState, id: string): GameState => ({
   ...state,
-  workBoosts: { ...state.workBoosts, [id]: (state.workBoosts[id] ?? 0) + 1 },
+  workBoosts: {
+    ...state.workBoosts,
+    [id]: (state.workBoosts[id] ?? 0) + manualFactor(state),
+  },
 });
 
 // Gain de l'action, chance de marqueur, puis temps qui passe.
