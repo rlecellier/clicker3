@@ -19,10 +19,9 @@ export const SkillsPage = () => {
         />
       ))}
       <dl className={styles.reputation}>
-        <Stat label="Réputation" value={screen.counters.reputation} />
         <Stat
-          label="Palier de réputation"
-          value={screen.counters.reputationTier}
+          label="Réputation disponible"
+          value={screen.counters.reputation}
         />
       </dl>
     </Window>
