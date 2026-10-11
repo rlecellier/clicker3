@@ -1,0 +1,10 @@
+.gauges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.caption {
+  font-size: var(--font-size);
+  font-weight: bold;
+}
