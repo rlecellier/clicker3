@@ -95,7 +95,7 @@ describe('chooseAction', () => {
   it('achète la première formation dès qu’il peut', () => {
     const cheap: GameState = {
       ...startState,
-      money: 150,
+      money: 450,
       upgrades: ['cartes-visite'],
     };
     expect(chooseAction(cheap)).toEqual({
@@ -125,7 +125,7 @@ describe('chooseAction', () => {
   it('étudie la stat qui bloque le prochain achat', () => {
     const student: GameState = {
       ...startState,
-      money: 100,
+      money: 400,
       upgrades: ['cartes-visite', 'stage-posture'],
     };
     expect(chooseAction(student)).toEqual({

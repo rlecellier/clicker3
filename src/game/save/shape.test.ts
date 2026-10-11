@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 4,
+    version: 5,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -35,6 +35,7 @@ describe('forme de l’état', () => {
       'jobSalaryFactors',
       'lastSeenAt',
       'lastStatement',
+      'ledger.current.interest',
       'ledger.current.otherExpenses',
       'ledger.current.otherIncome',
       'ledger.current.payroll',
@@ -52,6 +53,7 @@ describe('forme de l’état', () => {
       'ledger.current.studies',
       'ledger.current.surplus',
       'ledger.current.wages',
+      'ledger.last.interest',
       'ledger.last.otherExpenses',
       'ledger.last.otherIncome',
       'ledger.last.payroll',
@@ -69,6 +71,7 @@ describe('forme de l’état', () => {
       'ledger.last.studies',
       'ledger.last.surplus',
       'ledger.last.wages',
+      'ledger.total.interest',
       'ledger.total.otherExpenses',
       'ledger.total.otherIncome',
       'ledger.total.payroll',

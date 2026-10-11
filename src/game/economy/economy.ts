@@ -144,26 +144,34 @@ export const sellGoods = (state: GameState): GameState => {
   };
 };
 
-// Étape 3 : loyer et salaires. Impayé : on paie ce qu'on peut, la réputation
-// baisse et l'événement `unpaid` est noté.
+// Étape 3 : loyer et salaires, toujours prélevés en entier : l'argent peut
+// devenir négatif (dette). Un solde négatif après les dépenses est un impayé :
+// la réputation baisse et l'événement `unpaid` est noté.
 export const chargeExpenses = (state: GameState): GameState => {
   const due = state.rent + state.payroll;
-  const paid = Math.min(state.money, due);
   const statement = statementOf(state);
-  const rentPaid = Math.min(paid, state.rent);
   const paidState = withRecord(
-    { ...state, money: state.money - paid },
-    { rent: rentPaid, payroll: paid - rentPaid },
+    { ...state, money: state.money - due },
+    { rent: state.rent, payroll: state.payroll },
   );
-  if (paid >= due) {
+  if (paidState.money >= 0) {
     return {
       ...paidState,
-      lastStatement: { ...statement, paidExpenses: paid > 0 },
+      lastStatement: { ...statement, paidExpenses: due > 0 },
     };
   }
   const penalised = loseReputation(paidState, economyRules.unpaidPenalty);
   return {
     ...penalised,
-    lastStatement: { ...statement, paidExpenses: paid > 0, unpaid: true },
+    lastStatement: { ...statement, paidExpenses: due > 0, unpaid: true },
   };
+};
+
+// Étape 3 bis : un solde négatif porte intérêt, la dette s'alourdit.
+export const chargeInterest = (state: GameState): GameState => {
+  if (state.money >= 0) {
+    return state;
+  }
+  const interest = Math.ceil(-state.money * economyRules.debtInterestRate);
+  return withRecord({ ...state, money: state.money - interest }, { interest });
 };

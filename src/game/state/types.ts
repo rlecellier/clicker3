@@ -50,6 +50,8 @@ export type LedgerFigures = {
   purchases: number;
   studies: number;
   otherExpenses: number;
+  // Intérêts d'un solde négatif.
+  interest: number;
   // Flux de stock (articles) : stocké, vendu, perdu faute de place.
   stockProduced: number;
   stockSold: number;

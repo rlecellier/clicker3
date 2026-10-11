@@ -1,7 +1,12 @@
 import { economyRules, startState } from '@game/data';
 import type { GameState } from '@game/state';
 import { endPeriod } from '@game/period';
-import { chargeExpenses, produceGoods, sellGoods } from './economy';
+import {
+  chargeExpenses,
+  chargeInterest,
+  produceGoods,
+  sellGoods,
+} from './economy';
 
 const stateWith = (changes: Partial<GameState>): GameState => ({
   ...startState,
@@ -133,13 +138,19 @@ describe('chargeExpenses', () => {
     expect(next.lastStatement?.unpaid).toBe(false);
   });
 
-  it('gère l’impayé : paie ce qu’il peut et perd de la réputation', () => {
+  it('prélève tout et laisse l’argent passer en négatif (impayé)', () => {
     const next = chargeExpenses(stateWith({ money: 100, reputation: 5 }));
-    expect(next.money).toBe(0);
+    expect(next.money).toBe(100 - 300);
     expect(next.reputation).toBe(5 - economyRules.unpaidPenalty);
     expect(next.lastStatement?.unpaid).toBe(true);
-    expect(next.ledger.current.rent).toBe(100);
+    expect(next.ledger.current.rent).toBe(300);
     expect(next.ledger.current.reputationLost).toBe(economyRules.unpaidPenalty);
+  });
+
+  it('n’est pas un impayé quand le solde reste à zéro', () => {
+    const next = chargeExpenses(stateWith({ money: 300 }));
+    expect(next.money).toBe(0);
+    expect(next.lastStatement?.unpaid).toBe(false);
   });
 
   it('ne fait pas descendre la réputation sous 0', () => {
@@ -173,5 +184,26 @@ describe('résolution d’une période', () => {
   it('est déterministe', () => {
     const state = stateWith({ companies: { atelier: 2, boutique: 1 } });
     expect(endPeriod(state)).toEqual(endPeriod(state));
+  });
+});
+
+describe('chargeInterest', () => {
+  it('fait payer un intérêt sur un solde négatif', () => {
+    const next = chargeInterest(stateWith({ money: -1000 }));
+    expect(next.money).toBe(-1000 - 1000 * economyRules.debtInterestRate);
+    expect(next.ledger.current.interest).toBe(
+      1000 * economyRules.debtInterestRate,
+    );
+  });
+
+  it('arrondit l’intérêt à l’euro supérieur', () => {
+    expect(chargeInterest(stateWith({ money: -1 })).money).toBe(-2);
+  });
+
+  it('ne touche pas un solde positif ou nul', () => {
+    const rich = stateWith({ money: 500 });
+    expect(chargeInterest(rich)).toBe(rich);
+    const flat = stateWith({ money: 0 });
+    expect(chargeInterest(flat)).toBe(flat);
   });
 });

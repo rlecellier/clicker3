@@ -1,5 +1,6 @@
 export {
   chargeExpenses,
+  chargeInterest,
   periodProduction,
   produceGoods,
   sellGoods,

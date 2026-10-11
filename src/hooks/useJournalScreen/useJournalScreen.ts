@@ -50,6 +50,7 @@ const dashboardLines: Line[] = [
   money('payroll', '· Salaires versés', (report) => report.payroll),
   money('purchases', '· Achats', (report) => report.purchases),
   money('studies', '· Études', (report) => report.studies),
+  money('interest', '· Intérêts', (report) => report.interest),
   money('otherExpenses', '· Autres dépenses', (report) => report.otherExpenses),
   money('net', 'Solde', (report) => report.net),
   count(

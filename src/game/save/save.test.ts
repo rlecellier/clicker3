@@ -224,6 +224,25 @@ describe('migration de la version 2', () => {
   });
 });
 
+describe('migration de la version 4', () => {
+  it('ajoute les intérêts au ledger', () => {
+    const { interest, ...figures } = startState.ledger.total;
+    expect(interest).toBe(0);
+    const old = { ...figures, rent: 900 };
+    const text = JSON.stringify({
+      version: 4,
+      state: {
+        ...startState,
+        version: 4,
+        ledger: { current: old, last: old, total: old },
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.ledger.total.interest).toBe(0);
+    expect(result.ok && result.state.ledger.total.rent).toBe(900);
+  });
+});
+
 describe('migrations', () => {
   const v2: SaveOptions = {
     currentVersion: 2,

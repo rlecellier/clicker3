@@ -3,8 +3,9 @@ import type { Requirement } from '@game/requirements';
 export type EventEffect =
   // Réputation gagnée (positive) ou perdue (négative).
   | { type: 'reputation'; amount: number }
-  // Argent gagné ou perdu (jamais sous 0).
+  // Argent gagné ou perdu (peut mener à une dette).
   | { type: 'money'; amount: number }
+  // Facteur sur l'argent possédé ; une dette n'est pas touchée.
   | { type: 'moneyFactor'; factor: number }
   // Dépense unique de n mois de loyer.
   | { type: 'oneOffRent'; months: number }
