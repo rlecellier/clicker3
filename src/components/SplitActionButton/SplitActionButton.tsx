@@ -72,10 +72,12 @@ export const SplitActionButton = ({
         </Menu.Portal>
       </Menu.Root>
     </div>
-    {isDisabled && reason !== undefined ? (
-      <p className={styles.reason}>{reason}</p>
-    ) : (
-      detail !== undefined && <p className={styles.detail}>{detail}</p>
-    )}
+    <div className={styles.info}>
+      {isDisabled && reason !== undefined ? (
+        <p className={styles.reason}>{reason}</p>
+      ) : (
+        detail !== undefined && <p className={styles.detail}>{detail}</p>
+      )}
+    </div>
   </div>
 );

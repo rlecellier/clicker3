@@ -21,7 +21,8 @@
 }
 
 .feedback {
-  min-height: 1.4em;
+  /* Deux lignes réservées : le message ne fait pas sauter la page. */
+  min-height: 2lh;
   color: var(--color-primary);
   font-style: italic;
 }
