@@ -1,4 +1,6 @@
 import { createBrowserRouter } from 'react-router';
+import { GameProvider } from '@context/GameContext';
+import { GamePage } from '@page/GamePage';
 import { HomePage } from '@page/HomePage';
 import { StyleguidePage } from '@page/StyleguidePage';
 
@@ -8,6 +10,17 @@ const developmentRoutes = import.meta.env.DEV
   : [];
 
 export const router = createBrowserRouter(
-  [{ path: '/', element: <HomePage /> }, ...developmentRoutes],
+  [
+    { path: '/', element: <HomePage /> },
+    {
+      path: '/jeu',
+      element: (
+        <GameProvider>
+          <GamePage />
+        </GameProvider>
+      ),
+    },
+    ...developmentRoutes,
+  ],
   { basename: import.meta.env.BASE_URL },
 );
