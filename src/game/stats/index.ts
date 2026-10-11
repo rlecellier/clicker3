@@ -1,0 +1,1 @@
+export { tierOf } from './stats';
