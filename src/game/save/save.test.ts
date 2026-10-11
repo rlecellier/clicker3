@@ -1,6 +1,6 @@
 import { startState } from '@game/data';
 import { unreadMail } from '@game/mail';
-import { newItems } from '@game/novelty';
+import { newItems, noveltyTabs } from '@game/novelty';
 import type { GameState } from '@game/state';
 import { reduce } from '@game/reducer';
 import { defaultSaveOptions, deserialize, serialize } from './save';
@@ -291,6 +291,205 @@ describe('migration de la version 6', () => {
     expect(result.ok && result.state.seenItems.skills).toContain(
       'stat:metier:2',
     );
+  });
+});
+
+// Sauvegarde écrite par le code de la v1 (commit e8cd2a1), version 5.
+const saveV5 = `{
+  "version": 5,
+  "state": {
+    "version": 5,
+    "lastSeenAt": 915148800000,
+    "characterName": "Camille Morel",
+    "life": {
+      "startAge": 18,
+      "seniorAge": 60,
+      "deathAge": 75,
+      "startYear": 1999,
+      "startMonth": 1
+    },
+    "period": 4,
+    "gauge": 0,
+    "gaugeCapacity": 70,
+    "status": "playing",
+    "phase": "youngAdult",
+    "money": -1150,
+    "stock": 0,
+    "stockCapacity": 50,
+    "warehouses": 0,
+    "reputation": 0,
+    "reputationEarned": 0.6000000000000001,
+    "stats": { "metier": 0, "gestion": 0, "intelligence": 0, "endurance": 0 },
+    "markers": [],
+    "maxMarkers": 5,
+    "isSleeping": false,
+    "queuedActions": [],
+    "sleepMultiplier": 1,
+    "seed": 3599192428,
+    "jobId": "interim",
+    "housingId": "studio",
+    "rent": 300,
+    "payroll": 0,
+    "companies": {},
+    "upgrades": [],
+    "productionMultiplier": 1,
+    "salesMultiplier": 1,
+    "workBoosts": {},
+    "companyMultipliers": {},
+    "workReputationMultiplier": 1,
+    "reputationPerSaleMultiplier": 1,
+    "lastStatement": {
+      "period": 3,
+      "paidExpenses": true,
+      "unpaid": true,
+      "stockout": false,
+      "stockFull": false
+    },
+    "ledger": {
+      "current": {
+        "wages": 0,
+        "sales": 0,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 0,
+        "payroll": 0,
+        "purchases": 0,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 0,
+        "stockProduced": 0,
+        "stockSold": 0,
+        "stockLost": 0,
+        "stockIn": {},
+        "stockOut": {},
+        "reputationGained": 0,
+        "reputationLost": 0,
+        "reputationSpent": 0
+      },
+      "last": {
+        "wages": 60,
+        "sales": 0,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 300,
+        "payroll": 0,
+        "purchases": 0,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 55,
+        "stockProduced": 0,
+        "stockSold": 0,
+        "stockLost": 0,
+        "stockIn": {},
+        "stockOut": {},
+        "reputationGained": 0.2,
+        "reputationLost": 0.2,
+        "reputationSpent": 0
+      },
+      "total": {
+        "wages": 180,
+        "sales": 0,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 1200,
+        "payroll": 0,
+        "purchases": 0,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 130,
+        "stockProduced": 0,
+        "stockSold": 0,
+        "stockLost": 0,
+        "stockIn": {},
+        "stockOut": {},
+        "reputationGained": 0.6000000000000001,
+        "reputationLost": 0.6000000000000001,
+        "reputationSpent": 0
+      }
+    },
+    "districts": ["tilleuls"],
+    "flags": {},
+    "events": [
+      {
+        "period": 0,
+        "id": "euro",
+        "text": "Bienvenue dans l'euro. Votre compte est crédité de 0 €, ce qui est un bon début."
+      },
+      {
+        "period": 0,
+        "id": "age-18",
+        "text": "Vous êtes majeur. Les offres de crédit aussi."
+      },
+      {
+        "period": 1,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 1,
+        "id": "impaye",
+        "text": "Votre propriétaire a pris acte de votre situation. Il vous souhaite du courage."
+      },
+      {
+        "period": 2,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 2,
+        "id": "impaye",
+        "text": "Votre propriétaire a pris acte de votre situation. Il vous souhaite du courage."
+      },
+      {
+        "period": 3,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 3,
+        "id": "impaye",
+        "text": "Votre propriétaire a pris acte de votre situation. Il vous souhaite du courage."
+      },
+      {
+        "period": 4,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 4,
+        "id": "impaye",
+        "text": "Votre propriétaire a pris acte de votre situation. Il vous souhaite du courage."
+      }
+    ],
+    "firedEvents": ["euro", "age-18"],
+    "activeEffects": [],
+    "jobSalaryFactors": {},
+    "autoWork": false,
+    "autoElapsed": 0
+  }
+}`;
+
+describe('sauvegarde réelle de la v1 (version 5)', () => {
+  it('traverse toutes les migrations jusqu’à la version courante', () => {
+    expect(JSON.parse(saveV5).version).toBe(5);
+    const result = deserialize(saveV5);
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    const { state } = result;
+    expect(state.version).toBe(defaultSaveOptions.currentVersion);
+    expect(state.version).toBe(startState.version);
+    // Les données de la v1 sont conservées.
+    expect(state.period).toBe(4);
+    expect(state.money).toBe(-1150);
+    // Version 6 : compteurs de courrier, tout est lu.
+    expect(state.mailReceived).toBe(state.events.length);
+    expect(unreadMail(state)).toBe(0);
+    // Version 7 : rien n’est une nouveauté.
+    for (const tab of noveltyTabs) {
+      expect(newItems(state, tab)).toEqual([]);
+    }
   });
 });
 
