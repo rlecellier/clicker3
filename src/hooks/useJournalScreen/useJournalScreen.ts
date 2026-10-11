@@ -1,13 +1,10 @@
-import { useState } from 'react';
-import type { EventLogEntry } from '@component/EventLog';
 import type { LedgerRow } from '@component/LedgerTable';
 import { useGameContext } from '@context/GameContext';
 import { companies } from '@game/data';
-import { formatCount, formatDate, formatMoney } from '@game/format';
+import { formatCount, formatMoney } from '@game/format';
 import { lastPeriodReport, totals } from '@game/ledger';
 import type { LedgerReport } from '@game/ledger';
-import type { GameState, JournalEntry } from '@game/state';
-import { dateOf } from '@game/time';
+import type { GameState } from '@game/state';
 import { hasDashboard } from '@game/upgrades';
 
 type Line = {
@@ -101,37 +98,9 @@ const stockLines = (state: GameState): Line[] => {
   ];
 };
 
-const keyOf = (entry: JournalEntry) => `${entry.period}-${entry.id}`;
-
-// Courrier (événements) et comptabilité, prêts à afficher.
+// Comptabilité et stock, prêts à afficher.
 export const useJournalScreen = () => {
   const { state } = useGameContext();
-  const [dismissedKey, setDismissedKey] = useState<string | null>(null);
-
-  const dateLabel = (entry: JournalEntry) =>
-    formatDate(dateOf({ ...state, period: entry.period }));
-
-  const entries: EventLogEntry[] = state.events.toReversed().map((entry) => ({
-    id: keyOf(entry),
-    date: dateLabel(entry),
-    text: entry.text,
-    isNew: entry.period === state.period,
-  }));
-
-  // Le dernier message, tant qu'il date de la période en cours et n'est pas fermé.
-  const latest = state.events.at(-1);
-  const toast =
-    latest !== undefined &&
-    latest.period === state.period &&
-    keyOf(latest) !== dismissedKey
-      ? {
-          date: dateLabel(latest),
-          text: latest.text,
-          dismiss: () => {
-            setDismissedKey(keyOf(latest));
-          },
-        }
-      : null;
 
   const hasBoard = hasDashboard(state);
   const last = lastPeriodReport(state);
@@ -146,8 +115,6 @@ export const useJournalScreen = () => {
   const rows = toRows(hasBoard ? dashboardLines : basicLines);
 
   return {
-    entries,
-    toast,
     ledger: {
       caption: hasBoard ? 'Tableau de bord' : 'Comptes (version simplifiée)',
       rows,

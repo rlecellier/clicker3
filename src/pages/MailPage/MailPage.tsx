@@ -1,15 +1,15 @@
 import { EventLog } from '@component/EventLog';
 import { Window } from '@component/Window';
-import { useJournalScreen } from '@hook/useJournalScreen';
+import { useMailScreen } from '@hook/useMailScreen';
 
-// Onglet « Courrier » : orchestrateur de `useJournalScreen`.
+// Onglet « Courrier » : orchestrateur de `useMailScreen`.
 export const MailPage = () => {
-  const journal = useJournalScreen();
+  const mail = useMailScreen();
 
   return (
     <Window title="Courrier">
       <EventLog
-        entries={journal.entries}
+        entries={mail.entries}
         emptyText="Aucun courrier. La boîte aux lettres vous remercie de votre patience."
       />
     </Window>

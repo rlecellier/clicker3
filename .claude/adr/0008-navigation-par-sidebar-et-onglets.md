@@ -66,14 +66,15 @@ La page ne défile plus : la hauteur est celle de l'écran (`100dvh`), seule la
 zone de contenu défile et la sidebar reste fixe. Le contenu est une colonne de
 `Window` de `40rem` au plus, centrée dans la zone de contenu.
 
-La popup de courrier (`EventToast`) vit dans le layout : elle reste visible
-quel que soit l'onglet.
+Le courrier non lu se signale par un badge sur l'onglet Courrier (#99) ; la
+popup temporaire (`EventToast`) viendra avec #100, dans le layout.
 
 ### 6. Badges
 
-`SidebarItem` accepte `badge?` (un nombre, rendu par le composant `Badge`,
-avec `badgeTone?`). Personne ne la remplit encore : le courrier (#99) et les
-nouveautés (#103) la branchent.
+`SidebarItem` accepte `badge?` (un nombre ou « 99+ », rendu par le composant
+`Badge`, avec `badgeTone?`) et `accessibleLabel?` (nom accessible plus complet).
+Le courrier les remplit (#99, `useGameTabs`) ; les nouveautés (#103) les
+brancheront.
 
 ### 7. Icônes
 

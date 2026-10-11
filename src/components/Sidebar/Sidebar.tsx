@@ -10,8 +10,11 @@ export type SidebarItem = {
   // Pictogramme décoratif (SVG) : le libellé reste porté par `aria-label`.
   icon: ReactNode;
   to: string;
-  // Nombre affiché sur l'onglet (non lus, nouveautés) ; rien si absent ou nul.
-  badge?: number;
+  // Pastille de l'onglet (non lus, nouveautés) ; rien si absente ou nulle.
+  badge?: number | string;
+  // Nom accessible, quand il doit en dire plus que le libellé (« Courrier,
+  // 3 messages non lus »).
+  accessibleLabel?: string;
   badgeTone?: 'neutral' | 'info' | 'alert';
 };
 
@@ -26,7 +29,11 @@ type SidebarLinkProperties = { item: SidebarItem };
 
 const SidebarLink = ({ item }: SidebarLinkProperties) => (
   <InfoPanel content={item.label}>
-    <NavLink to={item.to} className={styles.link} aria-label={item.label}>
+    <NavLink
+      to={item.to}
+      className={styles.link}
+      aria-label={item.accessibleLabel ?? item.label}
+    >
       <span className={styles.icon} aria-hidden="true">
         {item.icon}
       </span>
