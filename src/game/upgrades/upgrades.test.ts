@@ -268,6 +268,29 @@ describe('nextUpgrade', () => {
     const all = { ...startState, upgrades: upgrades.map((entry) => entry.id) };
     expect(nextUpgrade(all)).toBeUndefined();
   });
+
+  it('fait toujours partie des améliorations disponibles', () => {
+    // Le lien « prochaine amélioration » mène à une ligne de la liste.
+    const owned = upgrades.map((entry) => entry.id);
+    const states = [
+      startState,
+      rich,
+      ...owned.map((_, index) => ({
+        ...startState,
+        upgrades: owned.slice(0, index),
+      })),
+      ...owned.map((_, index) => ({
+        ...rich,
+        upgrades: owned.slice(0, index),
+      })),
+    ];
+    for (const state of states) {
+      const next = nextUpgrade(state);
+      if (next !== undefined) {
+        expect(availableUpgrades(state)).toContain(next);
+      }
+    }
+  });
 });
 
 describe('availableUpgrades', () => {
