@@ -8,11 +8,24 @@ type TabsProperties = {
   tabs: readonly TabItem[];
   // Onglet ouvert au départ (le premier par défaut).
   defaultTab?: string;
+  // Mode contrôlé : l'appelant porte l'onglet ouvert.
+  value?: string;
+  onValueChange?: (id: string) => void;
 };
 
-export const Tabs = ({ tabs, defaultTab }: TabsProperties) => (
+export const Tabs = ({
+  tabs,
+  defaultTab,
+  value,
+  onValueChange,
+}: TabsProperties) => (
   <BaseTabs.Root
-    defaultValue={defaultTab ?? tabs[0]?.id}
+    {...(value === undefined
+      ? { defaultValue: defaultTab ?? tabs[0]?.id }
+      : { value })}
+    onValueChange={(next) => {
+      onValueChange?.(String(next));
+    }}
     className={styles.root}
   >
     <BaseTabs.List className={styles.list}>
