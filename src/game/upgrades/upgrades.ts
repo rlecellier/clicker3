@@ -1,5 +1,6 @@
 import { upgrades } from '@game/data';
 import type { UpgradeEffect } from '@game/data';
+import { withRecord } from '@game/ledger';
 import { isUnlocked } from '@game/requirements';
 import type { GameState } from '@game/state';
 
@@ -114,13 +115,16 @@ export const buyUpgrade = (state: GameState, id: string): GameState => {
   if (upgrade === undefined || !canBuyUpgrade(state, id)) {
     return state;
   }
-  const bought: GameState = {
-    ...state,
-    money: state.money - upgrade.price,
-    rent: state.rent + (upgrade.rent ?? 0),
-    payroll: state.payroll + (upgrade.payroll ?? 0),
-    upgrades: [...state.upgrades, id],
-  };
+  const bought = withRecord(
+    {
+      ...state,
+      money: state.money - upgrade.price,
+      rent: state.rent + (upgrade.rent ?? 0),
+      payroll: state.payroll + (upgrade.payroll ?? 0),
+      upgrades: [...state.upgrades, id],
+    },
+    { purchases: upgrade.price },
+  );
   let result = bought;
   for (const effect of upgrade.effects) {
     result = applyEffect(result, effect);

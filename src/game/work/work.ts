@@ -7,6 +7,7 @@ import {
 } from '@game/data';
 import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
+import { withRecord } from '@game/ledger';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
 import { manualFactor } from '@game/phases';
@@ -41,13 +42,11 @@ const workAtJob = (
     return state;
   }
   const factor = gainFactor(state, isAuto);
+  const wage = Math.round(
+    job.salary * factor * (state.jobSalaryFactors[job.id] ?? 1),
+  );
   return gainReputation(
-    {
-      ...state,
-      money:
-        state.money +
-        Math.round(job.salary * factor * (state.jobSalaryFactors[job.id] ?? 1)),
-    },
+    withRecord({ ...state, money: state.money + wage }, { wages: wage }),
     job.reputation * state.workReputationMultiplier * factor,
   );
 };

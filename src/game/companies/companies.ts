@@ -1,4 +1,5 @@
 import { companies } from '@game/data';
+import { withRecord } from '@game/ledger';
 import { isUnlocked } from '@game/requirements';
 import type { GameState } from '@game/state';
 
@@ -33,9 +34,13 @@ export const buyCompany = (state: GameState, id: string): GameState => {
     return state;
   }
   const owned = ownedCount(state, id);
-  return {
-    ...state,
-    money: state.money - companyCost(id, owned),
-    companies: { ...state.companies, [id]: owned + 1 },
-  };
+  const cost = companyCost(id, owned);
+  return withRecord(
+    {
+      ...state,
+      money: state.money - cost,
+      companies: { ...state.companies, [id]: owned + 1 },
+    },
+    { purchases: cost },
+  );
 };
