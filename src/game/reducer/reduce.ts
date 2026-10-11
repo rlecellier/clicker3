@@ -1,3 +1,4 @@
+import { autoTick, setAuto } from '@game/automation';
 import { buyCompany } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
@@ -44,6 +45,12 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'buyUpgrade': {
       return buyUpgrade(state, action.id);
+    }
+    case 'setAuto': {
+      return setAuto(state, action.action, action.isEnabled);
+    }
+    case 'autoTick': {
+      return autoTick(state, action.elapsedMs);
     }
     case 'restart': {
       return newGame();

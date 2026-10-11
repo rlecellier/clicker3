@@ -9,5 +9,9 @@ export type GameAction =
   | { type: 'buyCompany'; id: string }
   | { type: 'sellSurplus' }
   | { type: 'buyUpgrade'; id: string }
+  | { type: 'setAuto'; action: 'work' | 'sleep'; isEnabled: boolean }
+  // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
+  // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.
+  | { type: 'autoTick'; elapsedMs: number }
   // Rejoue la même vie depuis l'état de départ.
   | { type: 'restart' };

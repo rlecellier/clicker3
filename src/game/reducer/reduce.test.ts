@@ -1,3 +1,4 @@
+import { autoIntervalMs } from '@game/automation';
 import { startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
@@ -119,5 +120,33 @@ describe('reduce', () => {
     expect(played).toEqual(newGame());
     expect(played.money).toBe(startState.money);
     expect(played.period).toBe(0);
+  });
+
+  describe('automatisation', () => {
+    const owner: GameState = {
+      ...startState,
+      upgrades: ['procedure-travail'],
+    };
+
+    it('active un interrupteur, puis fait agir le temps réel', () => {
+      const on = reduce(owner, {
+        type: 'setAuto',
+        action: 'work',
+        isEnabled: true,
+      });
+      expect(on.autoWork).toBe(true);
+      const ticked = reduce(on, {
+        type: 'autoTick',
+        elapsedMs: autoIntervalMs,
+      });
+      expect(ticked.money).toBeGreaterThan(0);
+    });
+
+    it('n’avance pas sans interrupteur', () => {
+      const next = reduce(owner, { type: 'autoTick', elapsedMs: 99_999 });
+      expect(next.period).toBe(0);
+      expect(next.gauge).toBe(0);
+      expect(next.money).toBe(0);
+    });
   });
 });
