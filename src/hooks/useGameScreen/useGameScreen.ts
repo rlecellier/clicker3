@@ -232,7 +232,7 @@ export const useGameScreen = () => {
       const points = state.stats[id];
       return {
         id,
-        label: `${statLabels[id]} · palier ${tier} · ${formatCount(points)} pts`,
+        label: `${statLabels[id]} · palier ${tier} · ${next === undefined ? 'max' : `${formatCount(points)} pts`}`,
         value: next === undefined ? 1 : points - start,
         max: next === undefined ? 1 : next - start,
       };
