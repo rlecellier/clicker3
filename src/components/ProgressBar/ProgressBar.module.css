@@ -7,6 +7,10 @@
 .label {
   font-size: 0.75rem;
   color: var(--color-text-muted);
+  /* Une seule ligne : un libellé long est tronqué, la barre ne bouge pas. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track {

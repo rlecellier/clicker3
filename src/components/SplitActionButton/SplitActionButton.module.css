@@ -79,9 +79,17 @@
   color: var(--color-alert);
 }
 
-/* Deux lignes toujours réservées : le détail ou la raison ne fait pas sauter
-   la page en passant d'une ligne à deux. */
+/* Hauteur fixe de deux lignes : le détail ou la raison ne fait pas sauter la
+   page, et un texte plus long est tronqué (le texte complet est en infobulle). */
 .info {
   font-size: 0.75rem;
-  min-height: 2lh;
+  height: 2lh;
+  overflow: hidden;
+}
+
+.info > p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
