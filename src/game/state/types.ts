@@ -22,20 +22,19 @@ export type ActiveEffect = {
   until: number;
 };
 
-// Relevé économique d'une période (suivi détaillé : V1-13).
+// Drapeaux de la dernière période résolue, lus par les conditions
+// (`statement`). Les montants et les flux sont dans le `Ledger`.
 export type PeriodStatement = {
   // Période qui vient de se terminer.
   period: number;
-  revenue: number;
-  expenses: number;
-  stockProduced: number;
-  stockSold: number;
-  stockLost: number;
-  reputationGained: number;
-  reputationLost: number;
+  // Du loyer ou des salaires ont été prélevés.
+  paidExpenses: boolean;
+  // Loyer ou salaires impayés.
   unpaid: boolean;
   // Au moins un commerce n'a pas pu tout servir.
   stockout: boolean;
+  // De la production a été perdue faute de place dans l'entrepôt.
+  stockFull: boolean;
 };
 
 // Recettes, dépenses et flux d'une durée (période ou cumul), voir `@game/ledger`.

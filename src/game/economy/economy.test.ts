@@ -12,7 +12,8 @@ describe('produceGoods', () => {
   it('ajoute au stock la production de chaque exemplaire', () => {
     const next = produceGoods(stateWith({ companies: { atelier: 3 } }));
     expect(next.stock).toBe(12);
-    expect(next.lastStatement?.stockProduced).toBe(12);
+    expect(next.ledger.current.stockProduced).toBe(12);
+    expect(next.lastStatement?.stockFull).toBe(false);
   });
 
   it('perd la production au-delà de la capacité du stock', () => {
@@ -20,8 +21,9 @@ describe('produceGoods', () => {
       stateWith({ companies: { atelier: 3 }, stock: 45, stockCapacity: 50 }),
     );
     expect(next.stock).toBe(50);
-    expect(next.lastStatement?.stockProduced).toBe(5);
-    expect(next.lastStatement?.stockLost).toBe(7);
+    expect(next.ledger.current.stockProduced).toBe(5);
+    expect(next.ledger.current.stockLost).toBe(7);
+    expect(next.lastStatement?.stockFull).toBe(true);
   });
 
   it('applique le multiplicateur de production', () => {
@@ -57,8 +59,9 @@ describe('sellGoods', () => {
     expect(next.stock).toBe(6);
     expect(next.money).toBe(4 * 12);
     expect(next.reputation).toBeCloseTo(4 * economyRules.reputationPerSale);
-    expect(next.lastStatement?.revenue).toBe(48);
-    expect(next.lastStatement?.stockSold).toBe(4);
+    expect(next.ledger.current.sales).toBe(48);
+    expect(next.ledger.current.stockSold).toBe(4);
+    expect(next.lastStatement?.stockout).toBe(false);
   });
 
   it('vend ce qu’il reste quand le stock est insuffisant et perd de la réputation', () => {
@@ -68,7 +71,8 @@ describe('sellGoods', () => {
     expect(next.reputation).toBeCloseTo(
       5 + economyRules.reputationPerSale - economyRules.stockoutPenalty,
     );
-    expect(next.lastStatement?.reputationLost).toBeCloseTo(
+    expect(next.lastStatement?.stockout).toBe(true);
+    expect(next.ledger.current.reputationLost).toBeCloseTo(
       economyRules.stockoutPenalty,
     );
   });
@@ -104,7 +108,9 @@ describe('chargeExpenses', () => {
   it('prélève le loyer et les salaires', () => {
     const next = chargeExpenses(stateWith({ money: 1000, payroll: 100 }));
     expect(next.money).toBe(1000 - 300 - 100);
-    expect(next.lastStatement?.expenses).toBe(400);
+    expect(next.ledger.current.rent).toBe(300);
+    expect(next.ledger.current.payroll).toBe(100);
+    expect(next.lastStatement?.paidExpenses).toBe(true);
     expect(next.lastStatement?.unpaid).toBe(false);
   });
 
@@ -113,7 +119,8 @@ describe('chargeExpenses', () => {
     expect(next.money).toBe(0);
     expect(next.reputation).toBe(5 - economyRules.unpaidPenalty);
     expect(next.lastStatement?.unpaid).toBe(true);
-    expect(next.lastStatement?.expenses).toBe(100);
+    expect(next.ledger.current.rent).toBe(100);
+    expect(next.ledger.current.reputationLost).toBe(economyRules.unpaidPenalty);
   });
 
   it('ne fait pas descendre la réputation sous 0', () => {
@@ -134,14 +141,14 @@ describe('résolution d’une période', () => {
     expect(next.money).toBe(400 + 48 - 300);
     expect(next.stock).toBe(0);
     expect(next.period).toBe(1);
-    expect(next.lastStatement).toMatchObject({
-      period: 0,
-      revenue: 48,
-      expenses: 300,
+    expect(next.lastStatement).toMatchObject({ period: 0, unpaid: false });
+    expect(next.ledger.last).toMatchObject({
+      sales: 48,
+      rent: 300,
       stockProduced: 4,
       stockSold: 4,
-      unpaid: false,
     });
+    expect(next.ledger.current.rent).toBe(0);
   });
 
   it('est déterministe', () => {

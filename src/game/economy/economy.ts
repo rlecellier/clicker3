@@ -1,20 +1,18 @@
 import { companies, economyRules } from '@game/data';
 import { activeBonus } from '@game/effects';
 import type { Company } from '@game/data';
+import { record, withRecord } from '@game/ledger';
 import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState, PeriodStatement } from '@game/state';
 
+// Les montants et les flux vivent dans le ledger ; le relevé ne garde que les
+// drapeaux de la période que lisent les conditions (`@game/requirements`).
 const emptyStatement = (period: number): PeriodStatement => ({
   period,
-  revenue: 0,
-  expenses: 0,
-  stockProduced: 0,
-  stockSold: 0,
-  stockLost: 0,
-  reputationGained: 0,
-  reputationLost: 0,
+  paidExpenses: false,
   unpaid: false,
   stockout: false,
+  stockFull: false,
 });
 
 // Relevé de la période en cours de résolution (créé par l'étape 1).
@@ -44,15 +42,17 @@ export const produceGoods = (state: GameState): GameState => {
     produced,
     Math.max(0, state.stockCapacity - state.stock),
   );
-  return {
-    ...state,
-    stock: state.stock + stored,
-    lastStatement: {
-      ...emptyStatement(state.period),
-      stockProduced: stored,
-      stockLost: produced - stored,
+  return withRecord(
+    {
+      ...state,
+      stock: state.stock + stored,
+      lastStatement: {
+        ...emptyStatement(state.period),
+        stockFull: produced > stored,
+      },
     },
-  };
+    { stockProduced: stored, stockLost: produced - stored },
+  );
 };
 
 // Étape 2 : les commerces écoulent le stock contre de l'argent et un peu de
@@ -62,8 +62,6 @@ export const sellGoods = (state: GameState): GameState => {
   let stock = state.stock;
   let revenue = 0;
   let sold = 0;
-  let gained = 0;
-  let lost = 0;
   let isStockout = false;
   for (const company of companies) {
     if (company.kind !== 'commerce') {
@@ -82,14 +80,11 @@ export const sellGoods = (state: GameState): GameState => {
       economyRules.reputationPerSale *
       state.reputationPerSaleMultiplier;
     current = gainReputation(current, gain);
-    gained += Math.max(gain, 0);
-    const before = current.reputation;
     isStockout ||= units < capacity;
     current =
       units < capacity
         ? loseReputation(current, economyRules.stockoutPenalty)
         : current;
-    lost += before - current.reputation;
   }
   const earned = Math.round(
     revenue * (state.salesMultiplier + activeBonus(state, 'sales')),
@@ -99,15 +94,9 @@ export const sellGoods = (state: GameState): GameState => {
     ...current,
     stock,
     money: current.money + earned,
+    ledger: record(current.ledger, { sales: earned, stockSold: sold }),
     workBoosts: {},
-    lastStatement: {
-      ...statement,
-      revenue: earned,
-      stockSold: sold,
-      reputationGained: gained,
-      reputationLost: lost,
-      stockout: isStockout,
-    },
+    lastStatement: { ...statement, stockout: isStockout },
   };
 };
 
@@ -117,22 +106,20 @@ export const chargeExpenses = (state: GameState): GameState => {
   const due = state.rent + state.payroll;
   const paid = Math.min(state.money, due);
   const statement = statementOf(state);
-  const paidState = { ...state, money: state.money - paid };
+  const rentPaid = Math.min(paid, state.rent);
+  const paidState = withRecord(
+    { ...state, money: state.money - paid },
+    { rent: rentPaid, payroll: paid - rentPaid },
+  );
   if (paid >= due) {
     return {
       ...paidState,
-      lastStatement: { ...statement, expenses: paid },
+      lastStatement: { ...statement, paidExpenses: paid > 0 },
     };
   }
   const penalised = loseReputation(paidState, economyRules.unpaidPenalty);
   return {
     ...penalised,
-    lastStatement: {
-      ...statement,
-      expenses: paid,
-      unpaid: true,
-      reputationLost:
-        statement.reputationLost + (state.reputation - penalised.reputation),
-    },
+    lastStatement: { ...statement, paidExpenses: paid > 0, unpaid: true },
   };
 };
