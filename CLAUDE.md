@@ -7,8 +7,8 @@ recherche de game design dans `docs/game-design/README.md`.
 **État du projet** : squelette initialisé (Vite, React, TypeScript, ESLint,
 Prettier, Vitest ; V1-01), CI, déploiement Pages et parcours de fumée
 Playwright en place (V1-02), noyau des règles dans `src/game/` : état, reducer,
-jauge de temps, aléatoire à graine, paliers de stats et conditions de
-déblocage (V1-03 et V1-04, ADR 0002 et 0003). Le concept et les mécaniques de
+jauge de temps, aléatoire à graine, paliers de stats, conditions de
+déblocage, réputation et quartiers (V1-03 à V1-05, ADR 0002 et 0003). Le concept et les mécaniques de
 la v1 sont choisis (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le
 développement suit l'issue de suivi #29.
 
