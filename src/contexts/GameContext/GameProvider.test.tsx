@@ -118,10 +118,37 @@ describe('boucle automatique', () => {
 
 describe('sauvegarde', () => {
   it('sauvegarde périodiquement', () => {
-    const { storage } = setup();
-    expect(storage.read()).toBeNull();
+    const { storage, result } = setup();
+    act(() => {
+      result.current.startGame();
+    });
+    storage.clear();
     advance(5000);
     expect(storage.read()).not.toBeNull();
+  });
+
+  it('n’écrit rien tant qu’aucune partie n’est commencée', () => {
+    const { storage } = setup();
+    advance(5000);
+    setHidden(true);
+    expect(storage.read()).toBeNull();
+  });
+
+  it('écrit la vie neuve au démarrage et l’efface sur demande', () => {
+    const { result, storage } = setup();
+    expect(result.current.hasSave).toBe(false);
+    act(() => {
+      result.current.startGame();
+    });
+    expect(result.current.hasSave).toBe(true);
+    expect(storage.read()).not.toBeNull();
+    act(() => {
+      result.current.eraseSave();
+    });
+    expect(result.current.hasSave).toBe(false);
+    expect(storage.read()).toBeNull();
+    advance(5000);
+    expect(storage.read()).toBeNull();
   });
 
   it('sauvegarde à chaque achat', () => {
@@ -146,7 +173,11 @@ describe('sauvegarde', () => {
   });
 
   it('sauvegarde quand l’onglet se cache et avant de quitter', () => {
-    const { storage } = setup();
+    const { storage, result } = setup();
+    act(() => {
+      result.current.startGame();
+    });
+    storage.clear();
     setHidden(true);
     expect(storage.read()).not.toBeNull();
     storage.clear();

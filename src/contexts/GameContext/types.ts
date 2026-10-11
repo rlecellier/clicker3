@@ -13,6 +13,12 @@ export type GameContextValue = {
   // « Pendant votre absence », tant que le joueur ne l'a pas fermé.
   absence: AbsenceSummary | null;
   dismissAbsence: () => void;
+  // Une partie est sauvegardée : sans elle, on reste à l'écran titre.
+  hasSave: boolean;
+  // Commence une vie neuve et la sauvegarde.
+  startGame: () => void;
+  // Efface la sauvegarde et revient à une vie neuve non sauvegardée.
+  eraseSave: () => void;
 };
 
 export type GameProviderOptions = {

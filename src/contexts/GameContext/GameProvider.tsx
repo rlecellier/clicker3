@@ -35,14 +35,21 @@ export const GameProvider = ({
   const [boot] = useState(() => bootGame(storage, now()));
   const [state, dispatch] = useReducer(providerReduce, boot.state);
   const [absence, setAbsence] = useState(boot.absence);
+  const [hasSave, setHasSave] = useState(boot.hasSave);
+  const [startCount, setStartCount] = useState(0);
 
   const latestState = useRef(state);
+  const latestHasSave = useRef(hasSave);
   useEffect(() => {
     latestState.current = state;
-  }, [state]);
+    latestHasSave.current = hasSave;
+  }, [state, hasSave]);
 
+  // Sans partie sauvegardée (écran titre), rien n'est écrit.
   const save = useCallback(() => {
-    saveGame(storage, latestState.current, now());
+    if (latestHasSave.current) {
+      saveGame(storage, latestState.current, now());
+    }
   }, [storage, now]);
 
   // Boucle automatique, pause onglet caché, rattrapage au retour.
@@ -116,13 +123,42 @@ export const GameProvider = ({
     save();
   }, [state, save]);
 
+  // La vie neuve est écrite dès qu'elle est rendue.
+  useEffect(() => {
+    if (startCount > 0) {
+      save();
+    }
+  }, [startCount, save]);
+
+  const startGame = useCallback(() => {
+    dispatch({ type: 'restart' });
+    setAbsence(null);
+    setHasSave(true);
+    setStartCount((count) => count + 1);
+  }, []);
+
+  const eraseSave = useCallback(() => {
+    storage.clear();
+    dispatch({ type: 'restart' });
+    setAbsence(null);
+    setHasSave(false);
+  }, [storage]);
+
   const dismissAbsence = useCallback(() => {
     setAbsence(null);
   }, []);
 
   const value = useMemo<GameContextValue>(
-    () => ({ state, dispatch, absence, dismissAbsence }),
-    [state, absence, dismissAbsence],
+    () => ({
+      state,
+      dispatch,
+      absence,
+      dismissAbsence,
+      hasSave,
+      startGame,
+      eraseSave,
+    }),
+    [state, absence, dismissAbsence, hasSave, startGame, eraseSave],
   );
 
   return <GameContext value={value}>{children}</GameContext>;
