@@ -5,6 +5,7 @@ import {
   gainReputation,
   loseReputation,
   reputationTierOf,
+  reputationTierProgress,
   spendReputation,
 } from './reputation';
 
@@ -74,5 +75,40 @@ describe('reputationTierOf', () => {
     const earned = gainReputation(startState, 100);
     expect(reputationTierOf(spendReputation(earned, 100))).toBe(2);
     expect(reputationTierOf(loseReputation(earned, 100))).toBe(2);
+  });
+});
+
+describe('reputationTierProgress', () => {
+  it('part du palier 0 sans progression', () => {
+    expect(reputationTierProgress(startState)).toEqual({
+      tier: 0,
+      name: 'Inconnu',
+      value: 0,
+      max: 6,
+      isMax: false,
+    });
+  });
+
+  it('mesure la progression au milieu d’un palier', () => {
+    expect(
+      reputationTierProgress(gainReputation(startState, 37)),
+    ).toMatchObject({ tier: 1, value: 31, max: 94, isMax: false });
+  });
+
+  it('passe au palier suivant pile au seuil', () => {
+    expect(
+      reputationTierProgress(gainReputation(startState, 100)),
+    ).toMatchObject({ tier: 2, name: 'Acteur majeur', value: 0, max: 70 });
+  });
+
+  it('plafonne au dernier palier', () => {
+    expect(
+      reputationTierProgress(gainReputation(startState, 1000)),
+    ).toMatchObject({ tier: 3, value: 1, max: 1, isMax: true });
+  });
+
+  it('suit le total gagné et non le solde dépensable', () => {
+    const spent = spendReputation(gainReputation(startState, 37), 37);
+    expect(reputationTierProgress(spent)).toMatchObject({ tier: 1, value: 31 });
   });
 });
