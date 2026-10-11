@@ -30,6 +30,8 @@ export type CurvePoint = {
   revenue: number;
 };
 
+export type DeadZone = { atMinutes: number; minutes: number };
+
 export type SimulationResult = {
   endedBy: 'death' | 'limit' | 'stuck';
   // Temps de jeu actif estimé : actions manuelles × cadence humaine.
@@ -47,6 +49,10 @@ export type SimulationResult = {
   // Plus longue durée sans achat ni déblocage, jusqu'à la mort comprise.
   longestGapMs: number;
   longestGapAtMinutes: number;
+  // Toutes les zones mortes au-delà de la tolérance, dans l'ordre du temps.
+  deadZones: DeadZone[];
+  // État au moment où le travail automatique s'active (pour tester l'absence).
+  autoWorkState: GameState | null;
   curve: CurvePoint[];
   finalState: GameState;
 };
@@ -103,6 +109,8 @@ export const simulateLife = (
   let lastProgressMs = 0;
   let longestGapMs = 0;
   let longestGapAtMs = 0;
+  let autoWorkState: GameState | null = null;
+  const deadZones: DeadZone[] = [];
   let endedBy: SimulationResult['endedBy'] = 'limit';
   const milestones: Milestone[] = [];
   const reached = new Set<string>();
@@ -134,6 +142,12 @@ export const simulateLife = (
   };
   const noteProgress = () => {
     const gap = elapsedMs() - lastProgressMs;
+    if (gap > simulatorConfig.maxDeadZoneMs) {
+      deadZones.push({
+        atMinutes: lastProgressMs / 60_000,
+        minutes: gap / 60_000,
+      });
+    }
     if (gap > longestGapMs) {
       longestGapMs = gap;
       longestGapAtMs = lastProgressMs;
@@ -149,6 +163,7 @@ export const simulateLife = (
     }
     if (isAutoActive(state, 'work')) {
       mark('autoWork', 'Travail automatique');
+      autoWorkState ??= state;
     }
     if (isAutoActive(state, 'sleep')) {
       mark('autoSleep', 'Sommeil automatique');
@@ -219,6 +234,8 @@ export const simulateLife = (
     phasesReached: phaseOrder.filter((phase) => phases.has(phase)),
     longestGapMs,
     longestGapAtMinutes: longestGapAtMs / 60_000,
+    deadZones,
+    autoWorkState,
     curve,
     finalState: state,
   };

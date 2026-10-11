@@ -3,6 +3,7 @@ export { formatCsv, formatReport } from './report';
 export { simulateLife } from './simulate';
 export type {
   CurvePoint,
+  DeadZone,
   Milestone,
   SimulationPhase,
   SimulationResult,

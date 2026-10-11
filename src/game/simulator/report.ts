@@ -1,4 +1,5 @@
 import { PERIODS_PER_YEAR } from '@game/time';
+import { simulatorConfig } from './config';
 import type { CurvePoint, SimulationResult } from './simulate';
 
 const minutesLabel = (minutes: number) => {
@@ -32,6 +33,15 @@ export const formatReport = (result: SimulationResult): string => {
     `Phases atteintes : ${result.phasesReached.join(', ')}`,
     `Plus longue zone morte : ${minutesLabel(result.longestGapMs / 60_000)}` +
       ` (à partir de ${minutesLabel(result.longestGapAtMinutes)})`,
+    `Zones mortes de plus de ${minutesLabel(simulatorConfig.maxDeadZoneMs / 60_000)} : ${result.deadZones.length}` +
+      (result.deadZones.length === 0
+        ? ''
+        : ` (${result.deadZones
+            .map(
+              (zone) =>
+                `${minutesLabel(zone.minutes)} à ${minutesLabel(zone.atMinutes)}`,
+            )
+            .join(' ; ')})`),
     '',
     'Jalons',
     ...result.milestones.map(
