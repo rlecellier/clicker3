@@ -1,4 +1,5 @@
-import { actionRules, jobMarkerStat } from '@game/data';
+import { companyById, ownedCount } from '@game/companies';
+import { actionRules, economyRules, jobMarkerStat } from '@game/data';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
@@ -8,25 +9,48 @@ import type { GameState } from '@game/state';
 // Cible du travail : l'emploi, ou (à partir de V1-07) l'id d'une entreprise.
 export const JOB_TARGET = 'job';
 
-export const canWork = (state: GameState, target: string) =>
-  state.status === 'playing' &&
-  target === JOB_TARGET &&
-  jobById(state.jobId) !== undefined;
+export const canWork = (state: GameState, target: string) => {
+  if (state.status !== 'playing') {
+    return false;
+  }
+  return target === JOB_TARGET
+    ? jobById(state.jobId) !== undefined
+    : companyById(target) !== undefined && ownedCount(state, target) > 0;
+};
 
-// Salaire et réputation de l'emploi, chance de marqueur, puis temps qui passe.
-export const work = (state: GameState, target: string = JOB_TARGET) => {
-  const job = jobById(state.jobId);
-  if (job === undefined || !canWork(state, target)) {
+// Travailler à son emploi : salaire et réputation de l'emploi.
+const workAtJob = (state: GameState, jobId: string | null): GameState => {
+  const job = jobById(jobId);
+  return job === undefined
+    ? state
+    : gainReputation(
+        { ...state, money: state.money + job.salary },
+        job.reputation,
+      );
+};
+
+// Travailler dans une de ses entreprises : bonus sur la période (voir economy).
+const workAtCompany = (state: GameState, id: string): GameState => ({
+  ...state,
+  workBoosts: { ...state.workBoosts, [id]: (state.workBoosts[id] ?? 0) + 1 },
+});
+
+// Gain de l'action, chance de marqueur, puis temps qui passe.
+export const work = (
+  state: GameState,
+  target: string = JOB_TARGET,
+): GameState => {
+  if (!canWork(state, target)) {
     return state;
   }
   const { gauge, markerChance, markerVariance } = actionRules.work;
-  const paid = gainReputation(
-    { ...state, money: state.money + job.salary },
-    job.reputation,
-  );
+  const isAtJob = target === JOB_TARGET;
+  const done = isAtJob
+    ? workAtJob(state, state.jobId)
+    : workAtCompany(state, target);
   const withMarker = grantMarker(
-    paid,
-    jobMarkerStat,
+    done,
+    isAtJob ? jobMarkerStat : economyRules.companyMarkerStat,
     markerChance,
     markerVariance,
   );
