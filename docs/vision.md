@@ -20,10 +20,10 @@ en couches et les conventions ; on change de jeu.
 
 ## Avancement
 
-| Étape | Contenu                                                            | Statut  |
-| ----- | ------------------------------------------------------------------ | ------- |
-| 1     | Documentation de la stack ([stack.md](stack.md))                   | fait    |
-| 2     | But du repo (ce document)                                          | fait    |
-| 3     | Recherche game design ([game-design-idle.md](game-design-idle.md)) | fait    |
-| 4     | **Choix du thème et des mécaniques**                               | à faire |
-| 5     | Initialisation du code (Vite, lint, CI…)                           | à faire |
+| Étape | Contenu                                                              | Statut  |
+| ----- | -------------------------------------------------------------------- | ------- |
+| 1     | Documentation de la stack ([stack.md](stack.md))                     | fait    |
+| 2     | But du repo (ce document)                                            | fait    |
+| 3     | Recherche game design ([game-design-idle.md](game-design/README.md)) | fait    |
+| 4     | **Choix du thème et des mécaniques**                                 | à faire |
+| 5     | Initialisation du code (Vite, lint, CI…)                             | à faire |

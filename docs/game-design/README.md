@@ -154,8 +154,15 @@ Référence : la série [_The Math of Idle Games_](https://www.gamedeveloper.com
 
 ## Sources
 
-- Anthony Pecorella, [_The Math of Idle Games_, parties I à III](https://www.gamedeveloper.com/design/the-math-of-idle-games-part-i), Game Developer / Kongregate.
-- [Réédition de la série sur GameAnalytics](https://gameanalytics.com/?p=6634) (formule du maximum achetable).
-- [Balancing tips: how we managed math on Idle Idol](https://gamedeveloper.com/design/balancing-tips-how-we-managed-math-on-idle-idol), Game Developer.
-- Guides de développeurs sur la boucle clic/amélioration, le prestige (retour
-  2–5×) et le hors-ligne (plafond, taux réduit) : chiffres indicatifs.
+Résumés détaillés, avec le niveau de lecture de chaque page, dans
+[`references/`](references/README.md) :
+
+- [The Math of Idle Games, partie I](references/math-of-idle-games-1.md),
+  [II](references/math-of-idle-games-2.md) et
+  [III](references/math-of-idle-games-3.md) (Anthony Pecorella,
+  [Game Developer](https://www.gamedeveloper.com/design/the-math-of-idle-games-part-i)).
+- [Réédition GameAnalytics](references/gameanalytics-reedition.md) (formule du
+  maximum achetable).
+- [Balancing tips : Idle Idol](references/idle-idol-balancing.md).
+- [Guides de développeurs](references/guides-developpeurs.md) (prestige 2–5×,
+  hors-ligne plafonné) : chiffres indicatifs.
