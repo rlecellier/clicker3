@@ -40,6 +40,7 @@ token.
 | `--color-note`           | Jaune post-it (`Note`)                                       |
 | `--color-note-border`    | Bordure du post-it                                           |
 | `--color-alert`          | Rouge sobre : alertes, bouton `danger`                       |
+| `--color-ok`             | Vert sobre : prérequis obtenu (texte sur `--color-paper`)    |
 | `--color-alert-text`     | Texte sur fond `--color-alert`                               |
 | `--color-focus`          | Contour de focus (`:focus-visible`)                          |
 | `--font-sans`            | Tahoma, Verdana, puis polices de repli : tout le texte       |

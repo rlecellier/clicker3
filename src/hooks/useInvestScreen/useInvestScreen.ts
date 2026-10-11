@@ -4,7 +4,7 @@ import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
 import { companies, districts } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
-import { describeRequirement, formatCount, formatMoney } from '@game/format';
+import { checkRequirement, formatCount, formatMoney } from '@game/format';
 import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState } from '@game/state';
@@ -16,10 +16,10 @@ import {
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
 
-// Ce qui manque pour débloquer, sinon rien.
-const missing = (state: GameState, requirement?: Requirement) =>
+// Les prérequis à afficher en vert ou en rouge, seulement s'il en manque.
+const conditionsOf = (state: GameState, requirement?: Requirement) =>
   requirement !== undefined && !isUnlocked(state, requirement)
-    ? describeRequirement(requirement)
+    ? checkRequirement(state, requirement)
     : undefined;
 
 // Pourquoi l'achat est impossible : rien si déjà fait, sinon la fin de partie,
@@ -33,9 +33,10 @@ const reasonOf = (
   if (isDone) {
     return;
   }
-  return state.status === 'dead'
-    ? 'Partie terminée'
-    : (missing(state, requirement) ?? shortage);
+  if (state.status === 'dead') {
+    return 'Partie terminée';
+  }
+  return conditionsOf(state, requirement) === undefined ? shortage : undefined;
 };
 
 const stockLabel = (state: GameState) => {
@@ -70,6 +71,7 @@ export const useInvestScreen = () => {
       actionLabel: 'Acheter',
       isDisabled: !canBuy,
       reason: reasonOf(state, false, company.requirement, 'Argent insuffisant'),
+      conditions: conditionsOf(state, company.requirement),
       onAction: () => {
         actions.buyCompany(company.id);
       },
@@ -108,6 +110,7 @@ export const useInvestScreen = () => {
               next.requirement,
               'Argent insuffisant',
             ),
+            conditions: conditionsOf(state, next.requirement),
             onAction: () => {
               actions.buyUpgrade(next.id);
             },
@@ -146,6 +149,9 @@ export const useInvestScreen = () => {
         district.requirement,
         'Réputation insuffisante',
       ),
+      conditions: isOpen
+        ? undefined
+        : conditionsOf(state, district.requirement),
       onAction: () => {
         actions.unlockDistrict(district.id);
       },

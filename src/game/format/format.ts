@@ -2,6 +2,10 @@ import type { Requirement } from '@game/requirements';
 import type { GameDate } from '@game/time';
 import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
+import { reputationTiers, statTierThresholds } from '@game/data';
+import { isUnlocked } from '@game/requirements';
+import { reputationTierOf } from '@game/reputation';
+import { upgradeById } from '@game/upgrades';
 
 const money = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
@@ -100,4 +104,57 @@ export const describeRequirement = (requirement: Requirement): string => {
         .join(requirement.type === 'all' ? ' · ' : ' ou ');
     }
   }
+};
+
+export type RequirementCheck = { label: string; isMet: boolean };
+
+// Libellé d'une condition, avec la progression du joueur quand elle se chiffre.
+const describeCheck = (state: GameState, requirement: Requirement): string => {
+  switch (requirement.type) {
+    case 'reputationTier': {
+      const tier = reputationTiers[requirement.tier];
+      return tier === undefined
+        ? describeRequirement(requirement)
+        : `Palier de réputation ${requirement.tier} « ${tier.name} » : ${formatCount(state.reputationEarned)} / ${formatCount(tier.earned)} de réputation gagnée`;
+    }
+    case 'stat': {
+      const needed = statTierThresholds[requirement.stat][requirement.tier - 1];
+      return needed === undefined
+        ? describeRequirement(requirement)
+        : `Palier ${statLabels[requirement.stat]} ${requirement.tier} : ${formatCount(state.stats[requirement.stat])} / ${formatCount(needed)} pts`;
+    }
+    case 'reputation': {
+      return `Réputation : ${formatDecimal(state.reputation)} / ${formatCount(requirement.min)}`;
+    }
+    case 'upgrade': {
+      return `Amélioration « ${upgradeById(requirement.id)?.name ?? requirement.id} »`;
+    }
+    default: {
+      return describeRequirement(requirement);
+    }
+  }
+};
+
+// Les conditions à remplir, une par ligne, chacune avec son état (obtenue ou non).
+export const checkRequirement = (
+  state: GameState,
+  requirement: Requirement,
+): RequirementCheck[] =>
+  requirement.type === 'all'
+    ? requirement.of.flatMap((part) => checkRequirement(state, part))
+    : [
+        {
+          label: describeCheck(state, requirement),
+          isMet: isUnlocked(state, requirement),
+        },
+      ];
+
+// Palier de réputation courant et progression vers le suivant.
+export const describeReputationTier = (state: GameState) => {
+  const tier = reputationTierOf(state);
+  const name = `Palier ${tier} · ${reputationTiers[tier]?.name ?? ''}`;
+  const next = reputationTiers[tier + 1];
+  return next === undefined
+    ? `${name} (maximum)`
+    : `${name} · prochain à ${formatCount(next.earned)} gagnés (${formatCount(state.reputationEarned)})`;
 };

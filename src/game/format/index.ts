@@ -1,4 +1,6 @@
 export {
+  checkRequirement,
+  describeReputationTier,
   describeRequirement,
   formatAge,
   formatCount,
@@ -8,3 +10,4 @@ export {
   formatPhase,
   statLabels,
 } from './format';
+export type { RequirementCheck } from './format';

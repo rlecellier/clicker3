@@ -5,6 +5,8 @@ import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
 import { courses, jobs, statTierThresholds } from '@game/data';
 import {
+  checkRequirement,
+  describeReputationTier,
   describeRequirement,
   formatAge,
   formatCount,
@@ -117,16 +119,16 @@ export const useGameScreen = () => {
 
   const jobItems: ListItem[] = jobs.map((candidate) => {
     const isCurrent = candidate.id === state.jobId;
-    const missing =
-      candidate.requirement !== undefined &&
-      !isUnlocked(state, candidate.requirement)
-        ? describeRequirement(candidate.requirement)
-        : undefined;
+    const conditions =
+      isCurrent || candidate.requirement === undefined
+        ? undefined
+        : checkRequirement(state, candidate.requirement);
+    const hasMissing = conditions?.some((condition) => !condition.isMet);
     const isShortOnReputation = !canSpendReputation(state, candidate.cost);
-    const reason = isCurrent
-      ? undefined
-      : (missing ??
-        (isShortOnReputation ? 'Réputation insuffisante' : undefined));
+    const reason =
+      !isCurrent && hasMissing !== true && isShortOnReputation
+        ? 'Réputation insuffisante'
+        : undefined;
     return {
       id: candidate.id,
       title: candidate.name,
@@ -139,6 +141,7 @@ export const useGameScreen = () => {
       actionLabel: 'Prendre',
       isDisabled: !canChangeJob(state, candidate.id),
       reason,
+      conditions,
       onAction: say('Votre nouveau poste a été communiqué en interne.', () => {
         actions.changeJob(candidate.id);
       }),
@@ -210,6 +213,7 @@ export const useGameScreen = () => {
       money: formatMoney(state.money),
       stock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
       reputation: formatDecimal(state.reputation),
+      reputationTier: describeReputationTier(state),
     },
     brain: {
       count: state.markers.length,
