@@ -1,9 +1,1 @@
-export {
-  addGauge,
-  ageCharacter,
-  chargeExpenses,
-  endPeriod,
-  produceGoods,
-  resetGauge,
-  sellGoods,
-} from './period';
+export { addGauge, ageCharacter, endPeriod, resetGauge } from './period';
