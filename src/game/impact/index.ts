@@ -1,4 +1,4 @@
-export { impactOf } from './impact';
+export { districtOfCompany, impactOf } from './impact';
 export type {
   DistrictImpact,
   ImpactId,
