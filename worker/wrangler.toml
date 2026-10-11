@@ -1,0 +1,13 @@
+name = "clicker3-feedback-auth"
+main = "index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Origine du jeu (GitHub Pages), seule autorisée à recevoir le jeton.
+ALLOWED_ORIGIN = "https://rlecellier.github.io"
+# Identifiant public de l'OAuth App / GitHub App.
+GITHUB_CLIENT_ID = "À_REMPLIR"
+# OAuth App : "public_repo". GitHub App : laisser vide.
+OAUTH_SCOPE = ""
+
+# Secret, jamais dans ce fichier : `wrangler secret put GITHUB_CLIENT_SECRET`.
