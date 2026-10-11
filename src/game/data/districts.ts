@@ -10,7 +10,7 @@ export type District = {
 };
 
 // Dans l'ordre de la carte (docs/game/ton-et-univers.md). Les Tilleuls sont
-// ouverts au départ (voir startState). Coûts et seuils provisoires.
+// ouverts au départ (voir startState). Coûts calés en V1-24 (docs/game/equilibrage.md).
 export const districts: readonly District[] = [
   {
     id: 'tilleuls',

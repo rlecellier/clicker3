@@ -1,4 +1,4 @@
-// Valeurs provisoires des actions, à équilibrer au simulateur (V1-15, V1-24).
+// Valeurs des actions, calées au simulateur (V1-24, docs/game/equilibrage.md).
 export const actionRules = {
   work: {
     // Coût en jauge de temps.

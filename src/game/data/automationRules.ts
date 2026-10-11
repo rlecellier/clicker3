@@ -1,4 +1,4 @@
-// Valeurs provisoires de l'automatisation, à caler au simulateur (V1-24).
+// Valeurs de l'automatisation, calées au simulateur (V1-24, docs/game/equilibrage.md).
 export const automationRules = {
   // Rythme de référence d'un joueur actif : une action manuelle par seconde.
   referenceIntervalMs: 1000,

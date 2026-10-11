@@ -1,4 +1,4 @@
-// Valeurs provisoires des indicateurs d'impact (ADR 0004), à caler en V1-24.
+// Valeurs des indicateurs d'impact (ADR 0004), non modifiées par l'équilibrage V1-24.
 export const impactRules = {
   // Quartier de résidence : l'argent du personnage y compte.
   homeDistrict: 'tilleuls',

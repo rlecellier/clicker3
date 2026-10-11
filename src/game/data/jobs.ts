@@ -12,7 +12,7 @@ export type Job = {
   requirement?: Requirement;
 };
 
-// Les quatre emplois successifs (docs/game/ton-et-univers.md). Valeurs provisoires.
+// Les quatre emplois successifs (docs/game/ton-et-univers.md). Valeurs calées en V1-24 (docs/game/equilibrage.md).
 export const jobs: readonly Job[] = [
   {
     id: 'interim',

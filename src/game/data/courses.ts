@@ -10,7 +10,7 @@ export type Course = {
 };
 
 // Un cursus est disponible une fois la formation achetée (voir upgrades).
-// Coûts provisoires.
+// Coûts calés en V1-24 (docs/game/equilibrage.md).
 export const courses: readonly Course[] = [
   { id: 'metier', name: 'Posture professionnelle', stat: 'metier', cost: 20 },
   {

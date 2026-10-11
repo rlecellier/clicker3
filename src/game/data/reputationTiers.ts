@@ -4,7 +4,7 @@ export type ReputationTier = {
   earned: number;
 };
 
-// Du palier 0 au palier 3 (docs/game/ton-et-univers.md). Seuils provisoires.
+// Du palier 0 au palier 3 (docs/game/ton-et-univers.md). Seuils calés en V1-24 (docs/game/equilibrage.md).
 export const reputationTiers: readonly ReputationTier[] = [
   { name: 'Inconnu', earned: 0 },
   { name: 'Partenaire de confiance', earned: 6 },
