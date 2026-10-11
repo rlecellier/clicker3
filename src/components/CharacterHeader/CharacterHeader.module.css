@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 1.25rem;
+}
+
+.phase {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
