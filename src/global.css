@@ -21,6 +21,8 @@
   --font-mono: 'Courier New', Courier, monospace;
   --font-size: 0.875rem;
   --space: 0.5rem;
+  /* Zone tactile minimale (44 px à 16 px/rem), voir guide de style § 5. */
+  --touch-target: 2.75rem;
 
   /* Bords biseautés d'époque. */
   --bevel-out:

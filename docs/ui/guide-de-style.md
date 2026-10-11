@@ -142,7 +142,19 @@ distinct ; sinon, composer les existants.
 - Pas de largeur fixe en pixels : contenu fluide, `min-width: 0` sur les
   éléments de flex qui contiennent du texte long.
 - Espacements en multiples de `--space`.
-- Vérifier à 480×560 (viewport des tests e2e) avant de livrer.
+- **Zones tactiles** : toute cible interactive (lien de la sidebar, `Button`,
+  `PageLink`, onglet, ligne d'`ItemList`, choix d'un menu, bouton de fermeture
+  de la popup) fait au moins **44×44 px**, soit `--touch-target` (`2.75rem`,
+  pour 16 px par rem). On l'applique en `min-height` (et `min-width` pour les
+  icônes seules) : le contenu peut être plus grand, jamais plus petit.
+- L'infobulle (`InfoPanel`) ne capte pas les clics (`pointer-events: none`) : au
+  toucher, elle s'affiche sans gêner le tap suivant. Le nom accessible vient de
+  `aria-label`, pas de l'infobulle.
+- Les badges de la sidebar en icônes seules sont posés sur l'angle du lien,
+  dans la barre : ils ne la font pas déborder.
+- Vérifier à 480×560 (viewport des tests e2e) et à 360×640 (petit Android,
+  projet Playwright `petit-mobile`, qui rejoue `life.e2e.ts`) avant de livrer :
+  aucun défilement horizontal, `openTab` le vérifie à chaque onglet.
 
 ## 6. Ton des textes
 

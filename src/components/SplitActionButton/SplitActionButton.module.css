@@ -25,7 +25,7 @@
   border: 0;
   box-shadow: var(--bevel-out);
   cursor: pointer;
-  min-width: 2rem;
+  min-width: var(--touch-target);
   font-size: 0.625rem;
 }
 
@@ -45,6 +45,8 @@
 .choice {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: var(--touch-target);
   padding: 4px 8px;
   cursor: pointer;
 }

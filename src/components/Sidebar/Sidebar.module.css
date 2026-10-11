@@ -32,7 +32,7 @@
   display: flex;
   align-items: center;
   gap: var(--space);
-  min-height: 2.25rem;
+  min-height: var(--touch-target);
   padding: 0.25rem var(--space);
   background: var(--color-surface);
   color: var(--color-text);
@@ -62,6 +62,7 @@
 @media (max-width: 40rem) {
   .link {
     justify-content: center;
+    min-width: var(--touch-target);
     padding: 0.25rem;
   }
 
@@ -71,8 +72,8 @@
 
   .badge {
     position: absolute;
-    top: -2px;
-    right: -2px;
+    top: 0;
+    right: 0;
     margin-left: 0;
   }
 }
