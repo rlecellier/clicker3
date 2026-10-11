@@ -5,7 +5,8 @@ Un idle clicker (jeu incrémental) en React + TypeScript. Le but est décrit dan
 recherche de game design dans `docs/game-design/README.md`.
 
 **État du projet** : squelette initialisé (Vite, React, TypeScript, ESLint,
-Prettier, Vitest ; V1-01). Le concept et les mécaniques de la v1 sont choisis
+Prettier, Vitest ; V1-01) et noyau des règles posé dans `src/game/` (état,
+reducer, jauge de temps ; V1-03, ADR 0002 et 0003). Le concept et les mécaniques de la v1 sont choisis
 (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le développement suit
 l'issue de suivi #29. CI GitHub Actions, déploiement Pages et parcours de fumée Playwright en place (V1-02).
 
