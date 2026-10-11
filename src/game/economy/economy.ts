@@ -29,7 +29,8 @@ const unitsOf = (state: GameState, company: Company, perCopy: number) =>
   (1 + economyRules.workBonus * (state.workBoosts[company.id] ?? 0));
 
 // Étape 1 : les entreprises de production ajoutent au stock, dans la limite
-// de la capacité de l'entrepôt ; le reste est perdu.
+// de la capacité de l'entrepôt ; le reste est perdu. Le drapeau `stockFull`
+// est posé à l'étape 2, une fois le stock écoulé.
 export const produceGoods = (state: GameState): GameState => {
   let produced = 0;
   for (const company of companies) {
@@ -48,7 +49,6 @@ export const produceGoods = (state: GameState): GameState => {
       stock: state.stock + stored,
       lastStatement: {
         ...emptyStatement(state.period),
-        stockFull: produced > stored,
       },
     },
     { stockProduced: stored, stockLost: produced - stored },
@@ -96,7 +96,15 @@ export const sellGoods = (state: GameState): GameState => {
     money: current.money + earned,
     ledger: record(current.ledger, { sales: earned, stockSold: sold }),
     workBoosts: {},
-    lastStatement: { ...statement, stockout: isStockout },
+    lastStatement: {
+      ...statement,
+      stockout: isStockout,
+      // Plein = de la production perdue ET un entrepôt encore plein après les
+      // ventes ; sinon le joueur lirait « plein » devant un 0 / capacité.
+      stockFull:
+        (state.ledger.current.stockLost ?? 0) > 0 &&
+        stock >= state.stockCapacity,
+    },
   };
 };
 
