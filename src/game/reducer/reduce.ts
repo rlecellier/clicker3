@@ -1,5 +1,5 @@
 import { autoTick, setAuto } from '@game/automation';
-import { buyCompany } from '@game/companies';
+import { buyCompany, buyWarehouse } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob } from '@game/jobs';
@@ -40,6 +40,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'buyCompany': {
       return buyCompany(state, action.id);
+    }
+    case 'buyWarehouse': {
+      return buyWarehouse(state);
     }
     case 'sellSurplus': {
       return sellSurplus(state);

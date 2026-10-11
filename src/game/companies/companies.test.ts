@@ -3,7 +3,10 @@ import {
   buyCompany,
   canBuyCompany,
   companyCost,
+  buyWarehouse,
+  canBuyWarehouse,
   fitsWarehouse,
+  warehouseCost,
 } from './companies';
 
 const ready = {
@@ -97,5 +100,31 @@ describe('entrepôt', () => {
   it('ne limite jamais l’achat d’un commerce', () => {
     const jammed = { ...ready, stockCapacity: 0 };
     expect(canBuyCompany(jammed, 'boutique')).toBe(true);
+  });
+});
+
+describe('petits entrepôts', () => {
+  it('coûtent de plus en plus cher, arrondi', () => {
+    expect(warehouseCost(0)).toBe(100);
+    expect(warehouseCost(1)).toBe(115);
+    expect(warehouseCost(2)).toBe(132);
+  });
+
+  it('ajoutent de la capacité et débitent le coût', () => {
+    const next = buyWarehouse({ ...startState, money: 500 });
+    expect(next.warehouses).toBe(1);
+    expect(next.stockCapacity).toBe(startState.stockCapacity + 25);
+    expect(next.money).toBe(400);
+  });
+
+  it('se débloquent toujours, sans condition de compétence', () => {
+    expect(canBuyWarehouse({ ...startState, money: 100 })).toBe(true);
+  });
+
+  it('refusent sans assez d’argent ou si le personnage est mort', () => {
+    const poor = { ...startState, money: 99 };
+    expect(buyWarehouse(poor)).toBe(poor);
+    const dead = { ...startState, money: 500, status: 'dead' as const };
+    expect(buyWarehouse(dead)).toBe(dead);
   });
 });

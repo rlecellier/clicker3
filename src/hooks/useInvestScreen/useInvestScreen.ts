@@ -2,11 +2,13 @@ import type { ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
 import {
   canBuyCompany,
+  canBuyWarehouse,
   companyCost,
   fitsWarehouse,
   ownedCount,
+  warehouseCost,
 } from '@game/companies';
-import { companies, districts } from '@game/data';
+import { companies, districts, economyRules } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
 import { checkRequirement, formatCount, formatMoney } from '@game/format';
@@ -89,6 +91,22 @@ export const useInvestScreen = () => {
       },
     };
   });
+
+  const warehouseItem: ListItem = {
+    id: 'warehouse',
+    title: 'Petit entrepôt',
+    badge:
+      state.warehouses > 0
+        ? `${formatCount(state.warehouses)} possédé(s)`
+        : undefined,
+    detail: `Stockage · +${formatCount(economyRules.warehouse.capacity)} de capacité de stock · prochain : ${formatMoney(warehouseCost(state.warehouses))}`,
+    actionLabel: 'Acheter',
+    isDisabled: !canBuyWarehouse(state),
+    reason: reasonOf(state, false, undefined, 'Argent insuffisant'),
+    onAction: () => {
+      actions.buyWarehouse();
+    },
+  };
 
   const extraOf = (upgrade: Upgrade) =>
     [
@@ -176,7 +194,7 @@ export const useInvestScreen = () => {
       value: state.stock,
       max: state.stockCapacity,
     },
-    companies: companyItems,
+    companies: [...companyItems, warehouseItem],
     nextUpgrades: nextUpgradeItems,
     ownedUpgrades: ownedUpgradeItems,
     districts: districtItems,

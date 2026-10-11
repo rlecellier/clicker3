@@ -6,6 +6,7 @@ export type GameAction =
   | { type: 'study'; courseId: string }
   | { type: 'changeJob'; id: string }
   | { type: 'buyCompany'; id: string }
+  | { type: 'buyWarehouse' }
   | { type: 'sellSurplus' }
   | { type: 'buyUpgrade'; id: string }
   // Annule une amélioration possédée : ses effets disparaissent, sans remboursement.

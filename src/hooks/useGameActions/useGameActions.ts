@@ -18,6 +18,9 @@ export const useGameActions = () => {
       buyCompany: (id: string) => {
         dispatch({ type: 'buyCompany', id });
       },
+      buyWarehouse: () => {
+        dispatch({ type: 'buyWarehouse' });
+      },
       sellSurplus: () => {
         dispatch({ type: 'sellSurplus' });
       },
