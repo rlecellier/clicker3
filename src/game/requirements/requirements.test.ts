@@ -51,6 +51,12 @@ describe('isUnlocked', () => {
     expect(isUnlocked(stateWith({ period: 24 }), requirement)).toBe(true);
   });
 
+  it('teste le nombre de périodes écoulées', () => {
+    const requirement: Requirement = { type: 'period', min: 12 };
+    expect(isUnlocked(stateWith({ period: 11 }), requirement)).toBe(false);
+    expect(isUnlocked(stateWith({ period: 12 }), requirement)).toBe(true);
+  });
+
   it('teste la possession d’une entreprise', () => {
     const one: Requirement = { type: 'company', id: 'shop' };
     const three: Requirement = { type: 'company', id: 'shop', count: 3 };
