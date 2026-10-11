@@ -71,11 +71,11 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `DataTable`   | `caption`, `columns` (`id`, `header`, `isNumeric?`), `rows` (`id`, `cells`)                                                                         | Données tabulaires                             |
 | `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état)                |
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
-| `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?` ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
+| `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?`, `value?` + `onValueChange?` (mode contrôlé) ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
 | `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
 | `GameHeader`  | `money` (texte formaté), `date` (texte formaté), `gauge` (`value`, `max`) ; réutilise `Stat` et `ProgressBar`, hauteur fixe sur une ligne | En-tête fixe de l'écran de jeu (argent, date) |
 | `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
-| `Note`        | `children`, `minLines?` (hauteur réservée) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
+| `Note`        | `children`, `minLines?` (hauteur réservée), `to?` (le post-it devient un lien) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
 
 ### Page de jeu
 
@@ -85,7 +85,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `onClick`                          | Action de jeu ; l'appui long (`press`) active l'automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
-| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` | Liste d'éléments achetables ou activables                  |
+| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `EventToast`      | `date`, `text`, `onDismiss` ; `role="status"`                                                                                  | Événement important à signaler                             |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |

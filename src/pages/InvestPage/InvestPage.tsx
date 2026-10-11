@@ -4,10 +4,12 @@ import { ProgressBar } from '@component/ProgressBar';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useInvestScreen } from '@hook/useInvestScreen';
+import { useInvestTarget } from '@hook/useInvestTarget';
 
-// Onglet « Investir » : orchestrateur de `useInvestScreen`.
+// Onglet « Investir » : orchestrateur de `useInvestScreen` et `useInvestTarget`.
 export const InvestPage = () => {
   const invest = useInvestScreen();
+  const target = useInvestTarget();
 
   return (
     <Window title="Investir">
@@ -17,6 +19,8 @@ export const InvestPage = () => {
         max={invest.stock.max}
       />
       <Tabs
+        value={target.tab}
+        onValueChange={target.setTab}
         tabs={[
           {
             id: 'companies',
@@ -35,6 +39,7 @@ export const InvestPage = () => {
                 <ItemList
                   caption="Améliorations"
                   items={invest.availableUpgrades}
+                  highlightedId={target.highlightedId}
                 />
               ),
           },

@@ -26,6 +26,7 @@ import { hasAutomation, hasCourse, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork } from '@game/work';
 import type { GameState, StatId } from '@game/state';
 import { useGameActions } from '@hook/useGameActions';
+import { upgradePath } from '@hook/useGameTabs';
 import { useLongPress } from '@hook/useLongPress';
 
 const FEEDBACK_MS = 2500;
@@ -49,14 +50,20 @@ const statIds = Object.keys(statLabels) as StatId[];
 
 // Prochain achat visible : l'amélioration non achetée la moins chère qui est
 // déjà débloquée, sinon la moins chère avec ce qui lui manque.
-const nextObjective = (state: GameState): string => {
+const nextObjective = (
+  state: GameState,
+): { text: string; upgradeId?: string } => {
   const next = nextUpgrade(state);
   if (next === undefined) {
-    return 'Plus rien à acheter pour le moment.';
+    return { text: 'Plus rien à acheter pour le moment.' };
   }
-  return next.requirement === undefined || isUnlocked(state, next.requirement)
-    ? `Prochain achat : ${next.name} (${formatMoney(next.price)})`
-    : `Prochain déblocage : ${next.name}. ${describeRequirement(next.requirement)}`;
+  return {
+    upgradeId: next.id,
+    text:
+      next.requirement === undefined || isUnlocked(state, next.requirement)
+        ? `Prochain achat : ${next.name} (${formatMoney(next.price)})`
+        : `Prochain déblocage : ${next.name}. ${describeRequirement(next.requirement)}`,
+  };
 };
 
 // Tout ce que la page de jeu affiche et déclenche, prêt à brancher.
@@ -90,6 +97,7 @@ export const useGameScreen = () => {
   const sayOrQueue = (message: string, run: () => void) =>
     say(state.isSleeping ? QUEUED : message, run);
 
+  const objective = nextObjective(state);
   const isOver = state.status === 'dead';
   const job = jobs.find((candidate) => candidate.id === state.jobId);
 
@@ -243,7 +251,13 @@ export const useGameScreen = () => {
       select: setChosenCourse,
     },
     jobs: jobItems,
-    objective: nextObjective(state),
+    objective: {
+      text: objective.text,
+      to:
+        objective.upgradeId === undefined
+          ? undefined
+          : upgradePath(objective.upgradeId),
+    },
     feedback,
   };
 };

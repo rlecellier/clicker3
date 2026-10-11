@@ -95,4 +95,21 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await smallWarehouse.getByRole('button', { name: 'Acheter' }).click();
   await expect(smallWarehouse.getByText('1 possédé(s)')).toBeVisible();
   await expect(warehouse).toHaveAccessibleName(/ 75\)/);
+
+  // Le post-it « prochain achat » mène à la ligne de l'amélioration, mise en
+  // évidence ; l'achat la retire de la liste. Le lien marche aussi en direct.
+  await openTab(page, 'vie');
+  await page
+    .getByRole('link', { name: /Prochain achat : Cartes de visite/ })
+    .click();
+  await expect(page).toHaveURL(/\/jeu\/investir\?amelioration=cartes-visite$/);
+  const cards = itemOf(page, 'Cartes de visite');
+  await expect(cards).toBeInViewport();
+  await expect(cards).toHaveClass(/highlighted/);
+  await cards.getByRole('button', { name: 'Acheter' }).click();
+  await expect(cards).toBeHidden();
+  await page.reload();
+  await expect(
+    page.getByRole('tab', { name: 'Améliorations' }),
+  ).toHaveAttribute('aria-selected', 'true');
 });
