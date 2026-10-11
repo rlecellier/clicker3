@@ -52,4 +52,7 @@ export const startState: GameState = {
 
   flags: {},
   events: [],
+  firedEvents: [],
+  activeEffects: [],
+  jobSalaryFactors: {},
 };
