@@ -19,7 +19,8 @@ export type ImpactReport = {
 const saturate = (amount: number, half: number) =>
   amount <= 0 ? 0 : Math.round((100 * amount) / (amount + half));
 
-const districtOfCompany = (state: GameState, company: Company) => {
+// Quartier où se pose le bâtiment d'une entreprise : le sien, sinon les Tilleuls.
+export const districtOfCompany = (state: GameState, company: Company) => {
   const wanted: string | undefined =
     impactRules.companyDistricts[
       company.id as keyof typeof impactRules.companyDistricts
