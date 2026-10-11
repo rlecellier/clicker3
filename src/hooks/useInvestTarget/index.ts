@@ -1,0 +1,1 @@
+export { useInvestTarget } from './useInvestTarget';

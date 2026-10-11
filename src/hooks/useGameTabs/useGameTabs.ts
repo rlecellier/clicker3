@@ -36,6 +36,12 @@ const mailLabel = (unread: number) => {
   return `Courrier, ${count} ${unread === 1 ? 'message non lu' : 'messages non lus'}`;
 };
 
+// Paramètre d'URL qui désigne l'amélioration visée dans Investir.
+export const UPGRADE_PARAM = 'amelioration';
+
+export const upgradePath = (upgradeId: string) =>
+  `${gamePath('investir')}?${UPGRADE_PARAM}=${encodeURIComponent(upgradeId)}`;
+
 // Onglets de la sidebar et lien « Recommencer », prêts à afficher (sans icône).
 export const useGameTabs = () => {
   const { state } = useGameContext();

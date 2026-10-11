@@ -22,7 +22,9 @@ export const LifePage = () => {
       <dl className={styles.counters}>
         <Stat label="Stock" value={screen.counters.stock} />
       </dl>
-      <Note minLines={2}>{screen.objective}</Note>
+      <Note minLines={2} to={screen.objective.to}>
+        {screen.objective.text}
+      </Note>
       <div className={styles.actions}>
         <ActionButton
           label="Travailler"
