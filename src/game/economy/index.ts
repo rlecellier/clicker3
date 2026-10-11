@@ -1,1 +1,6 @@
-export { chargeExpenses, produceGoods, sellGoods } from './economy';
+export {
+  chargeExpenses,
+  periodProduction,
+  produceGoods,
+  sellGoods,
+} from './economy';

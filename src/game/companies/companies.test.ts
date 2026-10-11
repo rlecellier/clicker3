@@ -1,5 +1,10 @@
 import { companies, startState } from '@game/data';
-import { buyCompany, canBuyCompany, companyCost } from './companies';
+import {
+  buyCompany,
+  canBuyCompany,
+  companyCost,
+  fitsWarehouse,
+} from './companies';
 
 const ready = {
   ...startState,
@@ -60,5 +65,37 @@ describe('buyCompany', () => {
     expect(buyCompany(ready, 'nulle-part')).toBe(ready);
     const dead = { ...ready, status: 'dead' as const };
     expect(buyCompany(dead, 'atelier')).toBe(dead);
+  });
+});
+
+describe('entrepôt', () => {
+  it('refuse une production qui dépasse la capacité du stock', () => {
+    const small = { ...ready, stockCapacity: 4 };
+    const one = buyCompany(small, 'atelier');
+    const two = buyCompany(one, 'atelier');
+    expect(two.companies['atelier']).toBe(2);
+    expect(fitsWarehouse(two, 'atelier')).toBe(false);
+    expect(buyCompany(two, 'atelier')).toBe(two);
+  });
+
+  it('autorise à nouveau l’achat une fois l’entrepôt agrandi', () => {
+    const full = { ...ready, stockCapacity: 2, companies: { atelier: 1 } };
+    expect(canBuyCompany(full, 'atelier')).toBe(false);
+    expect(canBuyCompany({ ...full, stockCapacity: 4 }, 'atelier')).toBe(true);
+  });
+
+  it('ne bloque plus quand tous les agrandissements sont achetés', () => {
+    const maxed = {
+      ...ready,
+      stockCapacity: 2,
+      companies: { atelier: 1 },
+      upgrades: ['etageres-kit', 'entrepot-logistique'],
+    };
+    expect(canBuyCompany(maxed, 'atelier')).toBe(true);
+  });
+
+  it('ne limite jamais l’achat d’un commerce', () => {
+    const jammed = { ...ready, stockCapacity: 0 };
+    expect(canBuyCompany(jammed, 'boutique')).toBe(true);
   });
 });
