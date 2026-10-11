@@ -2,11 +2,13 @@ import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
 import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
+import { useSeenTab } from '@hook/useSeenTab';
 import styles from './SkillsPage.module.css';
 
 // Onglet « Compétences » : orchestrateur de `useGameScreen`.
 export const SkillsPage = () => {
   const screen = useGameScreen();
+  useSeenTab('skills');
 
   return (
     <Window title="Compétences et réputation">

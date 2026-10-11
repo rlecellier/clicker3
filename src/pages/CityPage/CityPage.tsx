@@ -3,10 +3,12 @@ import { DistrictSheet } from '@component/DistrictSheet';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { Window } from '@component/Window';
 import { useCityScreen } from '@hook/useCityScreen';
+import { useSeenTab } from '@hook/useSeenTab';
 
 // Onglet « Ville » : orchestrateur de `useCityScreen`.
 export const CityPage = () => {
   const city = useCityScreen();
+  useSeenTab('city');
 
   return (
     <>

@@ -5,11 +5,14 @@ import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useInvestScreen } from '@hook/useInvestScreen';
 import { useInvestTarget } from '@hook/useInvestTarget';
+import { useSeenTab } from '@hook/useSeenTab';
 
-// Onglet « Investir » : orchestrateur de `useInvestScreen` et `useInvestTarget`.
+// Onglet « Investir » : orchestrateur de `useInvestScreen`, `useInvestTarget`
+// et `useSeenTab`.
 export const InvestPage = () => {
   const invest = useInvestScreen();
   const target = useInvestTarget();
+  useSeenTab('invest');
 
   return (
     <Window title="Investir">
