@@ -1,5 +1,6 @@
 import { startState } from '@game/data';
 import { unreadMail } from '@game/mail';
+import { newItems } from '@game/novelty';
 import type { GameState } from '@game/state';
 import { reduce } from '@game/reducer';
 import { defaultSaveOptions, deserialize, serialize } from './save';
@@ -266,6 +267,30 @@ describe('migration de la version 5', () => {
     expect(result.ok && result.state.mailReceived).toBe(2);
     expect(result.ok && result.state.mailRead).toBe(2);
     expect(result.ok && unreadMail(result.state)).toBe(0);
+  });
+});
+
+describe('migration de la version 6', () => {
+  it('considère comme vu tout ce qui est déjà débloqué', () => {
+    const { seenItems, ...old } = startState;
+    expect(seenItems.jobs).toEqual([]);
+    const text = JSON.stringify({
+      version: 6,
+      state: {
+        ...old,
+        version: 6,
+        stats: { metier: 9, gestion: 2, intelligence: 0, endurance: 0 },
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.seenItems.jobs).toEqual([
+      'job:polyvalent',
+    ]);
+    expect(result.ok && newItems(result.state, 'invest')).toEqual([]);
+    expect(result.ok && newItems(result.state, 'skills')).toEqual([]);
+    expect(result.ok && result.state.seenItems.skills).toContain(
+      'stat:metier:2',
+    );
   });
 });
 

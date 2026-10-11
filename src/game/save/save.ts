@@ -6,6 +6,7 @@ import {
   startState,
   upgrades,
 } from '@game/data';
+import { markAllSeen } from '@game/novelty';
 import { lifePhases } from '@game/state';
 import type { GameState } from '@game/state';
 
@@ -83,6 +84,18 @@ export const defaultSaveOptions: SaveOptions = {
     5: (raw) => {
       const received = Array.isArray(raw.events) ? raw.events.length : 0;
       return { ...raw, mailReceived: received, mailRead: received };
+    },
+    // Version 7 : les nouveautés vues par onglet. Tout ce qui est déjà débloqué
+    // est considéré comme vu, pour ne pas allumer tous les badges.
+    6: (raw) => {
+      const base = { ...raw, seenItems: startState.seenItems };
+      try {
+        const { seenItems } = markAllSeen(base as unknown as GameState);
+        return { ...base, seenItems };
+      } catch {
+        // Contenu inexploitable : la validation rejettera la sauvegarde.
+        return base;
+      }
     },
   },
 };
@@ -184,6 +197,10 @@ const hasValidContent = (raw: RawState) =>
   isIdList(raw.upgrades, upgradeIds) &&
   isIdList(raw.districts, districtIds) &&
   isIdList(raw.firedEvents, eventIds) &&
+  isRecord(raw.seenItems) &&
+  Object.values(raw.seenItems).every(
+    (ids) => Array.isArray(ids) && ids.every((id) => typeof id === 'string'),
+  ) &&
   Array.isArray(raw.events) &&
   raw.events.every((entry) => isJournalEntry(entry)) &&
   Array.isArray(raw.activeEffects) &&
