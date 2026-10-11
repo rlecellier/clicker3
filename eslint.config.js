@@ -39,6 +39,8 @@ export default tseslint.config(
         { allowList: { props: true, prop: true, ref: true } },
       ],
       'unicorn/no-null': 'off',
+      'unicorn/single-line-block-comment-style': 'off',
+      'unicorn/no-asterisk-prefix-in-documentation-comments': 'off',
       'unicorn/no-top-level-side-effects': 'off',
       'no-restricted-imports': [
         'error',
