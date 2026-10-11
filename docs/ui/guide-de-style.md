@@ -141,6 +141,15 @@ distinct ; sinon, composer les existants.
   sidebar : une colonne centrée de `40rem` au plus.
 - Pas de largeur fixe en pixels : contenu fluide, `min-width: 0` sur les
   éléments de flex qui contiennent du texte long.
+- **Hauteurs stables** : tout texte dynamique a une hauteur réservée, pour que
+  les boutons d'action ne bougent jamais sous le doigt. Hauteur minimale ou
+  fixe en `lh` (`min-height: 2lh` du retour d'action, `Note` avec `minLines`),
+  une ligne avec ellipse pour un libellé de longueur variable (texte complet
+  en infobulle `title`), deux lignes tronquées pour un détail ou une raison
+  d'action. Un élément qui apparaît en cours de partie (bouton « Étudier »,
+  message d'accueil) occupe déjà son emplacement : case vide dans la grille,
+  ou texte placé dans une zone réservée. Une popup se superpose au lieu de
+  pousser le contenu (`MailPopup`).
 - Espacements en multiples de `--space`.
 - **Zones tactiles** : toute cible interactive (lien de la sidebar, `Button`,
   `PageLink`, onglet, ligne d'`ItemList`, choix d'un menu, bouton de fermeture
