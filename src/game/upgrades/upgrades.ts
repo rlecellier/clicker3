@@ -97,6 +97,17 @@ const applyEffect = (state: GameState, effect: UpgradeEffect): GameState => {
   }
 };
 
+// L'état après les seuls effets de l'amélioration, sans prix, loyer ni salaires :
+// sert à montrer la valeur finale avant d'acheter.
+export const previewEffects = (state: GameState, id: string): GameState => {
+  const effects = upgradeById(id)?.effects ?? [];
+  let result = state;
+  for (const effect of effects) {
+    result = applyEffect(result, effect);
+  }
+  return result;
+};
+
 export const canBuyUpgrade = (state: GameState, id: string) => {
   const upgrade = upgradeById(id);
   return (
