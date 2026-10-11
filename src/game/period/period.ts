@@ -1,4 +1,5 @@
 import { chargeExpenses, produceGoods, sellGoods } from '@game/economy';
+import { triggerEvents } from '@game/events';
 import type { GameState } from '@game/state';
 import { ageOf } from '@game/time';
 
@@ -18,7 +19,7 @@ export const endPeriod = (state: GameState): GameState => {
   const produced = produceGoods(state);
   const sold = sellGoods(produced);
   const charged = chargeExpenses(sold);
-  return resetGauge(ageCharacter(charged));
+  return triggerEvents(resetGauge(ageCharacter(charged)));
 };
 
 /**
