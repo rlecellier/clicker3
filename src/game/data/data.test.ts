@@ -4,6 +4,7 @@ import { companies } from './companies';
 import { courses } from './courses';
 import { districts } from './districts';
 import { events } from './events';
+import { impactRules } from './impactRules';
 import { jobs } from './jobs';
 import { startState } from './startState';
 import { upgrades } from './upgrades';
@@ -126,6 +127,23 @@ describe('cohérence des données', () => {
     expect(startState.upgrades.filter((id) => !ids.upgrade.has(id))).toEqual(
       [],
     );
+  });
+
+  it('les règles d’impact citent des ids existants et couvrent chaque quartier', () => {
+    const { companyDistricts, inequality, homeDistrict } = impactRules;
+    expect(ids.district.has(homeDistrict)).toBe(true);
+    expect(new Set(Object.keys(companyDistricts))).toEqual(ids.company);
+    expect(
+      Object.values(companyDistricts).filter((id) => !ids.district.has(id)),
+    ).toEqual([]);
+    // Un quartier sans richesse des habitants donnerait 100 d'inégalités
+    // dès le premier euro.
+    expect(new Set(Object.keys(inequality.residentWealth))).toEqual(
+      ids.district,
+    );
+    expect(
+      Object.values(inequality.residentWealth).every((wealth) => wealth > 0),
+    ).toBe(true);
   });
 
   it('détecte une faute de frappe', () => {
