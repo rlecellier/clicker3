@@ -71,12 +71,12 @@ précédent quand celui-ci devient trop cher.
 | Loft                           | 190 000, +500           | 400 000, +3 000       |                                     |
 | Étagères en kit                | 2 900                   | 2 000                 | capacité × 13 (× 2 avant)           |
 | Entrepôt logistique            | 31 000                  | 80 000                | capacité × 48 (× 5 avant)           |
-| Carnet de notes                | 430                     | 800                   |                                     |
+| Carnet de notes                | 380                     | 800                   |                                     |
 | Application de productivité    | 33 000                  | 25 000                |                                     |
 | Premier collaborateur          | 1 600, salaire 230      | 3 000, 900            | production + 110 % (+ 50 %)         |
 | Équipe de collaborateurs       | 37 000, salaire 3 600   | 30 000, 6 000         | tout + 60 % (+ 50 %)                |
 | Directeur de la transformation | 310 000, salaire 45 000 | 300 000, 25 000       | tout + 300 % (+ 100 %)              |
-| Procédure de travail           | 24 000                  | 20 000                |                                     |
+| Procédure de travail           | 90 000                  | 24 000                | ventes avant plafond d'entrepôt |
 | Tableau de bord                | 5 200                   | 5 000                 |                                     |
 | Camionnette                    | 16 000                  | 7 000                 | ateliers + 15 % (+ 25 %)            |
 | Plan de communication          | 19 000                  | 60 000                | ventes + 30 % (+ 25 %)              |

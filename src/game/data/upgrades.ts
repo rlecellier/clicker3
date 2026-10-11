@@ -139,7 +139,7 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Carnet de notes',
     description:
       'Écrire ses objectifs rend 30 % plus performant. Source : un carnet.',
-    price: 430,
+    price: 380,
     requirement: stat('intelligence', 1),
     effects: [{ type: 'maxMarkers', add: 2 }],
   },
@@ -191,7 +191,7 @@ export const upgrades: readonly Upgrade[] = [
     id: 'procedure-travail',
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
-    price: 24_000,
+    price: 90_000,
     requirement: { type: 'phase', phase: 'boss' },
     effects: [{ type: 'automation', action: 'work' }],
   },
