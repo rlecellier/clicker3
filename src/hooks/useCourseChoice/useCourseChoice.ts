@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router';
-import { courses } from '@game/data';
 import type { GameState } from '@game/state';
-import { hasCourse } from '@game/upgrades';
+import { studiableCourses } from '@game/study';
 
 export type CourseChoice = {
   chosenCourse: string | null;
   setChosenCourse: (id: string) => void;
 };
 
-// Cursus choisi par la flèche d'Étudier ; à défaut, le premier disponible.
+// Cursus choisi par la flèche d'Étudier ; à défaut (choix absent ou devenu
+// inutile), le premier étudiable. `undefined` quand plus rien n'est étudiable.
 export const selectedCourse = (state: GameState, chosenId: string | null) => {
-  const available = courses.filter((course) => hasCourse(state, course.id));
+  const available = studiableCourses(state);
   return available.find((course) => course.id === chosenId) ?? available[0];
 };
 

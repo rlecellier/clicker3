@@ -3,7 +3,7 @@ import type { ListItem } from '@component/ItemList';
 import type { SplitChoice } from '@component/SplitActionButton';
 import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
-import { courses, jobs, statTierThresholds } from '@game/data';
+import { jobs, statTierThresholds } from '@game/data';
 import {
   checkRequirement,
   describeRequirement,
@@ -19,9 +19,9 @@ import { canChangeJob } from '@game/jobs';
 import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { tierOf } from '@game/stats';
-import { canStudy } from '@game/study';
+import { canStudy, studiableCourses } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
-import { hasAutomation, hasCourse, nextUpgrade } from '@game/upgrades';
+import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork } from '@game/work';
 import type { GameState, StatId } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
@@ -156,10 +156,8 @@ export const useGameScreen = () => {
     };
   });
 
-  // Cursus choisi par la flèche ; à défaut, le premier disponible.
-  const availableCourses = courses.filter((course) =>
-    hasCourse(state, course.id),
-  );
+  // Cursus choisi par la flèche ; à défaut, le premier étudiable.
+  const availableCourses = studiableCourses(state);
   const course = selectedCourse(state, chosenCourse);
   const courseChoices: SplitChoice[] = availableCourses.map((candidate) => ({
     id: candidate.id,
