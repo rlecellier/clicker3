@@ -1,3 +1,4 @@
+import { emptyLedger } from '@game/ledger';
 import type { GameState } from '@game/state';
 
 /**
@@ -48,6 +49,7 @@ export const startState: GameState = {
   workReputationMultiplier: 1,
   reputationPerSaleMultiplier: 1,
   lastStatement: null,
+  ledger: emptyLedger(),
   districts: ['tilleuls'],
 
   flags: {},
