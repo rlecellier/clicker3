@@ -28,6 +28,8 @@ export type PeriodStatement = {
 
 export type LifeSpan = {
   startAge: number;
+  // Âge à partir duquel le personnage est senior (les actions manuelles rapportent moins).
+  seniorAge: number;
   deathAge: number;
   /** Année du premier jour de la partie. */
   startYear: number;
