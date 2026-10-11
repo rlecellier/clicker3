@@ -5,9 +5,21 @@ export default defineConfig({
   testMatch: '*.e2e.ts',
   use: {
     baseURL: 'http://localhost:4173',
-    viewport: { width: 480, height: 560 },
     launchOptions: { executablePath: process.env.CHROMIUM_PATH },
   },
+  projects: [
+    {
+      name: 'mobile',
+      use: { viewport: { width: 480, height: 560 } },
+    },
+    // Petit Android : on ne rejoue que le parcours d'une vie (navigation dans
+    // tous les onglets, sans défilement horizontal), sans dupliquer les autres.
+    {
+      name: 'petit-mobile',
+      testMatch: 'life.e2e.ts',
+      use: { viewport: { width: 360, height: 640 } },
+    },
+  ],
   webServer: {
     command: 'npm run build && npm run preview -- --port 4173 --strictPort',
     url: 'http://localhost:4173',

@@ -45,6 +45,14 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   );
   await expectNoOverflow(page);
 
+  // Zones tactiles : chaque lien de la sidebar fait au moins 44×44 px.
+  const links = await sidebar.getByRole('link').all();
+  for (const link of links) {
+    const box = await link.boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+  }
+
   // Chaque onglet a son URL ; recharger ou revenir en arrière le conserve.
   await openTab(page, 'ville');
   await openTab(page, 'investir');
