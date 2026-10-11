@@ -13,7 +13,7 @@ describe('addGauge', () => {
   });
 
   it('fait passer une période quand la jauge déborde et garde le surplus', () => {
-    const next = addGauge({ ...startState, gauge: 90 }, 25);
+    const next = addGauge({ ...startState, gauge: capacity - 10 }, 25);
     expect(next.period).toBe(1);
     expect(next.gauge).toBe(15);
   });

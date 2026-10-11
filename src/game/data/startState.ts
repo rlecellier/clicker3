@@ -19,7 +19,7 @@ export const startState: GameState = {
 
   period: 0,
   gauge: 0,
-  gaugeCapacity: 100,
+  gaugeCapacity: 70,
   status: 'playing',
   phase: 'youngAdult',
 
