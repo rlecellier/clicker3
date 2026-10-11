@@ -140,6 +140,14 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
   await openTab(page, 'vie');
 
+  // La mini-jauge sous « Étudier » suit le cursus choisi : les points gagnés
+  // en dormant la font avancer.
+  const miniGauge = page.getByRole('progressbar', { name: /^Métier · palier/ });
+  await expect(miniGauge).toBeVisible();
+  expect(Number(await miniGauge.getAttribute('aria-valuenow'))).toBeGreaterThan(
+    0,
+  );
+
   // Annuler une amélioration obtenue : elle disparaît, sans remboursement.
   const beforeCancel = await money();
   await openOwned();
