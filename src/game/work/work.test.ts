@@ -1,4 +1,5 @@
 import { actionRules, jobs, startState } from '@game/data';
+import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from './work';
 
@@ -44,8 +45,27 @@ describe('work', () => {
     expect(work(dead)).toBe(dead);
   });
 
-  it('refuse une cible autre que l’emploi (entreprises : V1-07)', () => {
-    expect(work(startState, 'some-company')).toBe(startState);
+  it('refuse une entreprise qu’on ne possède pas', () => {
+    expect(work(startState, 'atelier')).toBe(startState);
+    expect(work(startState, 'nulle-part')).toBe(startState);
+  });
+
+  it('travailler dans une entreprise donne un bonus de période, pas de salaire', () => {
+    const owner = { ...startState, companies: { atelier: 1 } };
+    const next = work(owner, 'atelier');
+    expect(next.workBoosts).toEqual({ atelier: 1 });
+    expect(next.money).toBe(0);
+    expect(next.reputation).toBe(0);
+    expect(next.gauge).toBe(actionRules.work.gauge);
+  });
+
+  it('travailler dans une entreprise donne des marqueurs de Gestion', () => {
+    let state: GameState = { ...startState, companies: { atelier: 1 } };
+    for (let index = 0; index < 100; index++) {
+      state = work({ ...state, gauge: 0 }, 'atelier');
+    }
+    expect(state.markers.length).toBeGreaterThan(0);
+    expect(new Set(state.markers)).toEqual(new Set(['gestion']));
   });
 
   it('refuse sans emploi', () => {
