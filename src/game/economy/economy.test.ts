@@ -21,14 +21,14 @@ describe('produceGoods', () => {
     expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
   });
 
-  it('perd la production au-delà de la capacité du stock', () => {
+  it('ne perd rien à la production, même au-delà de la capacité', () => {
     const next = produceGoods(
       stateWith({ companies: { atelier: 3 }, stock: 45, stockCapacity: 50 }),
     );
-    expect(next.stock).toBe(50);
-    expect(next.ledger.current.stockProduced).toBe(5);
-    expect(next.ledger.current.stockLost).toBe(1);
-    expect(next.ledger.current.stockIn).toEqual({ atelier: 5 });
+    expect(next.stock).toBe(51);
+    expect(next.ledger.current.stockProduced).toBe(6);
+    expect(next.ledger.current.stockLost).toBe(0);
+    expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
   });
 
   it('applique le multiplicateur de production', () => {
@@ -59,21 +59,38 @@ describe('produceGoods', () => {
 describe('sellGoods', () => {
   const shop = { companies: { boutique: 1 } };
 
-  it('signale le stock plein seulement s’il reste plein après les ventes', () => {
-    const overflow = {
-      stockCapacity: 50,
-      ledger: {
-        ...startState.ledger,
-        current: { ...startState.ledger.current, stockLost: 4 },
-      },
-    };
+  it('range l’excédent invendu et perd seulement ce qui dépasse la capacité', () => {
+    const next = sellGoods(
+      stateWith({ ...shop, stock: 56, stockCapacity: 50 }),
+    );
+    expect(next.stock).toBe(50);
+    expect(next.ledger.current.stockSold).toBe(3);
+    expect(next.ledger.current.stockLost).toBe(3);
+  });
+
+  it('vend la production avant de la ranger : pas de perte si tout part', () => {
+    const produced = produceGoods(
+      stateWith({
+        companies: { atelier: 3, boutique: 3 },
+        stock: 50,
+        stockCapacity: 50,
+      }),
+    );
+    const next = sellGoods(produced);
+    expect(next.stock).toBe(50 + 6 - 9);
+    expect(next.ledger.current.stockLost).toBe(0);
+    expect(next.lastStatement?.stockFull).toBe(false);
+  });
+
+  it('signale le stock plein seulement si de la production est perdue', () => {
+    const full = { stockCapacity: 50 };
     expect(
-      sellGoods(stateWith({ ...overflow, ...shop, stock: 50 })).lastStatement
+      sellGoods(stateWith({ ...full, ...shop, stock: 53 })).lastStatement
         ?.stockFull,
     ).toBe(false);
     expect(
-      sellGoods(stateWith({ ...overflow, companies: {}, stock: 50 }))
-        .lastStatement?.stockFull,
+      sellGoods(stateWith({ ...full, companies: {}, stock: 54 })).lastStatement
+        ?.stockFull,
     ).toBe(true);
   });
 

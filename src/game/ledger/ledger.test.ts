@@ -159,10 +159,12 @@ describe('invariants sur une partie jouée', () => {
     }
   });
 
-  it('stock = produit − vendu', () => {
+  it('stock = produit − vendu − perdu', () => {
     for (const state of states) {
       const cumulated = totals(state);
-      expect(state.stock).toBe(cumulated.stockProduced - cumulated.stockSold);
+      expect(state.stock).toBe(
+        cumulated.stockProduced - cumulated.stockSold - cumulated.stockLost,
+      );
     }
   });
 
