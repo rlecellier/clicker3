@@ -7,7 +7,7 @@ export type ReputationTier = {
 // Du palier 0 au palier 3 (docs/game/ton-et-univers.md). Seuils provisoires.
 export const reputationTiers: readonly ReputationTier[] = [
   { name: 'Inconnu', earned: 0 },
-  { name: 'Partenaire de confiance', earned: 10 },
-  { name: 'Acteur majeur', earned: 30 },
-  { name: 'Vous êtes devenu une marque', earned: 80 },
+  { name: 'Partenaire de confiance', earned: 6 },
+  { name: 'Acteur majeur', earned: 100 },
+  { name: 'Vous êtes devenu une marque', earned: 170 },
 ];

@@ -5,8 +5,8 @@ import type { StatId } from '@game/state';
  * Valeurs provisoires, à caler au simulateur.
  */
 export const statTierThresholds: Record<StatId, readonly number[]> = {
-  metier: [10, 30, 70, 150],
-  gestion: [10, 30, 70, 150],
-  intelligence: [10, 30, 70, 150],
-  endurance: [10, 30, 70, 150],
+  metier: [2, 9, 41, 81],
+  gestion: [2, 9, 41, 81],
+  intelligence: [2, 9, 41, 81],
+  endurance: [2, 9, 41, 81],
 };

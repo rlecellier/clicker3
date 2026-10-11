@@ -17,20 +17,23 @@ describe('données des quartiers', () => {
   });
 });
 
+const cost = (id: string) =>
+  districts.find((district) => district.id === id)?.cost ?? 0;
+
 describe('unlockDistrict', () => {
   const ready = gainReputation(startState, 12);
 
   it('débloque le quartier et dépense sa réputation', () => {
     const next = unlockDistrict(ready, 'hauts-fourneaux');
     expect(next.districts).toEqual(['tilleuls', 'hauts-fourneaux']);
-    expect(next.reputation).toBe(7);
+    expect(next.reputation).toBe(12 - cost('hauts-fourneaux'));
     expect(next.reputationEarned).toBe(12);
   });
 
   it('refuse si la réputation dépensable manque', () => {
     const poor = {
       ...gainReputation(startState, 12),
-      reputation: 2,
+      reputation: 0,
     };
     expect(canUnlockDistrict(poor, 'hauts-fourneaux')).toBe(false);
     expect(unlockDistrict(poor, 'hauts-fourneaux')).toBe(poor);
@@ -52,11 +55,16 @@ describe('unlockDistrict', () => {
   });
 
   it('débloque les quartiers suivants quand les paliers sont atteints', () => {
-    let state = gainReputation(startState, 100);
+    let state = gainReputation(startState, 300);
     for (const id of ['hauts-fourneaux', 'parc-horizon', 'pole-excellence']) {
       state = unlockDistrict(state, id);
     }
     expect(state.districts).toHaveLength(4);
-    expect(state.reputation).toBe(100 - 5 - 15 - 40);
+    expect(state.reputation).toBe(
+      300 -
+        cost('hauts-fourneaux') -
+        cost('parc-horizon') -
+        cost('pole-excellence'),
+    );
   });
 });

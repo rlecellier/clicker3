@@ -37,7 +37,7 @@ describe('changeJob', () => {
     const known = gainReputation(skilled, 12);
     const next = changeJob(known, 'mission');
     expect(next.jobId).toBe('mission');
-    expect(next.reputation).toBe(7);
+    expect(next.reputation).toBe(12 - 10);
   });
 
   it('refuse l’emploi actuel, un emploi inconnu et un personnage mort', () => {

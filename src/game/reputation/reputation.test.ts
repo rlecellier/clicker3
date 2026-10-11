@@ -64,15 +64,15 @@ describe('reputationTierOf', () => {
   });
 
   it('monte avec le total gagné', () => {
-    expect(reputationTierOf(gainReputation(startState, 9))).toBe(0);
-    expect(reputationTierOf(gainReputation(startState, 10))).toBe(1);
-    expect(reputationTierOf(gainReputation(startState, 30))).toBe(2);
+    expect(reputationTierOf(gainReputation(startState, 5))).toBe(0);
+    expect(reputationTierOf(gainReputation(startState, 6))).toBe(1);
+    expect(reputationTierOf(gainReputation(startState, 100))).toBe(2);
     expect(reputationTierOf(gainReputation(startState, 1000))).toBe(3);
   });
 
   it('ne redescend pas quand on dépense ou perd de la réputation', () => {
-    const earned = gainReputation(startState, 30);
-    expect(reputationTierOf(spendReputation(earned, 30))).toBe(2);
-    expect(reputationTierOf(loseReputation(earned, 30))).toBe(2);
+    const earned = gainReputation(startState, 100);
+    expect(reputationTierOf(spendReputation(earned, 100))).toBe(2);
+    expect(reputationTierOf(loseReputation(earned, 100))).toBe(2);
   });
 });
