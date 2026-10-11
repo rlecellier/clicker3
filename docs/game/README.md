@@ -11,7 +11,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
-| [ton-et-univers.md](ton-et-univers.md)         | Ton, époque (1999) et ville (Sainte-Croissance) décidés |
+| [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
 | [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville (à discuter)           |
 
 ## Les 8 questions à trancher avant de coder
