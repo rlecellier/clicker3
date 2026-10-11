@@ -13,24 +13,27 @@ déclarée.
 
 Logiciel de gestion de 1999 : fenêtres biseautées, barres de titre bleues,
 tableaux, jauge à blocs. Aucun néon, pas de mode sombre. Mobile d'abord
-(480×560) : sidebar à gauche (icônes seules sous `40rem`, ADR 0008), contenu
-en colonne de `40rem` max. Le décalage vient du texte, pas des
+(480×560) : `GameHeader` fixe en haut, `Sidebar` à gauche (icônes seules sous
+`40rem`, ADR 0008), zone de contenu qui défile seule, en colonne de `40rem`
+max. Les écrans hors jeu n'ont pas de sidebar. Le décalage vient du texte, pas des
 illustrations. Voix administrative pince-sans-rire.
 
 ## Checklist
 
 1. **Réutiliser avant de créer.** Composants existants (`@component/…`) :
    `Title`, `Window`, `Button`, `ProgressBar`, `DataTable`, `Badge`,
-   `InfoPanel`, `Tabs`, `Sidebar`, `Stat` (dans un `<dl>`), `Note`, `CharacterHeader`,
-   `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`, `EventLog`,
-   `EventToast`, `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
+   `InfoPanel`, `Tabs` (contrôlé avec `value` + `onValueChange`), `Sidebar`
+   (items `badge`, `badgeTone`, `accessibleLabel`, `shortcut`), `GameHeader`,
+   `Stat` (dans un `<dl>`), `Note` (`minLines`, `to`), `CharacterHeader`,
+   `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`
+   (`highlightedId`), `EventLog`, `MailPopup` (popup non modale), `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
    `-dark`), `--color-paper`, `--color-text` (`-muted`), `--color-primary`
    (`-text`), `--color-note` (`-border`), `--color-alert` (`-text`),
    `--color-ok`, `--color-focus` ; polices `--font-sans`, `--font-mono` ; `--font-size`,
-   `--space` ; biseaux `--bevel-out` (relief) et `--bevel-in` (creux).
+   `--space`, `--touch-target` ; biseaux `--bevel-out` (relief) et `--bevel-in` (creux).
 3. **CSS Module** `Nom.module.css` à côté du composant, seulement si besoin.
    Variantes avec **cva** (voir `Button`, `Badge`). Widgets interactifs à
    partir de Base UI.
@@ -51,8 +54,20 @@ illustrations. Voix administrative pince-sans-rire.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;
    raison de blocage via `describeRequirement` (« Argent insuffisant »,
    « Palier Gestion 2 requis ») ; ne jamais griser sans dire pourquoi.
-8. **Accessibilité** : garder le focus visible ; retour dynamique en
-   `role="status"` ; décoratif en `aria-hidden` ; tableaux avec `caption`,
-   sections avec `aria-label`.
-9. **Finir** : `npx prettier --write`, `npx tsc -b`, `npx eslint src`,
-   `npm test`. Vérifier à 480×560.
+8. **Hauteurs stables** : tout texte dynamique a une hauteur réservée
+   (`min-height` en `lh`, ellipse sur une ligne, deux lignes tronquées pour
+   un détail), et ce qui apparaît en cours de partie occupe déjà sa place :
+   les boutons ne bougent jamais sous le doigt. Une popup se superpose
+   (`MailPopup`), elle ne pousse pas le contenu.
+9. **Zones tactiles** : toute cible interactive fait au moins
+   `var(--touch-target)` (44 px) en `min-height` (et `min-width` pour une
+   icône seule).
+10. **Accessibilité** : garder le focus visible ; retour dynamique en
+    `role="status"` ; décoratif en `aria-hidden` ; tableaux avec `caption`,
+    sections avec `aria-label`. Navigation en `<nav>` avec `aria-current` ;
+    badge de sidebar accompagné d'`accessibleLabel` ; touche de raccourci
+    déclarée par `shortcut` (`aria-keyshortcuts`).
+11. **Finir** : `npx prettier --write`, `npx tsc -b`, `npx eslint src`,
+   `npm test`. Vérifier à 480×560 et 360×640 (aucun défilement horizontal).
+    Tout nouveau composant partagé va dans `/styleguide` et dans le tableau
+    du guide.
