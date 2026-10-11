@@ -20,6 +20,8 @@ type SplitActionButtonProperties = {
   choices: readonly SplitChoice[];
   selectedId: string;
   onSelect: (id: string) => void;
+  // Touche du raccourci clavier.
+  shortcut?: string;
   onClick: () => void;
 };
 
@@ -34,12 +36,18 @@ export const SplitActionButton = ({
   choices,
   selectedId,
   onSelect,
+  shortcut,
   onClick,
 }: SplitActionButtonProperties) => (
   <div className={styles.action}>
     <div className={styles.split}>
       <div className={styles.main}>
-        <Button size="large" isDisabled={isDisabled} onClick={onClick}>
+        <Button
+          size="large"
+          isDisabled={isDisabled}
+          shortcut={shortcut}
+          onClick={onClick}
+        >
           {label}
         </Button>
       </div>

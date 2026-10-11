@@ -15,6 +15,8 @@ export type SidebarItem = {
   // Nom accessible, quand il doit en dire plus que le libellé (« Courrier,
   // 3 messages non lus »).
   accessibleLabel?: string;
+  // Touche qui ouvre l'onglet : ajoutée à l'infobulle et à `aria-keyshortcuts`.
+  shortcut?: string;
   badgeTone?: 'neutral' | 'info' | 'alert';
 };
 
@@ -28,11 +30,18 @@ type SidebarProperties = {
 type SidebarLinkProperties = { item: SidebarItem };
 
 const SidebarLink = ({ item }: SidebarLinkProperties) => (
-  <InfoPanel content={item.label}>
+  <InfoPanel
+    content={
+      item.shortcut === undefined
+        ? item.label
+        : `${item.label} (${item.shortcut})`
+    }
+  >
     <NavLink
       to={item.to}
       className={styles.link}
       aria-label={item.accessibleLabel ?? item.label}
+      aria-keyshortcuts={item.shortcut}
     >
       <span className={styles.icon} aria-hidden="true">
         {item.icon}
