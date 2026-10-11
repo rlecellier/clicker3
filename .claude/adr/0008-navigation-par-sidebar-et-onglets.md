@@ -96,3 +96,20 @@ Pictogrammes SVG inline 16×16 en aplats (`currentColor`), `aria-hidden`, dans
   se réinitialise quand on change d'onglet.
 - Le guide de style (§ 1 et § 5) ne décrit plus une seule colonne de fenêtres
   empilées.
+
+## Raccourcis clavier (#105)
+
+`useGameShortcuts`, branché par `GamePage`, écoute le clavier depuis n'importe
+quel onglet : `1` à `7` ouvrent les onglets dans l'ordre de la sidebar, `T`
+travaille (un clic simple, jamais la bascule de l'automatique) et `E` étudie le
+cursus sélectionné. La table vit dans `useKeyboardShortcuts/shortcuts.ts`. Pas
+d'Espace ni d'Entrée globaux (ils activent déjà le bouton qui a le focus), et
+aucun raccourci d'achat, de vente ni de « Recommencer ». Sont ignorés : un champ
+de saisie, un menu ou une confirmation ouverts, Ctrl, Alt, Meta, et une touche
+maintenue (`event.repeat`).
+
+Le cursus sélectionné par la flèche d'Étudier vit dans `GamePage`
+(`useCourseChoiceState`) et se transmet aux pages par le contexte de l'`Outlet`
+(`useCourseChoice`), pour que `E` et le bouton visent le même cursus. Les
+raccourcis sont affichés dans l'infobulle des onglets (« Investir (5) ») et par
+`aria-keyshortcuts`.
