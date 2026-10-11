@@ -2,6 +2,8 @@
 
 Un idle clicker (jeu incrémental) construit avec React, TypeScript et Vite.
 
+Le jeu en ligne : <https://rlecellier.github.io/clicker3/> (GitHub Pages).
+
 ## Démarrer
 
 ```sh
