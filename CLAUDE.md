@@ -10,7 +10,7 @@ Playwright en place (V1-02), noyau des règles dans `src/game/` : état, reducer
 jauge de temps, aléatoire à graine, paliers de stats, conditions de
 déblocage, réputation, quartiers, marqueurs, emplois et actions du joueur (travailler,
 étudier, dormir), entreprises, stock, ventes et résolution économique de la
-période, 20 améliorations, phases de vie, vieillesse, mort et bilan (V1-03 à V1-09,
+période, 20 améliorations, phases de vie, vieillesse, mort et bilan, événements (V1-03 à V1-10,
 ADR 0002 et 0003). Le concept et les mécaniques de
 la v1 sont choisis (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le
 développement suit l'issue de suivi #29.
