@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { upgrades } from '@game/data';
 import { amountOf, counter, itemOf, longPress, preloadSave } from './helpers';
 
-// Seule la prochaine amélioration est proposée : on possède déjà toutes les
-// autres, pour n'acheter que celles du parcours, dans l'ordre des prix.
+// On possède déjà toutes les améliorations hors parcours, pour n'acheter que
+// celles du parcours, dans l'ordre des prix.
 const journey = new Set([
   'premier-collaborateur',
   'tableau-de-bord',
