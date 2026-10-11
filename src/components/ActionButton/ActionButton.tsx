@@ -23,6 +23,8 @@ type ActionButtonProperties = {
   isAuto?: boolean;
   autoHint?: string;
   press?: PressHandlers;
+  // Touche du raccourci clavier.
+  shortcut?: string;
   onClick: () => void;
 };
 
@@ -35,6 +37,7 @@ export const ActionButton = ({
   isAuto = false,
   autoHint,
   press,
+  shortcut,
   onClick,
 }: ActionButtonProperties) => (
   <div className={styles.action} {...press}>
@@ -42,6 +45,7 @@ export const ActionButton = ({
       variant={variant}
       size="large"
       isDisabled={isDisabled}
+      shortcut={shortcut}
       onClick={onClick}
     >
       {label}

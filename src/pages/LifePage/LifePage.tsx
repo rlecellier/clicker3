@@ -7,6 +7,7 @@ import { SplitActionButton } from '@component/SplitActionButton';
 import { Stat } from '@component/Stat';
 import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
+import { STUDY_SHORTCUT, WORK_SHORTCUT } from '@hook/useKeyboardShortcuts';
 import styles from './LifePage.module.css';
 
 // Onglet « Vie » : orchestrateur de `useGameScreen`.
@@ -35,6 +36,7 @@ export const LifePage = () => {
           isAuto={work.isAuto}
           autoHint={work.autoHint}
           press={work.press}
+          shortcut={WORK_SHORTCUT}
           onClick={work.run}
         />
         {study.action === null ? null : (
@@ -47,6 +49,7 @@ export const LifePage = () => {
             choices={study.choices}
             selectedId={study.selectedId}
             onSelect={study.select}
+            shortcut={STUDY_SHORTCUT}
             onClick={study.action.run}
           />
         )}

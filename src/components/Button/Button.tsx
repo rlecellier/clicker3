@@ -23,6 +23,8 @@ type ButtonProperties = VariantProps<typeof button> & {
   // Action en cours : le bouton reste visible mais ne réagit plus.
   isPending?: boolean;
   type?: 'button' | 'submit';
+  // Touche du raccourci clavier, pour les technologies d'assistance.
+  shortcut?: string;
 };
 
 export const Button = ({
@@ -33,6 +35,7 @@ export const Button = ({
   type = 'button',
   variant,
   size,
+  shortcut,
 }: ButtonProperties) => (
   <BaseButton
     className={button({ variant, size })}
@@ -41,6 +44,7 @@ export const Button = ({
     disabled={isDisabled || isPending}
     focusableWhenDisabled
     aria-busy={isPending}
+    aria-keyshortcuts={shortcut}
   >
     {children}
     {isPending ? <span aria-hidden="true"> …</span> : null}
