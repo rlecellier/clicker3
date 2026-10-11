@@ -19,9 +19,26 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
     globals: true,
-    setupFiles: ['./src/testSetup.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'game',
+          environment: 'node',
+          include: ['src/game/**/*.test.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'ui',
+          environment: 'jsdom',
+          setupFiles: ['./src/testSetup.ts'],
+          include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/game/**'],
+        },
+      },
+    ],
   },
 });
