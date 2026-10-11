@@ -1,9 +1,10 @@
 # Ton et univers de la ville
 
-> Statut : **ton, époque, lieu et nom décidés** ; quartiers, personnage et textes restent à discuter.
+> Statut : **décidé** (ton, époque, ville, quartiers, personnage, visuel, premiers
+> textes). Les noms sont des propositions modifiables jusqu'à l'écriture du contenu.
 
 La ville est **inventée** ([concept.md](concept.md)). Ce document fixe son ton et
-son identité avant de nommer les quartiers et les entreprises.
+son identité, puis nomme les quartiers, les entreprises et le personnage.
 
 ## Déjà acquis
 
@@ -75,13 +76,99 @@ Pistes de textes dans cette veine :
   avec les faits.
 - Vers 2000 : tout le monde lance une « start-up » sans produit.
 
-## À décider
+## Quartiers (décidés)
 
-1. **Identité visuelle** (palette, style de la carte).
-2. **Quartiers** : combien en v1 et quel caractère pour chacun (centre d'affaires,
-   quartier populaire, zone industrielle, banlieue…) ?
-3. **Personnage** : nom, histoire de départ (un seul départ en v1).
-4. **Textes** : écrire les premiers événements et écrans dans cette voix.
+Quatre quartiers en v1, **débloqués par réputation** sur la carte
+([v1.md](v1.md#5-économie)). En v1 ils sont décoratifs : un quartier est un
+endroit où se posent des bâtiments, sans propriété propre (les quartiers aux
+propriétés différentes sont dans le [backlog](backlog.md)). Chacun vise une cible
+du système.
+
+| # | Quartier                     | Caractère                                                                                   | Cible                          |
+| - | ---------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------ |
+| 1 | **Les Tilleuls**             | Lotissement de départ : pavillons identiques, studio au-dessus d'un pressing. Aucun tilleul. | Crédit, immobilier, banlieue   |
+| 2 | **Les Hauts-Fourneaux**      | Ancien quartier ouvrier « en cours de requalification » depuis 1987. Affiche : « Demain commence ici ». | Gentrification, urbanisme      |
+| 3 | **Parc d'activités Horizon** | Zone commerciale et entrepôts en périphérie, rond-point à chaque entrée, aucun piéton.       | Grande distribution, logistique |
+| 4 | **Le Pôle d'Excellence**     | Centre d'affaires de verre. Vingt cabinets s'y occupent de se conseiller mutuellement.       | Finance, conseil, jargon       |
+
+## Contenu nommé (décidé)
+
+### La marchandise
+
+**L'article.** Jamais précisé : on ne sait pas ce qu'on produit ni ce qu'on
+vend. Les entreprises « fabriquent des articles » et les commerces « écoulent des
+articles ». Gag permanent, et cela évite d'avoir à modéliser un produit.
+
+### Les 4 emplois
+
+Chaque emploi est un cran de plus vers un poste dont personne ne sait ce qu'il
+fait.
+
+1. **Manutentionnaire intérimaire** (agence « Adéquat Intérim »).
+2. **Employé polyvalent** (« polyvalent » = sous-payé sur trois postes).
+3. **Chargé de mission** (la mission n'est pas communiquée).
+4. **Directeur adjoint de la transformation** (transformation de quoi : voir 3).
+
+### Les entreprises (6 types, 3 de production, 3 de commerce)
+
+| Type       | Nom                         | Pointe satirique                                            |
+| ---------- | --------------------------- | ----------------------------------------------------------- |
+| Production | Atelier d'assemblage        | Artisanal, « made in Sainte-Croissance ».                   |
+| Production | Manufacture                 | Fait « de l'excellence opérationnelle ».                    |
+| Production | Site de production délocalisé | Production augmentée, personnel absent, communiqué ému.   |
+| Commerce   | Boutique                    | « L'article, en mieux. »                                    |
+| Commerce   | Hypermarché                 | Ouvert le dimanche, « par choix des salariés ».             |
+| Commerce   | Plateforme en ligne         | Arrive vers 2000. Perd de l'argent, vaut un milliard.       |
+
+### Les phases de vie, version satirique
+
+Jeune adulte → *Demandeur d'opportunités* ; Entrepreneur → *Porteur de projet* ;
+Patron → *Dirigeant* ; Vieillesse → *Senior* (« valeur d'expérience, hors
+périmètre »).
+
+## Personnage (décidé)
+
+**Camille Morel**, 18 ans, un prénom volontairement neutre. Vient de passer son
+bac en juin 1998, vit seul·e dans un studio de 18 m² au-dessus d'un pressing des
+Tilleuls, loyer à payer chaque mois, premier emploi à l'agence d'intérim. Pas de
+héros : un humain ordinaire face à un système qui lui promet « une carrière ». Un
+seul départ en v1.
+
+## Identité visuelle (décidée)
+
+L'interface est un **logiciel de gestion de 1999** : fenêtres à bords nets, barres
+de titre, tableaux, barre de progression pour la jauge de temps. Le sérieux
+d'un intranet d'entreprise sert la voix pince-sans-rire.
+
+- **Palette** : gris-beige d'administration, bleu « institutionnel », accent jaune
+  post-it, rouge sobre pour les alertes. Peu de couleurs, aucun néon.
+- **Typographie** : sans-serif d'époque, lisible, sans fantaisie.
+- **Carte** : plan d'urbanisme schématique (aplats, légende, échelle), avec des
+  panneaux municipaux et des slogans. Pas de pixel art mignon.
+- **Le décalage vient du texte**, pas des illustrations.
+
+## Premiers textes (propositions)
+
+Ils fixent la voix ; ce sont des exemples, pas le texte final.
+
+| Moment                         | Texte                                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Écran titre                    | « Sainte-Croissance. Ville en mouvement. » / Bouton : « Démarrer ma vie »                         |
+| Début (1er janvier 1999)       | « Bienvenue dans l'euro. Votre compte est crédité de 0 €, ce qui est un bon début. »            |
+| Premier emploi                 | « Adéquat Intérim vous remercie de votre confiance et de votre flexibilité. »                   |
+| Dormir                         | « Vous récupérez. Votre employeur le sait et en prend note. »                                   |
+| Loyer prélevé                  | « Votre bail a été renouvelé à des conditions plus ambitieuses. »                               |
+| Rupture de stock               | « Vos clients découvrent la rareté. Ils ne vous en sont pas reconnaissants. »                   |
+| Réputation, palier 3           | « Vous êtes un acteur majeur. Personne ne sait de quoi. »                                       |
+| Nouveau quartier débloqué      | « Les Hauts-Fourneaux vous ouvrent leurs portes. Elles étaient fermées pour requalification. »  |
+| Pendant votre absence          | « Pendant votre absence, la croissance a continué. Elle n'a pas demandé de vos nouvelles. »     |
+| Fin de partie                  | « You died. Votre exercice est terminé. Bilan : 4 entreprises, 0 week-end. »                    |
+
+## Reste à faire
+
+- Écrire les ~20 améliorations et les événements dans cette voix, avec le contenu
+  chiffré ([v1.md](v1.md)).
+- Relire à voix haute : si le texte cligne de l'œil, on le coupe.
 
 ## Pistes
 
