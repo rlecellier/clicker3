@@ -10,5 +10,6 @@ export {
   isOwned,
   nextUpgrade,
   ownedEffects,
+  previewEffects,
   upgradeById,
 } from './upgrades';

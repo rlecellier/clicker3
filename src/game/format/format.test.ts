@@ -1,6 +1,7 @@
-import { startState } from '@game/data';
+import { startState, upgrades } from '@game/data';
 import {
   checkRequirement,
+  describeEffect,
   describeRequirement,
   formatDate,
   formatMoney,
@@ -71,5 +72,57 @@ describe('checkRequirement', () => {
     expect(plain(checks[1]?.label ?? '')).toBe(
       'Palier de réputation 2 « Acteur majeur » : 10 / 100 de réputation gagnée',
     );
+  });
+});
+
+describe('describeEffect', () => {
+  it('dit quoi est multiplié ou ajouté, et sur quoi', () => {
+    expect(
+      describeEffect({
+        type: 'productionBonus',
+        bonus: 0.15,
+        companyId: 'atelier',
+      }),
+    ).toBe('Production de Atelier d’assemblage +15 %');
+    expect(describeEffect({ type: 'productionBonus', bonus: 0.5 })).toBe(
+      'Production de toutes les entreprises +50 %',
+    );
+    expect(describeEffect({ type: 'salesBonus', bonus: 0.3 })).toBe(
+      'Ventes +30 %',
+    );
+    expect(describeEffect({ type: 'stockCapacity', factor: 2 })).toBe(
+      'Capacité du stock ×2',
+    );
+    expect(describeEffect({ type: 'maxMarkers', add: 2 })).toBe(
+      'Marqueurs maximum +2',
+    );
+    expect(
+      describeEffect({ type: 'housing', housingId: 'x', sleepMultiplier: 2.5 }),
+    ).toBe('Conversion du sommeil ×2,5');
+    expect(describeEffect({ type: 'workReputation', bonus: 0.25 })).toBe(
+      'Réputation gagnée en travaillant +25 %',
+    );
+    expect(describeEffect({ type: 'course', courseId: 'metier' })).toBe(
+      'Étudier donne des marqueurs Métier',
+    );
+  });
+
+  it('donne un libellé à chaque effet de chaque amélioration', () => {
+    const types = new Set<string>();
+    for (const upgrade of upgrades) {
+      for (const effect of upgrade.effects) {
+        types.add(effect.type);
+        expect(describeEffect(effect).length).toBeGreaterThan(0);
+        expect(describeEffect(effect)).not.toContain('undefined');
+      }
+    }
+    expect(describeEffect({ type: 'allBonus', bonus: 0.6 })).toContain('+60 %');
+    expect(describeEffect({ type: 'reputationPerSale', bonus: 0.1 })).toContain(
+      '+10 %',
+    );
+    expect(describeEffect({ type: 'employee' })).not.toBe('');
+    expect(describeEffect({ type: 'automation', action: 'work' })).not.toBe('');
+    expect(describeEffect({ type: 'dashboard' })).not.toBe('');
+    expect(types.size).toBeGreaterThan(5);
   });
 });

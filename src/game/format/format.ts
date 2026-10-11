@@ -2,7 +2,13 @@ import type { Requirement } from '@game/requirements';
 import type { GameDate } from '@game/time';
 import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
-import { reputationTiers, statTierThresholds } from '@game/data';
+import {
+  companies,
+  courses,
+  reputationTiers,
+  statTierThresholds,
+} from '@game/data';
+import type { UpgradeEffect } from '@game/data';
 import { isUnlocked } from '@game/requirements';
 import { upgradeById } from '@game/upgrades';
 
@@ -147,3 +153,62 @@ export const checkRequirement = (
           isMet: isUnlocked(state, requirement),
         },
       ];
+
+// « +15 % » : un bonus additif (0,15) en pourcentage signé.
+const formatBonus = (bonus: number) => `+${formatDecimal(bonus * 100)} %`;
+
+// « ×2,5 » : un facteur multiplicatif.
+const formatFactor = (factor: number) => `×${formatDecimal(factor)}`;
+
+// Ce que fait un effet d'amélioration, en chiffres : quoi est multiplié ou
+// ajouté, et sur quoi. Généré depuis les `effects`, jamais écrit à la main.
+// Les bonus de production s'additionnent entre eux (pas de produit).
+export const describeEffect = (effect: UpgradeEffect): string => {
+  switch (effect.type) {
+    case 'course': {
+      const course = courses.find(
+        (candidate) => candidate.id === effect.courseId,
+      );
+      return course === undefined
+        ? 'Étudier donne des marqueurs'
+        : `Étudier donne des marqueurs ${statLabels[course.stat]}`;
+    }
+    case 'housing': {
+      return `Conversion du sommeil ${formatFactor(effect.sleepMultiplier)}`;
+    }
+    case 'stockCapacity': {
+      return `Capacité du stock ${formatFactor(effect.factor)}`;
+    }
+    case 'maxMarkers': {
+      return `Marqueurs maximum +${formatCount(effect.add)}`;
+    }
+    case 'productionBonus': {
+      const target =
+        effect.companyId === undefined
+          ? 'de toutes les entreprises'
+          : `de ${companies.find((company) => company.id === effect.companyId)?.name ?? effect.companyId}`;
+      return `Production ${target} ${formatBonus(effect.bonus)}`;
+    }
+    case 'salesBonus': {
+      return `Ventes ${formatBonus(effect.bonus)}`;
+    }
+    case 'allBonus': {
+      return `Production et ventes de toutes les entreprises ${formatBonus(effect.bonus)}`;
+    }
+    case 'workReputation': {
+      return `Réputation gagnée en travaillant ${formatBonus(effect.bonus)}`;
+    }
+    case 'reputationPerSale': {
+      return `Réputation gagnée par vente ${formatBonus(effect.bonus)}`;
+    }
+    case 'employee': {
+      return 'Un employé de plus';
+    }
+    case 'automation': {
+      return 'Le travail se fait tout seul (mode automatique)';
+    }
+    case 'dashboard': {
+      return 'Affiche le tableau de bord dans les Comptes';
+    }
+  }
+};
