@@ -1,5 +1,10 @@
-import { actionRules, courses, startState } from '@game/data';
-import { study } from './study';
+import {
+  actionRules,
+  courses,
+  startState,
+  statTierThresholds,
+} from '@game/data';
+import { canStudy, isStudiable, studiableCourses, study } from './study';
 
 const course = courses[0];
 const funded = { ...startState, money: 1000, upgrades: ['stage-posture'] };
@@ -50,5 +55,43 @@ describe('study', () => {
 
   it('est déterministe pour une graine donnée', () => {
     expect(study(funded, 'metier')).toEqual(study(funded, 'metier'));
+  });
+});
+
+const withMetier = (points: number) => ({
+  ...funded,
+  stats: { ...funded.stats, metier: points },
+});
+const lastTier = statTierThresholds.metier.at(-1) ?? 0;
+const thirdTier = statTierThresholds.metier.at(-2) ?? 0;
+
+describe('cursus étudiable', () => {
+  it('l’est au palier 0', () => {
+    expect(isStudiable(withMetier(0), 'metier')).toBe(true);
+  });
+
+  it('l’est au dernier palier moins un', () => {
+    expect(isStudiable(withMetier(thirdTier), 'metier')).toBe(true);
+  });
+
+  it('ne l’est plus au dernier palier', () => {
+    expect(isStudiable(withMetier(lastTier), 'metier')).toBe(false);
+    expect(isStudiable(withMetier(lastTier + 50), 'metier')).toBe(false);
+  });
+
+  it('ne l’est pas si la formation n’est pas achetée', () => {
+    expect(isStudiable({ ...funded, upgrades: [] }, 'metier')).toBe(false);
+    expect(isStudiable(funded, 'nulle-part')).toBe(false);
+  });
+
+  it('ne liste que les cursus étudiables', () => {
+    expect(studiableCourses(funded).map((item) => item.id)).toEqual(['metier']);
+    expect(studiableCourses(withMetier(lastTier))).toEqual([]);
+  });
+
+  it('est refusé par canStudy et study au dernier palier', () => {
+    const maxed = withMetier(lastTier);
+    expect(canStudy(maxed, 'metier')).toBe(false);
+    expect(study(maxed, 'metier')).toBe(maxed);
   });
 });

@@ -111,7 +111,8 @@ describe('invariants sur une partie jouée', () => {
   const rich: GameState = {
     ...startState,
     money: 30_000,
-    stats: { metier: 200, gestion: 200, intelligence: 200, endurance: 200 },
+    // Métier juste sous le dernier palier : l'étude reste permise au début.
+    stats: { metier: 80, gestion: 200, intelligence: 200, endurance: 200 },
     reputation: 50,
     reputationEarned: 50,
     upgrades: ['procedure-travail'],
