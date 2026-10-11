@@ -84,7 +84,7 @@ describe('intégrité des données', () => {
 describe('buyUpgrade', () => {
   it('débite le prix et marque l’amélioration comme achetée', () => {
     const next = buy(rich, 'cartes-visite');
-    expect(next.money).toBe(rich.money - 100);
+    expect(next.money).toBe(rich.money - 58);
     expect(next.upgrades).toEqual(['cartes-visite']);
   });
 
@@ -94,7 +94,7 @@ describe('buyUpgrade', () => {
   });
 
   it('refuse sans assez d’argent', () => {
-    const poor = { ...rich, money: 99 };
+    const poor = { ...rich, money: 57 };
     expect(buy(poor, 'cartes-visite')).toBe(poor);
   });
 
@@ -112,9 +112,9 @@ describe('buyUpgrade', () => {
 
   it('ajoute loyer et salaire récurrents', () => {
     const housed = buy(rich, 'studio-renove');
-    expect(housed.rent).toBe(rich.rent + 150);
+    expect(housed.rent).toBe(rich.rent + 34);
     const hired = buy(rich, 'premier-collaborateur');
-    expect(hired.payroll).toBe(900);
+    expect(hired.payroll).toBe(230);
   });
 });
 
@@ -133,7 +133,7 @@ describe('effets', () => {
 
   it('entrepôt : capacité du stock multipliée', () => {
     const next = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
-    expect(next.stockCapacity).toBe(rich.stockCapacity * 2 * 5);
+    expect(next.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
   });
 
   it('marqueurs : maximum augmenté', () => {
@@ -142,22 +142,22 @@ describe('effets', () => {
   });
 
   it('production : globale ou propre à un type d’entreprise', () => {
-    expect(buy(rich, 'premier-collaborateur').productionMultiplier).toBe(1.5);
+    expect(buy(rich, 'premier-collaborateur').productionMultiplier).toBe(2.1);
     expect(buy(rich, 'camionnette').companyMultipliers).toEqual({
-      atelier: 1.25,
+      atelier: 1.15,
     });
   });
 
   it('ventes et réputation par vente', () => {
     const next = buy(rich, 'plan-communication');
-    expect(next.salesMultiplier).toBe(1.25);
+    expect(next.salesMultiplier).toBe(1.3);
     expect(next.reputationPerSaleMultiplier).toBe(1.5);
   });
 
   it('toutes les entreprises : production et ventes', () => {
     const next = buy(rich, 'equipe-collaborateurs');
-    expect(next.productionMultiplier).toBe(1.5);
-    expect(next.salesMultiplier).toBe(1.5);
+    expect(next.productionMultiplier).toBe(1.6);
+    expect(next.salesMultiplier).toBe(1.6);
   });
 
   it('réputation gagnée par le travail', () => {
@@ -180,7 +180,7 @@ describe('effets', () => {
       buy(buy(rich, 'premier-collaborateur'), 'equipe-collaborateurs'),
       'directeur-transformation',
     );
-    expect(next.productionMultiplier).toBe(1 + 0.5 + 0.5 + 1);
-    expect(next.payroll).toBe(900 + 6000 + 25_000);
+    expect(next.productionMultiplier).toBeCloseTo(1 + 1.1 + 0.6 + 3);
+    expect(next.payroll).toBe(230 + 36_000 + 45_000);
   });
 });
