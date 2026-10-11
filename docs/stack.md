@@ -1,7 +1,7 @@
 # Stack technique
 
 Stack reprise de [clicker](https://github.com/rlecellier/clicker) (« clicker 1 »).
-Les versions sont celles de son `package.json` au 2026-10-11 ; à la création du
+Les versions ci-dessous sont celles de son `package.json` au 2026-10-11 ; à la création du
 projet, on installe les dernières versions compatibles plutôt que de recopier ces
 numéros.
 
@@ -58,8 +58,8 @@ Détail dans [`.claude/adr/0001-project-structure.md`](../.claude/adr/0001-proje
 
 ## Outillage
 
-Scripts npm : `dev`, `build` (`tsc -b && vite build`, copie `index.html` en
-`404.html` pour le fallback SPA de GitHub Pages), `preview`, `lint`, `format`,
+Scripts npm : `dev`, `build` (`tsc -b && vite build`, copie `dist/index.html`
+en `dist/404.html` pour le fallback SPA de GitHub Pages), `preview`, `lint`, `format`,
 `format:check`, `test`, `test:watch`, `e2e`.
 
 Playwright : viewport mobile (480×560), `webServer` = build + preview sur le

@@ -2,8 +2,14 @@
 
 Un idle clicker (jeu incrémental) construit avec React, TypeScript et Vite.
 
-Le projet est au stade de la documentation : le thème et les mécaniques restent
-à choisir avant d'écrire le code.
+## Démarrer
+
+```sh
+npm install
+npm run dev      # serveur de dev
+npm test         # tests unitaires (Vitest)
+npm run lint && npx tsc --noEmit && npm run format:check
+```
 
 ## Documentation
 
