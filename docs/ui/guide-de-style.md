@@ -86,9 +86,16 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `EventToast`      | `date`, `text`, `onDismiss` ; `role="status"`                                                                                  | Événement important à signaler                             |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
 
-### Carte et indicateurs (#24)
+### Carte, indicateurs et écrans de début et de fin
 
-À compléter une fois la carte de la ville fusionnée.
+| Composant        | Props clés                                                                                                                                  | Usage                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `CityMap`        | `title`, `slogan`, `districts` (`MapDistrict` : `id`, `name`, `isLocked`, `isSelected`, `conditions`, `buildings`), `onSelect` ; SVG, clavier | Plan d'urbanisme : quartiers en aplats, bâtiments par entreprise    |
+| `DistrictSheet`  | `name`, `description`, `detail`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `onAction`, `gauges`                                       | Fiche du quartier choisi : coût, déblocage, jauges si ouvert        |
+| `ImpactGauges`   | `caption`, `gauges` (`id`, `label`, `value` de 0 à 100) ; réutilise `ProgressBar`                                                              | Indicateurs d'impact (pollution, inégalités), en lecture seule      |
+| `PageLink`       | `to`, `children` ; lien d'allure bouton                                                                                                        | Navigation entre pages (`/jeu`, `/ville`)                           |
+| `FigureList`     | `figures` (`label`, `value`) ; grille de `Stat`                                                                                                | Chiffres d'un bilan (absence, fin de vie)                           |
+| `ConfirmPrompt`  | `message`, `confirmLabel`, `cancelLabel`, `onConfirm`, `onCancel`                                                                              | Confirmation en ligne avant un geste qui détruit la partie          |
 
 ### Règle de réutilisation
 
