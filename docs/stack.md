@@ -19,7 +19,7 @@ numéros.
 | Styles           | CSS Modules + `src/global.css`                                                          | Un module par composant, variables globales |
 | Tests unitaires  | Vitest 5 + jsdom                                                                        | Règles du jeu, hooks                        |
 | Tests de rendu   | Testing Library (`react`, `user-event`, `jest-dom`)                                     | Composants à comportement                   |
-| Données de test  | `@faker-js/faker`, `factory-kit`                                                        | Fabriques d'états (`src/test/factories`)    |
+| Données de test  | `@faker-js/faker`, `factory-kit`                                                        | Installés, pas encore utilisés              |
 | Tests e2e        | Playwright (`e2e/*.e2e.ts`)                                                             | Parcours joueur longs                       |
 | Lint             | ESLint 10, `typescript-eslint`, `eslint-plugin-unicorn`, `react-hooks`, `react-refresh` | Qualité et conventions                      |
 | Format           | Prettier 3 (`singleQuote`, `trailingComma: all`)                                        | Mise en forme                               |
@@ -38,12 +38,12 @@ objet JSON géré par un reducer pur, exposé par un context React.
 - **`src/contexts/`** : context + provider + hook de consommation.
 - **`src/pages/`** : pages routées ; les orchestrateurs branchent hooks et
   composants visuels.
-- **`src/test/`** : fabriques et utilitaires de test.
+- **`src/test/`** : utilitaires de test (`deepFreeze`).
 - **`e2e/`** : parcours Playwright.
 
-Le temps de jeu est la seule source de vérité (`elapsedHours`), l'état est
+Le temps de jeu vient de l'état (`period` et `gauge`), l'état est
 sérialisable (sauvegarde), les changements passent par un reducer pur
-(ADR 0002 et suivants de clicker 1).
+(ADR 0002 et 0003).
 
 ## Conventions de code
 
@@ -60,14 +60,16 @@ Détail dans [`.claude/adr/0001-project-structure.md`](../.claude/adr/0001-proje
 
 Scripts npm : `dev`, `build` (`tsc -b && vite build`, copie `dist/index.html`
 en `dist/404.html` pour le fallback SPA de GitHub Pages), `preview`, `lint`, `format`,
-`format:check`, `test`, `test:watch`, `e2e`.
+`format:check`, `test`, `test:watch`, `sim` (simulateur d'une vie, voir
+`docs/game/simulateur.md`), `e2e`.
 
 Playwright : viewport mobile (480×560), `webServer` = build + preview sur le
 port 4173, Chrome fourni par `CHROMIUM_PATH` en CI.
 
 CI (`ci.yml`, sur PR et `main`) : `lint`, `tsc --noEmit`, `format:check`,
-`test`, `build`, puis les parcours e2e. Déploiement (`deploy.yml`) : à chaque
-push sur `main` qui touche le site, vers GitHub Pages avec `BASE_PATH`.
+`test`, `build`, puis les parcours e2e. Déploiement (`deploy.yml`) : quand la CI
+réussit sur un push sur `main` (ou à la main), vers GitHub Pages avec
+`BASE_PATH`.
 
 ## Workflow git
 
