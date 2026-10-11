@@ -486,10 +486,263 @@ describe('sauvegarde réelle de la v1 (version 5)', () => {
     // Version 6 : compteurs de courrier, tout est lu.
     expect(state.mailReceived).toBe(state.events.length);
     expect(unreadMail(state)).toBe(0);
+    // Version 8 : `last` devient l’historique (période 3 = dernière jouée).
+    expect(state.ledger.history).toHaveLength(1);
+    expect(state.ledger.history[0]?.period).toBe(3);
     // Version 7 : rien n’est une nouveauté.
     for (const tab of noveltyTabs) {
       expect(newItems(state, tab)).toEqual([]);
     }
+  });
+});
+
+const loadV7 = () => {
+  expect(JSON.parse(saveV7).version).toBe(7);
+  const result = deserialize(saveV7);
+  expect(result.ok).toBe(true);
+  return result.ok ? result.state : startState;
+};
+
+// Sauvegarde écrite par le code de la version 7 (entreprises, entrepôt et trois
+// périodes jouées).
+const saveV7 = `{
+  "version": 7,
+  "state": {
+    "version": 7,
+    "characterName": "Camille Morel",
+    "life": {
+      "startAge": 18,
+      "seniorAge": 60,
+      "deathAge": 75,
+      "startYear": 1999,
+      "startMonth": 1
+    },
+    "period": 3,
+    "gauge": 0,
+    "gaugeCapacity": 70,
+    "status": "playing",
+    "phase": "entrepreneur",
+    "money": 99216,
+    "stock": 75,
+    "stockCapacity": 75,
+    "warehouses": 1,
+    "reputation": 0.36,
+    "reputationEarned": 0.36,
+    "stats": {
+      "metier": 0,
+      "gestion": 0,
+      "intelligence": 0,
+      "endurance": 0
+    },
+    "markers": [],
+    "maxMarkers": 5,
+    "isSleeping": false,
+    "queuedActions": [],
+    "sleepMultiplier": 1,
+    "seed": 1999,
+    "jobId": "interim",
+    "housingId": "studio",
+    "rent": 300,
+    "payroll": 0,
+    "companies": {
+      "atelier": 3,
+      "manufacture": 1,
+      "boutique": 2
+    },
+    "upgrades": [],
+    "productionMultiplier": 1,
+    "salesMultiplier": 1,
+    "workBoosts": {},
+    "companyMultipliers": {},
+    "workReputationMultiplier": 1,
+    "reputationPerSaleMultiplier": 1,
+    "lastStatement": {
+      "period": 2,
+      "paidExpenses": true,
+      "unpaid": false,
+      "stockout": false,
+      "stockFull": true
+    },
+    "ledger": {
+      "current": {
+        "wages": 0,
+        "sales": 0,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 0,
+        "payroll": 0,
+        "purchases": 0,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 0,
+        "stockProduced": 0,
+        "stockSold": 0,
+        "stockLost": 0,
+        "stockIn": {},
+        "stockOut": {},
+        "reputationGained": 0,
+        "reputationLost": 0,
+        "reputationSpent": 0
+      },
+      "last": {
+        "wages": 0,
+        "sales": 72,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 300,
+        "payroll": 0,
+        "purchases": 0,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 0,
+        "stockProduced": 105,
+        "stockSold": 6,
+        "stockLost": 99,
+        "stockIn": {
+          "atelier": 6,
+          "manufacture": 99
+        },
+        "stockOut": {
+          "boutique": 6
+        },
+        "reputationGained": 0.12,
+        "reputationLost": 0,
+        "reputationSpent": 0
+      },
+      "total": {
+        "wages": 0,
+        "sales": 216,
+        "surplus": 0,
+        "otherIncome": 0,
+        "rent": 900,
+        "payroll": 0,
+        "purchases": 100,
+        "studies": 0,
+        "otherExpenses": 0,
+        "interest": 0,
+        "stockProduced": 315,
+        "stockSold": 18,
+        "stockLost": 222,
+        "stockIn": {
+          "atelier": 18,
+          "manufacture": 297
+        },
+        "stockOut": {
+          "boutique": 18
+        },
+        "reputationGained": 0.36,
+        "reputationLost": 0,
+        "reputationSpent": 0
+      }
+    },
+    "districts": [
+      "tilleuls"
+    ],
+    "flags": {},
+    "events": [
+      {
+        "period": 1,
+        "id": "euro",
+        "text": "Bienvenue dans l'euro. Votre compte est crédité de 0 €, ce qui est un bon début."
+      },
+      {
+        "period": 1,
+        "id": "age-18",
+        "text": "Vous êtes majeur. Les offres de crédit aussi."
+      },
+      {
+        "period": 1,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 1,
+        "id": "premiere-entreprise",
+        "text": "Vous êtes porteur de projet. Personne ne vous demande lequel."
+      },
+      {
+        "period": 1,
+        "id": "stock-plein",
+        "text": "Votre entrepôt déborde. La production continue, par principe."
+      },
+      {
+        "period": 2,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 2,
+        "id": "stock-plein",
+        "text": "Votre entrepôt déborde. La production continue, par principe."
+      },
+      {
+        "period": 3,
+        "id": "loyer",
+        "text": "Votre bail a été renouvelé à des conditions plus ambitieuses."
+      },
+      {
+        "period": 3,
+        "id": "stock-plein",
+        "text": "Votre entrepôt déborde. La production continue, par principe."
+      }
+    ],
+    "mailReceived": 9,
+    "mailRead": 0,
+    "seenItems": {
+      "skills": [],
+      "jobs": [],
+      "invest": [],
+      "city": []
+    },
+    "firedEvents": [
+      "euro",
+      "age-18",
+      "premiere-entreprise"
+    ],
+    "activeEffects": [],
+    "jobSalaryFactors": {},
+    "autoWork": false,
+    "autoElapsed": 0,
+    "lastSeenAt": 1234
+  }
+}`;
+
+describe('migration de la version 7', () => {
+  it('fait de `last` l’unique entrée de l’historique', () => {
+    const old = JSON.parse(saveV7).state.ledger.last;
+    const { ledger, period } = loadV7();
+    expect(period).toBe(3);
+    expect(ledger.history).toHaveLength(1);
+    expect(ledger.history[0]?.period).toBe(2);
+    expect(ledger.history[0]?.figures).toMatchObject(old);
+    expect(ledger.history[0]?.figures.salesBy).toEqual({});
+    expect('last' in ledger).toBe(false);
+  });
+
+  it('laisse les ventilations vides et conserve les totaux', () => {
+    const { ledger } = loadV7();
+    const old = JSON.parse(saveV7).state.ledger.total;
+    expect(ledger.total).toMatchObject(old);
+    expect(ledger.total.purchasesBy).toEqual({});
+    expect(ledger.current.wagesBy).toEqual({});
+  });
+
+  it('déduit le stock de départ de la période en cours', () => {
+    const { ledger, stock } = loadV7();
+    const { current } = ledger;
+    expect(
+      current.stockStart +
+        current.stockProduced -
+        current.stockSold -
+        current.stockLost,
+    ).toBe(stock);
+  });
+
+  it('n’a pas de période terminée si la partie est au départ', () => {
+    const old = JSON.parse(saveV7);
+    old.state.period = 0;
+    const result = deserialize(JSON.stringify(old));
+    expect(result.ok && result.state.ledger.history).toEqual([]);
   });
 });
 

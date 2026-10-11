@@ -40,7 +40,7 @@ export const study = (state: GameState, courseId: string): GameState => {
   const { gauge, markerChance, markerVariance } = actionRules.study;
   const paid = withRecord(
     { ...state, money: state.money - course.cost },
-    { studies: course.cost },
+    { studies: course.cost, studiesBy: { [course.id]: course.cost } },
   );
   const withMarker = grantMarker(
     paid,

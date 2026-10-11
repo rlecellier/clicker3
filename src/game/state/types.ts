@@ -60,16 +60,40 @@ export type LedgerFigures = {
   // commerce (id) ou `surplus` (vente du surplus).
   stockIn: Record<string, number>;
   stockOut: Record<string, number>;
+  // Niveau du stock en entrepôt au début et à la fin de la période (la fin est
+  // relevée après les ventes et la perte). Sans sens pour la période en cours
+  // (fin) et pour le cumul (début et fin).
+  stockStart: number;
+  stockEnd: number;
+  // Ventilation des euros par source, additionnée comme `stockIn` : leur somme
+  // vaut le total correspondant (sauf pour les périodes migrées d'avant la
+  // version 8, qui n'ont pas de ventilation).
+  // Ventes par commerce (id).
+  salesBy: Record<string, number>;
+  // Salaires par emploi (id du poste).
+  wagesBy: Record<string, number>;
+  // Achats par entreprise (id), amélioration (id) ou `warehouse`.
+  purchasesBy: Record<string, number>;
+  // Études par cursus (id).
+  studiesBy: Record<string, number>;
   // Flux de réputation.
   reputationGained: number;
   reputationLost: number;
   reputationSpent: number;
 };
 
+// Une période terminée, avec son numéro.
+export type LedgerPeriod = {
+  period: number;
+  figures: LedgerFigures;
+};
+
 export type Ledger = {
-  // Période en cours, versée dans `last` quand elle se termine.
+  // Période en cours, versée dans `history` quand elle se termine.
   current: LedgerFigures;
-  last: LedgerFigures;
+  // Les dernières périodes terminées, la plus récente en tête (bornée par
+  // `ledgerHistoryLength`).
+  history: LedgerPeriod[];
   total: LedgerFigures;
 };
 

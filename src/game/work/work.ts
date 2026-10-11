@@ -46,7 +46,10 @@ const workAtJob = (
     job.salary * factor * (state.jobSalaryFactors[job.id] ?? 1),
   );
   return gainReputation(
-    withRecord({ ...state, money: state.money + wage }, { wages: wage }),
+    withRecord(
+      { ...state, money: state.money + wage },
+      { wages: wage, wagesBy: { [job.id]: wage } },
+    ),
     job.reputation * state.workReputationMultiplier * factor,
   );
 };

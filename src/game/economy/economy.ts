@@ -80,6 +80,8 @@ export const sellGoods = (state: GameState): GameState => {
   let revenue = 0;
   let sold = 0;
   const stockOut: Record<string, number> = {};
+  // Recette cumulée après chaque commerce : sert à répartir `sales`.
+  const cumulatedRevenues: [string, number][] = [];
   let isStockout = false;
   for (const company of companies) {
     if (company.kind !== 'commerce') {
@@ -96,6 +98,7 @@ export const sellGoods = (state: GameState): GameState => {
       stockOut[company.id] = units;
     }
     revenue += units * company.price;
+    cumulatedRevenues.push([company.id, revenue]);
     const gain =
       units *
       economyRules.reputationPerSale *
@@ -107,9 +110,18 @@ export const sellGoods = (state: GameState): GameState => {
         ? loseReputation(current, economyRules.stockoutPenalty)
         : current;
   }
-  const earned = Math.round(
-    revenue * (state.salesMultiplier + activeBonus(state, 'sales')),
-  );
+  const salesFactor = state.salesMultiplier + activeBonus(state, 'sales');
+  const earned = Math.round(revenue * salesFactor);
+  // Arrondi cumulé, comme `produceGoods` : la somme des parts vaut `earned`.
+  const salesBy: Record<string, number> = {};
+  let allocated = 0;
+  for (const [id, cumulated] of cumulatedRevenues) {
+    const share = Math.round(cumulated * salesFactor) - allocated;
+    allocated += share;
+    if (share !== 0) {
+      salesBy[id] = share;
+    }
+  }
   const statement = statementOf(state);
   const lost = Math.max(0, stock - state.stockCapacity);
   return {
@@ -118,6 +130,7 @@ export const sellGoods = (state: GameState): GameState => {
     money: current.money + earned,
     ledger: record(current.ledger, {
       sales: earned,
+      salesBy,
       stockSold: sold,
       stockLost: lost,
       stockOut,

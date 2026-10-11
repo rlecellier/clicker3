@@ -7,7 +7,7 @@ import type { GameState } from '@game/state';
  * équilibrer au simulateur.
  */
 export const startState: GameState = {
-  version: 7,
+  version: 8,
   characterName: 'Camille Morel',
   life: {
     startAge: 18,

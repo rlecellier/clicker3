@@ -145,6 +145,28 @@ describe('sellGoods', () => {
   });
 });
 
+describe('ventilation des ventes par commerce', () => {
+  it('somme exactement aux ventes, arrondi cumulé compris', () => {
+    const next = sellGoods(
+      stateWith({
+        companies: { boutique: 1, hypermarche: 1, plateforme: 1 },
+        stock: 100_000,
+        salesMultiplier: 1.37,
+      }),
+    );
+    const { sales, salesBy } = next.ledger.current;
+    expect(sales).toBeGreaterThan(0);
+    expect(Object.keys(salesBy).length).toBeGreaterThan(1);
+    expect(Object.values(salesBy).reduce((a, b) => a + b, 0)).toBe(sales);
+    expect(next.ledger.total.salesBy).toEqual(salesBy);
+  });
+
+  it('ne note rien pour un commerce qui ne vend pas', () => {
+    const next = sellGoods(stateWith({ companies: { boutique: 1 }, stock: 0 }));
+    expect(next.ledger.current.salesBy).toEqual({});
+  });
+});
+
 describe('chargeExpenses', () => {
   it('prélève le loyer et les salaires', () => {
     const next = chargeExpenses(stateWith({ money: 1000, payroll: 100 }));
@@ -189,7 +211,7 @@ describe('résolution d’une période', () => {
     expect(next.stock).toBe(0);
     expect(next.period).toBe(1);
     expect(next.lastStatement).toMatchObject({ period: 0, unpaid: false });
-    expect(next.ledger.last).toMatchObject({
+    expect(next.ledger.history[0]?.figures).toMatchObject({
       sales: 24,
       rent: 300,
       stockProduced: 2,
