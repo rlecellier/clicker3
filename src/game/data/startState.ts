@@ -55,4 +55,9 @@ export const startState: GameState = {
   firedEvents: [],
   activeEffects: [],
   jobSalaryFactors: {},
+
+  autoWork: false,
+  autoSleep: false,
+  autoElapsed: 0,
+  lastSeenAt: null,
 };
