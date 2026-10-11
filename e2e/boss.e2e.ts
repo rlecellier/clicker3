@@ -26,7 +26,9 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
       money: 100_000,
       companies: { atelier: 1 },
       phase: 'entrepreneur',
-      stats: { metier: 0, gestion: 30, intelligence: 30, endurance: 0 },
+      // Gestion et intelligence sont au dernier palier : leurs cursus sont
+      // débloqués mais inutiles.
+      stats: { metier: 0, gestion: 81, intelligence: 81, endurance: 0 },
       upgrades: upgrades
         .map((upgrade) => upgrade.id)
         .filter((id) => !journey.has(id)),
@@ -43,6 +45,15 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
 
   // Sans amélioration d'automatisation, aucun appui long ne s'annonce.
   await expect(page.getByText(/Appui long/)).toBeHidden();
+
+  // La flèche d'Étudier ne propose que les cursus dont la compétence peut
+  // encore progresser.
+  await page.getByRole('button', { name: 'Choisir le cursus' }).click();
+  const courseMenu = page.getByRole('menuitemradio');
+  await expect(courseMenu).toHaveCount(2);
+  await expect(courseMenu.filter({ hasText: /Posture/ })).toHaveCount(1);
+  await expect(courseMenu.filter({ hasText: /Dépassement/ })).toHaveCount(1);
+  await page.keyboard.press('Escape');
 
   // Le premier collaborateur fait de vous un dirigeant.
   await openUpgrades();
@@ -102,4 +113,31 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   const stopped = await money();
   await page.clock.runFor(20_000);
   expect(await money()).toBe(stopped);
+
+  // Quand tout est au dernier palier, « Étudier » disparaît sans que les
+  // autres boutons bougent ; le raccourci E ne fait plus rien.
+  const sellSurplus = page.getByRole('button', { name: /Vendre le surplus/ });
+  const boxes = async () => [
+    await work.boundingBox(),
+    await sellSurplus.boundingBox(),
+  ];
+  const boxesBefore = await boxes();
+  await preloadSave(page, {
+    state: {
+      money: 100_000,
+      phase: 'entrepreneur',
+      stats: { metier: 81, gestion: 81, intelligence: 81, endurance: 81 },
+      upgrades: upgrades.map((upgrade) => upgrade.id),
+    },
+  });
+  await page.goto('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
+  await expect(page.getByRole('button', { name: 'Étudier' })).toBeHidden();
+  await expect(
+    page.getByRole('button', { name: 'Choisir le cursus' }),
+  ).toBeHidden();
+  expect(await boxes()).toEqual(boxesBefore);
+  const richMoney = await money();
+  await page.keyboard.press('e');
+  expect(await money()).toBe(richMoney);
 });
