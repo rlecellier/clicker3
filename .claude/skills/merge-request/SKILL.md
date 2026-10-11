@@ -12,6 +12,12 @@ a MR. Do not open a MR unless the user asked for one.
 
 Go through every item. Fix what fails, do not push on a red item.
 
+**Scope**
+
+- [ ] The MR handles **one issue**, named in the description with
+      `Closes #N`. If the work covers several issues, stop and ask the user
+      how to split it instead of pushing one big MR.
+
 **History**
 
 - [ ] Every commit is a unit commit with a gitmoji message (see the `commit`
@@ -43,8 +49,9 @@ Go through every item. Fix what fails, do not push on a red item.
 
 **Description**
 
-- [ ] The MR has a title **and** a description. This item is blocking: never
-      push a MR for review without one.
+- [ ] The MR has a title **and** a description, and the description contains
+      `Closes #N`. This item is blocking: never push a MR for review with an
+      empty description or without a linked issue.
 - [ ] The description follows the structure below and is accurate against the
       final diff, not against an earlier draft.
 
@@ -66,7 +73,7 @@ reviewer who has not seen the conversation.
 
 | Section | Content |
 | ------- | ------- |
-| 🎯 Why | The problem or need, in one or two sentences. Link the issue. |
+| 🎯 Why | The problem or need, in one or two sentences, then `Closes #N` for the single issue handled. |
 | ✨ What changed | Bullets grouped by theme, written as outcomes, not file lists. |
 | 🧪 How to test | Numbered, concrete steps and the expected result. |
 | 📸 Screenshots | UI changes only. Remove the section otherwise; the demo workflow posts its own comment (see below). |
