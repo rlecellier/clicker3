@@ -1,0 +1,28 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space);
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space);
+}
+
+.link {
+  background: none;
+  border: 0;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: help;
+  padding: 0;
+}
