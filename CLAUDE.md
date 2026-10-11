@@ -4,16 +4,13 @@ Un idle clicker (jeu incrémental) en React + TypeScript. Le but est décrit dan
 `docs/vision.md`, la stack dans `docs/stack.md` (reprise de clicker 1) et la
 recherche de game design dans `docs/game-design/README.md`.
 
-**État du projet** : squelette initialisé (Vite, React, TypeScript, ESLint,
-Prettier, Vitest ; V1-01), CI, déploiement Pages et parcours de fumée
-Playwright en place (V1-02), noyau des règles dans `src/game/` : état, reducer,
-jauge de temps, aléatoire à graine, paliers de stats, conditions de
-déblocage, réputation, quartiers, marqueurs, emplois et actions du joueur (travailler,
-étudier, dormir), entreprises, stock, ventes et résolution économique de la
-période, 20 améliorations, phases de vie, vieillesse, mort et bilan, événements (V1-03 à V1-10,
-ADR 0002 et 0003). Le concept et les mécaniques de
-la v1 sont choisis (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le
-développement suit l'issue de suivi #29.
+**Avancement** : suivi dans l'issue #29 (une issue = une branche = une MR) ;
+le concept et les mécaniques de la v1 sont dans `docs/game/` (périmètre dans
+`docs/game/v1.md`). Ce fichier ne porte pas l'avancement : une MR de règles
+ordinaire n'a pas à le modifier.
+
+**Règles du jeu** : un module par dossier dans `src/game/`, avec son test
+(`ls src/game` donne la liste à jour).
 
 Conventions du projet : voir `.claude/adr/0001-project-structure.md`.
 
