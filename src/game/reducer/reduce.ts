@@ -3,6 +3,7 @@ import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob } from '@game/jobs';
 import { addGauge } from '@game/period';
+import { triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
 import { sleep } from '@game/sleep';
 import { study } from '@game/study';
@@ -11,6 +12,9 @@ import { buyUpgrade } from '@game/upgrades';
 import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
+
+// Nouvelle vie : l'état de départ, avec les événements déjà présents au départ.
+export const newGame = (): GameState => triggerEvents(startState);
 
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
@@ -42,11 +46,12 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return buyUpgrade(state, action.id);
     }
     case 'restart': {
-      return startState;
+      return newGame();
     }
   }
 };
 
-// La phase de vie suit les achats : on la remet à jour après chaque action.
+// La phase de vie suit les achats et les événements sont évalués après chaque
+// action (ceux de fin de période l'ont déjà été dans `endPeriod`).
 export const reduce = (state: GameState, action: GameAction): GameState =>
-  updatePhase(applyAction(state, action));
+  triggerEvents(updatePhase(applyAction(state, action)));
