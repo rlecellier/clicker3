@@ -22,7 +22,8 @@ illustrations. Voix administrative pince-sans-rire.
    `Title`, `Window`, `Button`, `ProgressBar`, `DataTable`, `Badge`,
    `InfoPanel`, `Tabs`, `Stat` (dans un `<dl>`), `Note`, `CharacterHeader`,
    `MarkerTrack`, `ActionButton`, `ItemList`, `AutoSwitch`, `EventLog`,
-   `EventToast`, `LedgerTable`. (Carte et indicateurs : à compléter.)
+   `EventToast`, `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
+   `PageLink`, `FigureList`, `ConfirmPrompt`.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
    `-dark`), `--color-paper`, `--color-text` (`-muted`), `--color-primary`
