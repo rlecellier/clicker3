@@ -21,30 +21,24 @@ const statementOf = (state: GameState) =>
     ? state.lastStatement
     : emptyStatement(state.period);
 
-// Unités d'une entreprise sur la période, avec le bonus du travail fait dedans.
-const unitsOf = (state: GameState, company: Company, perCopy: number) =>
-  (state.companies[company.id] ?? 0) *
+// Unités d'une entreprise sur la période, avec le bonus du travail fait dedans
+// (avant le multiplicateur de production générale).
+const unitsOf = (
+  state: GameState,
+  company: Company,
+  perCopy: number,
+  copies = state.companies[company.id] ?? 0,
+) =>
+  copies *
   perCopy *
   (state.companyMultipliers[company.id] ?? 1) *
   (1 + economyRules.workBonus * (state.workBoosts[company.id] ?? 0));
 
-// Articles produits par période, avant la limite de l'entrepôt.
-export const periodProduction = (state: GameState) => {
-  let total = 0;
-  for (const company of companies) {
-    if (company.kind === 'production') {
-      total += unitsOf(state, company, company.output);
-    }
-  }
-  return Math.round(total * state.productionMultiplier);
-};
-
-// Étape 1 : les entreprises de production ajoutent leur production au stock,
-// sans limite : rien n'est perdu ici. La capacité de l'entrepôt s'applique à
-// l'étape 2, une fois les ventes faites.
-export const produceGoods = (state: GameState): GameState => {
-  // Arrondi cumulé : la somme des parts vaut exactement la production totale.
-  const stockIn: Record<string, number> = {};
+// Part de chaque entreprise de production dans la production de la période,
+// en entiers. C'est la formule unique du moteur et de l'affichage. Arrondi
+// cumulé : la somme des parts vaut exactement la production totale arrondie.
+export const productionShares = (state: GameState) => {
+  const shares: Record<string, number> = {};
   let cumulated = 0;
   let produced = 0;
   for (const company of companies) {
@@ -54,8 +48,49 @@ export const produceGoods = (state: GameState): GameState => {
     cumulated += unitsOf(state, company, company.output);
     const share = Math.round(cumulated * state.productionMultiplier) - produced;
     produced += share;
+    shares[company.id] = share;
+  }
+  return shares;
+};
+
+// Articles produits par période, avant la limite de l'entrepôt.
+export const periodProduction = (state: GameState) =>
+  Object.values(productionShares(state)).reduce(
+    (total, share) => total + share,
+    0,
+  );
+
+// Valeur finale, par exemplaire, de ce que fait une entreprise (articles
+// produits ou vendables par période), tous modificateurs appliqués. Non
+// arrondie : c'est l'affichage qui décide de ses décimales.
+export const outputPerCopy = (state: GameState, company: Company) =>
+  company.kind === 'production'
+    ? unitsOf(state, company, company.output, 1) * state.productionMultiplier
+    : unitsOf(state, company, company.capacity, 1);
+
+// Prix de vente final d'un article d'un commerce (bonus de vente compris).
+export const finalPrice = (state: GameState, company: Company) =>
+  company.kind === 'commerce'
+    ? company.price * (state.salesMultiplier + activeBonus(state, 'sales'))
+    : 0;
+
+// Capacité de vente entière d'un commerce par période, telle que vendue.
+export const salesCapacity = (state: GameState, company: Company) =>
+  company.kind === 'commerce'
+    ? Math.round(unitsOf(state, company, company.capacity))
+    : 0;
+
+// Étape 1 : les entreprises de production ajoutent leur production au stock,
+// sans limite : rien n'est perdu ici. La capacité de l'entrepôt s'applique à
+// l'étape 2, une fois les ventes faites.
+export const produceGoods = (state: GameState): GameState => {
+  const stockIn: Record<string, number> = {};
+  let produced = 0;
+  const shares = Object.entries(productionShares(state));
+  for (const [id, share] of shares) {
+    produced += share;
     if (share > 0) {
-      stockIn[company.id] = share;
+      stockIn[id] = share;
     }
   }
   return withRecord(
@@ -87,7 +122,7 @@ export const sellGoods = (state: GameState): GameState => {
     if (company.kind !== 'commerce') {
       continue;
     }
-    const capacity = Math.round(unitsOf(state, company, company.capacity));
+    const capacity = salesCapacity(state, company);
     if (capacity === 0) {
       continue;
     }
