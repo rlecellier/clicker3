@@ -44,6 +44,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "sim": "node scripts/sim.mjs",
     "e2e": "playwright test"
   }
 }
