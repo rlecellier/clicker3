@@ -27,6 +27,9 @@ export const useGameActions = () => {
       buyUpgrade: (id: string) => {
         dispatch({ type: 'buyUpgrade', id });
       },
+      cancelUpgrade: (id: string) => {
+        dispatch({ type: 'cancelUpgrade', id });
+      },
       unlockDistrict: (id: string) => {
         dispatch({ type: 'unlockDistrict', id });
       },

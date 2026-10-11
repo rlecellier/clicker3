@@ -1,1 +1,0 @@
-export { AutoSwitch } from './AutoSwitch';

@@ -1,6 +1,7 @@
 import { ActionButton } from '@component/ActionButton';
-import { AutoSwitch } from '@component/AutoSwitch';
 import { CharacterHeader } from '@component/CharacterHeader';
+import { Button } from '@component/Button';
+import { ConfirmPrompt } from '@component/ConfirmPrompt';
 import { EventLog } from '@component/EventLog';
 import { EventToast } from '@component/EventToast';
 import { ItemList } from '@component/ItemList';
@@ -15,6 +16,7 @@ import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
 import { useInvestScreen } from '@hook/useInvestScreen';
 import { useJournalScreen } from '@hook/useJournalScreen';
+import { useResetGame } from '@hook/useResetGame';
 import styles from './GamePage.module.css';
 
 // Orchestrateur : branche `useGameScreen` sur les composants visuels.
@@ -22,6 +24,7 @@ export const GamePage = () => {
   const screen = useGameScreen();
   const invest = useInvestScreen();
   const journal = useJournalScreen();
+  const reset = useResetGame();
   const { work, sleep, sellSurplus } = screen.actions;
 
   return (
@@ -54,6 +57,9 @@ export const GamePage = () => {
             reason={work.reason}
             isDisabled={work.isDisabled}
             variant="primary"
+            isAuto={work.isAuto}
+            autoHint={work.autoHint}
+            press={work.press}
             onClick={work.run}
           />
           <ActionButton
@@ -61,6 +67,9 @@ export const GamePage = () => {
             detail={sleep.detail}
             reason={sleep.reason}
             isDisabled={sleep.isDisabled}
+            isAuto={sleep.isAuto}
+            autoHint={sleep.autoHint}
+            press={sleep.press}
             onClick={sleep.run}
           />
           <ActionButton
@@ -112,17 +121,15 @@ export const GamePage = () => {
             {
               id: 'upgrades',
               label: 'Améliorations',
-              content: (
-                <>
-                  {invest.upgradeGroups.map((group) => (
-                    <ItemList
-                      key={group.id}
-                      caption={group.caption}
-                      items={group.items}
-                    />
-                  ))}
-                </>
-              ),
+              content:
+                invest.nextUpgrades.length === 0 ? (
+                  <Note>Plus rien à acheter pour le moment.</Note>
+                ) : (
+                  <ItemList
+                    caption="Prochaine amélioration"
+                    items={invest.nextUpgrades}
+                  />
+                ),
             },
             {
               id: 'districts',
@@ -163,18 +170,26 @@ export const GamePage = () => {
       <Window title="Ville">
         <PageLink to="/ville">Plan de Sainte-Croissance</PageLink>
       </Window>
-      {screen.autos.length === 0 ? null : (
-        <Window title="Automatisation">
-          {screen.autos.map((auto) => (
-            <AutoSwitch
-              key={auto.id}
-              label={auto.label}
-              isChecked={auto.isChecked}
-              onChange={auto.onChange}
-            />
-          ))}
+      {invest.ownedUpgrades.length === 0 ? null : (
+        <Window title="Améliorations obtenues">
+          <ItemList caption="Obtenues" items={invest.ownedUpgrades} />
         </Window>
       )}
+      <Window title="Partie">
+        {reset.isConfirming ? (
+          <ConfirmPrompt
+            message="Recommencer la partie ? La vie en cours sera archivée sans bilan."
+            confirmLabel="Recommencer"
+            cancelLabel="Annuler"
+            onConfirm={reset.confirm}
+            onCancel={reset.cancel}
+          />
+        ) : (
+          <Button variant="danger" onClick={reset.ask}>
+            Recommencer la partie
+          </Button>
+        )}
+      </Window>
     </main>
   );
 };

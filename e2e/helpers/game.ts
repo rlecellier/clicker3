@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
+import { LONG_PRESS_MS } from '@hook/useLongPress';
 
 // Valeur affichée d'un compteur de la page de jeu (« Argent », « Stock »…).
 export const counter = (page: Page, label: string): Locator =>
@@ -45,4 +46,12 @@ export const expectNoOverflow = async (page: Page) => {
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
   expect(isOverflowing).toBe(false);
+};
+
+// Appui long sur un bouton (horloge simulée par `page.clock.install()`).
+export const longPress = async (page: Page, target: Locator) => {
+  await target.hover();
+  await page.mouse.down();
+  await page.clock.runFor(LONG_PRESS_MS + 100);
+  await page.mouse.up();
 };

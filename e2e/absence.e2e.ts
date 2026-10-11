@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import type { GameState } from '@game/state';
 import { expectNoOverflow, preloadSave } from './helpers';
 
-const HOUR_MS = 3_600_000;
-const MONTH_MS = 30 * 24 * HOUR_MS;
+const MINUTE_MS = 60_000;
+const MONTH_MS = 30 * 24 * 60 * MINUTE_MS;
 
 const automatedLife: Partial<GameState> = {
   phase: 'boss',
@@ -15,8 +15,8 @@ const automatedLife: Partial<GameState> = {
 test('absence : le travail automatique avance pendant la fermeture', async ({
   page,
 }) => {
-  // Une heure d'absence : l'écran d'absence passe avant le jeu.
-  await preloadSave(page, { state: automatedLife, absenceMs: HOUR_MS });
+  // Dix minutes d'absence : l'écran d'absence passe avant le jeu.
+  await preloadSave(page, { state: automatedLife, absenceMs: 10 * MINUTE_MS });
   await page.goto('/jeu');
   await expect(page).toHaveURL('/absence');
   await expect(
@@ -31,8 +31,8 @@ test('absence : le travail automatique avance pendant la fermeture', async ({
   await page.getByRole('button', { name: 'Reprendre ma vie' }).click();
   await expect(page).toHaveURL('/jeu');
   await expect(
-    page.getByRole('switch', { name: 'Travail automatique' }),
-  ).toBeChecked();
+    page.getByText('Appui long : couper l’automatique'),
+  ).toBeVisible();
 
   // Rouvrir tout de suite la partie ne rattrape rien.
   await page.reload();

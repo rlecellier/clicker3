@@ -1,5 +1,15 @@
+import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
 import styles from './ActionButton.module.css';
+
+// Gestes d'appui long, à poser sur le conteneur du bouton.
+type PressHandlers = {
+  onPointerDown: () => void;
+  onPointerUp: () => void;
+  onPointerLeave: () => void;
+  onPointerCancel: () => void;
+  onContextMenu: (event: { preventDefault: () => void }) => void;
+};
 
 type ActionButtonProperties = {
   label: string;
@@ -9,6 +19,10 @@ type ActionButtonProperties = {
   reason?: string;
   isDisabled?: boolean;
   variant?: 'default' | 'primary' | 'danger';
+  // Action automatique de ce bouton : l'appui long l'active ou la coupe.
+  isAuto?: boolean;
+  autoHint?: string;
+  press?: PressHandlers;
   onClick: () => void;
 };
 
@@ -18,9 +32,12 @@ export const ActionButton = ({
   reason,
   isDisabled = false,
   variant,
+  isAuto = false,
+  autoHint,
+  press,
   onClick,
 }: ActionButtonProperties) => (
-  <div className={styles.action}>
+  <div className={styles.action} {...press}>
     <Button
       variant={variant}
       size="large"
@@ -33,6 +50,11 @@ export const ActionButton = ({
       <p className={styles.reason}>{reason}</p>
     ) : (
       detail !== undefined && <p className={styles.detail}>{detail}</p>
+    )}
+    {autoHint === undefined ? null : (
+      <p className={styles.detail}>
+        {isAuto ? <Badge tone="info">Auto</Badge> : null} {autoHint}
+      </p>
     )}
   </div>
 );
