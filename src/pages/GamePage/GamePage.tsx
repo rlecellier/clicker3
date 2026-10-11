@@ -6,13 +6,16 @@ import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
+import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
+import { useInvestScreen } from '@hook/useInvestScreen';
 import styles from './GamePage.module.css';
 
 // Orchestrateur : branche `useGameScreen` sur les composants visuels.
 export const GamePage = () => {
   const screen = useGameScreen();
+  const invest = useInvestScreen();
   const { work, sleep, sellSurplus } = screen.actions;
 
   return (
@@ -77,6 +80,46 @@ export const GamePage = () => {
       )}
       <Window title="Emploi">
         <ItemList caption="Postes" items={screen.jobs} />
+      </Window>
+      <Window title="Investir">
+        <ProgressBar
+          label={invest.stock.label}
+          value={invest.stock.value}
+          max={invest.stock.max}
+        />
+        <Tabs
+          tabs={[
+            {
+              id: 'companies',
+              label: 'Entreprises',
+              content: (
+                <ItemList caption="Entreprises" items={invest.companies} />
+              ),
+            },
+            {
+              id: 'upgrades',
+              label: 'Améliorations',
+              content: (
+                <>
+                  {invest.upgradeGroups.map((group) => (
+                    <ItemList
+                      key={group.id}
+                      caption={group.caption}
+                      items={group.items}
+                    />
+                  ))}
+                </>
+              ),
+            },
+            {
+              id: 'districts',
+              label: 'Quartiers (réputation)',
+              content: (
+                <ItemList caption="Quartiers" items={invest.districts} />
+              ),
+            },
+          ]}
+        />
       </Window>
       {screen.autos.length === 0 ? null : (
         <Window title="Automatisation">
