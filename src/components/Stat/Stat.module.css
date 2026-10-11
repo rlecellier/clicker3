@@ -16,4 +16,7 @@
   font-family: var(--font-mono);
   font-size: 1.125rem;
   font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

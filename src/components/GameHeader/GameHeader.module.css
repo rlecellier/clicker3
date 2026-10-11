@@ -1,0 +1,17 @@
+/* Hauteur fixe : une ligne, quelle que soit la longueur du montant. */
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--space);
+  height: 4rem;
+  box-sizing: border-box;
+  padding: var(--space);
+  box-shadow: var(--bevel-out);
+  background: var(--color-surface);
+}
+
+.money {
+  margin: 0;
+  min-width: 0;
+}
