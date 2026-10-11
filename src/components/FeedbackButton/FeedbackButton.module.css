@@ -1,0 +1,18 @@
+.button {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow:
+    var(--bevel-out),
+    2px 2px 0 var(--color-surface-dark);
+  cursor: pointer;
+}
+
+.button:active {
+  box-shadow: var(--bevel-in);
+}

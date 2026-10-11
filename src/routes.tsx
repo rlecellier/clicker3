@@ -3,6 +3,7 @@ import { GameProvider } from '@context/GameContext';
 import { AbsencePage } from '@page/AbsencePage';
 import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
+import { FeedbackWidget } from '@page/FeedbackWidget';
 import { GamePage } from '@page/GamePage';
 import { ScreenGuard } from '@page/ScreenGuard';
 import { StyleguidePage } from '@page/StyleguidePage';
@@ -20,6 +21,7 @@ export const router = createBrowserRouter(
       element: (
         <GameProvider>
           <Outlet />
+          <FeedbackWidget />
         </GameProvider>
       ),
       children: [

@@ -38,6 +38,7 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_FEEDBACK_AUTH_URL: ${{ vars.FEEDBACK_AUTH_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
