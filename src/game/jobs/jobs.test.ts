@@ -1,5 +1,8 @@
 import { jobs, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
+import type { GameState } from '@game/state';
+import { reduce } from '@game/reducer';
+import { settleSleep, sleepStep } from '@game/sleep';
 import { changeJob, startingJobs } from './jobs';
 
 describe('données des emplois', () => {
@@ -20,6 +23,23 @@ describe('données des emplois', () => {
 describe('startingJobs', () => {
   it('ne propose que l’intérim, sans prérequis ni coût', () => {
     expect(startingJobs.map((job) => job.id)).toEqual(['interim']);
+  });
+});
+
+describe('premier emploi', () => {
+  it('permet de vivre sans dette en ne faisant que travailler', () => {
+    // Dix ans à l'intérim, sommeil compris : le loyer de départ est couvert.
+    let state: GameState = { ...startState, jobId: 'interim' };
+    let lowest = 0;
+    while (state.period < 120) {
+      state = settleSleep(
+        state.isSleeping
+          ? sleepStep(state)
+          : reduce(state, { type: 'work', target: 'job' }),
+      );
+      lowest = Math.min(lowest, state.money);
+    }
+    expect(lowest).toBeGreaterThanOrEqual(0);
   });
 });
 

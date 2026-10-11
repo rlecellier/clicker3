@@ -75,7 +75,9 @@ describe('vieillesse', () => {
   it('réduit le salaire et la réputation du travail', () => {
     const young = reduce(at(30), { type: 'work', target: 'job' });
     const senior = reduce(at(60), { type: 'work', target: 'job' });
-    expect(senior.money).toBe(Math.round(young.money * 0.5));
+    expect(senior.ledger.total.wages).toBe(
+      Math.round(young.ledger.total.wages * 0.5),
+    );
     expect(senior.reputation).toBeCloseTo(young.reputation * 0.5);
   });
 

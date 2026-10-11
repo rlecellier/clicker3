@@ -27,19 +27,16 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // Travailler paie, et l'intérim remercie.
   await work.click();
   await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
-  await expect(counter(page, 'Argent')).toHaveText(/^40\s€$/);
+  await expect(counter(page, 'Argent')).toHaveText(/^60\s€$/);
 
-  // Les améliorations disponibles sont toutes listées, même trop chères.
+  // Les améliorations disponibles sont toutes listées, même trop chères ; un
+  // seul salaire suffit aux cartes de visite, pas au stage.
   const cards = itemOf(page, 'Cartes de visite');
   const stage = itemOf(page, 'Stage « Posture professionnelle »');
   const owned = page.getByRole('region', { name: 'Obtenues', exact: true });
   await page.getByRole('tab', { name: 'Améliorations' }).click();
-  await expect(cards.getByRole('button', { name: 'Acheter' })).toBeDisabled();
   await expect(stage).toBeVisible();
-  await repeatUntil(
-    () => work.click(),
-    async () => (await money()) >= 58,
-  );
+  await expect(cards.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await cards.getByRole('button', { name: 'Acheter' }).click();
 
   // Obtenue, elle quitte la liste d'achat pour celle des améliorations
