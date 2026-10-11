@@ -57,6 +57,12 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     page.getByRole('cell', { name: '· Vente du surplus' }),
   ).toBeVisible();
 
+  // Le stock a son propre onglet : entrées, sorties, pertes.
+  await page.getByRole('tab', { name: 'Stock' }).click();
+  await expect(page.getByRole('cell', { name: 'Entrées' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Sorties' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Comptabilité' }).click();
+
   // L'automatisation s'achète, coupée au départ.
   await itemOf(page, 'Procédure de travail')
     .getByRole('button', { name: 'Acheter' })

@@ -32,17 +32,34 @@ const unitsOf = (state: GameState, company: Company, perCopy: number) =>
 // de la capacité de l'entrepôt ; le reste est perdu. Le drapeau `stockFull`
 // est posé à l'étape 2, une fois le stock écoulé.
 export const produceGoods = (state: GameState): GameState => {
+  // Arrondi cumulé : la somme des parts vaut exactement la production totale.
+  const made: Record<string, number> = {};
+  let cumulated = 0;
   let produced = 0;
   for (const company of companies) {
-    if (company.kind === 'production') {
-      produced += unitsOf(state, company, company.output);
+    if (company.kind !== 'production') {
+      continue;
     }
+    cumulated += unitsOf(state, company, company.output);
+    const share = Math.round(cumulated * state.productionMultiplier) - produced;
+    produced += share;
+    made[company.id] = share;
   }
-  produced = Math.round(produced * state.productionMultiplier);
   const stored = Math.min(
     produced,
     Math.max(0, state.stockCapacity - state.stock),
   );
+  // Entrepôt plein : les premières entreprises remplissent la place restante.
+  let room = stored;
+  const stockIn: Record<string, number> = {};
+  for (const [id, share] of Object.entries(made)) {
+    const kept = Math.min(share, room);
+    room -= kept;
+    if (kept === 0) {
+      continue;
+    }
+    stockIn[id] = kept;
+  }
   return withRecord(
     {
       ...state,
@@ -51,7 +68,7 @@ export const produceGoods = (state: GameState): GameState => {
         ...emptyStatement(state.period),
       },
     },
-    { stockProduced: stored, stockLost: produced - stored },
+    { stockProduced: stored, stockLost: produced - stored, stockIn },
   );
 };
 
@@ -62,6 +79,7 @@ export const sellGoods = (state: GameState): GameState => {
   let stock = state.stock;
   let revenue = 0;
   let sold = 0;
+  const stockOut: Record<string, number> = {};
   let isStockout = false;
   for (const company of companies) {
     if (company.kind !== 'commerce') {
@@ -74,6 +92,9 @@ export const sellGoods = (state: GameState): GameState => {
     const units = Math.min(capacity, stock);
     stock -= units;
     sold += units;
+    if (units > 0) {
+      stockOut[company.id] = units;
+    }
     revenue += units * company.price;
     const gain =
       units *
@@ -94,7 +115,11 @@ export const sellGoods = (state: GameState): GameState => {
     ...current,
     stock,
     money: current.money + earned,
-    ledger: record(current.ledger, { sales: earned, stockSold: sold }),
+    ledger: record(current.ledger, {
+      sales: earned,
+      stockSold: sold,
+      stockOut,
+    }),
     workBoosts: {},
     lastStatement: {
       ...statement,

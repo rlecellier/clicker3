@@ -30,6 +30,16 @@ describe('record', () => {
     expect(ledger.current.rent).toBe(300);
   });
 
+  it('cumule le détail du stock par origine et destination', () => {
+    let ledger = record(emptyLedger(), { stockIn: { atelier: 4 } });
+    ledger = record(ledger, {
+      stockIn: { atelier: 2, manufacture: 1 },
+      stockOut: { surplus: 3 },
+    });
+    expect(ledger.current.stockIn).toEqual({ atelier: 6, manufacture: 1 });
+    expect(ledger.total.stockOut).toEqual({ surplus: 3 });
+  });
+
   it('ne modifie pas le livre reçu', () => {
     const frozen = deepFreeze(emptyLedger());
     expect(() => record(frozen, { sales: 1 })).not.toThrow();
@@ -94,6 +104,9 @@ describe('sélecteurs', () => {
   });
 });
 
+const sum = (values: Record<string, number>) =>
+  Object.values(values).reduce((a, b) => a + b, 0);
+
 describe('invariants sur une partie jouée', () => {
   const rich: GameState = {
     ...startState,
@@ -150,6 +163,14 @@ describe('invariants sur une partie jouée', () => {
     for (const state of states) {
       const cumulated = totals(state);
       expect(state.stock).toBe(cumulated.stockProduced - cumulated.stockSold);
+    }
+  });
+
+  it('le détail du stock somme au total, entrées et sorties', () => {
+    for (const state of states) {
+      const cumulated = state.ledger.total;
+      expect(sum(cumulated.stockIn)).toBe(cumulated.stockProduced);
+      expect(sum(cumulated.stockOut)).toBe(cumulated.stockSold);
     }
   });
 

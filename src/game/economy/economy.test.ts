@@ -13,6 +13,7 @@ describe('produceGoods', () => {
     const next = produceGoods(stateWith({ companies: { atelier: 3 } }));
     expect(next.stock).toBe(6);
     expect(next.ledger.current.stockProduced).toBe(6);
+    expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
   });
 
   it('perd la production au-delà de la capacité du stock', () => {
@@ -22,6 +23,7 @@ describe('produceGoods', () => {
     expect(next.stock).toBe(50);
     expect(next.ledger.current.stockProduced).toBe(5);
     expect(next.ledger.current.stockLost).toBe(1);
+    expect(next.ledger.current.stockIn).toEqual({ atelier: 5 });
   });
 
   it('applique le multiplicateur de production', () => {
@@ -77,6 +79,7 @@ describe('sellGoods', () => {
     expect(next.reputation).toBeCloseTo(3 * economyRules.reputationPerSale);
     expect(next.ledger.current.sales).toBe(36);
     expect(next.ledger.current.stockSold).toBe(3);
+    expect(next.ledger.current.stockOut).toEqual({ boutique: 3 });
     expect(next.lastStatement?.stockout).toBe(false);
   });
 

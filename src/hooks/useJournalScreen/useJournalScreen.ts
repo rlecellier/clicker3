@@ -2,10 +2,11 @@ import { useState } from 'react';
 import type { EventLogEntry } from '@component/EventLog';
 import type { LedgerRow } from '@component/LedgerTable';
 import { useGameContext } from '@context/GameContext';
+import { companies } from '@game/data';
 import { formatCount, formatDate, formatMoney } from '@game/format';
 import { lastPeriodReport, totals } from '@game/ledger';
 import type { LedgerReport } from '@game/ledger';
-import type { JournalEntry } from '@game/state';
+import type { GameState, JournalEntry } from '@game/state';
 import { dateOf } from '@game/time';
 import { hasDashboard } from '@game/upgrades';
 
@@ -37,7 +38,7 @@ const basicLines: Line[] = [
   money('net', 'Solde', (report) => report.net),
 ];
 
-// Une fois le « Tableau de bord » acheté : le détail et les flux.
+// Une fois le « Tableau de bord » acheté : le détail de l'argent et la réputation.
 const dashboardLines: Line[] = [
   money('revenue', 'Recettes', (report) => report.revenue),
   money('wages', '· Salaires', (report) => report.wages),
@@ -51,9 +52,6 @@ const dashboardLines: Line[] = [
   money('studies', '· Études', (report) => report.studies),
   money('otherExpenses', '· Autres dépenses', (report) => report.otherExpenses),
   money('net', 'Solde', (report) => report.net),
-  count('stockProduced', 'Stock produit', (report) => report.stockProduced),
-  count('stockSold', 'Stock vendu', (report) => report.stockSold),
-  count('stockLost', 'Stock perdu', (report) => report.stockLost),
   count(
     'reputationGained',
     'Réputation gagnée',
@@ -70,6 +68,37 @@ const dashboardLines: Line[] = [
     (report) => report.reputationSpent,
   ),
 ];
+
+// Récap du stock : ce qui entre (production de chaque entreprise) et ce qui
+// sort (ventes de chaque commerce, vente du surplus), puis ce qui est perdu.
+const stockLines = (state: GameState): Line[] => {
+  const isKnown = (id: string) =>
+    (state.companies[id] ?? 0) > 0 ||
+    (state.ledger.total.stockIn[id] ?? 0) > 0 ||
+    (state.ledger.total.stockOut[id] ?? 0) > 0;
+  const detail = (
+    id: string,
+    label: string,
+    side: 'stockIn' | 'stockOut',
+  ): Line =>
+    count(`${side}-${id}`, `· ${label}`, (report) => report[side][id] ?? 0);
+  return [
+    count('stockProduced', 'Entrées', (report) => report.stockProduced),
+    ...companies
+      .filter((company) => company.kind === 'production' && isKnown(company.id))
+      .map((company) => detail(company.id, company.name, 'stockIn')),
+    count('stockSold', 'Sorties', (report) => report.stockSold),
+    ...companies
+      .filter((company) => company.kind === 'commerce' && isKnown(company.id))
+      .map((company) => detail(company.id, company.name, 'stockOut')),
+    detail('surplus', 'Vente du surplus', 'stockOut'),
+    count(
+      'stockLost',
+      'Production perdue (entrepôt plein)',
+      (report) => report.stockLost,
+    ),
+  ];
+};
 
 const keyOf = (entry: JournalEntry) => `${entry.period}-${entry.id}`;
 
@@ -106,14 +135,14 @@ export const useJournalScreen = () => {
   const hasBoard = hasDashboard(state);
   const last = lastPeriodReport(state);
   const total = totals(state);
-  const rows: LedgerRow[] = (hasBoard ? dashboardLines : basicLines).map(
-    (line) => ({
+  const toRows = (lines: Line[]): LedgerRow[] =>
+    lines.map((line) => ({
       id: line.id,
       label: line.label,
       last: line.format(line.value(last)),
       total: line.format(line.value(total)),
-    }),
-  );
+    }));
+  const rows = toRows(hasBoard ? dashboardLines : basicLines);
 
   return {
     entries,
@@ -122,5 +151,12 @@ export const useJournalScreen = () => {
       caption: hasBoard ? 'Tableau de bord' : 'Comptes (version simplifiée)',
       rows,
     },
+    // Gestion du stock : seulement avec le tableau de bord.
+    stock: hasBoard
+      ? {
+          caption: `Stock : ${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
+          rows: toRows(stockLines(state)),
+        }
+      : null,
   };
 };

@@ -13,6 +13,8 @@ export const emptyFigures = (): LedgerFigures => ({
   stockProduced: 0,
   stockSold: 0,
   stockLost: 0,
+  stockIn: {},
+  stockOut: {},
   reputationGained: 0,
   reputationLost: 0,
   reputationSpent: 0,
@@ -26,13 +28,37 @@ export const emptyLedger = (): Ledger => ({
 
 export type LedgerEntry = Partial<LedgerFigures>;
 
-const add = (figures: LedgerFigures, entry: LedgerEntry): LedgerFigures => {
-  const result = { ...figures };
-  for (const key of Object.keys(entry) as (keyof LedgerFigures)[]) {
-    result[key] += entry[key] ?? 0;
+const addRecords = (
+  base: Record<string, number>,
+  entry: Record<string, number>,
+) => {
+  const result = { ...base };
+  for (const [id, amount] of Object.entries(entry)) {
+    result[id] = (result[id] ?? 0) + amount;
   }
   return result;
 };
+
+const add = (figures: LedgerFigures, entry: LedgerEntry): LedgerFigures => ({
+  ...figures,
+  wages: figures.wages + (entry.wages ?? 0),
+  sales: figures.sales + (entry.sales ?? 0),
+  surplus: figures.surplus + (entry.surplus ?? 0),
+  otherIncome: figures.otherIncome + (entry.otherIncome ?? 0),
+  rent: figures.rent + (entry.rent ?? 0),
+  payroll: figures.payroll + (entry.payroll ?? 0),
+  purchases: figures.purchases + (entry.purchases ?? 0),
+  studies: figures.studies + (entry.studies ?? 0),
+  otherExpenses: figures.otherExpenses + (entry.otherExpenses ?? 0),
+  stockProduced: figures.stockProduced + (entry.stockProduced ?? 0),
+  stockSold: figures.stockSold + (entry.stockSold ?? 0),
+  stockLost: figures.stockLost + (entry.stockLost ?? 0),
+  stockIn: addRecords(figures.stockIn, entry.stockIn ?? {}),
+  stockOut: addRecords(figures.stockOut, entry.stockOut ?? {}),
+  reputationGained: figures.reputationGained + (entry.reputationGained ?? 0),
+  reputationLost: figures.reputationLost + (entry.reputationLost ?? 0),
+  reputationSpent: figures.reputationSpent + (entry.reputationSpent ?? 0),
+});
 
 /**
  * Seul point d'enregistrement : ajoute l'écriture à la période en cours et au
