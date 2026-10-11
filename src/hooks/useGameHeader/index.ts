@@ -1,0 +1,1 @@
+export { useGameHeader } from './useGameHeader';

@@ -5,6 +5,7 @@ import { DataTable } from '@component/DataTable';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
 import { Note } from '@component/Note';
+import { GameHeader } from '@component/GameHeader';
 import { ProgressBar } from '@component/ProgressBar';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { Stat } from '@component/Stat';
@@ -27,6 +28,7 @@ const rows = [
 export const StyleguidePage = () => (
   <main className={styles.page}>
     <Window title="Guide de style" actions={<Badge tone="info">v1</Badge>}>
+      <GameHeader money="1 250 €" gauge={{ value: 6, max: 10 }} />
       <ProgressBar label="Jauge de temps" value={6} max={10} />
       <dl className={styles.stats}>
         <Stat label="Argent" value="1 250 €" />
