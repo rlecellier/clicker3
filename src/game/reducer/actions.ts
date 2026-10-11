@@ -8,4 +8,6 @@ export type GameAction =
   | { type: 'changeJob'; id: string }
   | { type: 'buyCompany'; id: string }
   | { type: 'sellSurplus' }
-  | { type: 'buyUpgrade'; id: string };
+  | { type: 'buyUpgrade'; id: string }
+  // Rejoue la même vie depuis l'état de départ.
+  | { type: 'restart' };

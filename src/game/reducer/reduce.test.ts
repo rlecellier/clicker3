@@ -1,5 +1,7 @@
 import { startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
+import type { GameState } from '@game/state';
+import type { GameAction } from './actions';
 import { reduce } from './reduce';
 
 describe('reduce', () => {
@@ -75,5 +77,42 @@ describe('reduce', () => {
       { type: 'buyUpgrade', id: 'cartes-visite' },
     );
     expect(next.upgrades).toEqual(['cartes-visite']);
+  });
+
+  describe('après la mort', () => {
+    const rich: GameState = {
+      ...startState,
+      status: 'dead',
+      money: 1_000_000,
+      stock: 10,
+      markers: ['metier'],
+      reputation: 100,
+      reputationEarned: 100,
+      stats: { metier: 100, gestion: 100, intelligence: 100, endurance: 100 },
+      upgrades: ['stage-posture'],
+    };
+    const actions: GameAction[] = [
+      { type: 'addGauge', amount: 500 },
+      { type: 'unlockDistrict', id: 'hauts-fourneaux' },
+      { type: 'work', target: 'job' },
+      { type: 'study', courseId: 'metier' },
+      { type: 'sleep' },
+      { type: 'changeJob', id: 'polyvalent' },
+      { type: 'buyCompany', id: 'atelier' },
+      { type: 'sellSurplus' },
+      { type: 'buyUpgrade', id: 'cartes-visite' },
+    ];
+
+    it.each(actions)('refuse $type', (action) => {
+      expect(reduce(rich, action)).toBe(rich);
+    });
+  });
+
+  it('rejoue la même vie avec restart', () => {
+    const played = reduce(
+      { ...startState, status: 'dead', money: 99, period: 684 },
+      { type: 'restart' },
+    );
+    expect(played).toEqual(startState);
   });
 });

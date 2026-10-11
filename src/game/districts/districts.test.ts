@@ -41,6 +41,11 @@ describe('unlockDistrict', () => {
     expect(unlockDistrict(rich, 'parc-horizon')).toBe(rich);
   });
 
+  it('refuse quand le personnage est mort', () => {
+    const dead = { ...ready, status: 'dead' as const };
+    expect(unlockDistrict(dead, 'hauts-fourneaux')).toBe(dead);
+  });
+
   it('refuse un quartier déjà débloqué ou inconnu', () => {
     expect(unlockDistrict(ready, 'tilleuls')).toBe(ready);
     expect(unlockDistrict(ready, 'nulle-part')).toBe(ready);

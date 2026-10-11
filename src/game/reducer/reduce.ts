@@ -1,7 +1,9 @@
 import { buyCompany } from '@game/companies';
+import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob } from '@game/jobs';
 import { addGauge } from '@game/period';
+import { updatePhase } from '@game/phases';
 import { sleep } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
@@ -10,7 +12,7 @@ import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
 
-export const reduce = (state: GameState, action: GameAction): GameState => {
+const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'addGauge': {
       return addGauge(state, action.amount);
@@ -39,5 +41,12 @@ export const reduce = (state: GameState, action: GameAction): GameState => {
     case 'buyUpgrade': {
       return buyUpgrade(state, action.id);
     }
+    case 'restart': {
+      return startState;
+    }
   }
 };
+
+// La phase de vie suit les achats : on la remet à jour après chaque action.
+export const reduce = (state: GameState, action: GameAction): GameState =>
+  updatePhase(applyAction(state, action));
