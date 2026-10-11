@@ -26,8 +26,17 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   const sellSurplus = page.getByRole('button', { name: /Vendre le surplus/ });
   const warehouse = page.getByRole('progressbar', { name: /^Entrepôt/ });
 
+  // Les déblocages de la partie chargée s'annoncent sur les onglets concernés,
+  // et la visite d'un onglet éteint son badge.
+  const sidebar = page.getByRole('navigation', { name: 'Navigation du jeu' });
+  const investLink = sidebar.getByRole('link', { name: /^Investir/ });
+  const jobsLink = sidebar.getByRole('link', { name: /^Emploi/ });
+  await expect(investLink).toHaveAccessibleName(/^Investir, \d+ nouveautés?$/);
+  await expect(jobsLink).toHaveAccessibleName('Emploi, 1 nouveauté');
+
   // Le palier de métier ouvre un meilleur poste ; les autres restent fermés.
   await openTab(page, 'emploi');
+  await expect(jobsLink).toHaveAccessibleName('Emploi');
   const polyvalent = itemOf(page, 'Employé polyvalent');
   const manager = itemOf(page, 'Chargé de mission');
   await expect(manager.getByRole('button', { name: 'Prendre' })).toBeDisabled();
@@ -41,6 +50,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
 
   // Un commerce sans production : à la fin de la période, rupture de stock.
   await openTab(page, 'investir');
+  await expect(investLink).toHaveAccessibleName('Investir');
   const shop = itemOf(page, 'Boutique');
   await shop.getByRole('button', { name: 'Acheter' }).click();
   await expect(shop.getByText('1 possédé(s)')).toBeVisible();
