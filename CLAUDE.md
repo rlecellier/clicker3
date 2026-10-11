@@ -62,6 +62,13 @@ une branche = une MR.
 
 Rien d'autre n'est imposé : pas de test « par principe ».
 
+## Fin de travail
+
+Quand la demande contient une condition de fin du type « si X, alors ton
+travail est terminé », on vérifie cette condition avant de conclure. Si on
+considère qu'elle est remplie, la réponse se termine par la phrase « Mon travail
+est terminé. » ; sinon on ne l'écrit pas et on dit ce qui reste à faire.
+
 ## Documentation
 
 Les décisions d'architecture vont dans `.claude/adr/` (un ADR numéroté par
