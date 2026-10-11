@@ -1,0 +1,158 @@
+import { act, renderHook } from '@testing-library/react';
+import type { ReactNode } from 'react';
+import { autoIntervalMs } from '@game/automation';
+import { startState } from '@game/data';
+import { createMemoryStorage, serialize } from '@game/save';
+import type { GameState } from '@game/state';
+import { GameProvider } from './GameProvider';
+import { useGameContext } from './useGameContext';
+
+const START = 1_000_000;
+
+const automated: GameState = {
+  ...startState,
+  upgrades: ['procedure-travail', 'rythme-sommeil'],
+  autoWork: true,
+};
+
+const clock = { time: START, isHidden: false };
+const now = () => clock.time;
+const advance = (ms: number) => {
+  act(() => {
+    clock.time += ms;
+    vi.advanceTimersByTime(ms);
+  });
+};
+
+const setHidden = (isNowHidden: boolean) => {
+  clock.isHidden = isNowHidden;
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+};
+
+const setup = (storage = createMemoryStorage()) => {
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <GameProvider storage={storage} now={now}>
+      {children}
+    </GameProvider>
+  );
+  return { storage, ...renderHook(() => useGameContext(), { wrapper }) };
+};
+
+beforeEach(() => {
+  clock.time = START;
+  clock.isHidden = false;
+  vi.useFakeTimers();
+  vi.spyOn(document, 'hidden', 'get').mockImplementation(() => clock.isHidden);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.useRealTimers();
+});
+
+describe('démarrage', () => {
+  it('commence une vie neuve sans sauvegarde', () => {
+    const { result } = setup();
+    expect(result.current.state.period).toBe(0);
+    expect(result.current.state.money).toBe(startState.money);
+    expect(result.current.absence).toBeNull();
+  });
+
+  it('ignore une sauvegarde illisible', () => {
+    const { result } = setup(createMemoryStorage('pas du json'));
+    expect(result.current.state.period).toBe(0);
+  });
+
+  it('expose les actions des règles', () => {
+    const { result } = setup();
+    act(() => {
+      result.current.dispatch({ type: 'work', target: 'job' });
+    });
+    expect(result.current.state.money).toBeGreaterThan(startState.money);
+  });
+});
+
+describe('chargement et rattrapage', () => {
+  it('rattrape l’absence et expose le résumé, que le joueur peut fermer', () => {
+    const storage = createMemoryStorage(serialize(automated, START));
+    clock.time = START + 10 * autoIntervalMs;
+    const { result } = setup(storage);
+    expect(result.current.state.period).toBeGreaterThan(automated.period);
+    expect(result.current.absence?.actions).toBe(10);
+    act(() => {
+      result.current.dismissAbsence();
+    });
+    expect(result.current.absence).toBeNull();
+  });
+
+  it('ne montre pas de résumé sans action automatique rattrapée', () => {
+    const storage = createMemoryStorage(serialize(startState, START));
+    clock.time = START + 60_000;
+    const { result } = setup(storage);
+    expect(result.current.absence).toBeNull();
+    expect(result.current.state.money).toBe(startState.money);
+  });
+});
+
+describe('boucle automatique', () => {
+  it('joue les actions automatiques au rythme de l’horloge', () => {
+    const storage = createMemoryStorage(serialize(automated, START));
+    const { result } = setup(storage);
+    advance(autoIntervalMs);
+    expect(result.current.state.money).toBeGreaterThan(automated.money);
+  });
+
+  it('ne joue rien onglet caché, puis rattrape au retour', () => {
+    const storage = createMemoryStorage(serialize(automated, START));
+    const { result } = setup(storage);
+    setHidden(true);
+    advance(5 * autoIntervalMs);
+    expect(result.current.state.money).toBe(automated.money);
+    setHidden(false);
+    expect(result.current.state.money).toBeGreaterThan(automated.money);
+    expect(result.current.absence?.actions).toBe(5);
+  });
+});
+
+describe('sauvegarde', () => {
+  it('sauvegarde périodiquement', () => {
+    const { storage } = setup();
+    expect(storage.read()).toBeNull();
+    advance(5000);
+    expect(storage.read()).not.toBeNull();
+  });
+
+  it('sauvegarde à chaque achat', () => {
+    const { result, storage } = setup(
+      createMemoryStorage(
+        serialize(
+          {
+            ...startState,
+            money: 1_000_000,
+            stats: { ...startState.stats, gestion: 1_000_000 },
+          },
+          START,
+        ),
+      ),
+    );
+    const before = storage.read();
+    act(() => {
+      result.current.dispatch({ type: 'buyCompany', id: 'atelier' });
+    });
+    expect(result.current.state.companies['atelier']).toBe(1);
+    expect(storage.read()).not.toBe(before);
+  });
+
+  it('sauvegarde quand l’onglet se cache et avant de quitter', () => {
+    const { storage } = setup();
+    setHidden(true);
+    expect(storage.read()).not.toBeNull();
+    storage.clear();
+    act(() => {
+      dispatchEvent(new Event('beforeunload'));
+    });
+    expect(storage.read()).not.toBeNull();
+  });
+});
