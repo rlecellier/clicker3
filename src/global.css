@@ -1,6 +1,39 @@
 :root {
-  --color-background: #008080;
-  --color-text: #000000;
+  /* Palette : logiciel de gestion de 1999, aucun néon. */
+  --color-desktop: #5f7f8f;
+  --color-surface: #d4d0c8;
+  --color-surface-light: #f2efe6;
+  --color-surface-shadow: #808080;
+  --color-surface-dark: #404040;
+  --color-paper: #ffffff;
+  --color-text: #101010;
+  --color-text-muted: #4a4a4a;
+  --color-primary: #1f3a73;
+  --color-primary-text: #ffffff;
+  --color-note: #fff3a0;
+  --color-note-border: #c9b84a;
+  --color-alert: #a01818;
+  --color-alert-text: #ffffff;
+  --color-focus: #b35c00;
+
+  --font-sans: Tahoma, Verdana, 'Segoe UI', Arial, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-size: 0.875rem;
+  --space: 0.5rem;
+
+  /* Bords biseautés d'époque. */
+  --bevel-out:
+    inset 1px 1px 0 var(--color-surface-light),
+    inset -1px -1px 0 var(--color-surface-dark),
+    inset 2px 2px 0 var(--color-paper),
+    inset -2px -2px 0 var(--color-surface-shadow);
+  --bevel-in:
+    inset 1px 1px 0 var(--color-surface-dark),
+    inset -1px -1px 0 var(--color-paper),
+    inset 2px 2px 0 var(--color-surface-shadow),
+    inset -2px -2px 0 var(--color-surface-light);
+
+  color-scheme: light;
 }
 
 *,
@@ -11,7 +44,42 @@
 
 body {
   margin: 0;
-  background: var(--color-background);
+  background: var(--color-desktop);
   color: var(--color-text);
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-sans);
+  font-size: var(--font-size);
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px dotted var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
