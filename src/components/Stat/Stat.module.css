@@ -1,0 +1,19 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  padding: 4px 8px;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+}
