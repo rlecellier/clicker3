@@ -6,6 +6,7 @@ import type { GameState } from '@game/state';
 export const canUnlockDistrict = (state: GameState, id: string) => {
   const district = districts.find((candidate) => candidate.id === id);
   return (
+    state.status === 'playing' &&
     district !== undefined &&
     !state.districts.includes(id) &&
     canSpendReputation(state, district.cost) &&
