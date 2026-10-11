@@ -17,18 +17,18 @@ export const courses: readonly Course[] = [
     id: 'gestion',
     name: 'Gestion des opportunités',
     stat: 'gestion',
-    cost: 60,
+    cost: 150,
   },
   {
     id: 'intelligence',
     name: 'Économie appliquée',
     stat: 'intelligence',
-    cost: 150,
+    cost: 190,
   },
   {
     id: 'endurance',
     name: 'Dépassement de soi',
     stat: 'endurance',
-    cost: 300,
+    cost: 260,
   },
 ];

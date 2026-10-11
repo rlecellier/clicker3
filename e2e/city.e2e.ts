@@ -6,8 +6,8 @@ test('ville : débloquer des quartiers avec la réputation, lire la carte', asyn
 }) => {
   await preloadSave(page, {
     state: {
-      reputation: 25,
-      reputationEarned: 35,
+      reputation: 60,
+      reputationEarned: 110,
       companies: { atelier: 1, boutique: 1 },
       phase: 'entrepreneur',
     },

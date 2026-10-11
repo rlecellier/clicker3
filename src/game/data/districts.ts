@@ -24,7 +24,7 @@ export const districts: readonly District[] = [
     name: 'Les Hauts-Fourneaux',
     description:
       'Ancien quartier ouvrier en cours de requalification depuis 1987. « Demain commence ici. »',
-    cost: 5,
+    cost: 1,
     requirement: { type: 'reputationTier', tier: 1 },
   },
   {
@@ -32,7 +32,7 @@ export const districts: readonly District[] = [
     name: 'Parc d’activités Horizon',
     description:
       'Zone commerciale et entrepôts en périphérie. Un rond-point à chaque entrée, aucun piéton.',
-    cost: 15,
+    cost: 22,
     requirement: { type: 'reputationTier', tier: 2 },
   },
   {
@@ -40,7 +40,7 @@ export const districts: readonly District[] = [
     name: 'Le Pôle d’Excellence',
     description:
       'Centre d’affaires de verre. Vingt cabinets s’y occupent de se conseiller mutuellement.',
-    cost: 40,
+    cost: 33,
     requirement: { type: 'reputationTier', tier: 3 },
   },
 ];

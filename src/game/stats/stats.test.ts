@@ -12,10 +12,10 @@ describe('tierOf', () => {
   });
 
   it('monte d’un palier quand le seuil est atteint', () => {
-    expect(tierOf(withPoints(9), 'metier')).toBe(0);
-    expect(tierOf(withPoints(10), 'metier')).toBe(1);
-    expect(tierOf(withPoints(69), 'metier')).toBe(2);
-    expect(tierOf(withPoints(70), 'metier')).toBe(3);
+    expect(tierOf(withPoints(1), 'metier')).toBe(0);
+    expect(tierOf(withPoints(2), 'metier')).toBe(1);
+    expect(tierOf(withPoints(40), 'metier')).toBe(2);
+    expect(tierOf(withPoints(41), 'metier')).toBe(3);
   });
 
   it('plafonne au dernier palier', () => {
@@ -23,6 +23,6 @@ describe('tierOf', () => {
   });
 
   it('ne regarde que la stat demandée', () => {
-    expect(tierOf(withPoints(150), 'gestion')).toBe(0);
+    expect(tierOf(withPoints(81), 'gestion')).toBe(0);
   });
 });
