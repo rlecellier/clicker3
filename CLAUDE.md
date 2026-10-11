@@ -7,7 +7,7 @@ recherche de game design dans `docs/game-design/README.md`.
 **État du projet** : squelette initialisé (Vite, React, TypeScript, ESLint,
 Prettier, Vitest ; V1-01). Le concept et les mécaniques de la v1 sont choisis
 (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le développement suit
-l'issue de suivi #29. Pas encore de CI ni de Playwright configuré en CI (V1-02).
+l'issue de suivi #29. CI GitHub Actions, déploiement Pages et parcours de fumée Playwright en place (V1-02).
 
 Conventions du projet : voir `.claude/adr/0001-project-structure.md`.
 
