@@ -116,4 +116,13 @@ export type GameState = {
   activeEffects: ActiveEffect[];
   // Facteur de salaire par emploi (1 si absent).
   jobSalaryFactors: Record<string, number>;
+
+  // Interrupteurs des actions automatiques (activables une fois achetées).
+  autoWork: boolean;
+  autoSleep: boolean;
+  // Temps (ms) accumulé vers la prochaine action automatique.
+  autoElapsed: number;
+  // Horodatage fourni par l'appelant (jamais lu par les règles). Écrit à la
+  // sauvegarde (`serialize`) et au retour (`resume`), qui s'en sert pour rattraper l'absence.
+  lastSeenAt: number | null;
 };

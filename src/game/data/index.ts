@@ -1,4 +1,5 @@
 export { actionRules, jobMarkerStat } from './actionRules';
+export { automationRules } from './automationRules';
 export { companies } from './companies';
 export type { CommerceCompany, Company, ProductionCompany } from './companies';
 export { courses } from './courses';
