@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding-left: 4px;
+}
+
+.tab {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 0;
+  box-shadow: var(--bevel-out);
+  padding: 4px 12px;
+  min-height: 2rem;
+  cursor: pointer;
+}
+
+.tab[data-active] {
+  font-weight: bold;
+  position: relative;
+  top: 1px;
+}
+
+.panel {
+  background: var(--color-surface);
+  box-shadow: var(--bevel-out);
+  padding: var(--space);
+}
