@@ -33,7 +33,7 @@ const statementFlag = (state: GameState, flag: StatementFlag) => {
   }
   switch (flag) {
     case 'rentPaid': {
-      return statement.expenses > 0;
+      return statement.paidExpenses;
     }
     case 'unpaid': {
       return statement.unpaid;
@@ -42,7 +42,7 @@ const statementFlag = (state: GameState, flag: StatementFlag) => {
       return statement.stockout;
     }
     case 'stockFull': {
-      return statement.stockLost > 0;
+      return statement.stockFull;
     }
   }
 };

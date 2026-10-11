@@ -1,6 +1,7 @@
 import { events, journalLimit } from '@game/data';
 import type { EventEffect, GameEvent } from '@game/data';
 import { expireEffects } from '@game/effects';
+import { withRecord } from '@game/ledger';
 import { isUnlocked } from '@game/requirements';
 import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
@@ -23,6 +24,16 @@ const renderText = (state: GameState, text: string) => {
   );
 };
 
+// Change l'argent (jamais sous 0) et note la variation réelle au livre.
+const setMoney = (state: GameState, money: number): GameState => {
+  const next = Math.max(0, money);
+  const delta = next - state.money;
+  return withRecord(
+    { ...state, money: next },
+    delta >= 0 ? { otherIncome: delta } : { otherExpenses: -delta },
+  );
+};
+
 const applyEffect = (state: GameState, effect: EventEffect): GameState => {
   switch (effect.type) {
     case 'reputation': {
@@ -31,16 +42,13 @@ const applyEffect = (state: GameState, effect: EventEffect): GameState => {
         : loseReputation(state, -effect.amount);
     }
     case 'money': {
-      return { ...state, money: Math.max(0, state.money + effect.amount) };
+      return setMoney(state, state.money + effect.amount);
     }
     case 'moneyFactor': {
-      return { ...state, money: Math.round(state.money * effect.factor) };
+      return setMoney(state, Math.round(state.money * effect.factor));
     }
     case 'oneOffRent': {
-      return {
-        ...state,
-        money: Math.max(0, state.money - state.rent * effect.months),
-      };
+      return setMoney(state, state.money - state.rent * effect.months);
     }
     case 'rentFactor': {
       return { ...state, rent: Math.round(state.rent * effect.factor) };
