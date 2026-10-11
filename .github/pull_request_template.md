@@ -1,6 +1,10 @@
 ## 🎯 Why
 
-<!-- The problem or need this MR answers, in one or two sentences. Link the issue if any. -->
+<!-- The problem or need this MR answers, in one or two sentences. -->
+
+Closes #
+
+<!-- One issue per MR: replace the number above. If the work covers several issues, split it. -->
 
 ## ✨ What changed
 
