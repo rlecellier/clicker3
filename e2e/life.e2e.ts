@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-
-const SAVE_KEY = 'clicker3.save';
+import { SAVE_KEY, expectNoOverflow } from './helpers';
 
 // Fait mourir le personnage sauvegardé au prochain chargement (après la
 // sauvegarde de sortie de la page courante, qui l'écraserait sinon).
@@ -18,13 +17,6 @@ const killCharacterOnNextLoad = async (page: Page) => {
   await page.evaluate(() => {
     sessionStorage.setItem('kill', '1');
   });
-};
-
-const expectNoOverflow = async (page: Page) => {
-  const isOverflowing = await page.evaluate(
-    () => document.documentElement.scrollWidth > window.innerWidth,
-  );
-  expect(isOverflowing).toBe(false);
 };
 
 test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
