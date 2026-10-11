@@ -29,15 +29,19 @@ variantes dans `src/game/reducer/actions.ts` et son `case` dans `reduce`. Le
 
 ### 3. Organisation de `src/game/`
 
-Un dossier par unité, comme le reste du projet (ADR 0001) :
+Un dossier par unité, comme le reste du projet (ADR 0001). Les premiers
+modules :
 
-| Dossier   | Rôle                                                              |
-| --------- | ----------------------------------------------------------------- |
-| `state/`  | Types de l'état (`GameState`)                                     |
-| `data/`   | Données : état de départ, plus tard le contenu (emplois, etc.)    |
-| `time/`   | Âge et date dérivés de la période                                 |
-| `period/` | Jauge de temps et résolution d'une période                        |
-| `reducer/`| `GameAction` et `reduce`                                          |
+| Dossier    | Rôle                                                   |
+| ---------- | ------------------------------------------------------ |
+| `state/`   | Types de l'état (`GameState`)                          |
+| `data/`    | Données : état de départ et contenu (emplois, etc.)    |
+| `time/`    | Âge et date dérivés de la période                      |
+| `period/`  | Jauge de temps et résolution d'une période             |
+| `reducer/` | `GameAction` et `reduce`                               |
+
+Chaque règle ajoutée depuis a son propre dossier (`economy/`, `sleep/`,
+`automation/`…) ; `ls src/game` donne la liste à jour.
 
 Les modules s'importent par alias (`@game/state`, `@game/time`…). `src/game/`
 n'importe ni React ni les couches UI (imposé par ESLint).
@@ -49,13 +53,17 @@ que le personnage est vivant, `endPeriod` s'exécute, dans l'ordre de
 `docs/game/v1.md` § 1 :
 
 1. `produceGoods` — production ;
-2. `sellGoods` — ventes ;
-3. `chargeExpenses` — loyer et salaires ;
+2. `sellGoods` — ventes, puis rangement de l'invendu dans l'entrepôt ;
+3. `chargeExpenses` puis `chargeInterest` — loyer et salaires, puis intérêt
+   d'un solde négatif ; `closePeriod` clôt ensuite le relevé (`ledger`) ;
 4. `ageCharacter` — vieillissement, passage à `dead` à l'âge de mort ;
 5. `resetGauge` — la jauge repart.
 
-Les étapes 1 à 3 sont des fonctions identité (points d'extension) que les issues
-suivantes remplissent, sans changer l'ordre.
+Les événements (`triggerEvents`) sont évalués après l'étape 5 : ils sont datés
+de la période qui commence.
+
+À l'origine, les étapes 1 à 3 étaient des fonctions identité (points
+d'extension) ; les issues suivantes les ont remplies sans changer l'ordre.
 
 **Surplus de jauge** : l'étape 5 retire une capacité de jauge et **conserve le
 surplus** au lieu de remettre à zéro. Sans cela, une action longue ne ferait

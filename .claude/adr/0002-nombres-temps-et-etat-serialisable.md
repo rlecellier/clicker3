@@ -39,8 +39,8 @@ ni `NaN`. Garantie testée : `JSON.parse(JSON.stringify(state))` est égal à
   `gauge` (remplissage de la jauge de temps).
 - L'âge et la date **se dérivent** de `period` et des données de départ
   (`ageOf`, `dateOf`) ; on ne les stocke pas.
-- Aucune règle n'appelle `Date.now()` ni `Math.random()`. Le hasard viendra
-  d'une graine stockée dans l'état.
+- Aucune règle n'appelle `Date.now()` ni `Math.random()`. Le hasard vient
+  d'une graine stockée dans l'état (`seed`, module `@game/random`).
 
 ### 5. Les valeurs de départ sont des données
 
