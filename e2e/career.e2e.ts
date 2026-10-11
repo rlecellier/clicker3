@@ -29,12 +29,22 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const work = page.getByRole('button', { name: /Travailler/ });
   const money = () => amountOf(counter(page, 'Argent'));
 
+  // Hauteurs stables : le bouton Travailler ne bouge ni quand le message
+  // d'accueil laisse place au retour d'action, ni quand « Étudier » apparaît.
+  const workBox = async () => {
+    const box = await work.boundingBox();
+    expect(box).not.toBeNull();
+    return box;
+  };
+  const workBoxAtStart = await workBox();
+
   // Aucun cursus au départ.
   await expect(page.getByRole('heading', { name: 'Études' })).toBeHidden();
 
   // Travailler paie, et l'intérim remercie.
   await work.click();
   await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
+  expect(await workBox()).toEqual(workBoxAtStart);
   await expect(counter(page, 'Argent')).toHaveText(/^60\s€$/);
 
   // Les améliorations disponibles sont toutes listées, même trop chères ; un
@@ -82,6 +92,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(
     page.getByRole('button', { name: 'Choisir le cursus' }),
   ).toBeVisible();
+  expect(await workBox()).toEqual(workBoxAtStart);
   await repeatUntil(
     () => work.click(),
     async () => (await money()) >= 20,
