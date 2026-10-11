@@ -36,8 +36,36 @@ describe('useJournalScreen', () => {
       upgrades: ['tableau-de-bord'],
     });
     const ids = result.current.ledger.rows.map((row) => row.id);
-    expect(ids).toContain('stockProduced');
     expect(ids).toContain('reputationGained');
+    expect(ids).not.toContain('stockProduced');
+  });
+
+  it('sépare le stock de la comptabilité, derrière le tableau de bord', () => {
+    expect(setup(startState).result.current.stock).toBeNull();
+    const { result } = setup({
+      ...startState,
+      upgrades: ['tableau-de-bord'],
+      stock: 4,
+      stockCapacity: 20,
+      companies: { ...startState.companies, atelier: 1, boutique: 1 },
+      ledger: {
+        ...startState.ledger,
+        total: {
+          ...startState.ledger.total,
+          stockProduced: 10,
+          stockSold: 6,
+          stockIn: { atelier: 10 },
+          stockOut: { boutique: 5, surplus: 1 },
+        },
+      },
+    });
+    expect(result.current.stock?.caption).toBe('Stock : 4 / 20');
+    const totals = Object.fromEntries(
+      result.current.stock?.rows.map((row) => [row.id, row.total]) ?? [],
+    );
+    expect(totals['stockIn-atelier']).toBe('10');
+    expect(totals['stockOut-boutique']).toBe('5');
+    expect(totals['stockOut-surplus']).toBe('1');
   });
 
   it('liste le plus récent en haut et notifie le message de la période', () => {

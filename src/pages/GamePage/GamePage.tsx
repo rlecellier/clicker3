@@ -173,6 +173,20 @@ export const GamePage = () => {
                 />
               ),
             },
+            ...(journal.stock === null
+              ? []
+              : [
+                  {
+                    id: 'stock',
+                    label: 'Stock',
+                    content: (
+                      <LedgerTable
+                        caption={journal.stock.caption}
+                        rows={journal.stock.rows}
+                      />
+                    ),
+                  },
+                ]),
           ]}
         />
       </Window>

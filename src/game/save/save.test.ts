@@ -205,6 +205,25 @@ describe('migration de la version 1', () => {
   });
 });
 
+describe('migration de la version 2', () => {
+  it('ajoute le détail du stock au ledger', () => {
+    const { stockIn, stockOut, ...figures } = startState.ledger.total;
+    expect({ stockIn, stockOut }).toEqual({ stockIn: {}, stockOut: {} });
+    const old = { ...figures, stockProduced: 7 };
+    const text = JSON.stringify({
+      version: 2,
+      state: {
+        ...startState,
+        version: 2,
+        ledger: { current: old, last: old, total: old },
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.ledger.total.stockIn).toEqual({});
+    expect(result.ok && result.state.ledger.total.stockProduced).toBe(7);
+  });
+});
+
 describe('migrations', () => {
   const v2: SaveOptions = {
     currentVersion: 2,

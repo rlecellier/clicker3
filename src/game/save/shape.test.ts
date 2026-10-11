@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 2,
+    version: 3,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -44,7 +44,9 @@ describe('forme de l’état', () => {
       'ledger.current.reputationLost',
       'ledger.current.reputationSpent',
       'ledger.current.sales',
+      'ledger.current.stockIn',
       'ledger.current.stockLost',
+      'ledger.current.stockOut',
       'ledger.current.stockProduced',
       'ledger.current.stockSold',
       'ledger.current.studies',
@@ -59,7 +61,9 @@ describe('forme de l’état', () => {
       'ledger.last.reputationLost',
       'ledger.last.reputationSpent',
       'ledger.last.sales',
+      'ledger.last.stockIn',
       'ledger.last.stockLost',
+      'ledger.last.stockOut',
       'ledger.last.stockProduced',
       'ledger.last.stockSold',
       'ledger.last.studies',
@@ -74,7 +78,9 @@ describe('forme de l’état', () => {
       'ledger.total.reputationLost',
       'ledger.total.reputationSpent',
       'ledger.total.sales',
+      'ledger.total.stockIn',
       'ledger.total.stockLost',
+      'ledger.total.stockOut',
       'ledger.total.stockProduced',
       'ledger.total.stockSold',
       'ledger.total.studies',

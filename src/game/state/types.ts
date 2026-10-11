@@ -54,6 +54,10 @@ export type LedgerFigures = {
   stockProduced: number;
   stockSold: number;
   stockLost: number;
+  // Détail du stock : entrées par entreprise de production (id), sorties par
+  // commerce (id) ou `surplus` (vente du surplus).
+  stockIn: Record<string, number>;
+  stockOut: Record<string, number>;
   // Flux de réputation.
   reputationGained: number;
   reputationLost: number;

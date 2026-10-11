@@ -42,6 +42,23 @@ export const defaultSaveOptions: SaveOptions = {
         queuedActions: [],
       };
     },
+    // Version 3 : le ledger détaille le stock par origine et destination.
+    2: (raw) => {
+      const { ledger } = raw;
+      if (!isRecord(ledger)) {
+        return raw;
+      }
+      const withDetail = (figures: unknown) =>
+        isRecord(figures) ? { stockIn: {}, stockOut: {}, ...figures } : figures;
+      return {
+        ...raw,
+        ledger: {
+          current: withDetail(ledger.current),
+          last: withDetail(ledger.last),
+          total: withDetail(ledger.total),
+        },
+      };
+    },
   },
 };
 

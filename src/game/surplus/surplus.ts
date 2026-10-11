@@ -15,7 +15,11 @@ export const sellSurplus = (state: GameState): GameState => {
   const earned = Math.round(state.stock * economyRules.surplusPrice);
   const sold = withRecord(
     { ...state, stock: 0, money: state.money + earned },
-    { surplus: earned, stockSold: state.stock },
+    {
+      surplus: earned,
+      stockSold: state.stock,
+      stockOut: { surplus: state.stock },
+    },
   );
   return addGauge(sold, economyRules.surplusGauge);
 };
