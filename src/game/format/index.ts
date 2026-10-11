@@ -1,6 +1,5 @@
 export {
   checkRequirement,
-  describeReputationTier,
   describeRequirement,
   formatAge,
   formatCount,

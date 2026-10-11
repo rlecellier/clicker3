@@ -1,7 +1,6 @@
 import { startState } from '@game/data';
 import {
   checkRequirement,
-  describeReputationTier,
   describeRequirement,
   formatDate,
   formatMoney,
@@ -71,14 +70,6 @@ describe('checkRequirement', () => {
     expect(checks.map((check) => check.isMet)).toEqual([true, false]);
     expect(plain(checks[1]?.label ?? '')).toBe(
       'Palier de réputation 2 « Acteur majeur » : 10 / 100 de réputation gagnée',
-    );
-  });
-});
-
-describe('describeReputationTier', () => {
-  it('donne le palier et le seuil suivant', () => {
-    expect(describeReputationTier(startState)).toBe(
-      'Palier 0 · Inconnu · prochain à 6 gagnés (0)',
     );
   });
 });

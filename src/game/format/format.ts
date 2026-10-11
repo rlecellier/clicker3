@@ -4,7 +4,6 @@ import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
 import { reputationTiers, statTierThresholds } from '@game/data';
 import { isUnlocked } from '@game/requirements';
-import { reputationTierOf } from '@game/reputation';
 import { upgradeById } from '@game/upgrades';
 
 const money = new Intl.NumberFormat('fr-FR', {
@@ -148,13 +147,3 @@ export const checkRequirement = (
           isMet: isUnlocked(state, requirement),
         },
       ];
-
-// Palier de réputation courant et progression vers le suivant.
-export const describeReputationTier = (state: GameState) => {
-  const tier = reputationTierOf(state);
-  const name = `Palier ${tier} · ${reputationTiers[tier]?.name ?? ''}`;
-  const next = reputationTiers[tier + 1];
-  return next === undefined
-    ? `${name} (maximum)`
-    : `${name} · prochain à ${formatCount(next.earned)} gagnés (${formatCount(state.reputationEarned)})`;
-};
