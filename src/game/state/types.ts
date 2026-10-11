@@ -38,6 +38,36 @@ export type PeriodStatement = {
   stockout: boolean;
 };
 
+// Recettes, dépenses et flux d'une durée (période ou cumul), voir `@game/ledger`.
+export type LedgerFigures = {
+  // Recettes (euros).
+  wages: number;
+  sales: number;
+  surplus: number;
+  otherIncome: number;
+  // Dépenses (euros).
+  rent: number;
+  payroll: number;
+  purchases: number;
+  studies: number;
+  otherExpenses: number;
+  // Flux de stock (articles) : stocké, vendu, perdu faute de place.
+  stockProduced: number;
+  stockSold: number;
+  stockLost: number;
+  // Flux de réputation.
+  reputationGained: number;
+  reputationLost: number;
+  reputationSpent: number;
+};
+
+export type Ledger = {
+  // Période en cours, versée dans `last` quand elle se termine.
+  current: LedgerFigures;
+  last: LedgerFigures;
+  total: LedgerFigures;
+};
+
 export type LifeSpan = {
   startAge: number;
   // Âge à partir duquel le personnage est senior (les actions manuelles rapportent moins).
@@ -105,6 +135,8 @@ export type GameState = {
   workReputationMultiplier: number;
   reputationPerSaleMultiplier: number;
   lastStatement: PeriodStatement | null;
+  // Suivi des recettes, dépenses et flux (cumulés et dernière période).
+  ledger: Ledger;
   // Quartiers de la ville débloqués.
   districts: string[];
 
