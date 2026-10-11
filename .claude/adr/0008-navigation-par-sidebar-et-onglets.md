@@ -73,8 +73,13 @@ popup temporaire (`EventToast`) viendra avec #100, dans le layout.
 
 `SidebarItem` accepte `badge?` (un nombre ou « 99+ », rendu par le composant
 `Badge`, avec `badgeTone?`) et `accessibleLabel?` (nom accessible plus complet).
-Le courrier les remplit (#99, `useGameTabs`) ; les nouveautés (#103) les
-brancheront.
+Le courrier les remplit (#99, `useGameTabs`, ton `alert`).
+
+Les nouveautés (#103) les remplissent pour Compétences, Emploi, Investir et
+Ville (ton `info`, nom accessible « Emploi, 2 nouveautés »). Un élément est
+nouveau quand sa condition est remplie et que l'onglet n'a pas été ouvert
+depuis : les ids vus sont dans `GameState.seenItems` (règles dans
+`src/game/novelty`), et `useSeenTab` marque l'onglet comme vu à l'ouverture.
 
 ### 7. Icônes
 
