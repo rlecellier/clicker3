@@ -1,5 +1,6 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Outlet } from 'react-router';
 import { GameProvider } from '@context/GameContext';
+import { CityPage } from '@page/CityPage';
 import { GamePage } from '@page/GamePage';
 import { HomePage } from '@page/HomePage';
 import { StyleguidePage } from '@page/StyleguidePage';
@@ -13,12 +14,16 @@ export const router = createBrowserRouter(
   [
     { path: '/', element: <HomePage /> },
     {
-      path: '/jeu',
+      // Le jeu et la ville partagent la même partie.
       element: (
         <GameProvider>
-          <GamePage />
+          <Outlet />
         </GameProvider>
       ),
+      children: [
+        { path: '/jeu', element: <GamePage /> },
+        { path: '/ville', element: <CityPage /> },
+      ],
     },
     ...developmentRoutes,
   ],
