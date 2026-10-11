@@ -2,7 +2,8 @@ import { startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
-import { reduce } from './reduce';
+import { triggerEvents } from '@game/events';
+import { newGame, reduce } from './reduce';
 
 describe('reduce', () => {
   it('applique addGauge', () => {
@@ -27,11 +28,12 @@ describe('reduce', () => {
   });
 
   it('ignore un unlockDistrict refusé', () => {
-    const next = reduce(startState, {
+    const settled = newGame();
+    const next = reduce(settled, {
       type: 'unlockDistrict',
       id: 'hauts-fourneaux',
     });
-    expect(next).toBe(startState);
+    expect(next).toBe(settled);
   });
 
   it('applique work, study, sleep et changeJob', () => {
@@ -80,7 +82,8 @@ describe('reduce', () => {
   });
 
   describe('après la mort', () => {
-    const rich: GameState = {
+    // La mort est déjà passée dans le journal : plus rien ne doit bouger.
+    const rich: GameState = triggerEvents({
       ...startState,
       status: 'dead',
       money: 1_000_000,
@@ -90,7 +93,7 @@ describe('reduce', () => {
       reputationEarned: 100,
       stats: { metier: 100, gestion: 100, intelligence: 100, endurance: 100 },
       upgrades: ['stage-posture'],
-    };
+    });
     const actions: GameAction[] = [
       { type: 'addGauge', amount: 500 },
       { type: 'unlockDistrict', id: 'hauts-fourneaux' },
@@ -113,6 +116,8 @@ describe('reduce', () => {
       { ...startState, status: 'dead', money: 99, period: 684 },
       { type: 'restart' },
     );
-    expect(played).toEqual(startState);
+    expect(played).toEqual(newGame());
+    expect(played.money).toBe(startState.money);
+    expect(played.period).toBe(0);
   });
 });
