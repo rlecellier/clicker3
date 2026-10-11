@@ -25,7 +25,7 @@ Coût : S/M/L = effort de développement estimé, intérêt : ★ à ★★★.
 | Les autres actions donnent une chance de marqueur (maximum fixe)     | M    | ★★★     | v1      |
 | Maximum de marqueurs qui varie selon l'âge, la santé                 | S    | ★★      | v2      |
 
-Détail v1 dans [v1.md](v1.md#3-sommeil-et-marqueurs). Pas de cycle jour / nuit.
+Détail v1 dans [v1.md](v1.md#3-sommeil-marqueurs-stats). Pas de cycle jour / nuit.
 
 ## Économie et entreprises
 
@@ -92,7 +92,8 @@ demande un système d'événements aléatoires : prévoir un tirage reproductibl
 2. **v2 : plusieurs vies.** Changement de vie (transmission d'argent, de statut,
    de compétences ou d'idéologie, à trancher), deuxième départ et
    personnalisation, famille, quartiers aux propriétés différentes, chaînes
-   d'entreprises, activités illégales et police, bilan de fin de vie.
+   d'entreprises, activités illégales et police. (Le bilan de fin de vie est
+  déjà dans la v1.)
 3. **v3 : la ville vivante.** Politique, PNJ, amis et contacts, chaînes de
    production, indicateurs d'impact qui agissent sur le jeu.
 

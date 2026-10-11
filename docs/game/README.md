@@ -11,6 +11,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
 | [simulateur.md](simulateur.md)                 | Simulateur de vie : méthode, mesures, dernier relevé    |
+| [equilibrage.md](equilibrage.md)               | Valeurs retenues, leur justification et la preuve au simulateur |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
 | [ameliorations-et-evenements.md](ameliorations-et-evenements.md) | Les ~20 améliorations et les événements de la v1 (décidé) |
 | [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
@@ -25,7 +26,7 @@ Reprises de la [section 8 de la recherche](../game-design/README.md#8-questions-
 | 1   | Thème et ton                               | **décidé** | La vie d'un personnage dans une ville inventée ([concept.md](concept.md)) ; ton 50/50 réaliste-satirique-absurde, contre tout le système, fin froide ([ton-et-univers.md](ton-et-univers.md)) |
 | 2   | Ressource principale et secondaires        | **décidé** | Argent + une marchandise (stock) + réputation ([v1.md](v1.md#5-économie)) |
 | 3   | Générateurs et améliorations               | **décidé** | 4 emplois, 4 à 6 entreprises, ~20 améliorations ; croissance des coûts 1,07–1,15 ([v1.md](v1.md#5-économie)) |
-| 4   | Rôle du clic après l'automatisation        | **décidé** | **Boost actif** : une action automatique va 2× moins vite et rapporte 2× moins qu'une manuelle |
+| 4   | Rôle du clic après l'automatisation        | **décidé** | **Boost actif** : une action automatique rapporte 2× moins qu'une manuelle ; l'auto simule deux clics par seconde ([ADR 0005](../../.claude/adr/0005-rythme-de-l-automatisation.md)) |
 | 5   | Prestige                                   | **décidé** | **Pas de prestige en v1** : une seule vie. Plus tard, le changement de vie (mort) transmettra argent, statut, compétences ou idéologie — à trancher alors |
 | 6   | Hors-ligne                                 | **décidé** | Pas de limite ; actions automatiques activables, mort possible pendant l'absence ([v1.md](v1.md#6-automatisation-et-absence)) |
 | 7   | Choix de design (plus qu'un compteur)      | **décidé** | Chaque action fait avancer le temps ; produire ou vendre ; stats qui débloquent ; phases de vie ([v1.md](v1.md#2-les-actions)) |
