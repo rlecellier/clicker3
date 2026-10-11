@@ -27,8 +27,7 @@ src/
 │   └── MoneyCounter/
 │       ├── index.ts
 │       ├── MoneyCounter.tsx
-│       ├── MoneyCounter.module.css
-│       └── MoneyCounter.test.tsx
+│       └── MoneyCounter.module.css
 ├── hooks/
 │   └── useGame/
 │       ├── index.ts
@@ -47,6 +46,9 @@ src/
         ├── GamePage.tsx
         └── GamePage.module.css
 ```
+
+Un composant uniquement visuel n'a pas de test (voir la politique de test de
+`CLAUDE.md`) : seuls les hooks, les contexts et les règles du jeu en ont.
 
 ### 1 bis. Nommage : conventions React
 
