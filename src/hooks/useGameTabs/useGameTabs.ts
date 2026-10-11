@@ -1,3 +1,5 @@
+import { useGameContext } from '@context/GameContext';
+import { unreadMail } from '@game/mail';
 import { screenPaths } from '@hook/useGameFlow';
 
 export type GameTabId =
@@ -20,16 +22,39 @@ export const DEFAULT_TAB_SLUG = 'vie';
 
 export const gamePath = (slug: string) => `${screenPaths.game}/${slug}`;
 
+const maxBadge = 99;
+
+// Pastille du courrier : cachée à zéro, « 99+ » au-delà de 99.
+const mailBadge = (unread: number) =>
+  unread > maxBadge ? `${maxBadge}+` : unread;
+
+const mailLabel = (unread: number) => {
+  if (unread === 0) {
+    return 'Courrier';
+  }
+  const count = unread > maxBadge ? `Plus de ${maxBadge}` : String(unread);
+  return `Courrier, ${count} ${unread === 1 ? 'message non lu' : 'messages non lus'}`;
+};
+
 // Onglets de la sidebar et lien « Recommencer », prêts à afficher (sans icône).
-export const useGameTabs = () => ({
-  tabs: gameTabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    to: gamePath(tab.slug),
-  })),
-  footer: {
-    id: 'new-life',
-    label: 'Recommencer',
-    to: screenPaths.newLife,
-  },
-});
+export const useGameTabs = () => {
+  const { state } = useGameContext();
+  const unread = unreadMail(state);
+  return {
+    tabs: gameTabs.map((tab) => ({
+      id: tab.id,
+      label: tab.label,
+      to: gamePath(tab.slug),
+      ...(tab.id === 'mail' && {
+        badge: mailBadge(unread),
+        badgeTone: 'alert' as const,
+        accessibleLabel: mailLabel(unread),
+      }),
+    })),
+    footer: {
+      id: 'new-life',
+      label: 'Recommencer',
+      to: screenPaths.newLife,
+    },
+  };
+};

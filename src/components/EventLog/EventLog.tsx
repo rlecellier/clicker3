@@ -7,7 +7,7 @@ export type EventLogEntry = {
   date: string;
   // Texte affiché tel quel.
   text: string;
-  // Message de la période en cours : mis en évidence.
+  // Message non lu : mis en évidence.
   isNew: boolean;
 };
 

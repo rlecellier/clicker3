@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { GameProvider } from '@context/GameContext';
 import { startState } from '@game/data';
@@ -26,8 +26,6 @@ describe('useJournalScreen', () => {
       'expenses',
       'net',
     ]);
-    expect(result.current.toast).toBeNull();
-    expect(result.current.entries).toEqual([]);
   });
 
   it('détaille les flux avec le tableau de bord', () => {
@@ -66,29 +64,5 @@ describe('useJournalScreen', () => {
     expect(totals['stockIn-atelier']).toBe('10');
     expect(totals['stockOut-boutique']).toBe('5');
     expect(totals['stockOut-surplus']).toBe('1');
-  });
-
-  it('liste le plus récent en haut et notifie le message de la période', () => {
-    const { result } = setup({
-      ...startState,
-      period: 3,
-      events: [
-        { period: 1, id: 'a', text: 'Ancien' },
-        { period: 3, id: 'b', text: 'Récent' },
-      ],
-    });
-    expect(result.current.entries.map((entry) => entry.text)).toEqual([
-      'Récent',
-      'Ancien',
-    ]);
-    expect(result.current.entries.map((entry) => entry.isNew)).toEqual([
-      true,
-      false,
-    ]);
-    expect(result.current.toast?.text).toBe('Récent');
-    act(() => {
-      result.current.toast?.dismiss();
-    });
-    expect(result.current.toast).toBeNull();
   });
 });
