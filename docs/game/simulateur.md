@@ -33,7 +33,7 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
 - Une action manuelle prend `humanCadenceMs` (1 seconde, constante dans
   `config.ts`). Un achat est une action.
 - Les actions automatiques tournent **en parallèle** (règles de `autoTick`,
-  rythme de l'auto : ¼ du rythme manuel, ADR 0005).
+  rythme de l'auto : deux actions par seconde, ADR 0005).
 - **Une fois le travail automatique actif, le joueur virtuel lâche la souris**
   (ADR 0005) : il ne fait plus que des achats, et dort quand les marqueurs sont
   pleins faute de sommeil automatique. Le reste du temps il **attend**

@@ -3,6 +3,7 @@ import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from '@game/work';
 import {
+  afterManualAction,
   autoIntervalMs,
   autoTick,
   canEnableAuto,
@@ -24,9 +25,9 @@ const automated: GameState = {
 const workOnly: GameState = { ...automated, autoSleep: false };
 
 describe('rythme', () => {
-  it('une action automatique arrive quatre fois moins vite que le rythme de référence', () => {
-    expect(automationRules.speedFactor).toBe(0.25);
-    expect(autoIntervalMs).toBe(4 * automationRules.referenceIntervalMs);
+  it('le travail idle simule deux clics par seconde', () => {
+    expect(automationRules.speedFactor).toBe(2);
+    expect(autoIntervalMs).toBe(500);
   });
 
   it('ne joue rien avant le délai, puis une action à chaque délai', () => {
@@ -133,6 +134,30 @@ describe('sommeil automatique', () => {
     expect(next.gauge).toBe(0);
     expect(next.markers).toEqual(['metier']);
     expect(next.autoElapsed).toBe(0);
+  });
+});
+
+describe('sommeil automatique après un geste manuel', () => {
+  const full: GameState = {
+    ...automated,
+    markers: ['metier', 'metier', 'gestion', 'gestion', 'gestion'],
+  };
+
+  it('dort dès que les marqueurs sont pleins, sans attendre le tic', () => {
+    const next = afterManualAction(full);
+    expect(next.markers).toEqual([]);
+    expect(next.gauge).toBe(actionRules.sleep.gauge);
+    expect(next.stats.metier).toBe(1);
+  });
+
+  it('attend que les marqueurs soient pleins', () => {
+    const partial = { ...full, markers: ['metier' as const] };
+    expect(afterManualAction(partial)).toBe(partial);
+  });
+
+  it('ne fait rien sans l’interrupteur', () => {
+    const off = { ...full, autoSleep: false };
+    expect(afterManualAction(off)).toBe(off);
   });
 });
 

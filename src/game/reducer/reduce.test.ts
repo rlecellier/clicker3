@@ -105,6 +105,7 @@ describe('reduce', () => {
       { type: 'buyCompany', id: 'atelier' },
       { type: 'sellSurplus' },
       { type: 'buyUpgrade', id: 'cartes-visite' },
+      { type: 'cancelUpgrade', id: 'cartes-visite' },
     ];
 
     it.each(actions)('refuse $type', (action) => {
@@ -120,6 +121,31 @@ describe('reduce', () => {
     expect(played).toEqual(newGame());
     expect(played.money).toBe(startState.money);
     expect(played.period).toBe(0);
+  });
+
+  it('annule une amélioration sans rembourser', () => {
+    const bought = reduce(
+      { ...startState, money: 1000 },
+      { type: 'buyUpgrade', id: 'cartes-visite' },
+    );
+    const cancelled = reduce(bought, {
+      type: 'cancelUpgrade',
+      id: 'cartes-visite',
+    });
+    expect(cancelled.upgrades).toEqual([]);
+    expect(cancelled.money).toBe(bought.money);
+  });
+
+  it('dort tout seul après un travail manuel quand le sommeil automatique est actif', () => {
+    const state: GameState = {
+      ...startState,
+      upgrades: ['rythme-sommeil'],
+      autoSleep: true,
+      markers: Array.from({ length: startState.maxMarkers }, () => 'metier'),
+    };
+    const next = reduce(state, { type: 'work', target: 'job' });
+    expect(next.markers).toEqual([]);
+    expect(next.stats.metier).toBeGreaterThan(0);
   });
 
   describe('automatisation', () => {

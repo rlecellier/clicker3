@@ -24,14 +24,15 @@ L'auto n'a pas de durée fixe en secondes : elle est **proportionnelle à la
 cadence de référence d'un joueur actif**. Le coefficient est en données
 (`src/game/data/`), pas dans le code.
 
-- **Coefficient : ¼.** Si n clics manuels font avancer la partie de 8 h
-  d'horloge, l'auto n'avance que de n/4 sur ces 8 h.
-- Équivalence : **8 h d'absence valent 2 h de jeu actif.**
+- **Coefficient : ×2 (mise à jour, issue #67).** L'auto simule **deux clics par
+  seconde** (une action toutes les 500 ms), pour un joueur de référence qui
+  clique une fois par seconde. Le coefficient d'origine était ¼ (une action
+  toutes les 4 s) : trop lent à l'usage.
+- Équivalence : **1 h d'absence vaut 2 h de jeu actif.**
 - Cela vaut pour l'auto quand le joueur est présent comme pour le rattrapage
   d'une absence (`catchUp` et `autoTick` partagent le même coefficient).
-- Cela **remplace le « deux fois moins vite » de `docs/game/v1.md` § 6** : le
-  rythme passe de ½ à ¼. Le gain par action reste « moitié moins » ; V1-24
-  cale les deux au simulateur.
+- Cela **remplace le « deux fois moins vite » de `docs/game/v1.md` § 6**. Le
+  gain par action reste « moitié moins » ; V1-24 cale les deux au simulateur.
 
 ### 2. La mort pendant l'absence est voulue
 

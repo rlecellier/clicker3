@@ -36,15 +36,26 @@ export const setAuto = (
   return state[key] === isEnabled ? state : { ...state, [key]: isEnabled };
 };
 
+// Le sommeil automatique dort quand les marqueurs sont pleins. Rend l'état
+// inchangé sinon.
+const autoSleep = (state: GameState): GameState =>
+  isAutoActive(state, 'sleep') &&
+  state.markers.length >= state.maxMarkers &&
+  canSleep(state)
+    ? sleep(state, true)
+    : state;
+
+// Après un geste manuel (travail, étude) : le sommeil automatique s'applique
+// aussi, sans attendre le tic de l'automatisation.
+export const afterManualAction = (state: GameState): GameState =>
+  autoSleep(state);
+
 // Une action automatique : dormir quand les marqueurs sont pleins, sinon
 // travailler à son emploi. Rend l'état inchangé s'il n'y a rien à faire.
 const autoStep = (state: GameState): GameState => {
-  if (
-    isAutoActive(state, 'sleep') &&
-    state.markers.length >= state.maxMarkers &&
-    canSleep(state)
-  ) {
-    return sleep(state, true);
+  const slept = autoSleep(state);
+  if (slept !== state) {
+    return slept;
   }
   return isAutoActive(state, 'work') && canWork(state, JOB_TARGET)
     ? work(state, JOB_TARGET, true)

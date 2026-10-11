@@ -1,4 +1,4 @@
-import { autoTick, setAuto } from '@game/automation';
+import { afterManualAction, autoTick, setAuto } from '@game/automation';
 import { buyCompany } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
@@ -9,7 +9,7 @@ import { updatePhase } from '@game/phases';
 import { sleep } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
-import { buyUpgrade } from '@game/upgrades';
+import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
 import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -26,10 +26,10 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return unlockDistrict(state, action.id);
     }
     case 'work': {
-      return work(state, action.target);
+      return afterManualAction(work(state, action.target));
     }
     case 'study': {
-      return study(state, action.courseId);
+      return afterManualAction(study(state, action.courseId));
     }
     case 'sleep': {
       return sleep(state);
@@ -45,6 +45,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'buyUpgrade': {
       return buyUpgrade(state, action.id);
+    }
+    case 'cancelUpgrade': {
+      return cancelUpgrade(state, action.id);
     }
     case 'setAuto': {
       return setAuto(state, action.action, action.isEnabled);

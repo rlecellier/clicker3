@@ -10,9 +10,11 @@ import type { GameState } from '@game/state';
 import {
   buyUpgrade,
   canBuyUpgrade,
+  cancelUpgrade,
   hasAutomation,
   hasCourse,
   hasDashboard,
+  nextUpgrade,
 } from './upgrades';
 
 const rich: GameState = {
@@ -182,5 +184,90 @@ describe('effets', () => {
     );
     expect(next.productionMultiplier).toBeCloseTo(1 + 1.1 + 0.6 + 3);
     expect(next.payroll).toBe(230 + 3600 + 45_000);
+  });
+});
+
+describe('cancelUpgrade', () => {
+  it('retire l’amélioration et ses effets sans rembourser', () => {
+    const bought = buy(rich, 'premier-collaborateur');
+    const next = cancelUpgrade(bought, 'premier-collaborateur');
+    expect(next.upgrades).toEqual([]);
+    expect(next.payroll).toBe(rich.payroll);
+    expect(next.productionMultiplier).toBeCloseTo(rich.productionMultiplier);
+    expect(next.money).toBe(bought.money);
+  });
+
+  it('rend le loyer, le stock et les marqueurs', () => {
+    const housed = buy(rich, 'studio-renove');
+    const equipped = buy(buy(housed, 'etageres-kit'), 'carnet-notes');
+    const next = cancelUpgrade(equipped, 'carnet-notes');
+    expect(next.maxMarkers).toBe(rich.maxMarkers);
+    expect(next.rent).toBe(rich.rent + 34);
+    expect(cancelUpgrade(next, 'etageres-kit').stockCapacity).toBe(
+      rich.stockCapacity,
+    );
+  });
+
+  it('ne garde que les marqueurs qui tiennent encore', () => {
+    const bought = {
+      ...buy(rich, 'carnet-notes'),
+      markers: Array.from({ length: 7 }, () => 'metier' as const),
+    };
+    expect(cancelUpgrade(bought, 'carnet-notes').markers).toHaveLength(
+      rich.maxMarkers,
+    );
+  });
+
+  it('un logement annulé revient au précédent encore possédé, sinon au départ', () => {
+    const both = buy(buy(rich, 'studio-renove'), 'pavillon-tilleuls');
+    const back = cancelUpgrade(both, 'pavillon-tilleuls');
+    expect(back.housingId).toBe('studio-renove');
+    expect(back.sleepMultiplier).toBe(1.5);
+    const start = cancelUpgrade(back, 'studio-renove');
+    expect(start.housingId).toBe(rich.housingId);
+    expect(start.sleepMultiplier).toBe(rich.sleepMultiplier);
+  });
+
+  it('coupe l’automatisation achetée', () => {
+    const owner = buy(rich, 'procedure-travail');
+    expect(hasAutomation(owner, 'work')).toBe(true);
+    expect(
+      hasAutomation(cancelUpgrade(owner, 'procedure-travail'), 'work'),
+    ).toBe(false);
+  });
+
+  it('se rachète au même prix', () => {
+    const again = buy(
+      cancelUpgrade(buy(rich, 'cartes-visite'), 'cartes-visite'),
+      'cartes-visite',
+    );
+    expect(again.money).toBe(rich.money - 116);
+    expect(again.workReputationMultiplier).toBeCloseTo(1.25);
+  });
+
+  it('refuse ce qui n’est pas possédé ou quand le personnage est mort', () => {
+    expect(cancelUpgrade(rich, 'cartes-visite')).toBe(rich);
+    expect(cancelUpgrade(rich, 'nulle-part')).toBe(rich);
+    const dead = { ...buy(rich, 'cartes-visite'), status: 'dead' as const };
+    expect(cancelUpgrade(dead, 'cartes-visite')).toBe(dead);
+  });
+});
+
+describe('nextUpgrade', () => {
+  it('propose la moins chère déjà débloquée', () => {
+    expect(nextUpgrade(startState)?.id).toBe('cartes-visite');
+  });
+
+  it('passe à la suivante une fois achetée, et revient si on annule', () => {
+    const bought = buy(rich, 'cartes-visite');
+    expect(nextUpgrade(bought)?.id).not.toBe('cartes-visite');
+    expect(nextUpgrade(cancelUpgrade(bought, 'cartes-visite'))?.id).toBe(
+      'cartes-visite',
+    );
+  });
+
+  it('ne propose rien quand tout est acheté', () => {
+    const all = { ...startState, upgrades: upgrades.map((entry) => entry.id) };
+    expect(nextUpgrade(all)).toBeUndefined();
   });
 });

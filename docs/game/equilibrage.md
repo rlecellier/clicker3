@@ -34,11 +34,11 @@ règle) sans bénéfice mesuré.
 Une période demande 7 actions de travail (10 avant). C'est le levier principal :
 avec 10 actions par période, la vie dépassait 90 min de jeu actif ; avec 30 à 40
 de jauge, la vie devenait trop courte pour la cible de 30 min. Une action
-automatique (¼ du rythme, ADR 0005) fait passer une période en 28 s.
+automatique (deux par seconde, ADR 0005) fait passer une période en 3,5 s.
 
 ### Rendement de l'auto : inchangé
 
-`speedFactor` reste ¼ (ADR 0005) et `yieldFactor` reste ½ (« moitié moins »,
+`speedFactor` passe à 2 (deux actions par seconde, ADR 0005, issue #67) et `yieldFactor` reste ½ (« moitié moins »,
 v1.md § 6). Une version intermédiaire à 0,35 satisfaisait aussi les critères, mais
 rien ne la justifiait par rapport à la règle écrite.
 
@@ -74,7 +74,7 @@ précédent quand celui-ci devient trop cher.
 | Carnet de notes                | 430                     | 800                   |                                     |
 | Application de productivité    | 33 000                  | 25 000                |                                     |
 | Premier collaborateur          | 1 600, salaire 230      | 3 000, 900            | production + 110 % (+ 50 %)         |
-| Équipe de collaborateurs       | 3 700, salaire 36 000   | 30 000, 6 000         | tout + 60 % (+ 50 %)                |
+| Équipe de collaborateurs       | 37 000, salaire 3 600   | 30 000, 6 000         | tout + 60 % (+ 50 %)                |
 | Directeur de la transformation | 310 000, salaire 45 000 | 300 000, 25 000       | tout + 300 % (+ 100 %)              |
 | Procédure de travail           | 24 000                  | 20 000                |                                     |
 | Rythme de sommeil              | 12 000                  | 35 000                |                                     |
@@ -90,7 +90,7 @@ Raisons principales :
   dizaines de minutes).
 - **Premier collaborateur tôt et peu coûteux** (27 ans) : c'est la condition de
   la phase Patron et de l'automatisation (ADR 0005 §3).
-- **Les salaires des employés grimpent** (230, 36 000, 45 000 par mois) pour
+- **Les salaires des employés grimpent** (230, 3 600, 45 000 par mois) pour
   que l'embauche reste un vrai arbitrage.
 
 ### Stats, réputation, quartiers, emplois, études

@@ -9,6 +9,8 @@ export type GameAction =
   | { type: 'buyCompany'; id: string }
   | { type: 'sellSurplus' }
   | { type: 'buyUpgrade'; id: string }
+  // Annule une amélioration possédée : ses effets disparaissent, sans remboursement.
+  | { type: 'cancelUpgrade'; id: string }
   | { type: 'setAuto'; action: 'work' | 'sleep'; isEnabled: boolean }
   // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
   // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.
