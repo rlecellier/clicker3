@@ -136,8 +136,7 @@ Les alias sont déclarés à deux endroits, qui doivent rester synchronisés :
 - `tsconfig.json` (`compilerOptions.paths`) pour TypeScript ;
 - `vite.config.ts` (`resolve.alias`) pour Vite et Vitest.
 
-Tout nouvel alias (par exemple pour un dossier `game/`) s'ajoute aux deux
-fichiers et à la table ci-dessus.
+Tout nouvel alias s'ajoute aux deux fichiers et à la table ci-dessus.
 
 ### 7. Syntaxe : fonctions fléchées assignées à un `const`
 
