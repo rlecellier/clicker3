@@ -71,6 +71,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état)                |
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
 | `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?` ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
+| `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
 | `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
 | `Note`        | `children`, `minLines?` (hauteur réservée) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
 

@@ -6,6 +6,7 @@ import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
+import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
@@ -97,6 +98,41 @@ export const StyleguidePage = () => (
           { id: 'shop', label: 'Achats', content: 'Contenu des achats.' },
         ]}
       />
+      <div className={styles.sidebarDemo}>
+        <Sidebar
+          label="Navigation de démonstration"
+          items={[
+            {
+              id: 'mail',
+              label: 'Courrier',
+              icon: <SidebarIcon id="mail" />,
+              to: '#',
+              badge: 3,
+              badgeTone: 'alert',
+            },
+            {
+              id: 'life',
+              label: 'Vie',
+              icon: <SidebarIcon id="life" />,
+              to: '#',
+            },
+            {
+              id: 'invest',
+              label: 'Investir',
+              icon: <SidebarIcon id="invest" />,
+              to: '#',
+              badge: 1,
+              badgeTone: 'info',
+            },
+          ]}
+          footer={{
+            id: 'new-life',
+            label: 'Recommencer',
+            icon: <SidebarIcon id="new-life" />,
+            to: '#',
+          }}
+        />
+      </div>
     </Window>
   </main>
 );
