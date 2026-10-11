@@ -51,6 +51,8 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     await page.getByRole('tab', { name: 'Obtenues' }).click();
   };
   await openUpgrades();
+  // L'en-tête fixe garde l'argent visible hors de l'onglet Vie.
+  await expect(counter(page, 'Argent')).toHaveText(/^60\s€$/);
   await expect(stage).toBeVisible();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await cards.getByRole('button', { name: 'Acheter' }).click();
