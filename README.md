@@ -19,4 +19,6 @@ npm run lint && npx tsc --noEmit && npm run format:check
 - [Stack technique](docs/stack.md) : reprise de clicker 1.
 - [Game design d'un idle clicker](docs/game-design/) : recherche et
   questions à trancher.
+- [Guide de style de l'interface](docs/ui/guide-de-style.md) : tokens,
+  composants, accessibilité, ton des textes.
 - [Conventions de structure](.claude/adr/0001-project-structure.md) (ADR).
