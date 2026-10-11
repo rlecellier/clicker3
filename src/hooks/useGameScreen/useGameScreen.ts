@@ -27,7 +27,8 @@ import type { GameState, StatId } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
-import { useLongPress } from '@hook/useLongPress';
+import { useHoldRepeat } from '@hook/useHoldRepeat';
+import type { PressHandlers } from '@hook/useHoldRepeat';
 
 const FEEDBACK_MS = 2500;
 const START_TEXT =
@@ -35,16 +36,22 @@ const START_TEXT =
 const ENDED = 'Partie terminée';
 const QUEUED = 'Vous dormez. Cela sera fait au réveil.';
 
-export type ActionView = {
+type BaseAction = {
   detail?: string;
   reason?: string;
   isDisabled: boolean;
   run: () => void;
+};
+
+export type ActionView = BaseAction & {
   // Action automatique du bouton, activée par un appui long.
   isAuto?: boolean;
   autoHint?: string;
-  press?: ReturnType<typeof useLongPress>['press'];
+  // Appui maintenu : l'action se répète à 4 clics par seconde.
+  press: PressHandlers;
 };
+
+const noop = () => {};
 
 const statIds = Object.keys(statLabels) as StatId[];
 
@@ -101,7 +108,7 @@ export const useGameScreen = () => {
   const isOver = state.status === 'dead';
   const job = jobs.find((candidate) => candidate.id === state.jobId);
 
-  const workAction: ActionView = {
+  const workAction: BaseAction = {
     detail:
       job === undefined ? undefined : `Salaire : ${formatMoney(job.salary)}`,
     reason: isOver ? ENDED : 'Aucun emploi',
@@ -116,7 +123,7 @@ export const useGameScreen = () => {
     ),
   };
 
-  const sellSurplus: ActionView = {
+  const sellSurplusAction: BaseAction = {
     detail: 'Vend tout le stock à bas prix',
     reason: isOver ? ENDED : 'Aucun stock à vendre',
     isDisabled: !canSellSurplus(state),
@@ -165,7 +172,7 @@ export const useGameScreen = () => {
     detail: `${formatMoney(candidate.cost)} · ${statLabels[candidate.stat]}`,
   }));
 
-  const studyAction: ActionView | null =
+  const studyAction: BaseAction | null =
     course === undefined
       ? null
       : {
@@ -181,27 +188,46 @@ export const useGameScreen = () => {
         };
 
   // Appui long sur Travailler : active ou coupe le travail automatique, une
-  // fois l'amélioration achetée.
+  // fois l'amélioration achetée. L'appui maintenu répète l'action des trois
+  // boutons de l'onglet Vie ; les achats et « Recommencer » ne se répètent pas.
   const toggleAuto = () => {
     const isOn = state.autoWork;
     actions.setAuto('work', !isOn);
     setFeedback(`Travail automatique ${isOn ? 'coupé' : 'activé'}.`);
   };
-  const workPress = useLongPress(
-    workAction.run,
-    hasAutomation(state, 'work') ? toggleAuto : undefined,
-  );
-  const work: ActionView = hasAutomation(state, 'work')
-    ? {
-        ...workAction,
-        run: workPress.onClick,
-        press: workPress.press,
-        isAuto: state.autoWork,
-        autoHint: state.autoWork
-          ? 'Appui long : couper l’automatique'
-          : 'Appui long : automatique',
-      }
-    : workAction;
+  const workPress = useHoldRepeat({
+    onClick: workAction.run,
+    onLongPress: hasAutomation(state, 'work') ? toggleAuto : undefined,
+    isDisabled: workAction.isDisabled,
+  });
+  const studyPress = useHoldRepeat({
+    onClick: studyAction?.run ?? noop,
+    isDisabled: studyAction?.isDisabled ?? true,
+  });
+  const sellPress = useHoldRepeat({
+    onClick: sellSurplusAction.run,
+    isDisabled: sellSurplusAction.isDisabled,
+  });
+  const work: ActionView = {
+    ...workAction,
+    run: workPress.onClick,
+    press: workPress.press,
+    ...(hasAutomation(state, 'work') && {
+      isAuto: state.autoWork,
+      autoHint: state.autoWork
+        ? 'Appui long : couper l’automatique'
+        : 'Appui long : automatique',
+    }),
+  };
+  const sellSurplus: ActionView = {
+    ...sellSurplusAction,
+    run: sellPress.onClick,
+    press: sellPress.press,
+  };
+  const studyView: ActionView | null =
+    studyAction === null
+      ? null
+      : { ...studyAction, run: studyPress.onClick, press: studyPress.press };
 
   const skillBars = statIds.map((id) => {
     const tier = tierOf(state, id);
@@ -252,7 +278,7 @@ export const useGameScreen = () => {
     stats: [...skillBars, reputationBar],
     actions: { work, sellSurplus },
     study: {
-      action: studyAction,
+      action: studyView,
       choices: courseChoices,
       selectedId: course?.id ?? '',
       select: setChosenCourse,

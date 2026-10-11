@@ -1,15 +1,7 @@
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
+import type { PressHandlers } from '@hook/useHoldRepeat';
 import styles from './ActionButton.module.css';
-
-// Gestes d'appui long, à poser sur le conteneur du bouton.
-type PressHandlers = {
-  onPointerDown: () => void;
-  onPointerUp: () => void;
-  onPointerLeave: () => void;
-  onPointerCancel: () => void;
-  onContextMenu: (event: { preventDefault: () => void }) => void;
-};
 
 type ActionButtonProperties = {
   label: string;
@@ -22,6 +14,7 @@ type ActionButtonProperties = {
   // Action automatique de ce bouton : l'appui long l'active ou la coupe.
   isAuto?: boolean;
   autoHint?: string;
+  // Appui maintenu : répétition de l'action (et appui long).
   press?: PressHandlers;
   // Touche du raccourci clavier.
   shortcut?: string;

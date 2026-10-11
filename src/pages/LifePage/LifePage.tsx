@@ -51,6 +51,7 @@ export const LifePage = () => {
             choices={study.choices}
             selectedId={study.selectedId}
             onSelect={study.select}
+            press={study.action.press}
             shortcut={STUDY_SHORTCUT}
             onClick={study.action.run}
           />
@@ -60,6 +61,7 @@ export const LifePage = () => {
           detail={sellSurplus.detail}
           reason={sellSurplus.reason}
           isDisabled={sellSurplus.isDisabled}
+          press={sellSurplus.press}
           onClick={sellSurplus.run}
         />
       </div>
