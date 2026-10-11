@@ -1,0 +1,79 @@
+import { startState } from '@game/data';
+import { ageOf } from '@game/time';
+import { deepFreeze } from '@test/deepFreeze';
+import { addGauge, endPeriod } from './period';
+
+const capacity = startState.gaugeCapacity;
+
+describe('addGauge', () => {
+  it('remplit la jauge sans faire passer de période', () => {
+    const next = addGauge(startState, 30);
+    expect(next.gauge).toBe(30);
+    expect(next.period).toBe(0);
+  });
+
+  it('fait passer une période quand la jauge déborde et garde le surplus', () => {
+    const next = addGauge({ ...startState, gauge: 90 }, 25);
+    expect(next.period).toBe(1);
+    expect(next.gauge).toBe(15);
+  });
+
+  it('fait passer plusieurs périodes d’un coup', () => {
+    const next = addGauge(startState, capacity * 3 + 10);
+    expect(next.period).toBe(3);
+    expect(next.gauge).toBe(10);
+  });
+
+  it('ignore une quantité nulle ou négative', () => {
+    expect(addGauge(startState, 0)).toBe(startState);
+    expect(addGauge(startState, -5)).toBe(startState);
+  });
+
+  it('refuse une capacité de jauge invalide', () => {
+    expect(() => addGauge({ ...startState, gaugeCapacity: 0 }, 1)).toThrow(
+      RangeError,
+    );
+  });
+
+  it('fait vieillir d’un an après 12 périodes', () => {
+    const next = addGauge(startState, capacity * 12);
+    expect(ageOf(next)).toBe(19);
+  });
+
+  it('meurt à l’âge fixé dans les données et s’arrête là', () => {
+    const lastPeriod = (75 - 18) * 12 - 1;
+    const before = addGauge(startState, capacity * lastPeriod);
+    expect(before.status).toBe('playing');
+
+    const dead = addGauge(before, capacity * 5);
+    expect(dead.status).toBe('dead');
+    expect(ageOf(dead)).toBe(75);
+    expect(dead.period).toBe(lastPeriod + 1);
+  });
+
+  it('ne change plus rien une fois mort', () => {
+    const dead = { ...startState, status: 'dead' as const };
+    expect(addGauge(dead, capacity)).toBe(dead);
+  });
+
+  it('ne modifie pas l’état reçu', () => {
+    const frozen = deepFreeze(structuredClone(startState));
+    expect(() => addGauge(frozen, capacity * 2)).not.toThrow();
+    expect(frozen).toEqual(startState);
+  });
+
+  it('reste sérialisable', () => {
+    const next = addGauge(startState, capacity * 5 + 7);
+    // Le but du test est justement l'aller-retour JSON.
+    // eslint-disable-next-line unicorn/prefer-structured-clone
+    expect(JSON.parse(JSON.stringify(next))).toEqual(next);
+  });
+});
+
+describe('endPeriod', () => {
+  it('avance d’une période et retire une capacité de jauge', () => {
+    const next = endPeriod({ ...startState, gauge: capacity + 5 });
+    expect(next.period).toBe(1);
+    expect(next.gauge).toBe(5);
+  });
+});
