@@ -86,7 +86,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `shortcut?`, `onClick`                          | Action de jeu ; `press` : appui maintenu = 4 clics par seconde, appui long = automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
-| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
+| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `effects?` (lignes d'effet chiffré, en gras, avant le `detail`), `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
@@ -123,6 +123,9 @@ distinct ; sinon, composer les existants.
   (`aria-label`) ; `EventLog` est une liste nommée ; les tableaux ont une
   légende (`caption`). Les widgets Base UI (`Tabs`, `Menu`, `Progress`,
   `Tooltip`) fournissent leurs rôles ARIA et la navigation au clavier.
+- **Valeurs finales** : un chiffre que des modificateurs peuvent changer
+  (production, ventes, capacité) s'affiche toujours dans sa version finale, celle
+  du moteur (`@game/economy`), jamais en valeur de base.
 - **Clavier** : tout est atteignable et activable au clavier ; ne jamais
   retirer l'outline de focus.
 - **Retour d'action** : le message de retour de `LifePage` et `MailPopup`

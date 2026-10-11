@@ -4,6 +4,7 @@ import { CityMap } from '@component/CityMap';
 import { DataTable } from '@component/DataTable';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
+import { ItemList } from '@component/ItemList';
 import { MailPopup } from '@component/MailPopup';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
@@ -101,6 +102,23 @@ export const StyleguidePage = () => (
             id: 'inequality',
             label: 'Inégalités (convergence en cours)',
             value: 60,
+          },
+        ]}
+      />
+      <ItemList
+        caption="Améliorations"
+        items={[
+          {
+            id: 'camionnette',
+            title: 'Camionnette d’occasion',
+            effects: [
+              'Production de Atelier d’assemblage +15 %',
+              'Production : 40 → 46 articles par période',
+            ],
+            detail: 'Elle démarre le lundi. 16 000 €',
+            actionLabel: 'Acheter',
+            isDisabled: false,
+            onAction: () => {},
           },
         ]}
       />

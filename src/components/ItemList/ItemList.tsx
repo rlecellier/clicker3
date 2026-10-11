@@ -9,6 +9,8 @@ export type ListItem = {
   id: string;
   title: string;
   detail?: string;
+  // Effet chiffré, une ligne par élément, mis en avant avant le détail.
+  effects?: readonly string[];
   // Repère affiché à côté du titre (ex. « Actuel »).
   badge?: string;
   actionLabel: string;
@@ -50,6 +52,13 @@ export const ItemList = ({
                 </>
               )}
             </span>
+            {item.effects === undefined || item.effects.length === 0 ? null : (
+              <ul className={styles.effects}>
+                {item.effects.map((effect) => (
+                  <li key={effect}>{effect}</li>
+                ))}
+              </ul>
+            )}
             {item.detail === undefined ? null : (
               <span className={styles.detail}>{item.detail}</span>
             )}
