@@ -3,7 +3,7 @@ import type { ListItem } from '@component/ItemList';
 import type { SplitChoice } from '@component/SplitActionButton';
 import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
-import { jobs, statTierThresholds } from '@game/data';
+import { jobs } from '@game/data';
 import {
   checkRequirement,
   describeRequirement,
@@ -18,7 +18,7 @@ import {
 import { canChangeJob } from '@game/jobs';
 import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
-import { tierOf } from '@game/stats';
+import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
@@ -230,18 +230,26 @@ export const useGameScreen = () => {
       : { ...studyAction, run: studyPress.onClick, press: studyPress.press };
 
   const skillBars = statIds.map((id) => {
-    const tier = tierOf(state, id);
-    const thresholds = statTierThresholds[id];
-    const next = thresholds[tier];
-    const start = tier === 0 ? 0 : (thresholds[tier - 1] ?? 0);
-    const points = state.stats[id];
+    const progress = statProgress(state, id);
     return {
       id,
-      label: `${statLabels[id]} · palier ${tier} · ${next === undefined ? 'max' : `${formatCount(points)} pts`}`,
-      value: next === undefined ? 1 : points - start,
-      max: next === undefined ? 1 : next - start,
+      label: `${statLabels[id]} · palier ${progress.tier} · ${progress.isMax ? 'max' : `${formatCount(progress.points)} pts`}`,
+      value: progress.value,
+      max: progress.max,
     };
   });
+
+  // Mini-jauge sous « Étudier » : même progression, libellé court.
+  const courseProgress =
+    course === undefined ? undefined : statProgress(state, course.stat);
+  const studyGauge =
+    course === undefined || courseProgress === undefined
+      ? null
+      : {
+          label: `${statLabels[course.stat]} · palier ${courseProgress.tier}`,
+          value: courseProgress.value,
+          max: courseProgress.max,
+        };
 
   // Même format que les compétences ; le palier se calcule sur le cumul gagné.
   const reputation = reputationTierProgress(state);
@@ -279,6 +287,7 @@ export const useGameScreen = () => {
     actions: { work, sellSurplus },
     study: {
       action: studyView,
+      gauge: studyGauge,
       choices: courseChoices,
       selectedId: course?.id ?? '',
       select: setChosenCourse,

@@ -1,5 +1,5 @@
 import { startState } from '@game/data';
-import { tierOf } from './stats';
+import { statProgress, tierOf } from './stats';
 
 const withPoints = (metier: number) => ({
   ...startState,
@@ -24,5 +24,47 @@ describe('tierOf', () => {
 
   it('ne regarde que la stat demandée', () => {
     expect(tierOf(withPoints(81), 'gestion')).toBe(0);
+  });
+});
+
+describe('statProgress', () => {
+  it('part de zéro au palier 0', () => {
+    expect(statProgress(startState, 'metier')).toEqual({
+      tier: 0,
+      points: 0,
+      value: 0,
+      max: 2,
+      isMax: false,
+    });
+  });
+
+  it('mesure la progression dans le palier en cours', () => {
+    expect(statProgress(withPoints(1), 'metier')).toMatchObject({
+      tier: 0,
+      value: 1,
+      max: 2,
+    });
+    expect(statProgress(withPoints(20), 'metier')).toMatchObject({
+      tier: 2,
+      value: 11,
+      max: 32,
+    });
+  });
+
+  it('repart de zéro quand le seuil est atteint pile', () => {
+    expect(statProgress(withPoints(9), 'metier')).toMatchObject({
+      tier: 2,
+      value: 0,
+      max: 32,
+    });
+  });
+
+  it('est pleine au dernier palier', () => {
+    expect(statProgress(withPoints(81), 'metier')).toMatchObject({
+      tier: 4,
+      value: 1,
+      max: 1,
+      isMax: true,
+    });
   });
 });
