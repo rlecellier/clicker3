@@ -24,6 +24,11 @@ describe('study', () => {
     expect(study(startState, 'metier')).toBe(startState);
   });
 
+  it('refuse à découvert', () => {
+    const indebted = { ...funded, money: -10 };
+    expect(study(indebted, 'metier')).toBe(indebted);
+  });
+
   it('refuse un cursus dont la formation n’est pas achetée', () => {
     const untrained = { ...funded, upgrades: [] };
     expect(study(untrained, 'metier')).toBe(untrained);

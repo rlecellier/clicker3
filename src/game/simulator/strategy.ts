@@ -102,6 +102,10 @@ const isCovered = (state: GameState, extra: number) =>
 
 type Purchase = { cost: number; action: GameAction };
 
+// Argent à garder en caisse pour payer les dépenses fixes de la période suivante.
+const reserveOf = (state: GameState) =>
+  simulatorConfig.cashReserveMonths * (state.rent + state.payroll);
+
 const nextPurchase = (state: GameState): GameAction | undefined => {
   const salary = jobById(state.jobId)?.salary ?? 0;
   const betterJob = jobs
@@ -134,8 +138,9 @@ const nextPurchase = (state: GameState): GameAction | undefined => {
     });
   }
   // Le moins cher d'abord.
-  return purchases.toSorted((first, second) => first.cost - second.cost)[0]
-    ?.action;
+  return purchases
+    .filter((purchase) => state.money - purchase.cost >= reserveOf(state))
+    .toSorted((first, second) => first.cost - second.cost)[0]?.action;
 };
 
 // Où travailler : l'emploi, ou l'entreprise qui limite la chaîne si cela rapporte plus.
@@ -193,7 +198,8 @@ export const chooseAction = (state: GameState): GameAction | undefined => {
   if (
     course !== undefined &&
     state.markers.length < state.maxMarkers &&
-    state.money >= simulatorConfig.studyReserve * course.cost &&
+    state.money >=
+      Math.max(simulatorConfig.studyReserve * course.cost, reserveOf(state)) &&
     canStudy(state, course.id)
   ) {
     return { type: 'study', courseId: course.id };

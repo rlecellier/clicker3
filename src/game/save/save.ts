@@ -61,6 +61,23 @@ export const defaultSaveOptions: SaveOptions = {
     },
     // Version 4 : les petits entrepôts.
     3: (raw) => ({ ...raw, warehouses: 0 }),
+    // Version 5 : le ledger compte les intérêts de la dette.
+    4: (raw) => {
+      const { ledger } = raw;
+      if (!isRecord(ledger)) {
+        return raw;
+      }
+      const withInterest = (figures: unknown) =>
+        isRecord(figures) ? { interest: 0, ...figures } : figures;
+      return {
+        ...raw,
+        ledger: {
+          current: withInterest(ledger.current),
+          last: withInterest(ledger.last),
+          total: withInterest(ledger.total),
+        },
+      };
+    },
   },
 };
 

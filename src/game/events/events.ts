@@ -24,9 +24,9 @@ const renderText = (state: GameState, text: string) => {
   );
 };
 
-// Change l'argent (jamais sous 0) et note la variation réelle au livre.
+// Change l'argent (qui peut devenir négatif) et note la variation réelle au livre.
 const setMoney = (state: GameState, money: number): GameState => {
-  const next = Math.max(0, money);
+  const next = money;
   const delta = next - state.money;
   return withRecord(
     { ...state, money: next },
@@ -45,7 +45,10 @@ const applyEffect = (state: GameState, effect: EventEffect): GameState => {
       return setMoney(state, state.money + effect.amount);
     }
     case 'moneyFactor': {
-      return setMoney(state, Math.round(state.money * effect.factor));
+      // Une dette n'est pas touchée par un facteur sur le capital.
+      return state.money > 0
+        ? setMoney(state, Math.round(state.money * effect.factor))
+        : state;
     }
     case 'oneOffRent': {
       return setMoney(state, state.money - state.rent * effect.months);

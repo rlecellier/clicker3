@@ -17,6 +17,9 @@ export const simulatorConfig = {
   articleValue: 12,
   // Une étude n'a lieu que si l'argent couvre ce nombre de fois son coût.
   studyReserve: 3,
+  // Le joueur virtuel garde en caisse ce nombre de mois de dépenses fixes :
+  // il ne creuse jamais de dette pour acheter.
+  cashReserveMonths: 0.25,
   // Un achat qui alourdit les dépenses fixes exige des recettes d'au moins
   // ce multiple des dépenses futures.
   expenseCover: 1.5,

@@ -5,6 +5,8 @@ export const economyRules = {
   // Réputation perdue par commerce en rupture de stock, et par impayé.
   stockoutPenalty: 0.5,
   unpaidPenalty: 2,
+  // Intérêt prélevé à chaque période sur un solde négatif (0,05 = 5 %).
+  debtInterestRate: 0.05,
   // Bonus de production ou de vente d'une entreprise par action de travail
   // faite dedans pendant la période (0,5 = +50 %).
   workBonus: 0.5,

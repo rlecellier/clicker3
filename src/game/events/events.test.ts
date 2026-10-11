@@ -158,8 +158,20 @@ describe('effets', () => {
     expect(next.money).toBe(1000 - startState.rent);
   });
 
-  it('ne fait pas passer l’argent sous 0', () => {
-    expect(triggerEvents(stateAt(11, { money: 10 })).money).toBe(0);
+  it('laisse l’argent passer sous 0 (dette)', () => {
+    expect(triggerEvents(stateAt(11, { money: 10 })).money).toBe(
+      10 - startState.rent,
+    );
+  });
+
+  it('ne réduit pas une dette avec un facteur sur l’argent (crise)', () => {
+    const firedEvents = events
+      .map((event) => event.id)
+      .filter((id) => id !== 'crise-financiere');
+    const crisis = (money: number) =>
+      triggerEvents(stateAt(116, { money, firedEvents })).money;
+    expect(crisis(-1000)).toBe(-1000);
+    expect(crisis(1000)).toBe(900);
   });
 
   it('augmente le loyer (euro fiduciaire)', () => {

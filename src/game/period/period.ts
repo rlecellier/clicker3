@@ -1,4 +1,9 @@
-import { chargeExpenses, produceGoods, sellGoods } from '@game/economy';
+import {
+  chargeExpenses,
+  chargeInterest,
+  produceGoods,
+  sellGoods,
+} from '@game/economy';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
 import type { GameState } from '@game/state';
@@ -21,7 +26,7 @@ export const endPeriod = (state: GameState): GameState => {
   const sold = sellGoods(produced);
   // Le ledger se ferme avant les événements : ceux-ci surviennent au début de
   // la période suivante (ils sont datés d'elle) et s'y écrivent.
-  const charged = closePeriod(chargeExpenses(sold));
+  const charged = closePeriod(chargeInterest(chargeExpenses(sold)));
   return triggerEvents(resetGauge(ageCharacter(charged)));
 };
 
