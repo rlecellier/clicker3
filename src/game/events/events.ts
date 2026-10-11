@@ -5,13 +5,13 @@ import { withRecord } from '@game/ledger';
 import { isUnlocked } from '@game/requirements';
 import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
-import { lifeSummary } from '@game/summary';
+import { lifeFigures } from '@game/summary';
 
 export const eventById = (id: string) =>
   events.find((candidate) => candidate.id === id);
 
 const renderText = (state: GameState, text: string) => {
-  const summary = lifeSummary(state);
+  const summary = lifeFigures(state);
   const values: Record<string, string> = {
     companies: String(summary.companies),
     money: String(summary.money),
