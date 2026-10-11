@@ -4,8 +4,9 @@ Un idle clicker (jeu incrémental) en React + TypeScript. Le but est décrit dan
 `docs/vision.md`, la stack dans `docs/stack.md` (reprise de clicker 1) et la
 recherche de game design dans `docs/game-design/README.md`.
 
-**État du projet** : documentation uniquement. Le thème et les mécaniques ne
-sont pas encore choisis ; ne pas initialiser de code avant cette décision.
+**État du projet** : documentation uniquement. Le concept et les mécaniques de
+la v1 sont choisis (`docs/game/`, périmètre dans `docs/game/v1.md`) ; prochaine
+étape : initialiser le code.
 
 Conventions du projet : voir `.claude/adr/0001-project-structure.md`.
 
