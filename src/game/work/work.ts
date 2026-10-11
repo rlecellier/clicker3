@@ -25,7 +25,7 @@ const workAtJob = (state: GameState, jobId: string | null): GameState => {
     ? state
     : gainReputation(
         { ...state, money: state.money + job.salary },
-        job.reputation,
+        job.reputation * state.workReputationMultiplier,
       );
 };
 

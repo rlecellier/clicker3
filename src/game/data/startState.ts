@@ -38,6 +38,9 @@ export const startState: GameState = {
   productionMultiplier: 1,
   salesMultiplier: 1,
   workBoosts: {},
+  companyMultipliers: {},
+  workReputationMultiplier: 1,
+  reputationPerSaleMultiplier: 1,
   lastStatement: null,
   districts: ['tilleuls'],
 

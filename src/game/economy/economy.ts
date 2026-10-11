@@ -25,6 +25,7 @@ const statementOf = (state: GameState) =>
 const unitsOf = (state: GameState, company: Company, perCopy: number) =>
   (state.companies[company.id] ?? 0) *
   perCopy *
+  (state.companyMultipliers[company.id] ?? 1) *
   (1 + economyRules.workBonus * (state.workBoosts[company.id] ?? 0));
 
 // Étape 1 : les entreprises de production ajoutent au stock, dans la limite
@@ -73,7 +74,10 @@ export const sellGoods = (state: GameState): GameState => {
     stock -= units;
     sold += units;
     revenue += units * company.price;
-    const gain = units * economyRules.reputationPerSale;
+    const gain =
+      units *
+      economyRules.reputationPerSale *
+      state.reputationPerSaleMultiplier;
     current = gainReputation(current, gain);
     gained += Math.max(gain, 0);
     const before = current.reputation;

@@ -13,6 +13,11 @@ describe('work', () => {
     expect(next.reputationEarned).toBeCloseTo(firstJob?.reputation ?? 0);
   });
 
+  it('applique le multiplicateur de réputation de l’emploi', () => {
+    const boosted = work({ ...startState, workReputationMultiplier: 2 });
+    expect(boosted.reputation).toBeCloseTo((firstJob?.reputation ?? 0) * 2);
+  });
+
   it('remplit la jauge du coût de l’action', () => {
     expect(work(startState).gauge).toBe(actionRules.work.gauge);
   });
