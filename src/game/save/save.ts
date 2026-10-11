@@ -59,6 +59,8 @@ export const defaultSaveOptions: SaveOptions = {
         },
       };
     },
+    // Version 4 : les petits entrepôts.
+    3: (raw) => ({ ...raw, warehouses: 0 }),
   },
 };
 

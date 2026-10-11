@@ -13,4 +13,7 @@ export const economyRules = {
   // Vente directe du surplus de stock, à bas prix.
   surplusPrice: 4,
   surplusGauge: 5,
+  // Petit entrepôt supplémentaire, toujours achetable : l'issue de secours
+  // quand la production dépasse le stock que l'on peut ranger.
+  warehouse: { baseCost: 100, growth: 1.15, capacity: 25 },
 } as const;

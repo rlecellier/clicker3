@@ -108,6 +108,8 @@ export type GameState = {
   stock: number;
   // Capacité de l'entrepôt : la production au-delà est perdue.
   stockCapacity: number;
+  // Petits entrepôts achetés (chacun ajoute de la capacité).
+  warehouses: number;
   reputation: number;
   // Total de réputation gagnée depuis le départ : dépenser ne le fait pas baisser.
   reputationEarned: number;

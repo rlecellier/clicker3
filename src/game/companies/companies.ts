@@ -1,4 +1,4 @@
-import { companies, upgrades } from '@game/data';
+import { companies, economyRules, upgrades } from '@game/data';
 import { periodProduction } from '@game/economy';
 import { withRecord } from '@game/ledger';
 import { isUnlocked } from '@game/requirements';
@@ -65,6 +65,33 @@ export const buyCompany = (state: GameState, id: string): GameState => {
       ...state,
       money: state.money - cost,
       companies: { ...state.companies, [id]: owned + 1 },
+    },
+    { purchases: cost },
+  );
+};
+
+// Coût du prochain petit entrepôt, arrondi une seule fois (ADR 0002).
+export const warehouseCost = (owned: number) =>
+  Math.round(
+    economyRules.warehouse.baseCost * economyRules.warehouse.growth ** owned,
+  );
+
+export const canBuyWarehouse = (state: GameState) =>
+  state.status === 'playing' && state.money >= warehouseCost(state.warehouses);
+
+// Ajoute de la capacité de stock ; sans condition, pour toujours pouvoir
+// s'en sortir d'un entrepôt trop petit.
+export const buyWarehouse = (state: GameState): GameState => {
+  if (!canBuyWarehouse(state)) {
+    return state;
+  }
+  const cost = warehouseCost(state.warehouses);
+  return withRecord(
+    {
+      ...state,
+      money: state.money - cost,
+      warehouses: state.warehouses + 1,
+      stockCapacity: state.stockCapacity + economyRules.warehouse.capacity,
     },
     { purchases: cost },
   );
