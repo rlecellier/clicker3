@@ -1,0 +1,1 @@
+export { InvestPage } from './InvestPage';
