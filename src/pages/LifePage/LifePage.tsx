@@ -19,7 +19,6 @@ export const LifePage = () => {
   return (
     <Window title="Ma vie à Sainte-Croissance">
       <CharacterHeader {...screen.header} />
-      {screen.intro === null ? null : <Note>{screen.intro}</Note>}
       <dl className={styles.counters}>
         <Stat label="Stock" value={screen.counters.stock} />
       </dl>
@@ -39,7 +38,10 @@ export const LifePage = () => {
           shortcut={WORK_SHORTCUT}
           onClick={work.run}
         />
-        {study.action === null ? null : (
+        {study.action === null ? (
+          // Emplacement réservé : l'apparition d'« Étudier » ne déplace rien.
+          <div aria-hidden="true" />
+        ) : (
           <SplitActionButton
             label="Étudier"
             detail={study.action.detail}
