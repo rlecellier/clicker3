@@ -42,3 +42,18 @@ export const spendReputation = (state: GameState, amount: number) =>
 export const reputationTierOf = (state: GameState) =>
   reputationTiers.filter((tier) => state.reputationEarned >= tier.earned)
     .length - 1;
+
+// Progression dans le palier courant, sur le total gagné (jamais sur le solde).
+// Au dernier palier : value = max = 1, comme pour les compétences.
+export const reputationTierProgress = (state: GameState) => {
+  const tier = reputationTierOf(state);
+  const start = reputationTiers[tier]?.earned ?? 0;
+  const next = reputationTiers[tier + 1];
+  return {
+    tier,
+    name: reputationTiers[tier]?.name ?? '',
+    value: next === undefined ? 1 : state.reputationEarned - start,
+    max: next === undefined ? 1 : next.earned - start,
+    isMax: next === undefined,
+  };
+};

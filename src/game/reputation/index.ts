@@ -3,5 +3,6 @@ export {
   gainReputation,
   loseReputation,
   reputationTierOf,
+  reputationTierProgress,
   spendReputation,
 } from './reputation';
