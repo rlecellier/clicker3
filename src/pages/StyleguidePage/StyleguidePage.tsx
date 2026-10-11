@@ -1,6 +1,8 @@
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
+import { CityMap } from '@component/CityMap';
 import { DataTable } from '@component/DataTable';
+import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
@@ -48,6 +50,46 @@ export const StyleguidePage = () => (
         </InfoPanel>
       </div>
       <DataTable caption="Vos entreprises" columns={columns} rows={rows} />
+      <CityMap
+        title="Plan de Sainte-Croissance"
+        slogan="Sainte-Croissance, ville en mouvement."
+        onSelect={() => {}}
+        districts={[
+          {
+            id: 'tilleuls',
+            name: 'Les Tilleuls',
+            isLocked: false,
+            isSelected: true,
+            conditions: [],
+            buildings: [
+              { id: 'atelier', label: 'Atelier', kind: 'production', count: 2 },
+            ],
+          },
+          {
+            id: 'hauts-fourneaux',
+            name: 'Les Hauts-Fourneaux',
+            isLocked: true,
+            isSelected: false,
+            conditions: ['Palier de réputation 1 requis'],
+            buildings: [],
+          },
+        ]}
+      />
+      <ImpactGauges
+        caption="Indicateurs"
+        gauges={[
+          {
+            id: 'pollution',
+            label: 'Pollution (dynamisme industriel)',
+            value: 35,
+          },
+          {
+            id: 'inequality',
+            label: 'Inégalités (convergence en cours)',
+            value: 60,
+          },
+        ]}
+      />
       <Note>Bienvenue dans l’euro. Votre compte est crédité de 0 €.</Note>
       <Tabs
         tabs={[
