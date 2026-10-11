@@ -3,6 +3,7 @@ import { buyCompany, buyWarehouse } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
+import { readMail } from '@game/mail';
 import { addGauge } from '@game/period';
 import { triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
@@ -63,6 +64,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'autoTick': {
       return autoTick(state, action.elapsedMs);
+    }
+    case 'readMail': {
+      return readMail(state);
     }
     case 'restart': {
       return newGame(action.jobId);

@@ -95,6 +95,7 @@ export const fireEvent = (state: GameState, event: GameEvent): GameState => {
   }
   result = {
     ...result,
+    mailReceived: result.mailReceived + 1,
     activeEffects: result.activeEffects.map((effect) =>
       effect.eventId === '' ? { ...effect, eventId: event.id } : effect,
     ),

@@ -157,6 +157,10 @@ export type GameState = {
   flags: Record<string, boolean>;
   // Journal des événements (les plus récents, borné).
   events: JournalEntry[];
+  // Compteurs de courrier, qui ne font que croître : messages reçus, et
+  // messages reçus à la dernière lecture (voir `@game/mail`).
+  mailReceived: number;
+  mailRead: number;
   // Événements uniques déjà survenus.
   firedEvents: string[];
   activeEffects: ActiveEffect[];

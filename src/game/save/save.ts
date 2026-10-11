@@ -78,6 +78,12 @@ export const defaultSaveOptions: SaveOptions = {
         },
       };
     },
+    // Version 6 : les compteurs de courrier. Une partie existante démarre sans
+    // message non lu.
+    5: (raw) => {
+      const received = Array.isArray(raw.events) ? raw.events.length : 0;
+      return { ...raw, mailReceived: received, mailRead: received };
+    },
   },
 };
 

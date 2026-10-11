@@ -1,4 +1,5 @@
 import { startState } from '@game/data';
+import { unreadMail } from '@game/mail';
 import type { GameState } from '@game/state';
 import { reduce } from '@game/reducer';
 import { defaultSaveOptions, deserialize, serialize } from './save';
@@ -240,6 +241,31 @@ describe('migration de la version 4', () => {
     const result = deserialize(text);
     expect(result.ok && result.state.ledger.total.interest).toBe(0);
     expect(result.ok && result.state.ledger.total.rent).toBe(900);
+  });
+});
+
+describe('migration de la version 5', () => {
+  it('initialise les compteurs de courrier sans message non lu', () => {
+    const { mailReceived, mailRead, ...old } = startState;
+    expect({ mailReceived, mailRead }).toEqual({
+      mailReceived: 0,
+      mailRead: 0,
+    });
+    const text = JSON.stringify({
+      version: 5,
+      state: {
+        ...old,
+        version: 5,
+        events: [
+          { period: 1, id: 'a', text: 'Un' },
+          { period: 2, id: 'b', text: 'Deux' },
+        ],
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.mailReceived).toBe(2);
+    expect(result.ok && result.state.mailRead).toBe(2);
+    expect(result.ok && unreadMail(result.state)).toBe(0);
   });
 });
 
