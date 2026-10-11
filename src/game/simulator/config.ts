@@ -2,9 +2,10 @@
 export const simulatorConfig = {
   // Cadence d'un joueur humain : une action manuelle par seconde.
   humanCadenceMs: 1000,
-  // Quand le joueur virtuel attend les automatismes, il regarde l'écran toutes
-  // les 5 secondes (pour acheter dès que possible).
-  waitStepMs: 5000,
+  // Quand le joueur virtuel attend les automatismes, il regarde l'écran chaque
+  // seconde (pour acheter dès que possible). Au rythme de l'auto, un pas
+  // ne fait jamais passer deux périodes.
+  waitStepMs: 1000,
   // Garde-fou : nombre maximum de pas simulés (actions et attentes).
   maxSteps: 200_000,
   // Durée cible d'une vie en jeu actif (docs/game/v1.md § 10).

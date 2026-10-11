@@ -50,8 +50,9 @@ passe ensuite par l'action « Étudier » puis par le sommeil.
 
 ### Automatisations (3)
 
-Elles s'activent ou se coupent à volonté. Une action automatique est 2× moins
-rapide et rapporte 2× moins qu'une manuelle ([v1.md](v1.md#6-automatisation-et-absence)).
+Elles s'activent ou se coupent à volonté par un appui long sur Travailler ou
+Dormir. Une action automatique simule deux clics par seconde et rapporte 2×
+moins qu'une manuelle ([v1.md](v1.md#6-automatisation-et-absence)).
 
 | Nom                           | Effet                                       | Déblocage           | Prix      | Description                                                        |
 | ----------------------------- | ------------------------------------------- | ------------------- | --------- | ------------------------------------------------------------------ |

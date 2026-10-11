@@ -1,4 +1,5 @@
 export {
+  afterManualAction,
   autoIntervalMs,
   autoTick,
   canEnableAuto,
