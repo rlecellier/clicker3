@@ -1,4 +1,5 @@
 import { actionRules, courses } from '@game/data';
+import { withRecord } from '@game/ledger';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
 import type { GameState } from '@game/state';
@@ -21,7 +22,10 @@ export const study = (state: GameState, courseId: string): GameState => {
     return state;
   }
   const { gauge, markerChance, markerVariance } = actionRules.study;
-  const paid = { ...state, money: state.money - course.cost };
+  const paid = withRecord(
+    { ...state, money: state.money - course.cost },
+    { studies: course.cost },
+  );
   const withMarker = grantMarker(
     paid,
     course.stat,
