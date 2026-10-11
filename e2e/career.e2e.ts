@@ -51,17 +51,21 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
     owned.getByText('Stage « Posture professionnelle »'),
   ).toBeVisible();
 
-  // Le cursus apparaît ; étudier coûte de l'argent.
-  const course = itemOf(page, 'Posture professionnelle').filter({
-    has: page.getByRole('button', { name: 'Étudier' }),
-  });
-  await expect(page.getByRole('heading', { name: 'Études' })).toBeVisible();
+  // Le cursus apparaît dans la zone d'action ; étudier coûte de l'argent.
+  await expect(
+    page.getByRole('button', { name: 'Choisir le cursus' }),
+  ).toBeVisible();
   await repeatUntil(
     () => work.click(),
     async () => (await money()) >= 20,
   );
+  // La flèche ouvre le choix du cursus.
+  await page.getByRole('button', { name: 'Choisir le cursus' }).click();
+  await page
+    .getByRole('menuitemradio', { name: /Posture professionnelle/ })
+    .click();
   const before = await money();
-  await course.getByRole('button', { name: 'Étudier' }).click();
+  await page.getByRole('button', { name: 'Étudier' }).click();
   await expect(page.getByText('Vous avez étudié.')).toBeVisible();
   // L'étude coûte de l'argent (un loyer peut tomber avec elle).
   expect(await money()).toBeLessThan(before);
