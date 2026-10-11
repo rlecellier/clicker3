@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
-import { LONG_PRESS_MS } from '@hook/useLongPress';
+import { LONG_PRESS_MS } from '@hook/useHoldRepeat';
 
 // Valeur affichée d'un compteur de la page de jeu (« Argent », « Stock »…).
 export const counter = (page: Page, label: string): Locator =>

@@ -88,6 +88,24 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await expect(page.getByRole('cell', { name: 'Sorties' })).toBeVisible();
   await page.getByRole('tab', { name: 'Comptabilité' }).click();
 
+  // Maintenir Travailler répète l'action à 4 clics par seconde : bien plus
+  // qu'un clic seul, et plus rien une fois le doigt levé.
+  await openTab(page, 'vie');
+  const money = () => amountOf(counter(page, 'Argent'));
+  const beforeClick = await money();
+  await work.click();
+  const oneClick = (await money()) - beforeClick;
+  expect(oneClick).toBeGreaterThan(0);
+  const beforeHold = await money();
+  await work.hover();
+  await page.mouse.down();
+  await page.clock.runFor(1000);
+  await page.mouse.up();
+  const afterHold = await money();
+  expect(afterHold - beforeHold).toBeGreaterThanOrEqual(oneClick * 3);
+  await page.clock.runFor(2000);
+  expect(await money()).toBe(afterHold);
+
   // L'automatisation s'achète, coupée au départ.
   await openUpgrades();
   await itemOf(page, 'Procédure de travail')
@@ -96,16 +114,14 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await openTab(page, 'vie');
   await expect(page.getByText('Appui long : automatique')).toHaveCount(1);
 
-  // Un appui long sur Travailler l'active : le travail rapporte seul. Le clic
-  // qui suit le relâchement ne compte pas comme un travail manuel.
-  const money = () => amountOf(counter(page, 'Argent'));
-  const beforeLongPress = await money();
+  // Un appui long sur Travailler l'active sans interrompre la répétition ;
+  // le clic qui suit le relâchement ne compte pas comme un travail de plus.
   await longPress(page, work);
   await expect(workOn).toBeVisible();
   await expect(page.getByText('Travail automatique activé.')).toBeVisible();
-  expect(await money()).toBe(beforeLongPress);
+  const afterLongPress = await money();
   await page.clock.runFor(1000);
-  await expect.poll(money).toBeGreaterThan(beforeLongPress);
+  await expect.poll(money).toBeGreaterThan(afterLongPress);
 
   // Un second appui long le coupe.
   await longPress(page, work);
