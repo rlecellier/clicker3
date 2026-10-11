@@ -208,9 +208,7 @@ export const useGameScreen = () => {
       date: formatDate(dateOf(state)),
       phase: formatPhase(state),
     },
-    gauge: { value: state.gauge, max: state.gaugeCapacity },
     counters: {
-      money: formatMoney(state.money),
       stock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
       reputation: formatDecimal(state.reputation),
       reputationTier: describeReputationTier(state),

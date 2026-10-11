@@ -19,13 +19,7 @@ export const LifePage = () => {
     <Window title="Ma vie à Sainte-Croissance">
       <CharacterHeader {...screen.header} />
       {screen.intro === null ? null : <Note>{screen.intro}</Note>}
-      <ProgressBar
-        label="Jauge de temps"
-        value={screen.gauge.value}
-        max={screen.gauge.max}
-      />
       <dl className={styles.counters}>
-        <Stat label="Argent" value={screen.counters.money} />
         <Stat label="Stock" value={screen.counters.stock} />
       </dl>
       <Note minLines={2}>{screen.objective}</Note>
