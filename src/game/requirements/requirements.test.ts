@@ -42,7 +42,7 @@ describe('isUnlocked', () => {
     expect(isUnlocked(stateWith({ phase: 'entrepreneur' }), requirement)).toBe(
       true,
     );
-    expect(isUnlocked(stateWith({ phase: 'senior' }), requirement)).toBe(true);
+    expect(isUnlocked(stateWith({ phase: 'boss' }), requirement)).toBe(true);
   });
 
   it('teste l’âge minimum', () => {

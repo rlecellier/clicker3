@@ -17,6 +17,10 @@ export const actionRules = {
     // Points de stat par marqueur consommé, avant le multiplicateur du logement.
     pointsPerMarker: 1,
   },
+  senior: {
+    // Coefficient des gains des actions manuelles une fois senior.
+    manualFactor: 0.5,
+  },
 } as const;
 
 // Stat qui reçoit les marqueurs gagnés en travaillant à son emploi.

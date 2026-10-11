@@ -8,7 +8,13 @@ import type { GameState } from '@game/state';
 export const startState: GameState = {
   version: 1,
   characterName: 'Camille Morel',
-  life: { startAge: 18, deathAge: 75, startYear: 1999, startMonth: 1 },
+  life: {
+    startAge: 18,
+    seniorAge: 60,
+    deathAge: 75,
+    startYear: 1999,
+    startMonth: 1,
+  },
 
   period: 0,
   gauge: 0,
