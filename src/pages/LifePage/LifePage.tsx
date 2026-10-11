@@ -10,6 +10,8 @@ import { useGameScreen } from '@hook/useGameScreen';
 import { STUDY_SHORTCUT, WORK_SHORTCUT } from '@hook/useKeyboardShortcuts';
 import styles from './LifePage.module.css';
 
+const noop = () => {};
+
 // Onglet « Vie » : orchestrateur de `useGameScreen`.
 export const LifePage = () => {
   const screen = useGameScreen();
@@ -38,24 +40,33 @@ export const LifePage = () => {
           shortcut={WORK_SHORTCUT}
           onClick={work.run}
         />
-        {study.action === null ? (
-          // Emplacement réservé : l'apparition d'« Étudier » ne déplace rien.
-          <div aria-hidden="true" />
-        ) : (
+        {/* Emplacement toujours occupé par la même structure : quand rien
+            n'est étudiable, une copie invisible garde la hauteur de la zone. */}
+        <div
+          className={study.action === null ? styles.reserved : styles.study}
+          aria-hidden={study.action === null ? 'true' : undefined}
+          inert={study.action === null}
+        >
           <SplitActionButton
             label="Étudier"
-            detail={study.action.detail}
-            reason={study.action.reason}
-            isDisabled={study.action.isDisabled}
+            detail={study.action?.detail ?? ' '}
+            reason={study.action?.reason}
+            isDisabled={study.action?.isDisabled ?? true}
             menuLabel="Choisir le cursus"
             choices={study.choices}
             selectedId={study.selectedId}
             onSelect={study.select}
-            press={study.action.press}
-            shortcut={STUDY_SHORTCUT}
-            onClick={study.action.run}
+            press={study.action?.press}
+            shortcut={study.action === null ? undefined : STUDY_SHORTCUT}
+            onClick={study.action?.run ?? noop}
           />
-        )}
+          <ProgressBar
+            size="small"
+            label={study.gauge?.label ?? '\u{A0}'}
+            value={study.gauge?.value ?? 0}
+            max={study.gauge?.max ?? 1}
+          />
+        </div>
         <ActionButton
           label="Vendre le surplus"
           detail={sellSurplus.detail}

@@ -17,3 +17,15 @@
   color: var(--color-primary);
   font-style: italic;
 }
+
+.study {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Copie invisible : mêmes dimensions, aucun effet. */
+.reserved {
+  composes: study;
+  visibility: hidden;
+}

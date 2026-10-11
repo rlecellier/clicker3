@@ -53,7 +53,16 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await expect(courseMenu).toHaveCount(2);
   await expect(courseMenu.filter({ hasText: /Posture/ })).toHaveCount(1);
   await expect(courseMenu.filter({ hasText: /Dépassement/ })).toHaveCount(1);
+
+  // La mini-jauge sous « Étudier » suit le cursus choisi.
   await page.keyboard.press('Escape');
+  const miniGauge = (stat: string) =>
+    page.getByRole('progressbar', { name: new RegExp(`^${stat} · palier`) });
+  await expect(miniGauge('Métier')).toBeVisible();
+  await page.getByRole('button', { name: 'Choisir le cursus' }).click();
+  await courseMenu.filter({ hasText: /Dépassement/ }).click();
+  await expect(miniGauge('Endurance')).toBeVisible();
+  await expect(miniGauge('Métier')).toBeHidden();
 
   // Le premier collaborateur fait de vous un dirigeant.
   await openUpgrades();
