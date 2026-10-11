@@ -18,6 +18,7 @@ export const startState: GameState = {
 
   money: 0,
   stock: 0,
+  stockCapacity: 50,
   reputation: 0,
   reputationEarned: 0,
 
@@ -31,8 +32,13 @@ export const startState: GameState = {
   jobId: 'interim',
   housingId: 'studio',
   rent: 300,
+  payroll: 0,
   companies: {},
   upgrades: [],
+  productionMultiplier: 1,
+  salesMultiplier: 1,
+  workBoosts: {},
+  lastStatement: null,
   districts: ['tilleuls'],
 
   flags: {},

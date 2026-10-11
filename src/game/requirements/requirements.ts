@@ -13,6 +13,8 @@ export type Requirement =
   // Phase atteinte ou dépassée.
   | { type: 'phase'; phase: LifePhase }
   | { type: 'age'; min: number }
+  // Nombre de périodes écoulées (pour dater une arrivée, ex. internet).
+  | { type: 'period'; min: number }
   | { type: 'company'; id: string; count?: number }
   | { type: 'upgrade'; id: string }
   | { type: 'all'; of: Requirement[] }
@@ -39,6 +41,9 @@ export const isUnlocked = (
       return (
         lifePhases.indexOf(state.phase) >= lifePhases.indexOf(requirement.phase)
       );
+    }
+    case 'period': {
+      return state.period >= requirement.min;
     }
     case 'age': {
       return ageOf(state) >= requirement.min;

@@ -1,8 +1,11 @@
 export { actionRules, jobMarkerStat } from './actionRules';
+export { companies } from './companies';
+export type { CommerceCompany, Company, ProductionCompany } from './companies';
 export { courses } from './courses';
 export type { Course } from './courses';
 export { districts } from './districts';
 export type { District } from './districts';
+export { economyRules } from './economyRules';
 export { jobs } from './jobs';
 export type { Job } from './jobs';
 export { reputationTiers } from './reputationTiers';

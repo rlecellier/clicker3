@@ -12,6 +12,20 @@ export type GameEvent = {
   id: string;
 };
 
+// Relevé économique d'une période (suivi détaillé : V1-13).
+export type PeriodStatement = {
+  // Période qui vient de se terminer.
+  period: number;
+  revenue: number;
+  expenses: number;
+  stockProduced: number;
+  stockSold: number;
+  stockLost: number;
+  reputationGained: number;
+  reputationLost: number;
+  unpaid: boolean;
+};
+
 export type LifeSpan = {
   startAge: number;
   deathAge: number;
@@ -42,6 +56,8 @@ export type GameState = {
   /** Euros entiers. */
   money: number;
   stock: number;
+  // Capacité de l'entrepôt : la production au-delà est perdue.
+  stockCapacity: number;
   reputation: number;
   // Total de réputation gagnée depuis le départ : dépenser ne le fait pas baisser.
   reputationEarned: number;
@@ -59,9 +75,17 @@ export type GameState = {
   jobId: string | null;
   housingId: string;
   rent: number;
+  // Salaires des employés prélevés à chaque période.
+  payroll: number;
   /** Nombre d'exemplaires possédés, par type d'entreprise. */
   companies: Record<string, number>;
   upgrades: string[];
+  // Multiplicateurs de production et de ventes (alimentés par les améliorations).
+  productionMultiplier: number;
+  salesMultiplier: number;
+  // Actions de travail faites cette période dans chaque entreprise.
+  workBoosts: Record<string, number>;
+  lastStatement: PeriodStatement | null;
   // Quartiers de la ville débloqués.
   districts: string[];
 
