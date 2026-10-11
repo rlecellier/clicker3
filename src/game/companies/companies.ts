@@ -66,7 +66,7 @@ export const buyCompany = (state: GameState, id: string): GameState => {
       money: state.money - cost,
       companies: { ...state.companies, [id]: owned + 1 },
     },
-    { purchases: cost },
+    { purchases: cost, purchasesBy: { [id]: cost } },
   );
 };
 
@@ -93,6 +93,6 @@ export const buyWarehouse = (state: GameState): GameState => {
       warehouses: state.warehouses + 1,
       stockCapacity: state.stockCapacity + economyRules.warehouse.capacity,
     },
-    { purchases: cost },
+    { purchases: cost, purchasesBy: { warehouse: cost } },
   );
 };

@@ -1,4 +1,4 @@
-import { startState } from '@game/data';
+import { ledgerHistoryLength, startState } from '@game/data';
 import { reduce } from '@game/reducer';
 import type { GameAction } from '@game/reducer';
 import type { GameState } from '@game/state';
@@ -8,6 +8,7 @@ import {
   emptyFigures,
   emptyLedger,
   lastPeriodReport,
+  periodReports,
   record,
   totals,
   withRecord,
@@ -19,7 +20,7 @@ describe('record', () => {
     expect(ledger.current.wages).toBe(40);
     expect(ledger.total.wages).toBe(40);
     expect(ledger.total.stockSold).toBe(3);
-    expect(ledger.last).toEqual(emptyFigures());
+    expect(ledger.history).toEqual([]);
   });
 
   it('cumule plusieurs écritures', () => {
@@ -53,19 +54,58 @@ describe('record', () => {
 });
 
 describe('closePeriod', () => {
-  it('verse la période en cours dans la dernière et la remet à zéro', () => {
+  it('verse la période en cours dans l’historique et la remet à zéro', () => {
     const written = withRecord(startState, { wages: 40, rent: 300 });
     const closed = closePeriod(written);
-    expect(closed.ledger.last.wages).toBe(40);
+    expect(closed.ledger.history).toHaveLength(1);
+    expect(closed.ledger.history[0]?.period).toBe(startState.period);
+    expect(closed.ledger.history[0]?.figures.wages).toBe(40);
     expect(closed.ledger.current).toEqual(emptyFigures());
     expect(closed.ledger.total.wages).toBe(40);
   });
 
-  it('remplace la dernière période au lieu de l’additionner', () => {
+  it('garde les périodes terminées, la plus récente en tête', () => {
     let state = closePeriod(withRecord(startState, { wages: 40 }));
-    state = closePeriod(withRecord(state, { wages: 5 }));
-    expect(state.ledger.last.wages).toBe(5);
+    state = closePeriod({
+      ...withRecord(state, { wages: 5 }),
+      period: state.period + 1,
+    });
+    expect(state.ledger.history.map((entry) => entry.figures.wages)).toEqual([
+      5, 40,
+    ]);
     expect(state.ledger.total.wages).toBe(45);
+  });
+
+  it('ne garde que ledgerHistoryLength périodes sur plus de fermetures', () => {
+    let state: GameState = startState;
+    for (let index = 1; index <= ledgerHistoryLength + 2; index++) {
+      state = closePeriod({
+        ...withRecord(state, { wages: index }),
+        period: index,
+      });
+    }
+    expect(state.ledger.history).toHaveLength(ledgerHistoryLength);
+    expect(state.ledger.history.map((entry) => entry.period)).toEqual([
+      5, 4, 3,
+    ]);
+    expect(state.ledger.history.map((entry) => entry.figures.wages)).toEqual([
+      5, 4, 3,
+    ]);
+    expect(state.ledger.total.wages).toBe(15);
+  });
+
+  it('relève le stock de fin dans la période close et de départ dans la suivante', () => {
+    const closed = closePeriod({ ...startState, stock: 12 });
+    expect(closed.ledger.history[0]?.figures.stockEnd).toBe(12);
+    expect(closed.ledger.current.stockStart).toBe(12);
+    expect(closed.ledger.current.stockEnd).toBe(0);
+  });
+
+  it('record ne touche pas aux niveaux de stock', () => {
+    const closed = closePeriod({ ...startState, stock: 12 });
+    const next = record(closed.ledger, { stockProduced: 3 });
+    expect(next.current.stockStart).toBe(12);
+    expect(next.total.stockStart).toBe(0);
   });
 });
 
@@ -101,6 +141,44 @@ describe('sélecteurs', () => {
   it('est vide au départ', () => {
     expect(lastPeriodReport(startState).net).toBe(0);
     expect(totals(startState).revenue).toBe(0);
+  });
+});
+
+describe('ventilation par source', () => {
+  const rich: GameState = {
+    ...startState,
+    money: 30_000,
+    stats: { metier: 0, gestion: 200, intelligence: 200, endurance: 200 },
+  };
+  const play = (actions: GameAction[]) => {
+    let state = rich;
+    for (const action of actions) {
+      state = reduce(state, action);
+    }
+    return state.ledger.current;
+  };
+
+  it('note l’emploi, l’entreprise, l’entrepôt, l’amélioration et le cursus', () => {
+    const current = play([
+      { type: 'work', target: 'job' },
+      { type: 'buyCompany', id: 'atelier' },
+      { type: 'buyWarehouse' },
+      { type: 'buyUpgrade', id: 'stage-posture' },
+      { type: 'study', courseId: 'metier' },
+    ]);
+    expect(Object.keys(current.wagesBy)).toEqual([startState.jobId]);
+    expect(
+      Object.keys(current.purchasesBy).toSorted((a, b) => a.localeCompare(b)),
+    ).toEqual(['atelier', 'stage-posture', 'warehouse']);
+    expect(current.studiesBy).toEqual({ metier: current.studies });
+  });
+
+  it('cumule deux achats de la même entreprise', () => {
+    const current = play([
+      { type: 'buyCompany', id: 'atelier' },
+      { type: 'buyCompany', id: 'atelier' },
+    ]);
+    expect(current.purchasesBy).toEqual({ atelier: current.purchases });
   });
 });
 
@@ -175,6 +253,64 @@ describe('invariants sur une partie jouée', () => {
       expect(sum(cumulated.stockIn)).toBe(cumulated.stockProduced);
       expect(sum(cumulated.stockOut)).toBe(cumulated.stockSold);
     }
+  });
+
+  it('les ventilations en euros somment exactement au total', () => {
+    for (const state of states) {
+      const figures = [
+        state.ledger.total,
+        state.ledger.current,
+        ...state.ledger.history.map((entry) => entry.figures),
+      ];
+      for (const entry of figures) {
+        expect(sum(entry.salesBy)).toBe(entry.sales);
+        expect(sum(entry.wagesBy)).toBe(entry.wages);
+        expect(sum(entry.purchasesBy)).toBe(entry.purchases);
+        expect(sum(entry.studiesBy)).toBe(entry.studies);
+      }
+    }
+  });
+
+  it('stock de départ + produit − vendu − perdu = stock de fin', () => {
+    for (const state of states) {
+      for (const { figures } of state.ledger.history) {
+        expect(
+          figures.stockStart +
+            figures.stockProduced -
+            figures.stockSold -
+            figures.stockLost,
+        ).toBe(figures.stockEnd);
+      }
+      const { current } = state.ledger;
+      expect(
+        current.stockStart +
+          current.stockProduced -
+          current.stockSold -
+          current.stockLost,
+      ).toBe(state.stock);
+    }
+  });
+
+  it('l’historique reste borné, récent en tête, avec des numéros qui se suivent', () => {
+    const last = states.at(-1);
+    const history = last?.ledger.history ?? [];
+    expect(history).toHaveLength(ledgerHistoryLength);
+    expect(history.map((entry) => entry.period)).toEqual([
+      (last?.period ?? 0) - 1,
+      (last?.period ?? 0) - 2,
+      (last?.period ?? 0) - 3,
+    ]);
+  });
+
+  it('periodReports donne la période en cours puis l’historique', () => {
+    const last = states.at(-1) ?? rich;
+    const reports = periodReports(last);
+    expect(reports.map((report) => report.period)).toEqual([
+      last.period,
+      ...last.ledger.history.map((entry) => entry.period),
+    ]);
+    expect(reports[0]?.sales).toBe(last.ledger.current.sales);
+    expect(reports[1]?.net).toBe(lastPeriodReport(last).net);
   });
 
   it('réputation = gagnée − perdue − dépensée', () => {

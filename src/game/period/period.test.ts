@@ -55,7 +55,7 @@ describe('addGauge', () => {
     const next = addGauge({ ...startState, money: -1000 }, capacity);
     // Loyer 300 prélevé : -1 300, puis 5 % d'intérêt.
     expect(next.money).toBe(-1300 - 65);
-    expect(next.ledger.last.interest).toBe(65);
+    expect(next.ledger.history[0]?.figures.interest).toBe(65);
   });
 
   it('ne change plus rien une fois mort', () => {

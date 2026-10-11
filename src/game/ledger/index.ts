@@ -3,8 +3,9 @@ export {
   emptyFigures,
   emptyLedger,
   lastPeriodReport,
+  periodReports,
   record,
   totals,
   withRecord,
 } from './ledger';
-export type { LedgerEntry, LedgerReport } from './ledger';
+export type { LedgerEntry, LedgerReport, PeriodReport } from './ledger';

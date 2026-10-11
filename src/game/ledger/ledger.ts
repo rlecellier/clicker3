@@ -1,3 +1,4 @@
+import { ledgerHistoryLength } from '@game/data';
 import type { GameState, Ledger, LedgerFigures } from '@game/state';
 
 export const emptyFigures = (): LedgerFigures => ({
@@ -16,6 +17,12 @@ export const emptyFigures = (): LedgerFigures => ({
   stockLost: 0,
   stockIn: {},
   stockOut: {},
+  stockStart: 0,
+  stockEnd: 0,
+  salesBy: {},
+  wagesBy: {},
+  purchasesBy: {},
+  studiesBy: {},
   reputationGained: 0,
   reputationLost: 0,
   reputationSpent: 0,
@@ -23,11 +30,15 @@ export const emptyFigures = (): LedgerFigures => ({
 
 export const emptyLedger = (): Ledger => ({
   current: emptyFigures(),
-  last: emptyFigures(),
+  history: [],
   total: emptyFigures(),
 });
 
-export type LedgerEntry = Partial<LedgerFigures>;
+// Les niveaux de stock (`stockStart`, `stockEnd`) ne s'additionnent pas : ils
+// sont posés par `closePeriod`, pas enregistrés.
+export type LedgerEntry = Partial<
+  Omit<LedgerFigures, 'stockStart' | 'stockEnd'>
+>;
 
 const addRecords = (
   base: Record<string, number>,
@@ -57,6 +68,10 @@ const add = (figures: LedgerFigures, entry: LedgerEntry): LedgerFigures => ({
   stockLost: figures.stockLost + (entry.stockLost ?? 0),
   stockIn: addRecords(figures.stockIn, entry.stockIn ?? {}),
   stockOut: addRecords(figures.stockOut, entry.stockOut ?? {}),
+  salesBy: addRecords(figures.salesBy, entry.salesBy ?? {}),
+  wagesBy: addRecords(figures.wagesBy, entry.wagesBy ?? {}),
+  purchasesBy: addRecords(figures.purchasesBy, entry.purchasesBy ?? {}),
+  studiesBy: addRecords(figures.studiesBy, entry.studiesBy ?? {}),
   reputationGained: figures.reputationGained + (entry.reputationGained ?? 0),
   reputationLost: figures.reputationLost + (entry.reputationLost ?? 0),
   reputationSpent: figures.reputationSpent + (entry.reputationSpent ?? 0),
@@ -81,13 +96,24 @@ export const withRecord = (
   ledger: record(state.ledger, entry),
 });
 
-// Fin de période : la période en cours devient « la dernière », une nouvelle commence.
+/**
+ * Fin de période : la période en cours (avec le stock restant) est versée en
+ * tête de l'historique, borné à `ledgerHistoryLength`, et une nouvelle commence
+ * avec le stock actuel comme stock de départ. Appelée avant que `period` ne
+ * change : la période versée est `state.period`.
+ */
 export const closePeriod = (state: GameState): GameState => ({
   ...state,
   ledger: {
     ...state.ledger,
-    last: state.ledger.current,
-    current: emptyFigures(),
+    history: [
+      {
+        period: state.period,
+        figures: { ...state.ledger.current, stockEnd: state.stock },
+      },
+      ...state.ledger.history,
+    ].slice(0, ledgerHistoryLength),
+    current: { ...emptyFigures(), stockStart: state.stock },
   },
 });
 
@@ -113,9 +139,24 @@ const reportOf = (figures: LedgerFigures): LedgerReport => {
   return { ...figures, revenue, expenses, net: revenue - expenses };
 };
 
-/** Recettes, dépenses et flux de la dernière période terminée. */
+/** Une période et son numéro. */
+export type PeriodReport = LedgerReport & { period: number };
+
+/** Recettes, dépenses et flux de la dernière période terminée (nuls au départ). */
 export const lastPeriodReport = (state: GameState): LedgerReport =>
-  reportOf(state.ledger.last);
+  reportOf(state.ledger.history[0]?.figures ?? emptyFigures());
+
+/**
+ * La période en cours, puis les périodes terminées de la plus récente à la
+ * plus ancienne (au plus `ledgerHistoryLength`).
+ */
+export const periodReports = (state: GameState): PeriodReport[] => [
+  { ...reportOf(state.ledger.current), period: state.period },
+  ...state.ledger.history.map(({ period, figures }) => ({
+    ...reportOf(figures),
+    period,
+  })),
+];
 
 /** Recettes, dépenses et flux cumulés depuis le départ. */
 export const totals = (state: GameState): LedgerReport =>

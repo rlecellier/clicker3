@@ -123,7 +123,7 @@ export const buyUpgrade = (state: GameState, id: string): GameState => {
       payroll: state.payroll + (upgrade.payroll ?? 0),
       upgrades: [...state.upgrades, id],
     },
-    { purchases: upgrade.price },
+    { purchases: upgrade.price, purchasesBy: { [id]: upgrade.price } },
   );
   let result = bought;
   for (const effect of upgrade.effects) {

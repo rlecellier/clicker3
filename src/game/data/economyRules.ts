@@ -19,3 +19,6 @@ export const economyRules = {
   // quand la production dépasse le stock que l'on peut ranger.
   warehouse: { baseCost: 100, growth: 1.15, capacity: 25 },
 } as const;
+
+// Nombre de périodes terminées gardées dans l'historique du ledger.
+export const ledgerHistoryLength = 3;

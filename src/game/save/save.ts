@@ -3,9 +3,11 @@ import {
   districts,
   events,
   jobs,
+  ledgerHistoryLength,
   startState,
   upgrades,
 } from '@game/data';
+import { emptyFigures } from '@game/ledger';
 import { markAllSeen } from '@game/novelty';
 import { lifePhases } from '@game/state';
 import type { GameState } from '@game/state';
@@ -97,6 +99,52 @@ export const defaultSaveOptions: SaveOptions = {
         return base;
       }
     },
+    // Version 8 : le ledger garde un historique de périodes et ventile les
+    // montants par source. `last` devient l'unique entrée de `history` (période
+    // `period - 1`, aucune au départ). Les ventilations des périodes déjà
+    // jouées sont vides : elles ne somment donc pas à leur total. Le stock de
+    // départ de la période en cours se déduit de ses flux ; celui des périodes
+    // passées est inconnu (0).
+    7: (raw) => {
+      const { ledger, period, stock } = raw;
+      if (!isRecord(ledger)) {
+        return raw;
+      }
+      const withDetail = (figures: unknown) =>
+        isRecord(figures)
+          ? {
+              stockStart: 0,
+              stockEnd: 0,
+              salesBy: {},
+              wagesBy: {},
+              purchasesBy: {},
+              studiesBy: {},
+              ...figures,
+            }
+          : figures;
+      const current = withDetail(ledger.current);
+      if (
+        isRecord(current) &&
+        isFiniteNumber(stock) &&
+        isFiniteNumber(current.stockProduced) &&
+        isFiniteNumber(current.stockSold) &&
+        isFiniteNumber(current.stockLost)
+      ) {
+        current.stockStart =
+          stock - current.stockProduced + current.stockSold + current.stockLost;
+      }
+      return {
+        ...raw,
+        ledger: {
+          current,
+          history:
+            isFiniteNumber(period) && period > 0
+              ? [{ period: period - 1, figures: withDetail(ledger.last) }]
+              : [],
+          total: withDetail(ledger.total),
+        },
+      };
+    },
   },
 };
 
@@ -168,6 +216,11 @@ const isJournalEntry = (value: unknown) =>
   typeof value.id === 'string' &&
   typeof value.text === 'string';
 
+const isLedgerPeriod = (value: unknown) =>
+  isRecord(value) &&
+  isFiniteNumber(value.period) &&
+  hasShapeOf(emptyFigures(), value.figures);
+
 const isActiveEffect = (value: unknown) =>
   isRecord(value) &&
   typeof value.eventId === 'string' &&
@@ -201,6 +254,10 @@ const hasValidContent = (raw: RawState) =>
   Object.values(raw.seenItems).every(
     (ids) => Array.isArray(ids) && ids.every((id) => typeof id === 'string'),
   ) &&
+  isRecord(raw.ledger) &&
+  Array.isArray(raw.ledger.history) &&
+  raw.ledger.history.length <= ledgerHistoryLength &&
+  raw.ledger.history.every((entry) => isLedgerPeriod(entry)) &&
   Array.isArray(raw.events) &&
   raw.events.every((entry) => isJournalEntry(entry)) &&
   Array.isArray(raw.activeEffects) &&
