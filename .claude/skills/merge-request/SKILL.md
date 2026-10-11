@@ -76,7 +76,7 @@ reviewer who has not seen the conversation.
 | 🎯 Why | The problem or need, in one or two sentences, then `Closes #N` for the single issue handled. |
 | ✨ What changed | Bullets grouped by theme, written as outcomes, not file lists. |
 | 🧪 How to test | Numbered, concrete steps and the expected result. |
-| 📸 Screenshots | UI changes only. Remove the section otherwise; the demo workflow posts its own comment (see below). |
+| 📸 Screenshots | UI changes only. Remove the section otherwise. |
 | ⚠️ Notes for reviewers | Trade-offs, risks, follow-ups, what is out of scope. |
 | ✅ Checklist | The items from the template, ticked only if true. |
 
@@ -119,27 +119,7 @@ The game needed a second way to earn money that trades clicking for waiting.
 - [x] Follows the project structure ADR
 ```
 
-## 5. Demo
-
-The demo is on demand and never adds demo-only code. Commenting `/demo` on the
-MR (a collaborator only) starts the `MR demo` workflow
-(`.github/workflows/demo.yml`): it runs the Playwright e2e journeys
-(`e2e/*.e2e.ts`) on the current head and posts as a comment the screenshots that
-this MR lists in `e2e/demo.json`. Comment again after a push to refresh it.
-
-To show a feature, add `await demoShot(page, 'my-shot')` (from
-`e2e/support`) at the right step of a journey that is a real test:
-it asserts the behavior and stays after the merge. Then list `my-shot` in
-`e2e/demo.json`. Never commit a script that exists only to film a feature.
-`e2e/demo.json` belongs to the MR: set it to this MR's screenshots, and empty
-the list (`{ "screenshots": [] }`) when none applies.
-
-The files live on the `mr-assets` branch and are deleted, with the comment, when
-the MR is merged or closed.
-
-Locally: `DEMO=1 npm run e2e` writes the listed screenshots to `demo/`.
-
-## 6. Then
+## 5. Then
 
 Push to the designated branch. Open the MR only if asked; when opening it, pass
 the title and the finished description, not the template.

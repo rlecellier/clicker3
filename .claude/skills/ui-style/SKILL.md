@@ -28,7 +28,7 @@ illustrations. Voix administrative pince-sans-rire.
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
    `-dark`), `--color-paper`, `--color-text` (`-muted`), `--color-primary`
    (`-text`), `--color-note` (`-border`), `--color-alert` (`-text`),
-   `--color-focus` ; polices `--font-sans`, `--font-mono` ; `--font-size`,
+   `--color-ok`, `--color-focus` ; polices `--font-sans`, `--font-mono` ; `--font-size`,
    `--space` ; biseaux `--bevel-out` (relief) et `--bevel-in` (creux).
 3. **CSS Module** `Nom.module.css` à côté du composant, seulement si besoin.
    Variantes avec **cva** (voir `Button`, `Badge`). Widgets interactifs à
