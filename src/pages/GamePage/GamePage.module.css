@@ -1,0 +1,27 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.counters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space);
+  margin: 0;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space);
+}
+
+.feedback {
+  min-height: 1.4em;
+  color: var(--color-primary);
+  font-style: italic;
+}
