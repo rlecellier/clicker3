@@ -1,0 +1,177 @@
+# Guide de style de l'interface
+
+Référence humaine pour créer ou modifier l'UI. La version courte, destinée aux
+agents, est le skill `.claude/skills/ui-style/SKILL.md`. La page `/styleguide`
+(développement seulement, voir
+[ADR 0006](../../.claude/adr/0006-decisions-visuelles-v1.md)) montre les
+composants de base en situation : lancer `npm run dev` puis ouvrir
+`/styleguide`.
+
+## 1. Principes
+
+- **Logiciel de gestion de 1999** : fenêtres à bords biseautés, barres de titre
+  bleues, tableaux, jauge à blocs. Aucun néon.
+- **Le décalage vient du texte**, pas des illustrations
+  (`docs/game/ton-et-univers.md`, § Identité visuelle).
+- **Mobile d'abord** : le viewport des tests e2e est 480×560. Sur bureau, les
+  pages restent une colonne centrée (`max-width: 40rem`).
+- **Pas de mode sombre en v1** (`color-scheme: light`).
+- Focus toujours visible (contour pointillé `--color-focus`) et
+  `prefers-reduced-motion` respecté, tous deux posés dans `src/global.css`.
+
+## 2. Tokens
+
+Définis dans `:root` de `src/global.css`. On n'écrit jamais de valeur de
+couleur, de police ou d'espacement en dur dans un CSS Module : on utilise un
+token.
+
+| Token                    | Usage                                                        |
+| ------------------------ | ------------------------------------------------------------ |
+| `--color-desktop`        | Fond du `body` (le « bureau »)                               |
+| `--color-surface`        | Fond des fenêtres, boutons, onglets                          |
+| `--color-surface-light`  | Arête claire des biseaux                                     |
+| `--color-surface-shadow` | Ombre moyenne des biseaux                                    |
+| `--color-surface-dark`   | Arête sombre des biseaux, ombre portée des fenêtres          |
+| `--color-paper`          | Fond des zones de contenu (tableaux, jauges), arête blanche  |
+| `--color-text`           | Texte courant                                                |
+| `--color-text-muted`     | Texte secondaire (détails, raisons de blocage)               |
+| `--color-primary`        | Bleu institutionnel : barre de titre, jauge, bouton primaire |
+| `--color-primary-text`   | Texte sur fond `--color-primary`                             |
+| `--color-note`           | Jaune post-it (`Note`)                                       |
+| `--color-note-border`    | Bordure du post-it                                           |
+| `--color-alert`          | Rouge sobre : alertes, bouton `danger`                       |
+| `--color-alert-text`     | Texte sur fond `--color-alert`                               |
+| `--color-focus`          | Contour de focus (`:focus-visible`)                          |
+| `--font-sans`            | Tahoma, Verdana, puis polices de repli : tout le texte       |
+| `--font-mono`            | Courier : texte à chasse fixe                                |
+| `--font-size`            | Taille de base (0,875 rem)                                   |
+| `--space`                | Unité d'espacement (0,5 rem) ; multiples ou fractions        |
+| `--bevel-out`            | Biseau en relief (fenêtre, bouton, onglet)                   |
+| `--bevel-in`             | Biseau en creux (tableau, jauge)                             |
+
+Les biseaux s'appliquent avec `box-shadow: var(--bevel-out)` (ou `--bevel-in`).
+
+## 3. Composants
+
+Tous dans `src/components/`, importés par `@component/Nom`. Un composant est
+visuel : il affiche ses props, sans état métier, et n'a pas de test (voir
+`CLAUDE.md`). Les variantes sont décrites avec `cva`. Les captures se prennent
+sur `/styleguide` (pas de capture versionnée : la page fait foi).
+
+### Fondations
+
+| Composant     | Rôle et props clés                                                                                                                                  | Quand l'utiliser                               |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `Title`       | `children` ; rend un `h1`                                                                                                                           | Titre de page                                  |
+| `Window`      | `title`, `children`, `actions?` (zone à droite de la barre de titre) ; section nommée par `title`                                                   | Tout bloc de contenu d'une page                |
+| `Button`      | `variant` (`default`, `primary`, `danger`), `size` (`normal`, `large`), `isDisabled`, `isPending`, `onClick`, `type` ; base `@base-ui/react/button` | Action simple sans détail ni raison de blocage |
+| `ProgressBar` | `label`, `value`, `max` ; Base UI Progress                                                                                                          | Jauge (temps, compétence)                      |
+| `DataTable`   | `caption`, `columns` (`id`, `header`, `isNumeric?`), `rows` (`id`, `cells`)                                                                         | Données tabulaires                             |
+| `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état)                |
+| `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
+| `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?` ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
+| `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
+| `Note`        | `children` ; post-it jaune                                                                                                                          | Message d'ambiance ou rappel                   |
+
+### Page de jeu
+
+| Composant         | Rôle et props clés                                                                                                             | Quand l'utiliser                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| `CharacterHeader` | `name`, `age`, `date`, `phase` (textes déjà formatés)                                                                          | En-tête du personnage                                      |
+| `MarkerTrack`     | `count`, `max` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
+| `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `onClick`                                                            | Action de jeu : affiche le détail, ou la raison du blocage |
+| `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `onAction` | Liste d'éléments achetables ou activables                  |
+| `AutoSwitch`      | `label`, `isChecked`, `onChange` ; Base UI Switch                                                                              | Activer ou couper une automatisation                       |
+| `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
+| `EventToast`      | `date`, `text`, `onDismiss` ; `role="status"`                                                                                  | Événement important à signaler                             |
+| `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
+
+### Carte et indicateurs (#24)
+
+À compléter une fois la carte de la ville fusionnée.
+
+### Règle de réutilisation
+
+Avant de créer un composant, vérifier la liste ci-dessus. Un nouveau composant
+se justifie s'il sera utilisé ailleurs ou s'il porte un rôle d'interface
+distinct ; sinon, composer les existants.
+
+## 4. Accessibilité
+
+- **Rôles et noms** : `Window` et `ItemList` sont des `section` nommées
+  (`aria-label`) ; `EventLog` est une liste nommée ; les tableaux ont une
+  légende (`caption`). Les widgets Base UI (`Tabs`, `Switch`, `Progress`,
+  `Tooltip`) fournissent leurs rôles ARIA et la navigation au clavier.
+- **Clavier** : tout est atteignable et activable au clavier ; ne jamais
+  retirer l'outline de focus.
+- **Retour d'action** : le message de retour de `GamePage` et `EventToast`
+  portent `role="status"` (région vive polie). Tout nouveau retour dynamique
+  fait de même.
+- **Décoratif** : un élément purement visuel (blocs de `MarkerTrack`, points de
+  suspension de `Button` en attente) est `aria-hidden`. Un bouton en attente
+  porte `aria-busy`.
+- **Blocage explicite** : ne jamais griser sans dire pourquoi ; la raison est
+  affichée en texte (voir § 6), pas seulement par la couleur.
+- **Contrastes** : on reste sur les paires du système : `--color-text` sur
+  `--color-surface` ou `--color-paper`, `--color-primary-text` sur
+  `--color-primary`, `--color-alert-text` sur `--color-alert`. Toute autre
+  paire se vérifie.
+
+## 5. Mise en page
+
+- Une colonne, de haut en bas, de fenêtres `Window` empilées ; largeur
+  maximale `40rem`, centrée sur bureau.
+- Pas de largeur fixe en pixels : contenu fluide, `min-width: 0` sur les
+  éléments de flex qui contiennent du texte long.
+- Espacements en multiples de `--space`.
+- Vérifier à 480×560 (viewport des tests e2e) avant de livrer.
+
+## 6. Ton des textes
+
+Voix administrative pince-sans-rire (`docs/game/ton-et-univers.md`) : phrases
+courtes, vocabulaire de formulaire, jamais d'exclamation ni de blague
+explicite.
+
+- Libellés d'actions : verbe à l'infinitif (« Travailler », « Vendre le
+  surplus »).
+- Raisons de blocage lisibles, générées par `describeRequirement`
+  (`@game/format`) : « Argent insuffisant », « Palier Gestion 2 requis ».
+- Nombres, dates et âges formatés par `@game/format` (`formatMoney`,
+  `formatCount`, `formatDecimal`, `formatDate`, `formatAge`, `formatPhase`),
+  jamais à la main.
+
+## 7. Conventions de code UI
+
+Les règles ESLint (`unicorn` strict) imposent :
+
+- Pas de `function` déclarée : `const Nom = () => {}`.
+- Types de props nommés `NomProperties` (pas `NomProps`) ; `ref` s'écrit
+  `reference`. L'ADR 0001 mentionne encore `Props` ; ESLint fait foi.
+- Booléens préfixés `is`, `has`, `can`, `should` (`isDisabled`, `isPending`,
+  `isChecked`).
+- Pas de ternaire imbriqué (extraire un helper) ; `toReversed()` et
+  `toSorted()` plutôt que `reverse()` et `sort()` ; pas de `undefined` inutile
+  dans un `return`.
+- Imports par alias (`@component/…`, `@hook/…`, `@game/…`), jamais de `../`.
+- Un dossier par composant : `Nom.tsx`, `Nom.module.css` (si besoin de
+  styles), `index.ts` (ADR 0001).
+
+### Séparation visuel / hook / page
+
+1. **Composant visuel** (`src/components/`) : props seulement.
+2. **Hook de vue** (`src/hooks/`, ex. `useGameScreen`, `useInvestScreen`,
+   `useJournalScreen`) : état, calculs, appels au context ; renvoie des
+   données prêtes à afficher (textes déjà formatés).
+3. **Page orchestratrice** (`src/pages/`, ex. `GamePage`) : branche les hooks
+   sur les composants et ne fait rien d'autre.
+
+## 8. Ajouter un composant
+
+1. Vérifier qu'aucun composant existant ne convient (§ 3).
+2. Créer `src/components/Nom/` avec `Nom.tsx`, `Nom.module.css`, `index.ts`.
+3. Styler avec des tokens uniquement ; variantes avec `cva`.
+4. Partir d'un composant Base UI pour les widgets interactifs (bouton, onglets,
+   interrupteur…).
+5. Ne pas écrire de test pour un composant uniquement visuel.
+6. L'ajouter à `/styleguide` seulement s'il illustre la doc ; mettre à jour ce
+   guide et le skill.
