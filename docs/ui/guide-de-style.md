@@ -87,7 +87,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
-| `EventToast`      | `date`, `text`, `onDismiss` ; `role="status"`                                                                                  | Événement important à signaler                             |
+| `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
 
 ### Carte, indicateurs et écrans de début et de fin
@@ -115,7 +115,7 @@ distinct ; sinon, composer les existants.
   `Tooltip`) fournissent leurs rôles ARIA et la navigation au clavier.
 - **Clavier** : tout est atteignable et activable au clavier ; ne jamais
   retirer l'outline de focus.
-- **Retour d'action** : le message de retour de `LifePage` et `EventToast`
+- **Retour d'action** : le message de retour de `LifePage` et `MailPopup`
   portent `role="status"` (région vive polie). Tout nouveau retour dynamique
   fait de même.
 - **Décoratif** : un élément purement visuel (blocs de `MarkerTrack`, points de

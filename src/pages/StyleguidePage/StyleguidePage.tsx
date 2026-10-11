@@ -4,6 +4,7 @@ import { CityMap } from '@component/CityMap';
 import { DataTable } from '@component/DataTable';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
+import { MailPopup } from '@component/MailPopup';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
 import { ProgressBar } from '@component/ProgressBar';
@@ -98,6 +99,15 @@ export const StyleguidePage = () => (
         ]}
       />
       <Note>Bienvenue dans l’euro. Votre compte est crédité de 0 €.</Note>
+      <MailPopup
+        date="3 mars 2026"
+        text="Votre loyer augmente de 20 € par mois."
+        otherCount={2}
+        mailPath="/jeu/courrier"
+        onDismiss={() => {}}
+        onPause={() => {}}
+        onResume={() => {}}
+      />
       <Tabs
         tabs={[
           { id: 'work', label: 'Travail', content: 'Contenu du travail.' },
