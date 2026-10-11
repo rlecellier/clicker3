@@ -10,6 +10,7 @@ import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
+import { SplitActionButton } from '@component/SplitActionButton';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
@@ -26,6 +27,7 @@ export const GamePage = () => {
   const journal = useJournalScreen();
   const reset = useResetGame();
   const { work, sleep, sellSurplus } = screen.actions;
+  const { study } = screen;
 
   return (
     <main className={styles.page}>
@@ -72,6 +74,19 @@ export const GamePage = () => {
             press={sleep.press}
             onClick={sleep.run}
           />
+          {study.action === null ? null : (
+            <SplitActionButton
+              label="Étudier"
+              detail={study.action.detail}
+              reason={study.action.reason}
+              isDisabled={study.action.isDisabled}
+              menuLabel="Choisir le cursus"
+              choices={study.choices}
+              selectedId={study.selectedId}
+              onSelect={study.select}
+              onClick={study.action.run}
+            />
+          )}
           <ActionButton
             label="Vendre le surplus"
             detail={sellSurplus.detail}
@@ -95,11 +110,6 @@ export const GamePage = () => {
           />
         ))}
       </Window>
-      {screen.courses.length === 0 ? null : (
-        <Window title="Études">
-          <ItemList caption="Cursus" items={screen.courses} />
-        </Window>
-      )}
       <Window title="Emploi">
         <ItemList caption="Postes" items={screen.jobs} />
       </Window>

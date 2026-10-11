@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ListItem } from '@component/ItemList';
+import type { SplitChoice } from '@component/SplitActionButton';
 import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
 import { courses, jobs, statTierThresholds } from '@game/data';
@@ -61,6 +62,7 @@ export const useGameScreen = () => {
   const { state } = useGameContext();
   const actions = useGameActions();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [chosenCourse, setChosenCourse] = useState<string | null>(null);
 
   useEffect(() => {
     if (feedback === null) {
@@ -151,19 +153,30 @@ export const useGameScreen = () => {
     };
   });
 
-  const courseItems: ListItem[] = courses
-    .filter((course) => hasCourse(state, course.id))
-    .map((course) => ({
-      id: course.id,
-      title: course.name,
-      detail: `Coût : ${formatMoney(course.cost)} · ${statLabels[course.stat]}`,
-      actionLabel: 'Étudier',
-      isDisabled: !canStudy(state, course.id),
-      reason: isOver ? ENDED : 'Argent insuffisant',
-      onAction: say('Vous avez étudié. Personne ne vous l’a demandé.', () => {
-        actions.study(course.id);
-      }),
-    }));
+  // Cursus choisi par la flèche ; à défaut, le premier disponible.
+  const availableCourses = courses.filter((course) =>
+    hasCourse(state, course.id),
+  );
+  const course =
+    availableCourses.find((candidate) => candidate.id === chosenCourse) ??
+    availableCourses[0];
+  const courseChoices: SplitChoice[] = availableCourses.map((candidate) => ({
+    id: candidate.id,
+    label: candidate.name,
+    detail: `${formatMoney(candidate.cost)} · ${statLabels[candidate.stat]}`,
+  }));
+
+  const studyAction: ActionView | null =
+    course === undefined
+      ? null
+      : {
+          detail: `${course.name} · ${formatMoney(course.cost)} · ${statLabels[course.stat]}`,
+          reason: isOver ? ENDED : 'Argent insuffisant',
+          isDisabled: !canStudy(state, course.id),
+          run: say('Vous avez étudié. Personne ne vous l’a demandé.', () => {
+            actions.study(course.id);
+          }),
+        };
 
   // Appui long sur Travailler ou Dormir : active ou coupe l'action
   // automatique, une fois l'amélioration achetée.
@@ -232,8 +245,13 @@ export const useGameScreen = () => {
       };
     }),
     actions: { work, sleep, sellSurplus },
+    study: {
+      action: studyAction,
+      choices: courseChoices,
+      selectedId: course?.id ?? '',
+      select: setChosenCourse,
+    },
     jobs: jobItems,
-    courses: courseItems,
     objective: nextObjective(state),
     feedback,
   };

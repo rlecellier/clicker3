@@ -21,7 +21,7 @@ illustrations. Voix administrative pince-sans-rire.
 1. **Réutiliser avant de créer.** Composants existants (`@component/…`) :
    `Title`, `Window`, `Button`, `ProgressBar`, `DataTable`, `Badge`,
    `InfoPanel`, `Tabs`, `Stat` (dans un `<dl>`), `Note`, `CharacterHeader`,
-   `MarkerTrack`, `ActionButton`, `ItemList`, `EventLog`,
+   `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`, `EventLog`,
    `EventToast`, `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
