@@ -1,0 +1,43 @@
+# Notre clicker
+
+Toute la documentation du jeu lui-même (thème, mécaniques, équilibrage) vit ici.
+La recherche générale sur le genre est dans [`../game-design/`](../game-design/README.md) ;
+la stack dans [`../stack.md`](../stack.md).
+
+## Documents
+
+| Document                                       | Contenu                                                  |
+| ---------------------------------------------- | -------------------------------------------------------- |
+| [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
+| [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
+| [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
+| [ton-et-univers.md](ton-et-univers.md)         | Ton et univers de la ville inventée (à discuter)         |
+| [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville (à discuter)           |
+
+## Les 8 questions à trancher avant de coder
+
+Reprises de la [section 8 de la recherche](../game-design/README.md#8-questions-à-trancher-pour-la-suite).
+
+| #   | Question                                   | Statut    | Décision                                                                                  |
+| --- | ------------------------------------------ | --------- | ----------------------------------------------------------------------------------------- |
+| 1   | Thème et ton                               | **décidé** | La vie d'un personnage dans une ville inventée ([concept.md](concept.md)) ; ton à discuter ([ton-et-univers.md](ton-et-univers.md)) |
+| 2   | Ressource principale et secondaires        | **décidé** | Argent + une marchandise (stock) + réputation ([v1.md](v1.md#5-économie)) |
+| 3   | Générateurs et améliorations               | **décidé** | 4 emplois, 4 à 6 entreprises, ~20 améliorations ; croissance des coûts 1,07–1,15 ([v1.md](v1.md#5-économie)) |
+| 4   | Rôle du clic après l'automatisation        | **décidé** | **Boost actif** : une action automatique va 2× moins vite et rapporte 2× moins qu'une manuelle |
+| 5   | Prestige                                   | **décidé** | **Pas de prestige en v1** : une seule vie. Plus tard, le changement de vie (mort) transmettra argent, statut, compétences ou idéologie — à trancher alors |
+| 6   | Hors-ligne                                 | **décidé** | Pas de limite ; actions automatiques activables, mort possible pendant l'absence ([v1.md](v1.md#6-automatisation-et-absence)) |
+| 7   | Choix de design (plus qu'un compteur)      | **décidé** | Chaque action fait avancer le temps ; produire ou vendre ; stats qui débloquent ; phases de vie ([v1.md](v1.md#2-les-actions)) |
+| 8   | Taille de la v1                            | **décidé** | **Petite** : une vie complète, 30 à 60 min de jeu actif, à valider en playtest |
+
+## Conséquences des décisions
+
+- Sans prestige, la fin de la v1 est la **mort du personnage** ; la progression
+  doit rester lisible jusque-là : il faut des phases de vie, des paliers de
+  multiplicateurs et des objectifs visibles pour éviter les zones mortes
+  (voir [pièges courants](../game-design/README.md#6-pièges-courants)).
+- Le temps vient de l'état (périodes, jauge), jamais de `Date.now()` dans les
+  règles.
+- Le hors-ligne est calculé à l'ouverture depuis l'horodatage sauvegardé, en
+  rejouant les actions automatiques.
+- Le temps du jeu avance par une jauge remplie par les actions ; la production
+  des entreprises est versée en fin de période.
