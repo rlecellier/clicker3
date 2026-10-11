@@ -1,0 +1,225 @@
+import { ageOf } from '@game/time';
+import { districts } from '@game/data';
+import { isAutoActive } from '@game/automation';
+import { newGame, reduce } from '@game/reducer';
+import type { GameState, StatId } from '@game/state';
+import { tierOf } from '@game/stats';
+import { lastPeriodReport } from '@game/ledger';
+import { simulatorConfig } from './config';
+import { chooseAction } from './strategy';
+
+export type SimulationPhase = 'youngAdult' | 'entrepreneur' | 'boss' | 'senior';
+
+export type Milestone = {
+  id: string;
+  label: string;
+  age: number;
+  minutes: number;
+};
+
+export type CurvePoint = {
+  period: number;
+  age: number;
+  minutes: number;
+  money: number;
+  stock: number;
+  reputation: number;
+  companies: number;
+  upgrades: number;
+  // Recettes de la dernière période.
+  revenue: number;
+};
+
+export type SimulationResult = {
+  endedBy: 'death' | 'limit' | 'stuck';
+  // Temps de jeu actif estimé : actions manuelles × cadence humaine.
+  activeMs: number;
+  // Temps passé à attendre les automatismes, sans cliquer (ADR 0005).
+  waitMs: number;
+  // Durée totale de la vie : jeu actif + attente.
+  elapsedMs: number;
+  manualActions: number;
+  // Clics de travail, d'étude ou de vente après le travail automatique (0 : le
+  // joueur virtuel a bien lâché la souris).
+  clicksAfterAutoWork: number;
+  milestones: Milestone[];
+  phasesReached: SimulationPhase[];
+  // Plus longue durée sans achat ni déblocage, jusqu'à la mort comprise.
+  longestGapMs: number;
+  longestGapAtMinutes: number;
+  curve: CurvePoint[];
+  finalState: GameState;
+};
+
+const statIds: StatId[] = ['metier', 'gestion', 'intelligence', 'endurance'];
+
+const totalCompanies = (state: GameState) =>
+  Object.values(state.companies).reduce((sum, count) => sum + count, 0);
+
+// Ce qui compte comme un progrès visible : achat, déblocage, palier de stat.
+const hasProgressed = (before: GameState, after: GameState) =>
+  totalCompanies(after) > totalCompanies(before) ||
+  after.upgrades.length > before.upgrades.length ||
+  after.districts.length > before.districts.length ||
+  after.jobId !== before.jobId ||
+  statIds.some((stat) => tierOf(after, stat) > tierOf(before, stat));
+
+// Dans l'ordre de la vie.
+const phaseOrder: readonly SimulationPhase[] = [
+  'youngAdult',
+  'entrepreneur',
+  'boss',
+  'senior',
+];
+
+const phasesOf = (state: GameState): SimulationPhase[] => {
+  const reached: SimulationPhase[] = ['youngAdult'];
+  if (state.phase === 'entrepreneur' || state.phase === 'boss') {
+    reached.push('entrepreneur');
+  }
+  if (state.phase === 'boss') {
+    reached.push('boss');
+  }
+  if (ageOf(state) >= state.life.seniorAge) {
+    reached.push('senior');
+  }
+  return reached;
+};
+
+/**
+ * Joue une vie complète avec le joueur virtuel (stratégie gloutonne) et mesure
+ * la durée, les jalons, les zones mortes et la courbe. Déterministe : mêmes
+ * données, même résultat. La vie démarre de l'état neuf.
+ */
+export const simulateLife = (
+  start: GameState = newGame(),
+): SimulationResult => {
+  const { humanCadenceMs, maxSteps, waitStepMs } = simulatorConfig;
+  let state = start;
+  let activeMs = 0;
+  let waitMs = 0;
+  let manualActions = 0;
+  let clicksAfterAutoWork = 0;
+  let lastProgressMs = 0;
+  let longestGapMs = 0;
+  let longestGapAtMs = 0;
+  let endedBy: SimulationResult['endedBy'] = 'limit';
+  const milestones: Milestone[] = [];
+  const reached = new Set<string>();
+  const phases = new Set<SimulationPhase>(['youngAdult']);
+  const curve: CurvePoint[] = [];
+
+  const elapsedMs = () => activeMs + waitMs;
+  const minutes = () => elapsedMs() / 60_000;
+  const mark = (id: string, label: string) => {
+    if (reached.has(id)) {
+      return;
+    }
+
+    reached.add(id);
+    milestones.push({ id, label, age: ageOf(state), minutes: minutes() });
+  };
+  const sample = () => {
+    curve.push({
+      period: state.period,
+      age: ageOf(state),
+      minutes: minutes(),
+      money: state.money,
+      stock: state.stock,
+      reputation: state.reputation,
+      companies: totalCompanies(state),
+      upgrades: state.upgrades.length,
+      revenue: lastPeriodReport(state).revenue,
+    });
+  };
+  const noteProgress = () => {
+    const gap = elapsedMs() - lastProgressMs;
+    if (gap > longestGapMs) {
+      longestGapMs = gap;
+      longestGapAtMs = lastProgressMs;
+    }
+    lastProgressMs = elapsedMs();
+  };
+  const observe = () => {
+    if (totalCompanies(state) > 0) {
+      mark('company', 'Première entreprise');
+    }
+    if (state.phase === 'boss') {
+      mark('employee', 'Premier employé');
+    }
+    if (isAutoActive(state, 'work')) {
+      mark('autoWork', 'Travail automatique');
+    }
+    if (isAutoActive(state, 'sleep')) {
+      mark('autoSleep', 'Sommeil automatique');
+    }
+    for (const district of districts) {
+      if (district.id !== 'tilleuls' && state.districts.includes(district.id)) {
+        mark(`district-${district.id}`, district.name);
+      }
+    }
+    for (const phase of phasesOf(state)) {
+      phases.add(phase);
+    }
+  };
+
+  sample();
+  for (let step = 0; step < maxSteps; step++) {
+    if (state.status === 'dead') {
+      endedBy = 'death';
+      break;
+    }
+    const before = state;
+    const action = chooseAction(state);
+    const after = action === undefined ? state : reduce(state, action);
+    // Rien à faire (ou action sans effet) : le joueur attend les automatismes.
+    const isWaiting = after === state;
+    const hasAuto = isAutoActive(state, 'work') || isAutoActive(state, 'sleep');
+    if (isWaiting && !hasAuto) {
+      endedBy = 'stuck';
+      break;
+    }
+    const stepMs = isWaiting ? waitStepMs : humanCadenceMs;
+    if (isWaiting) {
+      waitMs += stepMs;
+    } else {
+      activeMs += stepMs;
+      manualActions += 1;
+      if (
+        reached.has('autoWork') &&
+        ['work', 'study', 'sellSurplus'].includes(action?.type ?? '')
+      ) {
+        clicksAfterAutoWork += 1;
+      }
+    }
+    state = hasAuto
+      ? reduce(after, { type: 'autoTick', elapsedMs: stepMs })
+      : after;
+    if (hasProgressed(before, state)) {
+      noteProgress();
+    }
+    observe();
+    if (state.period > before.period) {
+      sample();
+    }
+  }
+  if (state.status === 'dead') {
+    endedBy = 'death';
+  }
+  noteProgress();
+  observe();
+  return {
+    endedBy,
+    activeMs,
+    waitMs,
+    elapsedMs: elapsedMs(),
+    manualActions,
+    clicksAfterAutoWork,
+    milestones,
+    phasesReached: phaseOrder.filter((phase) => phases.has(phase)),
+    longestGapMs,
+    longestGapAtMinutes: longestGapAtMs / 60_000,
+    curve,
+    finalState: state,
+  };
+};
