@@ -1,0 +1,1 @@
+export { AutoSwitch } from './AutoSwitch';

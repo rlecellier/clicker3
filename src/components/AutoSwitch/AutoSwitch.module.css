@@ -1,0 +1,32 @@
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  min-height: 2rem;
+}
+
+.root {
+  width: 2.5rem;
+  height: 1.5rem;
+  padding: 2px;
+  border: 0;
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  cursor: pointer;
+}
+
+.root[data-checked] {
+  background: var(--color-primary);
+}
+
+.thumb {
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  background: var(--color-surface);
+  box-shadow: var(--bevel-out);
+}
+
+.thumb[data-checked] {
+  transform: translateX(1rem);
+}
