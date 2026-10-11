@@ -2,9 +2,11 @@ import { Outlet } from 'react-router';
 import { GameHeader } from '@component/GameHeader';
 import { MailPopup } from '@component/MailPopup';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
+import { useCourseChoiceState } from '@hook/useCourseChoice';
 import { useGameHeader } from '@hook/useGameHeader';
 import { useGameTabs } from '@hook/useGameTabs';
 import { useMailPopup } from '@hook/useMailPopup';
+import { useGameShortcuts } from '@hook/useKeyboardShortcuts';
 import styles from './GamePage.module.css';
 
 // Layout de l'écran de jeu : la sidebar et, à droite, la page de l'onglet
@@ -15,6 +17,8 @@ export const GamePage = () => {
   const { tabs, footer } = useGameTabs();
   const header = useGameHeader();
   const mailPopup = useMailPopup();
+  const courseChoice = useCourseChoiceState();
+  useGameShortcuts(courseChoice.chosenCourse);
 
   return (
     <div className={styles.layout}>
@@ -30,7 +34,7 @@ export const GamePage = () => {
         <GameHeader {...header} />
         <main className={styles.content}>
           <div className={styles.page}>
-            <Outlet />
+            <Outlet context={courseChoice} />
           </div>
         </main>
         {mailPopup && (
