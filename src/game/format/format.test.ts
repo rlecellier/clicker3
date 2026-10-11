@@ -1,5 +1,7 @@
 import { startState } from '@game/data';
 import {
+  checkRequirement,
+  describeReputationTier,
   describeRequirement,
   formatDate,
   formatMoney,
@@ -53,5 +55,30 @@ describe('describeRequirement', () => {
         ],
       }),
     ).toBe('Palier Métier 2 requis · Palier de réputation 1 requis');
+  });
+});
+
+describe('checkRequirement', () => {
+  it('liste chaque condition avec son état et la progression', () => {
+    const state = { ...startState, reputationEarned: 10 };
+    const checks = checkRequirement(state, {
+      type: 'all',
+      of: [
+        { type: 'reputationTier', tier: 1 },
+        { type: 'reputationTier', tier: 2 },
+      ],
+    });
+    expect(checks.map((check) => check.isMet)).toEqual([true, false]);
+    expect(plain(checks[1]?.label ?? '')).toBe(
+      'Palier de réputation 2 « Acteur majeur » : 10 / 100 de réputation gagnée',
+    );
+  });
+});
+
+describe('describeReputationTier', () => {
+  it('donne le palier et le seuil suivant', () => {
+    expect(describeReputationTier(startState)).toBe(
+      'Palier 0 · Inconnu · prochain à 6 gagnés (0)',
+    );
   });
 });

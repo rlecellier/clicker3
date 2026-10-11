@@ -1,2 +1,2 @@
 export { ItemList } from './ItemList';
-export type { ListItem } from './ItemList';
+export type { ListCondition, ListItem } from './ItemList';

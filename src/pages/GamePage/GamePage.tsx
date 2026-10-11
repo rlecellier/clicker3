@@ -50,6 +50,10 @@ export const GamePage = () => {
           <Stat label="Argent" value={screen.counters.money} />
           <Stat label="Stock" value={screen.counters.stock} />
           <Stat label="Réputation" value={screen.counters.reputation} />
+          <Stat
+            label="Palier de réputation"
+            value={screen.counters.reputationTier}
+          />
         </dl>
         <Note>{screen.objective}</Note>
         <div className={styles.actions}>

@@ -2,6 +2,8 @@ import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
 import styles from './ItemList.module.css';
 
+export type ListCondition = { label: string; isMet: boolean };
+
 export type ListItem = {
   id: string;
   title: string;
@@ -11,6 +13,8 @@ export type ListItem = {
   actionLabel: string;
   isDisabled: boolean;
   reason?: string;
+  // Prérequis, chacun en vert (obtenu) ou en rouge (manquant).
+  conditions?: readonly ListCondition[];
   onAction: () => void;
 };
 
@@ -34,6 +38,19 @@ export const ItemList = ({ caption, items }: ItemListProperties) => (
             </span>
             {item.detail === undefined ? null : (
               <span className={styles.detail}>{item.detail}</span>
+            )}
+            {item.conditions === undefined ||
+            item.conditions.length === 0 ? null : (
+              <ul className={styles.conditions}>
+                {item.conditions.map((condition) => (
+                  <li
+                    key={condition.label}
+                    className={condition.isMet ? styles.met : styles.missing}
+                  >
+                    {condition.isMet ? '✔' : '✘'} {condition.label}
+                  </li>
+                ))}
+              </ul>
             )}
             {item.isDisabled && item.reason !== undefined ? (
               <span className={styles.reason}>{item.reason}</span>
