@@ -1,4 +1,4 @@
-import { actionRules, jobs, startState } from '@game/data';
+import { actionRules, automationRules, jobs, startState } from '@game/data';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from './work';
@@ -76,6 +76,38 @@ describe('work', () => {
   it('refuse sans emploi', () => {
     const jobless = { ...startState, jobId: null };
     expect(work(jobless)).toBe(jobless);
+  });
+
+  describe('action automatique', () => {
+    const senior = { ...startState, period: 12 * 42 };
+
+    it('rapporte moitié moins qu’une action manuelle', () => {
+      const manual = work(startState);
+      const auto = work(startState, 'job', true);
+      expect(auto.money).toBe(
+        Math.round(manual.money * automationRules.yieldFactor),
+      );
+      expect(auto.reputation).toBeCloseTo(
+        manual.reputation * automationRules.yieldFactor,
+      );
+    });
+
+    it('subit le malus de vieillesse en manuel, pas en automatique', () => {
+      expect(work(senior).money).toBe(
+        Math.round((firstJob?.salary ?? 0) * actionRules.senior.manualFactor),
+      );
+      expect(work(senior, 'job', true).money).toBe(
+        work(startState, 'job', true).money,
+      );
+    });
+
+    it('donne le même bonus d’entreprise à 18 ans et à la vieillesse', () => {
+      const owner = { ...startState, companies: { atelier: 1 } };
+      const old = { ...senior, companies: { atelier: 1 } };
+      expect(work(old, 'atelier', true).workBoosts).toEqual(
+        work(owner, 'atelier', true).workBoosts,
+      );
+    });
   });
 
   it('ne modifie pas l’état reçu', () => {

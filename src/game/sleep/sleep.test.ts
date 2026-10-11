@@ -1,4 +1,4 @@
-import { actionRules, startState } from '@game/data';
+import { actionRules, automationRules, startState } from '@game/data';
 import { sleep } from './sleep';
 
 const tired = {
@@ -23,6 +23,17 @@ describe('sleep', () => {
     const next = sleep({ ...tired, sleepMultiplier: 2.5 });
     expect(next.stats.metier).toBe(5);
     expect(next.stats.gestion).toBe(3);
+  });
+
+  it('donne moins de points quand le sommeil est automatique', () => {
+    const many = {
+      ...startState,
+      markers: Array.from({ length: 4 }, () => 'metier' as const),
+    };
+    expect(sleep(many).stats.metier).toBe(4);
+    expect(sleep(many, true).stats.metier).toBe(
+      Math.round(4 * automationRules.yieldFactor),
+    );
   });
 
   it('refuse sans marqueur', () => {

@@ -1,5 +1,10 @@
 import { companyById, ownedCount } from '@game/companies';
-import { actionRules, economyRules, jobMarkerStat } from '@game/data';
+import {
+  actionRules,
+  automationRules,
+  economyRules,
+  jobMarkerStat,
+} from '@game/data';
 import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
@@ -20,13 +25,22 @@ export const canWork = (state: GameState, target: string) => {
     : companyById(target) !== undefined && ownedCount(state, target) > 0;
 };
 
+// Coefficient des gains : le malus de vieillesse ne touche que le travail
+// manuel (v1.md § 4), l'action automatique rapporte moitié moins à tout âge.
+const gainFactor = (state: GameState, isAuto: boolean) =>
+  isAuto ? automationRules.yieldFactor : manualFactor(state);
+
 // Travailler à son emploi : salaire et réputation de l'emploi.
-const workAtJob = (state: GameState, jobId: string | null): GameState => {
+const workAtJob = (
+  state: GameState,
+  jobId: string | null,
+  isAuto: boolean,
+): GameState => {
   const job = jobById(jobId);
   if (job === undefined) {
     return state;
   }
-  const factor = manualFactor(state);
+  const factor = gainFactor(state, isAuto);
   return gainReputation(
     {
       ...state,
@@ -39,18 +53,24 @@ const workAtJob = (state: GameState, jobId: string | null): GameState => {
 };
 
 // Travailler dans une de ses entreprises : bonus sur la période (voir economy).
-const workAtCompany = (state: GameState, id: string): GameState => ({
+const workAtCompany = (
+  state: GameState,
+  id: string,
+  isAuto: boolean,
+): GameState => ({
   ...state,
   workBoosts: {
     ...state.workBoosts,
-    [id]: (state.workBoosts[id] ?? 0) + manualFactor(state),
+    [id]: (state.workBoosts[id] ?? 0) + gainFactor(state, isAuto),
   },
 });
 
-// Gain de l'action, chance de marqueur, puis temps qui passe.
+// Gain de l'action, chance de marqueur, puis temps qui passe. `isAuto`
+// distingue l'action automatique de l'action manuelle.
 export const work = (
   state: GameState,
   target: string = JOB_TARGET,
+  isAuto = false,
 ): GameState => {
   if (!canWork(state, target)) {
     return state;
@@ -58,8 +78,8 @@ export const work = (
   const { gauge, markerChance, markerVariance } = actionRules.work;
   const isAtJob = target === JOB_TARGET;
   const done = isAtJob
-    ? workAtJob(state, state.jobId)
-    : workAtCompany(state, target);
+    ? workAtJob(state, state.jobId, isAuto)
+    : workAtCompany(state, target, isAuto);
   const withMarker = grantMarker(
     done,
     isAtJob ? jobMarkerStat : economyRules.companyMarkerStat,
