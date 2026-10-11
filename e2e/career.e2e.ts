@@ -97,6 +97,19 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // L'étude coûte de l'argent (un loyer peut tomber avec elle).
   expect(await money()).toBeLessThan(before);
 
+  // Le raccourci E étudie le cursus choisi, depuis un autre onglet.
+  await repeatUntil(
+    () => work.click(),
+    async () => (await money()) >= 20,
+  );
+  const afterWork = await money();
+  await page.keyboard.press('3');
+  await expect(page).toHaveURL('/jeu/competences');
+  await page.keyboard.press('e');
+  await page.keyboard.press('2');
+  await expect(page).toHaveURL('/jeu/vie');
+  await expect.poll(money).toBeLessThan(afterWork);
+
   // Cerveau plein, le personnage s'endort tout seul : les marqueurs se vident
   // un à un et se convertissent en points de stat. Travailler est impossible
   // pendant ce temps (Playwright attend que le bouton se réactive).

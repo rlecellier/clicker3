@@ -49,13 +49,22 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(sellSurplus).toBeDisabled();
 
   // Un commerce sans production : à la fin de la période, rupture de stock.
-  await openTab(page, 'investir');
+  // Les raccourcis clavier ouvrent l'onglet (5) et travaillent (T) de partout.
+  await page.keyboard.press('5');
+  await expect(page).toHaveURL('/jeu/investir');
   await expect(investLink).toHaveAccessibleName('Investir');
   const shop = itemOf(page, 'Boutique');
   await shop.getByRole('button', { name: 'Acheter' }).click();
   await expect(shop.getByText('1 possédé(s)')).toBeVisible();
   await expect(warehouse).toHaveAccessibleName(/vide/);
-  await openTab(page, 'vie');
+  await page.keyboard.press('2');
+  await expect(page).toHaveURL('/jeu/vie');
+  const money = () => amountOf(counter(page, 'Argent'));
+  const moneyBeforeKey = await money();
+  await page.keyboard.press('5');
+  await page.keyboard.press('t');
+  await page.keyboard.press('2');
+  await expect.poll(money).toBeGreaterThan(moneyBeforeKey);
   await expect(page.getByText('Entrepreneur (statut déclaré)')).toBeVisible();
   for (let turn = 0; turn < 10; turn += 1) {
     await work.click();
