@@ -65,4 +65,11 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   expect(await stock()).toBe(0);
   expect(await amountOf(counter(page, 'Argent'))).toBeGreaterThan(moneyBefore);
   await expect(sellSurplus).toBeDisabled();
+
+  // Un petit entrepôt agrandit le stock, sans condition : l'issue de secours.
+  const smallWarehouse = itemOf(page, 'Petit entrepôt');
+  await expect(warehouse).toHaveAccessibleName(/ 50\)/);
+  await smallWarehouse.getByRole('button', { name: 'Acheter' }).click();
+  await expect(smallWarehouse.getByText('1 possédé(s)')).toBeVisible();
+  await expect(warehouse).toHaveAccessibleName(/ 75\)/);
 });
