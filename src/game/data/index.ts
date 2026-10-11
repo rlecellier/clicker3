@@ -6,6 +6,8 @@ export type { Course } from './courses';
 export { districts } from './districts';
 export type { District } from './districts';
 export { economyRules } from './economyRules';
+export { events, journalLimit } from './events';
+export type { EventEffect, GameEvent } from './events';
 export { jobs } from './jobs';
 export type { Job } from './jobs';
 export { reputationTiers } from './reputationTiers';
