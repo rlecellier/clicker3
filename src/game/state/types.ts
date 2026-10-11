@@ -43,6 +43,8 @@ export type GameState = {
   money: number;
   stock: number;
   reputation: number;
+  // Total de réputation gagnée depuis le départ : dépenser ne le fait pas baisser.
+  reputationEarned: number;
 
   stats: Record<StatId, number>;
   markers: StatId[];
@@ -56,6 +58,8 @@ export type GameState = {
   /** Nombre d'exemplaires possédés, par type d'entreprise. */
   companies: Record<string, number>;
   upgrades: string[];
+  // Quartiers de la ville débloqués.
+  districts: string[];
 
   flags: Record<string, boolean>;
   events: GameEvent[];

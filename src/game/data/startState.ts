@@ -19,6 +19,7 @@ export const startState: GameState = {
   money: 0,
   stock: 0,
   reputation: 0,
+  reputationEarned: 0,
 
   stats: { metier: 0, gestion: 0, intelligence: 0, endurance: 0 },
   markers: [],
@@ -30,6 +31,7 @@ export const startState: GameState = {
   rent: 300,
   companies: {},
   upgrades: [],
+  districts: ['tilleuls'],
 
   flags: {},
   events: [],
