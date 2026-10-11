@@ -1,3 +1,5 @@
+import type { NoveltyTab } from '@game/novelty';
+
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
 export type GameAction =
   | { type: 'addGauge'; amount: number }
@@ -17,6 +19,8 @@ export type GameAction =
   | { type: 'autoTick'; elapsedMs: number }
   // Le joueur a lu le courrier : plus de message non lu.
   | { type: 'readMail' }
+  // Le joueur a ouvert un onglet : ses nouveautés sont vues.
+  | { type: 'markSeen'; tab: NoveltyTab }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi
   // choisi (un emploi de départ, voir `startingJobs`).
   | { type: 'restart'; jobId?: string };

@@ -4,6 +4,7 @@ import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { readMail } from '@game/mail';
+import { markAllSeen, markSeen } from '@game/novelty';
 import { addGauge } from '@game/period';
 import { triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
@@ -18,10 +19,13 @@ import type { GameAction } from './actions';
 // Nouvelle vie : l'état de départ, avec les événements déjà présents au départ.
 // Un emploi qui n'est pas un emploi de départ est ignoré (on garde celui par défaut).
 export const newGame = (jobId?: string): GameState =>
-  triggerEvents({
-    ...startState,
-    jobId: startingJobs.find((job) => job.id === jobId)?.id ?? startState.jobId,
-  });
+  markAllSeen(
+    triggerEvents({
+      ...startState,
+      jobId:
+        startingJobs.find((job) => job.id === jobId)?.id ?? startState.jobId,
+    }),
+  );
 
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
@@ -67,6 +71,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'readMail': {
       return readMail(state);
+    }
+    case 'markSeen': {
+      return markSeen(state, action.tab);
     }
     case 'restart': {
       return newGame(action.jobId);

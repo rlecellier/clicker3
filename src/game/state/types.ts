@@ -161,6 +161,9 @@ export type GameState = {
   // messages reçus à la dernière lecture (voir `@game/mail`).
   mailReceived: number;
   mailRead: number;
+  // Nouveautés déjà vues par onglet (voir `@game/novelty`) : les ids débloqués
+  // quand le joueur a ouvert l'onglet.
+  seenItems: Record<'skills' | 'jobs' | 'invest' | 'city', string[]>;
   // Événements uniques déjà survenus.
   firedEvents: string[];
   activeEffects: ActiveEffect[];
