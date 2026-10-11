@@ -165,9 +165,6 @@ export const simulateLife = (
       mark('autoWork', 'Travail automatique');
       autoWorkState ??= state;
     }
-    if (isAutoActive(state, 'sleep')) {
-      mark('autoSleep', 'Sommeil automatique');
-    }
     for (const district of districts) {
       if (district.id !== 'tilleuls' && state.districts.includes(district.id)) {
         mark(`district-${district.id}`, district.name);
@@ -189,7 +186,7 @@ export const simulateLife = (
     const after = action === undefined ? state : reduce(state, action);
     // Rien à faire (ou action sans effet) : le joueur attend les automatismes.
     const isWaiting = after === state;
-    const hasAuto = isAutoActive(state, 'work') || isAutoActive(state, 'sleep');
+    const hasAuto = isAutoActive(state, 'work') || state.isSleeping;
     if (isWaiting && !hasAuto) {
       endedBy = 'stuck';
       break;

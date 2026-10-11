@@ -21,7 +21,7 @@ Coût : S/M/L = effort de développement estimé, intérêt : ★ à ★★★.
 
 | Idée                                                                 | Coût | Intérêt | Verdict |
 | -------------------------------------------------------------------- | ---- | ------- | ------- |
-| Dormir est une action qui convertit les marqueurs en points          | M    | ★★★     | v1      |
+| Le cerveau plein s'endort et convertit ses marqueurs en points       | M    | ★★★     | v1      |
 | Les autres actions donnent une chance de marqueur (maximum fixe)     | M    | ★★★     | v1      |
 | Maximum de marqueurs qui varie selon l'âge, la santé                 | S    | ★★      | v2      |
 

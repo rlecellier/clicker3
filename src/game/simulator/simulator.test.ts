@@ -104,12 +104,13 @@ describe('chooseAction', () => {
     });
   });
 
-  it('dort quand les marqueurs sont pleins', () => {
-    const full: GameState = {
+  it('attend pendant le sommeil', () => {
+    const asleep: GameState = {
       ...startState,
+      isSleeping: true,
       markers: ['metier', 'metier', 'metier', 'metier', 'metier'],
     };
-    expect(chooseAction(full)).toEqual({ type: 'sleep' });
+    expect(chooseAction(asleep)).toBeUndefined();
   });
 
   it('active l’automatisation dès qu’elle est possible', () => {

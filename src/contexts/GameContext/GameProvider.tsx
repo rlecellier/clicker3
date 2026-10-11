@@ -19,7 +19,7 @@ import type {
   ProviderAction,
 } from './types';
 
-const TICK_MS = 250;
+const TICK_MS = 100;
 const AUTOSAVE_MS = 5000;
 
 const defaultStorage = createLocalStorage();
@@ -64,7 +64,7 @@ export const GameProvider = ({
       const elapsedMs = current - last;
       last = current;
       const game = latestState.current;
-      if (isAutoActive(game, 'work') || isAutoActive(game, 'sleep')) {
+      if (isAutoActive(game, 'work') || game.isSleeping) {
         dispatch({ type: 'autoTick', elapsedMs });
       }
     };

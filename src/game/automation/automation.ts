@@ -1,23 +1,26 @@
 import { automationRules } from '@game/data';
 import { eventById, fireEvent, triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
-import { canSleep, sleep } from '@game/sleep';
+import { settleSleep, sleepStep, sleepStepMs } from '@game/sleep';
 import type { GameState, JournalEntry } from '@game/state';
 import { ageOf } from '@game/time';
 import { hasAutomation } from '@game/upgrades';
 import { JOB_TARGET, canWork, work } from '@game/work';
 
-export type AutoAction = 'work' | 'sleep';
+export type AutoAction = 'work';
 
 // Délai entre deux actions automatiques : rythme de référence ÷ coefficient
 // de l'auto (¼, ADR 0005).
 export const autoIntervalMs =
   automationRules.referenceIntervalMs / automationRules.speedFactor;
 
+// Délai avant le prochain pas : plus court pendant le sommeil.
+const stepIntervalMs = (state: GameState) =>
+  state.isSleeping ? sleepStepMs(state) : autoIntervalMs;
+
 // Un interrupteur n'agit que si l'amélioration correspondante est achetée.
 export const isAutoActive = (state: GameState, action: AutoAction) =>
-  (action === 'work' ? state.autoWork : state.autoSleep) &&
-  hasAutomation(state, action);
+  state.autoWork && hasAutomation(state, action);
 
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
   state.status === 'playing' && hasAutomation(state, action);
@@ -32,38 +35,25 @@ export const setAuto = (
   if (isEnabled && !canEnableAuto(state, action)) {
     return state;
   }
-  const key = action === 'work' ? 'autoWork' : 'autoSleep';
-  return state[key] === isEnabled ? state : { ...state, [key]: isEnabled };
+  return state.autoWork === isEnabled
+    ? state
+    : { ...state, autoWork: isEnabled };
 };
 
-// Le sommeil automatique dort quand les marqueurs sont pleins. Rend l'état
-// inchangé sinon.
-const autoSleep = (state: GameState): GameState =>
-  isAutoActive(state, 'sleep') &&
-  state.markers.length >= state.maxMarkers &&
-  canSleep(state)
-    ? sleep(state, true)
-    : state;
-
-// Après un geste manuel (travail, étude) : le sommeil automatique s'applique
-// aussi, sans attendre le tic de l'automatisation.
-export const afterManualAction = (state: GameState): GameState =>
-  autoSleep(state);
-
-// Une action automatique : dormir quand les marqueurs sont pleins, sinon
-// travailler à son emploi. Rend l'état inchangé s'il n'y a rien à faire.
+// Un pas du temps qui passe : un marqueur se vide pendant le sommeil, sinon
+// le travail automatique travaille à son emploi. Rend l'état inchangé s'il n'y
+// a rien à faire.
 const autoStep = (state: GameState): GameState => {
-  const slept = autoSleep(state);
-  if (slept !== state) {
-    return slept;
+  if (state.isSleeping) {
+    return sleepStep(state);
   }
   return isAutoActive(state, 'work') && canWork(state, JOB_TARGET)
     ? work(state, JOB_TARGET, true)
     : state;
 };
 
-// Joue les actions automatiques dues. Sans interrupteur actif, ou sans rien à
-// faire, le temps n'avance pas et le temps écoulé est perdu. `onAction` voit
+// Joue les pas dus (travail automatique, sommeil). Sans interrupteur actif ni
+// sommeil, ou sans rien à faire, le temps n'avance pas et le temps écoulé est perdu. `onAction` voit
 // chaque action jouée (avant, après).
 const runAuto = (
   state: GameState,
@@ -73,7 +63,7 @@ const runAuto = (
   if (
     elapsedMs <= 0 ||
     state.status === 'dead' ||
-    (!isAutoActive(state, 'work') && !isAutoActive(state, 'sleep'))
+    (!isAutoActive(state, 'work') && !state.isSleeping)
   ) {
     return state;
   }
@@ -83,15 +73,18 @@ const runAuto = (
   };
   while (
     current.status === 'playing' &&
-    current.autoElapsed >= autoIntervalMs
+    current.autoElapsed >= stepIntervalMs(current)
   ) {
     const acted = autoStep(current);
     if (acted === current) {
       return { ...current, autoElapsed: 0 };
     }
-    const settled = triggerEvents(updatePhase(acted));
+    const settled = triggerEvents(updatePhase(settleSleep(acted)));
     onAction?.(current, settled);
-    current = { ...settled, autoElapsed: current.autoElapsed - autoIntervalMs };
+    current = {
+      ...settled,
+      autoElapsed: current.autoElapsed - stepIntervalMs(current),
+    };
   }
   return current;
 };

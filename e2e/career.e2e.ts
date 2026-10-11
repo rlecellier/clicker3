@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { amountOf, counter, itemOf, repeatUntil } from './helpers';
 
-test('début de carrière : travailler, acheter un stage, étudier, dormir', async ({
+test('début de carrière : travailler, acheter un stage, étudier, s’endormir', async ({
   page,
 }) => {
   await page.goto('/');
@@ -13,11 +13,9 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
 
   const work = page.getByRole('button', { name: /Travailler/ });
-  const sleep = page.getByRole('button', { name: /Dormir/ });
   const money = () => amountOf(counter(page, 'Argent'));
 
-  // Ni étude ni sommeil au départ : rien à convertir, aucun cursus.
-  await expect(sleep).toBeDisabled();
+  // Aucun cursus au départ.
   await expect(page.getByRole('heading', { name: 'Études' })).toBeHidden();
 
   // Travailler paie, et l'intérim remercie.
@@ -70,24 +68,19 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
   // L'étude coûte de l'argent (un loyer peut tomber avec elle).
   expect(await money()).toBeLessThan(before);
 
-  // Les marqueurs gagnés se convertissent en points de stat en dormant.
+  // Cerveau plein, le personnage s'endort tout seul : les marqueurs se vident
+  // un à un et se convertissent en points de stat. Travailler est impossible
+  // pendant ce temps (Playwright attend que le bouton se réactive).
+  const metier = page.getByRole('progressbar', { name: /^Métier/ });
+  await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
   await repeatUntil(
     async () => {
       await work.click();
     },
-    async () => sleep.isEnabled(),
+    async () => !/ 0 pts/.test((await metier.textContent()) ?? ''),
     150,
   );
-  const metier = page.getByRole('progressbar', { name: /^Métier/ });
-  const gauge = page.getByRole('progressbar', { name: 'Jauge de temps' });
-  await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
-  const gaugeBefore = Number(await gauge.getAttribute('aria-valuenow'));
-  await sleep.click();
-  // Dormir fait avancer la jauge de temps (ou passe la période).
-  await expect
-    .poll(async () => Number(await gauge.getAttribute('aria-valuenow')))
-    .not.toBe(gaugeBefore);
-  await expect(page.getByText('Vous récupérez.')).toBeVisible();
+  await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
   await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
 
   // Annuler une amélioration obtenue : elle disparaît, sans remboursement.

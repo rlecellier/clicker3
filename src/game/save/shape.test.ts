@@ -15,11 +15,10 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 1,
+    version: 2,
     keys: [
       'activeEffects',
       'autoElapsed',
-      'autoSleep',
       'autoWork',
       'characterName',
       'companies',
@@ -31,6 +30,7 @@ describe('forme de l’état', () => {
       'gauge',
       'gaugeCapacity',
       'housingId',
+      'isSleeping',
       'jobId',
       'jobSalaryFactors',
       'lastSeenAt',
@@ -92,6 +92,7 @@ describe('forme de l’état', () => {
       'period',
       'phase',
       'productionMultiplier',
+      'queuedActions',
       'rent',
       'reputation',
       'reputationEarned',

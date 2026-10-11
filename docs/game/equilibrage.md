@@ -77,7 +77,6 @@ précédent quand celui-ci devient trop cher.
 | Équipe de collaborateurs       | 37 000, salaire 3 600   | 30 000, 6 000         | tout + 60 % (+ 50 %)                |
 | Directeur de la transformation | 310 000, salaire 45 000 | 300 000, 25 000       | tout + 300 % (+ 100 %)              |
 | Procédure de travail           | 24 000                  | 20 000                |                                     |
-| Rythme de sommeil              | 12 000                  | 35 000                |                                     |
 | Tableau de bord                | 5 200                   | 5 000                 |                                     |
 | Camionnette                    | 16 000                  | 7 000                 | ateliers + 15 % (+ 25 %)            |
 | Plan de communication          | 19 000                  | 60 000                | ventes + 30 % (+ 25 %)              |
@@ -123,8 +122,8 @@ de `src/game/simulator/simulator.test.ts`.
 | 5   | La sauvegarde survit à un rechargement               | **Atteint** (hors équilibrage)                                                                                                                                                   | Tests de `save`, parcours e2e « une vie »                              |
 | 6   | Un simulateur confirme la durée                      | **Atteint** : il produit la courbe et ses tests reprennent les critères 1 à 4                                                                                                    | `npm run sim`, `simulator.test.ts`                                     |
 
-Jalons du joueur virtuel : premier employé à 27 ans (minute 11), sommeil
-automatique à 37 ans (minute 22), travail automatique à 44 ans (minute 32),
+Jalons du joueur virtuel : premier employé à 27 ans (minute 11), travail
+automatique à 44 ans (minute 32),
 quartiers à 18, 22 et 27 ans. L'ADR 0005 visait 35 à 45 ans pour l'auto.
 
 ## Limites connues

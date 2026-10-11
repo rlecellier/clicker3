@@ -1,5 +1,5 @@
 import { autoIntervalMs } from '@game/automation';
-import { startState } from '@game/data';
+import { actionRules, automationRules, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -37,7 +37,7 @@ describe('reduce', () => {
     expect(next).toBe(settled);
   });
 
-  it('applique work, study, sleep et changeJob', () => {
+  it('applique work, study et changeJob', () => {
     const worked = reduce(startState, { type: 'work', target: 'job' });
     expect(worked.money).toBeGreaterThan(0);
 
@@ -46,12 +46,6 @@ describe('reduce', () => {
       { type: 'study', courseId: 'metier' },
     );
     expect(studied.money).toBeLessThan(worked.money);
-
-    const rested = reduce(
-      { ...startState, markers: ['metier'] },
-      { type: 'sleep' },
-    );
-    expect(rested.stats.metier).toBe(1);
 
     const promoted = reduce(
       { ...startState, stats: { ...startState.stats, metier: 10 } },
@@ -100,7 +94,6 @@ describe('reduce', () => {
       { type: 'unlockDistrict', id: 'hauts-fourneaux' },
       { type: 'work', target: 'job' },
       { type: 'study', courseId: 'metier' },
-      { type: 'sleep' },
       { type: 'changeJob', id: 'polyvalent' },
       { type: 'buyCompany', id: 'atelier' },
       { type: 'sellSurplus' },
@@ -136,16 +129,56 @@ describe('reduce', () => {
     expect(cancelled.money).toBe(bought.money);
   });
 
-  it('dort tout seul après un travail manuel quand le sommeil automatique est actif', () => {
+  it('s’endort quand un travail manuel remplit le cerveau', () => {
     const state: GameState = {
       ...startState,
-      upgrades: ['rythme-sommeil'],
-      autoSleep: true,
       markers: Array.from({ length: startState.maxMarkers }, () => 'metier'),
     };
     const next = reduce(state, { type: 'work', target: 'job' });
-    expect(next.markers).toEqual([]);
-    expect(next.stats.metier).toBeGreaterThan(0);
+    expect(next.isSleeping).toBe(true);
+    expect(next.stats.metier).toBe(0);
+  });
+
+  it('garde les gestes manuels pendant le sommeil et les rejoue au réveil', () => {
+    const asleep: GameState = {
+      ...startState,
+      upgrades: ['stage-posture'],
+      money: 500,
+      isSleeping: true,
+      markers: ['metier'],
+    };
+    const worked = reduce(asleep, { type: 'work', target: 'job' });
+    const studied = reduce(worked, { type: 'study', courseId: 'metier' });
+    expect(studied.money).toBe(asleep.money);
+    expect(studied.gauge).toBe(0);
+    expect(studied.queuedActions).toEqual([
+      { type: 'work', target: 'job' },
+      { type: 'study', courseId: 'metier' },
+    ]);
+    const awake = reduce(studied, {
+      type: 'autoTick',
+      elapsedMs: automationRules.sleepDurationMs,
+    });
+    expect(awake.queuedActions).toEqual([]);
+    expect(awake.money).not.toBe(asleep.money);
+    expect(awake.gauge).toBeGreaterThan(studied.gauge);
+  });
+
+  it('vide le cerveau au fil du temps réel, puis se réveille', () => {
+    const state: GameState = {
+      ...startState,
+      isSleeping: true,
+      markers: ['metier', 'metier'],
+    };
+    const done = reduce(state, {
+      type: 'autoTick',
+      elapsedMs: (2 * automationRules.sleepDurationMs) / startState.maxMarkers,
+    });
+    expect(done.isSleeping).toBe(false);
+    expect(done.stats.metier).toBe(2);
+    expect(done.gauge).toBe(
+      (2 * actionRules.sleep.gauge) / startState.maxMarkers,
+    );
   });
 
   describe('automatisation', () => {

@@ -51,9 +51,9 @@ const idsOf = (requirement: Requirement): string[] => {
 };
 
 describe('intégrité des données', () => {
-  it('compte 20 améliorations aux ids uniques', () => {
-    expect(upgrades).toHaveLength(20);
-    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(20);
+  it('compte 19 améliorations aux ids uniques', () => {
+    expect(upgrades).toHaveLength(19);
+    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(19);
   });
 
   it('ne référence que des ids existants', () => {
@@ -168,12 +168,8 @@ describe('effets', () => {
 
   it('automatisations et tableau de bord sont mémorisés', () => {
     expect(hasAutomation(rich, 'work')).toBe(false);
-    const next = buy(
-      buy(buy(rich, 'procedure-travail'), 'rythme-sommeil'),
-      'tableau-de-bord',
-    );
+    const next = buy(buy(rich, 'procedure-travail'), 'tableau-de-bord');
     expect(hasAutomation(next, 'work')).toBe(true);
-    expect(hasAutomation(next, 'sleep')).toBe(true);
     expect(hasDashboard(next)).toBe(true);
   });
 

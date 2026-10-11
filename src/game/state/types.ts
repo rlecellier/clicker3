@@ -82,6 +82,9 @@ export type LifeSpan = {
  * Tout l'état du jeu. Sérialisable (JSON), sans date ni fonction : le temps
  * vient uniquement de `period` et `gauge` (ADR 0002).
  */
+export type QueuedAction =
+  { type: 'work'; target: string } | { type: 'study'; courseId: string };
+
 export type GameState = {
   version: number;
   characterName: string;
@@ -107,8 +110,12 @@ export type GameState = {
 
   stats: Record<StatId, number>;
   markers: StatId[];
-  // Nombre maximum de marqueurs détenus.
+  // Nombre maximum de marqueurs détenus (la capacité du cerveau).
   maxMarkers: number;
+  // Cerveau plein : le personnage dort et vide ses marqueurs un par un.
+  isSleeping: boolean;
+  // Gestes manuels faits pendant le sommeil, rejoués au réveil (dans l'ordre).
+  queuedActions: QueuedAction[];
   // Conversion du sommeil, selon le logement (studio : 1).
   sleepMultiplier: number;
 
@@ -150,7 +157,6 @@ export type GameState = {
 
   // Interrupteurs des actions automatiques (activables une fois achetées).
   autoWork: boolean;
-  autoSleep: boolean;
   // Temps (ms) accumulé vers la prochaine action automatique.
   autoElapsed: number;
   // Horodatage fourni par l'appelant (jamais lu par les règles). Écrit à la

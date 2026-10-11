@@ -1,1 +1,7 @@
-export { canSleep, sleep } from './sleep';
+export {
+  fallAsleep,
+  queueAction,
+  settleSleep,
+  sleepStep,
+  sleepStepMs,
+} from './sleep';

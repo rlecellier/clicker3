@@ -26,7 +26,7 @@ export const GamePage = () => {
   const invest = useInvestScreen();
   const journal = useJournalScreen();
   const reset = useResetGame();
-  const { work, sleep, sellSurplus } = screen.actions;
+  const { work, sellSurplus } = screen.actions;
   const { study } = screen;
 
   return (
@@ -64,16 +64,6 @@ export const GamePage = () => {
             press={work.press}
             onClick={work.run}
           />
-          <ActionButton
-            label="Dormir"
-            detail={sleep.detail}
-            reason={sleep.reason}
-            isDisabled={sleep.isDisabled}
-            isAuto={sleep.isAuto}
-            autoHint={sleep.autoHint}
-            press={sleep.press}
-            onClick={sleep.run}
-          />
           {study.action === null ? null : (
             <SplitActionButton
               label="Étudier"
@@ -98,7 +88,12 @@ export const GamePage = () => {
         <p className={styles.feedback} role="status">
           {screen.feedback}
         </p>
-        <MarkerTrack {...screen.markers} />
+        <MarkerTrack {...screen.brain} />
+        <ProgressBar
+          label={screen.brain.isSleeping ? 'Sommeil' : 'Éveillé'}
+          value={screen.brain.sleepProgress}
+          max={screen.brain.max}
+        />
       </Window>
       <Window title="Compétences et stats">
         {screen.stats.map((stat) => (

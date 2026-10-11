@@ -7,7 +7,6 @@ import { canChangeJob, jobById } from '@game/jobs';
 import { lastPeriodReport } from '@game/ledger';
 import type { GameAction } from '@game/reducer';
 import type { Requirement } from '@game/requirements';
-import { canSleep } from '@game/sleep';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { canStudy } from '@game/study';
@@ -172,31 +171,21 @@ const workTarget = (state: GameState): string => {
 /**
  * Le joueur virtuel : une stratégie gloutonne et déterministe. Il active
  * l'automatisation dès qu'elle est possible, achète le moins cher des achats
- * utiles, dort quand les marqueurs sont pleins, étudie la stat qui bloque le
- * prochain achat, sinon travaille.
+ * utiles, étudie la stat qui bloque le prochain achat, sinon travaille. Le
+ * sommeil vient seul quand les marqueurs sont pleins : il attend alors.
  *
  * Une fois le travail automatique actif, il lâche la souris (ADR 0005) : il
- * ne fait plus que des achats et dort quand les marqueurs sont pleins, faute
- * de sommeil automatique. Il rend `undefined` quand il attend l'automatisation.
+ * ne fait plus que des achats. Il rend `undefined` quand il attend.
  */
 export const chooseAction = (state: GameState): GameAction | undefined => {
-  for (const action of ['work', 'sleep'] as const) {
-    if (canEnableAuto(state, action) && !isAutoActive(state, action)) {
-      return { type: 'setAuto', action, isEnabled: true };
-    }
+  if (canEnableAuto(state, 'work') && !isAutoActive(state, 'work')) {
+    return { type: 'setAuto', action: 'work', isEnabled: true };
   }
   const purchase = nextPurchase(state);
   if (purchase !== undefined) {
     return purchase;
   }
-  if (
-    state.markers.length >= state.maxMarkers &&
-    canSleep(state) &&
-    !isAutoActive(state, 'sleep')
-  ) {
-    return { type: 'sleep' };
-  }
-  if (isAutoActive(state, 'work')) {
+  if (state.isSleeping || isAutoActive(state, 'work')) {
     return undefined;
   }
   const stat = neededStat(state);

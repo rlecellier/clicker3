@@ -48,16 +48,16 @@ passe ensuite par l'action « Étudier » puis par le sommeil.
 | Équipe de collaborateurs    | Toutes les entreprises +50 %                             | Gestion P3 + réputation  | 30 000 € (+6 000 €) | « Ils se sentent écoutés. Ils n'ont pas d'augmentation. »            |
 | Directeur de la transformation | Toutes les entreprises +100 % ; ouvre l'emploi 4      | Gestion P4 + réputation  | 300 000 € (+25 000 €)| « Il transforme. Quoi ? Il reviendra vers vous. »                  |
 
-### Automatisations (3)
+### Automatisation et tableau de bord (2)
 
-Elles s'activent ou se coupent à volonté par un appui long sur Travailler ou
-Dormir. Une action automatique simule deux clics par seconde et rapporte 2×
+Le travail automatique s'active ou se coupe à volonté par un appui long sur
+Travailler. Le sommeil n'a plus d'amélioration : il vient seul
+([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)). Une action automatique simule deux clics par seconde et rapporte 2×
 moins qu'une manuelle ([v1.md](v1.md#6-automatisation-et-absence)).
 
 | Nom                           | Effet                                       | Déblocage           | Prix      | Description                                                        |
 | ----------------------------- | ------------------------------------------- | ------------------- | --------- | ------------------------------------------------------------------ |
 | Procédure de travail          | Travail automatique                         | Phase Patron        | 20 000 €  | « Le travail se fait seul. Vous le surveillerez de loin. »         |
-| Rythme de sommeil optimisé    | Sommeil automatique quand les marqueurs sont pleins | Intelligence P2 | 35 000 €  | « Vous dormez quand les chiffres le disent. Ils ont raison. »     |
 | Tableau de bord               | Affiche recettes, dépenses, flux de stock et de réputation | Gestion P2 | 5 000 €   | « Dix indicateurs. Un seul qui compte, que vous ne regardez pas. »|
 
 ### Matériel et réputation (3)
