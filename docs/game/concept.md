@@ -24,8 +24,8 @@ sa marque avant que le temps lui manque.
 - **Durée d'une vie : 30 à 60 minutes de jeu actif** (à valider en playtest). La
   mort arrive à l'échéance de l'espérance de vie ; la repousser (soins, argent)
   est une idée pour plus tard.
-- **Fin de partie : un écran « You died » seul** en v1, sans bilan. Le bilan
-  (richesse, impact sur la ville) viendra après.
+- **Fin de partie : un écran « You died »** suivi d'un bilan chiffré
+  (`lifeSummary` : âge, argent, réputation, entreprises, indicateurs d'impact).
 - **Le temps avance par les actions** (jauge de temps, une période par jauge
   pleine) ; pas de cycle jour / nuit. Détail dans [v1.md](v1.md#1-le-temps).
 - **Absence sans limite** : les actions automatiques (2× moins efficaces que
@@ -38,8 +38,9 @@ sa marque avant que le temps lui manque.
   départ (et la personnalisation) viendra plus tard.
 - **Pas d'amis ni de contacts en v1** : gardés pour le futur.
 - **Pas de « changer le monde »** comme objectif. À la place, des **indicateurs
-  d'impact sur la ville** (pauvreté, inégalités, pollution, autonomie…, liste à
-  décider) qui racontent ce que le personnage a fait de sa vie.
+  d'impact sur la ville** (pollution et inégalités en v1,
+  [ADR 0004](../../.claude/adr/0004-indicateurs-d-impact.md)) qui racontent ce
+  que le personnage a fait de sa vie.
 - Le clic « boost actif » devient le **travail manuel** du personnage.
 
 ## Risques

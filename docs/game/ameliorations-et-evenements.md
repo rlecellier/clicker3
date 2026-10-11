@@ -5,7 +5,10 @@
 > grandeur** à caler au simulateur ([v1.md](v1.md)). Une période = un mois ;
 > la partie commence en période 0 (janvier 1999).
 
-## Améliorations (20 achats uniques)
+## Améliorations (19 achats uniques)
+
+La vingtième, l'automatisation du sommeil, a été retirée : le sommeil vient
+seul ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)).
 
 Chaque amélioration a un nom, un effet de jeu, un déblocage et une phrase de
 description. Prix : **€** (ordre de grandeur, croissance à régler). Les paliers
@@ -121,7 +124,7 @@ année ni chiffre précis dans le texte, pour ne pas dater le jeu.
 | Première entreprise achetée            | « Vous êtes porteur de projet. Personne ne vous demande lequel. »                             | phase Entrepreneur                 |
 | Premier collaborateur                  | « Vous êtes dirigeant. La différence avec un salarié : vous le dites. »                       | phase Patron                       |
 | Rupture de stock                       | « Vos clients découvrent la rareté. Ils ne vous en sont pas reconnaissants. »                  | réputation −                       |
-| Stock plein                            | « Votre entrepôt déborde. La production continue, par principe. »                             | production perdue                  |
+| Stock plein                            | « Votre entrepôt déborde. La production continue, par principe. »                             | invendu au-delà de l'entrepôt perdu |
 | Réputation palier 1                    | « Partenaire de confiance. Vous avez un badge. »                                              | quartier 2 disponible              |
 | Réputation palier 2                    | « Acteur majeur. Personne ne sait de quoi. »                                                  | quartier 3 disponible              |
 | Réputation palier 3                    | « Vous êtes devenu une marque. Votre nom figure dans un tableau Excel. »                      | quartier 4 disponible              |
