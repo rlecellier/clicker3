@@ -54,6 +54,8 @@ export const jobs: readonly Job[] = [
       of: [
         { type: 'stat', stat: 'metier', tier: 3 },
         { type: 'reputationTier', tier: 2 },
+        // « Ouvre l'emploi 4 » : le Directeur de la transformation.
+        { type: 'upgrade', id: 'directeur-transformation' },
       ],
     },
   },
