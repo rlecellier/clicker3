@@ -29,3 +29,17 @@
     transparent 8px 10px
   );
 }
+
+/* Version mini : piste basse, blocs plus fins. */
+.small .track {
+  height: 0.75rem;
+  padding: 2px;
+}
+
+.small .indicator {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-primary) 0 5px,
+    transparent 5px 7px
+  );
+}

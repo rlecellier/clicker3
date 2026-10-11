@@ -40,6 +40,7 @@ export const StyleguidePage = () => (
         gauge={{ value: 10, max: 10 }}
       />
       <ProgressBar label="Progression" value={6} max={10} />
+      <ProgressBar label="Métier · palier 1" value={6} max={10} size="small" />
       <dl className={styles.stats}>
         <Stat label="Argent" value="1 250 €" />
         <Stat label="Âge" value="23 ans" />
