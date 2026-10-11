@@ -5,3 +5,12 @@
   padding: 6px 10px;
   min-height: calc(var(--note-lines, 0) * 1lh + 12px + 2px);
 }
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.link:hover {
+  text-decoration-thickness: 2px;
+}
