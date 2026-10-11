@@ -1,4 +1,5 @@
 export {
+  availableUpgrades,
   buyUpgrade,
   canBuyUpgrade,
   canCancelUpgrade,

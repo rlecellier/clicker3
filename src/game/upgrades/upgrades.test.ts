@@ -5,6 +5,7 @@ import {
   startState,
   upgrades,
 } from '@game/data';
+import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState } from '@game/state';
 import {
@@ -14,6 +15,7 @@ import {
   hasAutomation,
   hasCourse,
   hasDashboard,
+  availableUpgrades,
   nextUpgrade,
 } from './upgrades';
 
@@ -265,5 +267,31 @@ describe('nextUpgrade', () => {
   it('ne propose rien quand tout est acheté', () => {
     const all = { ...startState, upgrades: upgrades.map((entry) => entry.id) };
     expect(nextUpgrade(all)).toBeUndefined();
+  });
+});
+
+describe('availableUpgrades', () => {
+  it('liste les débloquées puis la prochaine verrouillée', () => {
+    const list = availableUpgrades(rich);
+    const locked = list.filter(
+      (upgrade) =>
+        upgrade.requirement !== undefined &&
+        !isUnlocked(rich, upgrade.requirement),
+    );
+    expect(list.length).toBeGreaterThan(1);
+    expect(locked.length).toBeLessThanOrEqual(1);
+    expect(list.at(-1)).toBe(locked[0] ?? list.at(-1));
+  });
+
+  it('retire une amélioration achetée', () => {
+    const ids = availableUpgrades(buy(rich, 'cartes-visite')).map(
+      (upgrade) => upgrade.id,
+    );
+    expect(ids).not.toContain('cartes-visite');
+  });
+
+  it('est vide quand tout est acheté', () => {
+    const all = { ...startState, upgrades: upgrades.map((entry) => entry.id) };
+    expect(availableUpgrades(all)).toEqual([]);
   });
 });

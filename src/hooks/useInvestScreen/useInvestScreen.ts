@@ -16,9 +16,9 @@ import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState } from '@game/state';
 import {
+  availableUpgrades,
   canBuyUpgrade,
   canCancelUpgrade,
-  nextUpgrade,
   upgradeById,
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
@@ -60,6 +60,16 @@ const companyEffect = (company: Company) =>
   company.kind === 'production'
     ? `Produit ${formatCount(company.output)} articles par période`
     : `Vend jusqu’à ${formatCount(company.capacity)} articles à ${formatMoney(company.price)}`;
+
+const extraOf = (upgrade: Upgrade) =>
+  [
+    upgrade.rent === undefined
+      ? undefined
+      : `loyer +${formatMoney(upgrade.rent)}`,
+    upgrade.payroll === undefined
+      ? undefined
+      : `salaires +${formatMoney(upgrade.payroll)}`,
+  ].filter((part) => part !== undefined);
 
 // Achats d'entreprises, d'améliorations et déblocage de quartiers.
 export const useInvestScreen = () => {
@@ -108,44 +118,25 @@ export const useInvestScreen = () => {
     },
   };
 
-  const extraOf = (upgrade: Upgrade) =>
-    [
-      upgrade.rent === undefined
-        ? undefined
-        : `loyer +${formatMoney(upgrade.rent)}`,
-      upgrade.payroll === undefined
-        ? undefined
-        : `salaires +${formatMoney(upgrade.payroll)}`,
-    ].filter((part) => part !== undefined);
-
-  // Seule la prochaine amélioration est proposée à l'achat.
-  const next = nextUpgrade(state);
-  const nextUpgradeItems: ListItem[] =
-    next === undefined
-      ? []
-      : [
-          {
-            id: next.id,
-            title: next.name,
-            detail: [
-              next.description,
-              formatMoney(next.price),
-              ...extraOf(next),
-            ].join(' · '),
-            actionLabel: 'Acheter',
-            isDisabled: !canBuyUpgrade(state, next.id),
-            reason: reasonOf(
-              state,
-              false,
-              next.requirement,
-              'Argent insuffisant',
-            ),
-            conditions: conditionsOf(state, next.requirement),
-            onAction: () => {
-              actions.buyUpgrade(next.id);
-            },
-          },
-        ];
+  // Toutes les améliorations disponibles, plus la prochaine indisponible.
+  const availableUpgradeItems: ListItem[] = availableUpgrades(state).map(
+    (upgrade) => ({
+      id: upgrade.id,
+      title: upgrade.name,
+      detail: [
+        upgrade.description,
+        formatMoney(upgrade.price),
+        ...extraOf(upgrade),
+      ].join(' · '),
+      actionLabel: 'Acheter',
+      isDisabled: !canBuyUpgrade(state, upgrade.id),
+      reason: reasonOf(state, false, upgrade.requirement, 'Argent insuffisant'),
+      conditions: conditionsOf(state, upgrade.requirement),
+      onAction: () => {
+        actions.buyUpgrade(upgrade.id);
+      },
+    }),
+  );
 
   // Les améliorations obtenues, dans l'ordre d'achat : on peut les annuler,
   // sans rien récupérer.
@@ -195,7 +186,7 @@ export const useInvestScreen = () => {
       max: state.stockCapacity,
     },
     companies: [...companyItems, warehouseItem],
-    nextUpgrades: nextUpgradeItems,
+    availableUpgrades: availableUpgradeItems,
     ownedUpgrades: ownedUpgradeItems,
     districts: districtItems,
   };

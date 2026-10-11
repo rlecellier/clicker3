@@ -131,12 +131,12 @@ export const GamePage = () => {
               id: 'upgrades',
               label: 'Améliorations',
               content:
-                invest.nextUpgrades.length === 0 ? (
+                invest.availableUpgrades.length === 0 ? (
                   <Note>Plus rien à acheter pour le moment.</Note>
                 ) : (
                   <ItemList
-                    caption="Prochaine amélioration"
-                    items={invest.nextUpgrades}
+                    caption="Améliorations"
+                    items={invest.availableUpgrades}
                   />
                 ),
             },

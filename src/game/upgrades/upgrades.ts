@@ -255,3 +255,18 @@ export const nextUpgrade = (state: GameState) => {
     ) ?? remaining[0]
   );
 };
+
+// Améliorations à proposer : toutes celles déjà débloquées (de la moins chère à
+// la plus chère), plus la moins chère encore verrouillée pour montrer la suite.
+export const availableUpgrades = (state: GameState) => {
+  const remaining = upgrades
+    .filter((upgrade) => !isOwned(state, upgrade.id))
+    .toSorted((first, second) => first.price - second.price);
+  const isOpen = (upgrade: (typeof upgrades)[number]) =>
+    upgrade.requirement === undefined || isUnlocked(state, upgrade.requirement);
+  const locked = remaining.find((upgrade) => !isOpen(upgrade));
+  return [
+    ...remaining.filter((upgrade) => isOpen(upgrade)),
+    ...(locked === undefined ? [] : [locked]),
+  ];
+};
