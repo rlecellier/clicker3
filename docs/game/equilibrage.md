@@ -103,8 +103,9 @@ Raisons principales :
 | Coût en réputation emplois 3 et 4 | 10, 9                        | 5, 15            |
 | Études (coût par action)          | 20, 150, 190, 260            | 20, 60, 150, 300 |
 
-La réputation par vente reste 0,02. Le salaire de l'emploi 1 (40 €), le stage
-(150 €) et l'étude du Métier (20 €) restent inchangés pour les parcours e2e. Les
+La réputation par vente reste 0,02. Le stage (150 €) et l'étude du Métier (20 €)
+restent inchangés pour les parcours e2e. Le salaire de l'emploi 1 passe de 40 à
+60 € et celui de l'emploi 2 de 51 à 76 € avec l'argent négatif (voir ci-dessous). Les
 événements historiques et les indicateurs d'impact n'ont pas été modifiés : les
 mesures ne l'ont pas exigé.
 
@@ -143,3 +144,19 @@ quartiers à 18, 22 et 27 ans. L'ADR 0005 visait 35 à 45 ans pour l'auto.
   donc être atteint avant 44 ans. Un vrai joueur peut continuer à cliquer.
 - **Playtest humain** : tout est mesuré au simulateur. Le rythme ressenti (une
   période de 4 s) et la lisibilité du prochain achat restent à valider en jouant.
+
+## Argent négatif et premier emploi (issue #88)
+
+L'argent peut descendre sous 0 : le loyer et les salaires sont prélevés en
+entier, un solde négatif après les dépenses est un impayé (perte de
+réputation) et un solde négatif porte **5 % d'intérêt par période**
+(`economyRules.debtInterestRate`, arrondi à l'euro supérieur). On ne peut rien
+acheter à découvert (entreprise, amélioration, étude).
+
+Le premier emploi doit permettre de **vivre sans dette en ne faisant que
+travailler**, sommeil compris : un sommeil complet coûte 40 de jauge sans
+salaire, soit environ 5,7 salaires par période et non 7. L'intérim passe donc
+de 40 à 60 € (≈ 340 € par mois pour 300 € de loyer) et l'emploi 2 de 51 à
+76 € pour rester meilleur. Un test (`jobs.test.ts`) joue dix ans d'intérim sans
+jamais passer sous 0. Le joueur virtuel garde un quart de mois de dépenses
+fixes en caisse avant d'acheter.
