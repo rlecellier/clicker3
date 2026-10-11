@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { SAVE_KEY, expectNoOverflow } from './helpers';
+import { SAVE_KEY, expectNoOverflow, openTab } from './helpers';
 
 // Fait mourir le personnage sauvegardé au prochain chargement (après la
 // sauvegarde de sortie de la page courante, qui l'écraserait sinon).
@@ -32,17 +32,47 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   // Démarrer une vie ; la recharger ramène dans la partie.
   await page.getByRole('link', { name: 'Démarrer ma vie' }).click();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
   await page.getByRole('button', { name: /Travailler/ }).click();
-  await page.getByRole('link', { name: 'Plan de Sainte-Croissance' }).click();
-  await expect(page).toHaveURL('/ville');
+
+  // À 480 px, la sidebar est à gauche et en icônes seules, mais chaque onglet
+  // garde son nom accessible.
+  const sidebar = page.getByRole('navigation', { name: 'Navigation du jeu' });
+  await expect(sidebar.getByText('Vie', { exact: true })).toBeHidden();
+  await expect(sidebar.getByRole('link', { name: 'Vie' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expectNoOverflow(page);
+
+  // Chaque onglet a son URL ; recharger ou revenir en arrière le conserve.
+  await openTab(page, 'ville');
+  await openTab(page, 'investir');
   await page.reload();
-  await expect(page).toHaveURL('/ville');
+  await expect(page).toHaveURL('/jeu/investir');
+  await expect(page.getByRole('tab', { name: 'Entreprises' })).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL('/jeu/ville');
+  await expect(
+    page.getByRole('group', { name: 'Plan de la ville' }),
+  ).toBeVisible();
+  await openTab(page, 'competences');
+  await openTab(page, 'emploi');
+  await openTab(page, 'comptes');
+  await openTab(page, 'courrier');
+
+  // Les anciens liens et les onglets inconnus mènent à l'onglet par défaut.
+  await page.goto('/ville');
+  await expect(page).toHaveURL('/jeu/ville');
+  await page.goto('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
+  await page.goto('/jeu/inconnu');
+  await expect(page).toHaveURL('/jeu/vie');
 
   // Depuis le titre, on reprend la partie en cours.
   await page.goto('/');
   await page.getByRole('link', { name: 'Reprendre' }).click();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
 
   // Après la mort, un rechargement mène à l'écran de fin et son bilan.
   await killCharacterOnNextLoad(page);
@@ -58,9 +88,9 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await page.getByRole('button', { name: 'Rejouer' }).click();
   await expect(page).toHaveURL('/nouvelle-vie');
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
   await page.reload();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
 
   // Effacer la sauvegarde demande confirmation, puis renvoie au titre.
   await page.goto('/');

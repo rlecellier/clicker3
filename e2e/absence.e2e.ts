@@ -29,14 +29,14 @@ test('absence : le travail automatique avance pendant la fermeture', async ({
 
   // Fermer l'écran reprend la partie, interrupteur toujours activé.
   await page.getByRole('button', { name: 'Reprendre ma vie' }).click();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
   await expect(
     page.getByText('Appui long : couper l’automatique'),
   ).toBeVisible();
 
   // Rouvrir tout de suite la partie ne rattrape rien.
   await page.reload();
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
 
   // Une absence qui dépasse la vie mène au bilan, via l'écran d'absence.
   await preloadSave(page, { state: automatedLife, absenceMs: 40 * MONTH_MS });

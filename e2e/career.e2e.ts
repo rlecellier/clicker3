@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { startState } from '@game/data';
-import { SAVE_KEY, amountOf, counter, itemOf, repeatUntil } from './helpers';
+import {
+  SAVE_KEY,
+  amountOf,
+  counter,
+  itemOf,
+  openTab,
+  repeatUntil,
+} from './helpers';
 
 test('début de carrière : travailler, acheter un stage, étudier, s’endormir', async ({
   page,
@@ -12,6 +19,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     page.getByRole('heading', { name: 'Votre premier emploi' }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
+  await expect(page).toHaveURL('/jeu/vie');
   await expect(
     page.getByRole('heading', { name: 'Camille Morel' }),
   ).toBeVisible();
@@ -34,25 +42,41 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const cards = itemOf(page, 'Cartes de visite');
   const stage = itemOf(page, 'Stage « Posture professionnelle »');
   const owned = page.getByRole('region', { name: 'Obtenues', exact: true });
-  await page.getByRole('tab', { name: 'Améliorations' }).click();
+  const openUpgrades = async () => {
+    await openTab(page, 'investir');
+    await page.getByRole('tab', { name: 'Améliorations' }).click();
+  };
+  const openOwned = async () => {
+    await openTab(page, 'investir');
+    await page.getByRole('tab', { name: 'Obtenues' }).click();
+  };
+  await openUpgrades();
   await expect(stage).toBeVisible();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await cards.getByRole('button', { name: 'Acheter' }).click();
 
-  // Obtenue, elle quitte la liste d'achat pour celle des améliorations
-  // obtenues ; le stage, déjà listé, reste à acheter.
-  await expect(owned.getByText('Cartes de visite')).toBeVisible();
+  // Obtenue, elle quitte la liste d'achat pour le sous-onglet des
+  // améliorations obtenues ; le stage, déjà listé, reste à acheter.
+  await expect(cards).toBeHidden();
   await expect(stage.getByRole('button', { name: 'Acheter' })).toBeDisabled();
+  await page.getByRole('tab', { name: 'Obtenues' }).click();
+  await expect(owned.getByText('Cartes de visite')).toBeVisible();
+  await openTab(page, 'vie');
   await repeatUntil(
     () => work.click(),
     async () => (await money()) >= 150,
   );
+  await openUpgrades();
   await stage.getByRole('button', { name: 'Acheter' }).click();
+  await page.getByRole('tab', { name: 'Obtenues' }).click();
   await expect(
     owned.getByText('Stage « Posture professionnelle »'),
   ).toBeVisible();
 
-  // Le cursus apparaît dans la zone d'action ; étudier coûte de l'argent.
+  // Le cursus apparaît dans la zone d'action de l'onglet Vie.
+  await openTab(page, 'vie');
+
+  // Étudier coûte de l'argent.
   await expect(
     page.getByRole('button', { name: 'Choisir le cursus' }),
   ).toBeVisible();
@@ -75,41 +99,49 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // un à un et se convertissent en points de stat. Travailler est impossible
   // pendant ce temps (Playwright attend que le bouton se réactive).
   const metier = page.getByRole('progressbar', { name: /^Métier/ });
+  await openTab(page, 'competences');
   await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
+  await openTab(page, 'vie');
   await repeatUntil(
     async () => {
       await work.click();
     },
-    async () => !/ 0 pts/.test((await metier.textContent()) ?? ''),
+    () => page.getByRole('progressbar', { name: /^Sommeil/ }).isVisible(),
     150,
   );
   await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
+  await openTab(page, 'competences');
   await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
+  await openTab(page, 'vie');
 
   // Annuler une amélioration obtenue : elle disparaît, sans remboursement.
   const beforeCancel = await money();
+  await openOwned();
   await owned
     .getByRole('listitem')
     .filter({ hasText: 'Cartes de visite' })
     .getByRole('button', { name: 'Annuler' })
     .click();
   await expect(owned.getByText('Cartes de visite')).toBeHidden();
-  expect(await money()).toBe(beforeCancel);
+  await page.getByRole('tab', { name: 'Améliorations' }).click();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeVisible();
+  await openTab(page, 'vie');
+  expect(await money()).toBe(beforeCancel);
 
-  // Le courrier garde les messages reçus ; la comptabilité, les comptes.
-  await page.getByRole('tab', { name: 'Courrier' }).click();
+  // Le courrier garde les messages reçus ; les comptes, la comptabilité.
+  await openTab(page, 'courrier');
   await expect(page.getByText("Bienvenue dans l'euro.").first()).toBeVisible();
   await page.getByRole('button', { name: 'Fermer' }).click();
-  await page.getByRole('tab', { name: 'Comptabilité' }).click();
+  await openTab(page, 'comptes');
   await expect(
     page.getByRole('table', { name: 'Comptes (version simplifiée)' }),
   ).toBeVisible();
   await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
 
-  // Recommencer la partie ramène au choix du premier emploi ; la
-  // confirmation protège la vie en cours.
-  await page.getByRole('link', { name: 'Recommencer la partie' }).click();
+  // Recommencer ramène au choix du premier emploi ; la confirmation protège
+  // la vie en cours.
+  const restart = page.getByRole('link', { name: 'Recommencer', exact: true });
+  await restart.click();
   await expect(page).toHaveURL('/nouvelle-vie');
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
@@ -118,16 +150,18 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .click();
   await page.getByRole('link', { name: 'Retour' }).click();
   await page.getByRole('link', { name: 'Reprendre' }).click();
+  await openOwned();
   await expect(owned).toBeVisible();
-  await page.getByRole('link', { name: 'Recommencer la partie' }).click();
+  await restart.click();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
     .getByRole('alertdialog')
     .getByRole('button', { name: 'Recommencer' })
     .click();
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
-  await expect(owned).toBeHidden();
   await expect(page.getByText('Bienvenue dans l’euro.')).toBeVisible();
+  await openOwned();
+  await expect(owned).toBeHidden();
 
   // Rien de l'ancienne vie ne reste dans la mémoire du navigateur.
   await page.reload();

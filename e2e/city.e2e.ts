@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { expectNoOverflow, itemOf, preloadSave } from './helpers';
+import { expectNoOverflow, itemOf, openTab, preloadSave } from './helpers';
 
 test('ville : débloquer des quartiers avec la réputation, lire la carte', async ({
   page,
@@ -13,9 +13,10 @@ test('ville : débloquer des quartiers avec la réputation, lire la carte', asyn
     },
   });
   await page.goto('/jeu');
-  await expect(page).toHaveURL('/jeu');
+  await expect(page).toHaveURL('/jeu/vie');
 
-  // Un quartier se débloque avec de la réputation, depuis la page de jeu.
+  // Un quartier se débloque avec de la réputation, depuis l'onglet Investir.
+  await openTab(page, 'investir');
   await page.getByRole('tab', { name: /^Quartiers/ }).click();
   const hauts = itemOf(page, 'Les Hauts-Fourneaux');
   await expect(
@@ -30,8 +31,7 @@ test('ville : débloquer des quartiers avec la réputation, lire la carte', asyn
   await expect(hauts.getByRole('button', { name: 'Ouvert' })).toBeDisabled();
 
   // La carte montre les quartiers, les bâtiments et les indicateurs.
-  await page.getByRole('link', { name: 'Plan de Sainte-Croissance' }).click();
-  await expect(page).toHaveURL('/ville');
+  await openTab(page, 'ville');
   await expect(
     page.getByRole('group', { name: 'Plan de la ville' }),
   ).toBeVisible();
@@ -76,6 +76,5 @@ test('ville : débloquer des quartiers avec la réputation, lire la carte', asyn
   await expect(last.getByRole('button', { name: 'Débloquer' })).toBeDisabled();
 
   // Retour à la vie.
-  await page.getByRole('link', { name: 'Retour à ma vie' }).click();
-  await expect(page).toHaveURL('/jeu');
+  await openTab(page, 'vie');
 });
