@@ -1,10 +1,16 @@
-import { economyRules, startState } from '@game/data';
+import { companies, economyRules, startState, upgrades } from '@game/data';
 import type { GameState } from '@game/state';
 import { endPeriod } from '@game/period';
+import { buyUpgrade } from '@game/upgrades';
 import {
   chargeExpenses,
   chargeInterest,
+  finalPrice,
+  outputPerCopy,
+  periodProduction,
   produceGoods,
+  productionShares,
+  salesCapacity,
   sellGoods,
 } from './economy';
 
@@ -244,5 +250,103 @@ describe('chargeInterest', () => {
     expect(chargeInterest(rich)).toBe(rich);
     const flat = stateWith({ money: 0 });
     expect(chargeInterest(flat)).toBe(flat);
+  });
+});
+
+// L'affichage de l'écran Investir et le moteur partagent les mêmes fonctions.
+describe('valeurs finales', () => {
+  const atelier = companies.find((company) => company.id === 'atelier');
+  const boutique = companies.find((company) => company.id === 'boutique');
+  if (atelier === undefined || boutique === undefined) {
+    throw new Error('entreprises de test introuvables');
+  }
+
+  it('sans bonus, rend la valeur de base', () => {
+    const state = stateWith({ companies: { atelier: 10 } });
+    expect(outputPerCopy(state, atelier)).toBe(2);
+    expect(productionShares(state).atelier).toBe(20);
+    expect(periodProduction(state)).toBe(20);
+  });
+
+  it('applique le bonus global de production', () => {
+    const state = stateWith({
+      companies: { atelier: 10 },
+      productionMultiplier: 1.5,
+    });
+    expect(outputPerCopy(state, atelier)).toBe(3);
+    expect(productionShares(state).atelier).toBe(30);
+  });
+
+  it('applique le bonus propre à une entreprise', () => {
+    const state = stateWith({
+      companies: { atelier: 10 },
+      companyMultipliers: { atelier: 1.25 },
+    });
+    expect(outputPerCopy(state, atelier)).toBe(2.5);
+    expect(productionShares(state).atelier).toBe(25);
+  });
+
+  it('inclut le bonus du travail fait dans l’entreprise', () => {
+    const state = stateWith({
+      companies: { atelier: 10 },
+      workBoosts: { atelier: 2 },
+    });
+    expect(outputPerCopy(state, atelier)).toBe(4);
+    expect(productionShares(state).atelier).toBe(40);
+  });
+
+  it('arrondit au cumul : la somme des parts est la production totale', () => {
+    const state = stateWith({
+      companies: { atelier: 3, manufacture: 3 },
+      productionMultiplier: 1.15,
+    });
+    const shares = Object.values(productionShares(state));
+    expect(shares.reduce((total, share) => total + share, 0)).toBe(
+      periodProduction(state),
+    );
+  });
+
+  it('rend la capacité et le prix finaux d’un commerce', () => {
+    const state = stateWith({
+      companies: { boutique: 4 },
+      salesMultiplier: 1.5,
+      companyMultipliers: { boutique: 2 },
+    });
+    expect(outputPerCopy(state, boutique)).toBe(6);
+    expect(salesCapacity(state, boutique)).toBe(24);
+    expect(finalPrice(state, boutique)).toBe(18);
+  });
+
+  it('correspond exactement à la production ajoutée au stock', () => {
+    // Plusieurs améliorations de production, du travail fait, plusieurs entreprises.
+    let state = stateWith({
+      money: 10_000_000,
+      stats: {
+        metier: 1000,
+        gestion: 1000,
+        intelligence: 1000,
+        endurance: 1000,
+      },
+      reputationEarned: 10_000_000,
+      reputation: 10_000_000,
+      companies: { atelier: 7, manufacture: 3 },
+      workBoosts: { atelier: 3, manufacture: 1 },
+      stock: 0,
+      stockCapacity: 1_000_000,
+    });
+    for (const id of [
+      'premier-collaborateur',
+      'equipe-collaborateurs',
+      'camionnette',
+    ]) {
+      state = buyUpgrade(state, id);
+    }
+    expect(state.upgrades).toHaveLength(3);
+    expect(upgrades.length).toBeGreaterThan(3);
+    const shown = periodProduction(state);
+    expect(shown).toBeGreaterThan(0);
+    const next = produceGoods(state);
+    expect(next.stock - state.stock).toBe(shown);
+    expect(next.ledger.current.stockProduced).toBe(shown);
   });
 });
