@@ -25,7 +25,7 @@ export type CommerceCompany = CompanyBase & {
 
 export type Company = ProductionCompany | CommerceCompany;
 
-// Les six types (docs/game/ton-et-univers.md). Valeurs provisoires.
+// Les six types (docs/game/ton-et-univers.md). Valeurs calées en V1-24 (docs/game/equilibrage.md).
 export const companies: readonly Company[] = [
   {
     id: 'atelier',

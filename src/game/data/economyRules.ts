@@ -1,4 +1,4 @@
-// Valeurs provisoires de l'économie, à équilibrer au simulateur (V1-15, V1-24).
+// Valeurs de l'économie, calées au simulateur (V1-24, docs/game/equilibrage.md).
 export const economyRules = {
   // Réputation gagnée par article vendu.
   reputationPerSale: 0.02,

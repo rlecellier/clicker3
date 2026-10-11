@@ -48,7 +48,7 @@ const stat = (
 ): Requirement => ({ type: 'stat', stat: name, tier });
 
 // Les 20 améliorations (docs/game/ameliorations-et-evenements.md).
-// Prix et effets : ordres de grandeur à caler au simulateur.
+// Prix et effets calés en V1-24 (docs/game/equilibrage.md).
 export const upgrades: readonly Upgrade[] = [
   // Formations
   {
