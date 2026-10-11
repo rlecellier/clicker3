@@ -13,8 +13,9 @@ composants de base en situation : lancer `npm run dev` puis ouvrir
   bleues, tableaux, jauge à blocs. Aucun néon.
 - **Le décalage vient du texte**, pas des illustrations
   (`docs/game/ton-et-univers.md`, § Identité visuelle).
-- **Mobile d'abord** : le viewport des tests e2e est 480×560. Sur bureau, les
-  pages restent une colonne centrée (`max-width: 40rem`).
+- **Mobile d'abord** : le viewport des tests e2e est 480×560. Sur bureau, le
+  contenu reste une colonne centrée (`max-width: 40rem`), à droite d'une
+  sidebar de navigation (ADR 0008).
 - **Pas de mode sombre en v1** (`color-scheme: light`).
 - Focus toujours visible (contour pointillé `--color-focus`) et
   `prefers-reduced-motion` respecté, tous deux posés dans `src/global.css`.
@@ -95,7 +96,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `CityMap`        | `title`, `slogan`, `districts` (`MapDistrict` : `id`, `name`, `isLocked`, `isSelected`, `conditions`, `buildings`), `onSelect` ; SVG, clavier | Plan d'urbanisme : quartiers en aplats, bâtiments par entreprise    |
 | `DistrictSheet`  | `name`, `description`, `detail`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `onAction`, `gauges`                                       | Fiche du quartier choisi : coût, déblocage, jauges si ouvert        |
 | `ImpactGauges`   | `caption`, `gauges` (`id`, `label`, `value` de 0 à 100) ; réutilise `ProgressBar`                                                              | Indicateurs d'impact (pollution, inégalités), en lecture seule      |
-| `PageLink`       | `to`, `children` ; lien d'allure bouton                                                                                                        | Navigation entre pages (`/jeu`, `/ville`)                           |
+| `PageLink`       | `to`, `children` ; lien d'allure bouton                                                                                                        | Navigation entre écrans (`/`, `/nouvelle-vie`)                           |
 | `FigureList`     | `figures` (`label`, `value`) ; grille de `Stat`                                                                                                | Chiffres d'un bilan (absence, fin de vie)                           |
 | `ConfirmPrompt`  | `message`, `confirmLabel`, `cancelLabel`, `onConfirm`, `onCancel`                                                                              | Confirmation en ligne avant un geste qui détruit la partie          |
 
@@ -113,7 +114,7 @@ distinct ; sinon, composer les existants.
   `Tooltip`) fournissent leurs rôles ARIA et la navigation au clavier.
 - **Clavier** : tout est atteignable et activable au clavier ; ne jamais
   retirer l'outline de focus.
-- **Retour d'action** : le message de retour de `GamePage` et `EventToast`
+- **Retour d'action** : le message de retour de `LifePage` et `EventToast`
   portent `role="status"` (région vive polie). Tout nouveau retour dynamique
   fait de même.
 - **Décoratif** : un élément purement visuel (blocs de `MarkerTrack`, points de
@@ -128,8 +129,15 @@ distinct ; sinon, composer les existants.
 
 ## 5. Mise en page
 
-- Une colonne, de haut en bas, de fenêtres `Window` empilées ; largeur
-  maximale `40rem`, centrée sur bureau.
+- L'écran de jeu est une **sidebar fixe à gauche** (composant `Sidebar`) et
+  une zone de contenu qui défile seule (ADR 0008). Au-dessus de `40rem`, la
+  sidebar montre icônes et libellés ; à `40rem` et en dessous (480 px compris),
+  des icônes seules, toujours à gauche, avec le libellé en `aria-label` et en
+  infobulle. Un seul onglet est affiché à la fois (`/jeu/<onglet>`).
+- Dans la zone de contenu : une colonne de fenêtres `Window` ; largeur
+  maximale `40rem`, centrée.
+- Les écrans hors jeu (titre, nouvelle vie, absence, fin) n'ont pas de
+  sidebar : une colonne centrée de `40rem` au plus.
 - Pas de largeur fixe en pixels : contenu fluide, `min-width: 0` sur les
   éléments de flex qui contiennent du texte long.
 - Espacements en multiples de `--space`.
@@ -171,7 +179,7 @@ Les règles ESLint (`unicorn` strict) imposent :
 2. **Hook de vue** (`src/hooks/`, ex. `useGameScreen`, `useInvestScreen`,
    `useJournalScreen`) : état, calculs, appels au context ; renvoie des
    données prêtes à afficher (textes déjà formatés).
-3. **Page orchestratrice** (`src/pages/`, ex. `GamePage`) : branche les hooks
+3. **Page orchestratrice** (`src/pages/`, ex. `LifePage`) : branche les hooks
    sur les composants et ne fait rien d'autre.
 
 ## 8. Ajouter un composant
