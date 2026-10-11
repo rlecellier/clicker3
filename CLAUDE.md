@@ -9,7 +9,8 @@ Prettier, Vitest ; V1-01), CI, déploiement Pages et parcours de fumée
 Playwright en place (V1-02), noyau des règles dans `src/game/` : état, reducer,
 jauge de temps, aléatoire à graine, paliers de stats, conditions de
 déblocage, réputation, quartiers, marqueurs, emplois et actions du joueur (travailler,
-étudier, dormir) (V1-03 à V1-06, ADR 0002 et 0003). Le concept et les mécaniques de
+étudier, dormir), entreprises, stock, ventes et résolution économique de la
+période (V1-03 à V1-07, ADR 0002 et 0003). Le concept et les mécaniques de
 la v1 sont choisis (`docs/game/`, périmètre dans `docs/game/v1.md`) ; le
 développement suit l'issue de suivi #29.
 
