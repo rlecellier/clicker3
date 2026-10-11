@@ -6,7 +6,6 @@ import { canSellSurplus } from '@game/surplus';
 import { courses, jobs, statTierThresholds } from '@game/data';
 import {
   checkRequirement,
-  describeReputationTier,
   describeRequirement,
   formatAge,
   formatCount,
@@ -17,7 +16,7 @@ import {
   statLabels,
 } from '@game/format';
 import { canChangeJob } from '@game/jobs';
-import { canSpendReputation } from '@game/reputation';
+import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { tierOf } from '@game/stats';
 import { canStudy } from '@game/study';
@@ -207,6 +206,31 @@ export const useGameScreen = () => {
       }
     : workAction;
 
+  const skillBars = statIds.map((id) => {
+    const tier = tierOf(state, id);
+    const thresholds = statTierThresholds[id];
+    const next = thresholds[tier];
+    const start = tier === 0 ? 0 : (thresholds[tier - 1] ?? 0);
+    const points = state.stats[id];
+    return {
+      id,
+      label: `${statLabels[id]} · palier ${tier} · ${next === undefined ? 'max' : `${formatCount(points)} pts`}`,
+      value: next === undefined ? 1 : points - start,
+      max: next === undefined ? 1 : next - start,
+    };
+  });
+
+  // Même format que les compétences ; le palier se calcule sur le cumul gagné.
+  const reputation = reputationTierProgress(state);
+  const reputationBar = {
+    id: 'reputation',
+    label: `Réputation · palier ${reputation.tier} · ${reputation.name} · ${
+      reputation.isMax ? 'max' : `${formatCount(state.reputationEarned)} gagnés`
+    }`,
+    value: reputation.value,
+    max: reputation.max,
+  };
+
   return {
     isOver,
     intro: state.period === 0 && state.gauge === 0 ? START_TEXT : null,
@@ -219,7 +243,6 @@ export const useGameScreen = () => {
     counters: {
       stock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
       reputation: formatDecimal(state.reputation),
-      reputationTier: describeReputationTier(state),
     },
     brain: {
       count: state.markers.length,
@@ -230,19 +253,7 @@ export const useGameScreen = () => {
         ? state.maxMarkers - state.markers.length
         : 0,
     },
-    stats: statIds.map((id) => {
-      const tier = tierOf(state, id);
-      const thresholds = statTierThresholds[id];
-      const next = thresholds[tier];
-      const start = tier === 0 ? 0 : (thresholds[tier - 1] ?? 0);
-      const points = state.stats[id];
-      return {
-        id,
-        label: `${statLabels[id]} · palier ${tier} · ${next === undefined ? 'max' : `${formatCount(points)} pts`}`,
-        value: next === undefined ? 1 : points - start,
-        max: next === undefined ? 1 : next - start,
-      };
-    }),
+    stats: [...skillBars, reputationBar],
     actions: { work, sellSurplus },
     study: {
       action: studyAction,
