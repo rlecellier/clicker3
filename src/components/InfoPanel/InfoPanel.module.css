@@ -7,3 +7,9 @@
   padding: 4px 8px;
   font-size: 0.8125rem;
 }
+
+/* Au doigt, l'infobulle s'affiche au toucher mais ne capte jamais le clic
+   suivant : elle ne gêne pas la navigation. */
+.popup {
+  pointer-events: none;
+}
