@@ -11,6 +11,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
+| [ameliorations-et-evenements.md](ameliorations-et-evenements.md) | Les ~20 améliorations et les événements de la v1 (décidé) |
 | [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
 | [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville (à discuter)           |
 

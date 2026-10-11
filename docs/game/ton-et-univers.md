@@ -166,8 +166,7 @@ Ils fixent la voix ; ce sont des exemples, pas le texte final.
 
 ## Reste à faire
 
-- Écrire les ~20 améliorations et les événements dans cette voix, avec le contenu
-  chiffré ([v1.md](v1.md)).
+- Améliorations et événements : [ameliorations-et-evenements.md](ameliorations-et-evenements.md).
 - Relire à voix haute : si le texte cligne de l'œil, on le coupe.
 
 ## Pistes
