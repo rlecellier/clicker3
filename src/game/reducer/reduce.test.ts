@@ -13,6 +13,12 @@ describe('reduce', () => {
     expect(next.gauge).toBe(40);
   });
 
+  it('applique readMail : les messages reçus passent en lus', () => {
+    const state = { ...startState, mailReceived: 4 };
+    const next = reduce(state, { type: 'readMail' });
+    expect(next.mailRead).toBe(4);
+  });
+
   it('laisse l’état d’origine intact', () => {
     const before = structuredClone(startState);
     reduce(startState, { type: 'addGauge', amount: 250 });

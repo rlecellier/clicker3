@@ -15,6 +15,8 @@ export type GameAction =
   // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
   // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.
   | { type: 'autoTick'; elapsedMs: number }
+  // Le joueur a lu le courrier : plus de message non lu.
+  | { type: 'readMail' }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi
   // choisi (un emploi de départ, voir `startingJobs`).
   | { type: 'restart'; jobId?: string };
