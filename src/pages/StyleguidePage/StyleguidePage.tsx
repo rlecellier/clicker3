@@ -34,6 +34,11 @@ export const StyleguidePage = () => (
         date="janvier 1999"
         gauge={{ value: 6, max: 10 }}
       />
+      <GameHeader
+        money="-1 234 567,89 €"
+        date="décembre 2026"
+        gauge={{ value: 10, max: 10 }}
+      />
       <ProgressBar label="Progression" value={6} max={10} />
       <dl className={styles.stats}>
         <Stat label="Argent" value="1 250 €" />
@@ -125,6 +130,8 @@ export const StyleguidePage = () => (
               to: '#',
               badge: 3,
               badgeTone: 'alert',
+              accessibleLabel: 'Courrier, 3 messages non lus',
+              shortcut: '1',
             },
             {
               id: 'life',
@@ -139,6 +146,15 @@ export const StyleguidePage = () => (
               to: '#',
               badge: 1,
               badgeTone: 'info',
+              accessibleLabel: 'Investir, 1 nouveauté',
+            },
+            {
+              id: 'jobs',
+              label: 'Emploi',
+              icon: <SidebarIcon id="jobs" />,
+              to: '#',
+              badge: '99+',
+              badgeTone: 'alert',
             },
           ]}
           footer={{
