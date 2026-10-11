@@ -11,7 +11,20 @@ import {
 import { companies, districts, economyRules } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
-import { checkRequirement, formatCount, formatMoney } from '@game/format';
+import {
+  finalPrice,
+  outputPerCopy,
+  periodProduction,
+  productionShares,
+  salesCapacity,
+} from '@game/economy';
+import {
+  checkRequirement,
+  describeEffect,
+  formatCount,
+  formatDecimal,
+  formatMoney,
+} from '@game/format';
 import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState } from '@game/state';
@@ -19,6 +32,7 @@ import {
   availableUpgrades,
   canBuyUpgrade,
   canCancelUpgrade,
+  previewEffects,
   upgradeById,
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
@@ -56,10 +70,39 @@ const stockLabel = (state: GameState) => {
   return state.stock === 0 ? 'vide' : 'en cours';
 };
 
-const companyEffect = (company: Company) =>
-  company.kind === 'production'
-    ? `Produit ${formatCount(company.output)} articles par période`
-    : `Vend jusqu’à ${formatCount(company.capacity)} articles à ${formatMoney(company.price)}`;
+// Valeur finale (tous modificateurs appliqués), par exemplaire puis au total ;
+// le total arrondi est celui du moteur, jamais la base de l'entreprise.
+const companyEffect = (state: GameState, company: Company) => {
+  const owned = ownedCount(state, company.id);
+  const perCopy = formatDecimal(outputPerCopy(state, company));
+  const total =
+    company.kind === 'production'
+      ? (productionShares(state)[company.id] ?? 0)
+      : salesCapacity(state, company);
+  const verb = company.kind === 'production' ? 'Produit' : 'Vend jusqu’à';
+  const price =
+    company.kind === 'commerce'
+      ? ` à ${formatDecimal(finalPrice(state, company))} €`
+      : '';
+  return owned === 0
+    ? `${verb} ${perCopy} articles par période et par exemplaire${price}`
+    : `${verb} ${formatCount(total)} articles par période (${formatCount(owned)} × ${perCopy})${price}`;
+};
+
+// Effet chiffré d'une amélioration, plus la production avant / après achat
+// quand elle change.
+const effectsOf = (state: GameState, upgrade: Upgrade) => {
+  const before = periodProduction(state);
+  const after = periodProduction(previewEffects(state, upgrade.id));
+  return [
+    ...upgrade.effects.map((effect) => describeEffect(effect)),
+    ...(after === before
+      ? []
+      : [
+          `Production : ${formatCount(before)} → ${formatCount(after)} articles par période`,
+        ]),
+  ];
+};
 
 const extraOf = (upgrade: Upgrade) =>
   [
@@ -84,7 +127,7 @@ export const useInvestScreen = () => {
       id: company.id,
       title: company.name,
       badge: owned > 0 ? `${formatCount(owned)} possédé(s)` : undefined,
-      detail: `${company.kind === 'production' ? 'Production' : 'Commerce'} · ${companyEffect(company)} · prochain : ${formatMoney(cost)}`,
+      detail: `${company.kind === 'production' ? 'Production' : 'Commerce'} · ${companyEffect(state, company)} · prochain : ${formatMoney(cost)}`,
       actionLabel: 'Acheter',
       isDisabled: !canBuy,
       reason: reasonOf(
@@ -123,6 +166,7 @@ export const useInvestScreen = () => {
     (upgrade) => ({
       id: upgrade.id,
       title: upgrade.name,
+      effects: effectsOf(state, upgrade),
       detail: [
         upgrade.description,
         formatMoney(upgrade.price),
@@ -146,6 +190,7 @@ export const useInvestScreen = () => {
     .map((upgrade) => ({
       id: upgrade.id,
       title: upgrade.name,
+      effects: upgrade.effects.map((effect) => describeEffect(effect)),
       detail: [upgrade.description, ...extraOf(upgrade)].join(' · '),
       actionLabel: 'Annuler',
       isDisabled: !canCancelUpgrade(state, upgrade.id),
