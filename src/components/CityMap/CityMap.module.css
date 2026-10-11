@@ -1,0 +1,127 @@
+.map {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  font-family: var(--font-sans);
+}
+
+.slogan {
+  font-size: 12px;
+  font-style: italic;
+  fill: var(--color-primary);
+}
+
+/* Aplats d'un plan d'urbanisme : peu de teintes, sobres. */
+.district {
+  cursor: pointer;
+  --tone: #e6e1c8;
+}
+
+.district[data-tone='1'] {
+  --tone: #d9cdbd;
+}
+
+.district[data-tone='2'] {
+  --tone: #cfd9dc;
+}
+
+.district[data-tone='3'] {
+  --tone: #cdd5e8;
+}
+
+.block {
+  fill: var(--tone);
+  stroke: var(--color-surface-dark);
+  stroke-width: 1;
+}
+
+.district[data-locked='true'] .block {
+  fill: var(--color-surface);
+  stroke: var(--color-surface-shadow);
+  stroke-dasharray: 5 3;
+}
+
+.district:focus-visible {
+  outline: none;
+}
+
+.district:focus-visible .block {
+  stroke: var(--color-focus);
+  stroke-width: 3;
+}
+
+.selection {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 3;
+}
+
+.name {
+  font-size: 13px;
+  font-weight: bold;
+  fill: var(--color-text);
+}
+
+.district[data-locked='true'] .name,
+.locked,
+.condition {
+  fill: var(--color-text-muted);
+}
+
+.locked {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.condition {
+  font-size: 11px;
+}
+
+.buildingLabel {
+  font-size: 10px;
+  fill: var(--color-text);
+}
+
+.wall {
+  fill: var(--color-paper);
+  stroke: var(--color-surface-dark);
+  stroke-width: 1.5;
+}
+
+.chimney {
+  fill: var(--color-surface-shadow);
+  stroke: var(--color-surface-dark);
+  stroke-width: 1;
+}
+
+.awning {
+  fill: var(--color-note);
+  stroke: var(--color-surface-dark);
+  stroke-width: 1.5;
+}
+
+.door {
+  fill: var(--color-primary);
+}
+
+.legend {
+  font-size: 11px;
+  fill: var(--color-text);
+}
+
+.swatchOpen {
+  fill: #e6e1c8;
+  stroke: var(--color-surface-dark);
+}
+
+.swatchLocked {
+  fill: var(--color-surface);
+  stroke: var(--color-surface-shadow);
+  stroke-dasharray: 3 2;
+}
+
+.scaleBar {
+  fill: var(--color-text);
+}

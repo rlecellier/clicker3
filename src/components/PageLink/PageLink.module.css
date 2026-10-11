@@ -1,0 +1,16 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-height: 2.25rem;
+  padding: 0.25rem 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--bevel-out);
+  text-decoration: none;
+}
+
+.link:active {
+  box-shadow: var(--bevel-in);
+}
