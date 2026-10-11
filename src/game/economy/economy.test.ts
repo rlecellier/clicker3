@@ -11,8 +11,8 @@ const stateWith = (changes: Partial<GameState>): GameState => ({
 describe('produceGoods', () => {
   it('ajoute au stock la production de chaque exemplaire', () => {
     const next = produceGoods(stateWith({ companies: { atelier: 3 } }));
-    expect(next.stock).toBe(12);
-    expect(next.ledger.current.stockProduced).toBe(12);
+    expect(next.stock).toBe(6);
+    expect(next.ledger.current.stockProduced).toBe(6);
     expect(next.lastStatement?.stockFull).toBe(false);
   });
 
@@ -22,7 +22,7 @@ describe('produceGoods', () => {
     );
     expect(next.stock).toBe(50);
     expect(next.ledger.current.stockProduced).toBe(5);
-    expect(next.ledger.current.stockLost).toBe(7);
+    expect(next.ledger.current.stockLost).toBe(1);
     expect(next.lastStatement?.stockFull).toBe(true);
   });
 
@@ -30,7 +30,7 @@ describe('produceGoods', () => {
     const next = produceGoods(
       stateWith({ companies: { atelier: 2 }, productionMultiplier: 1.5 }),
     );
-    expect(next.stock).toBe(12);
+    expect(next.stock).toBe(6);
   });
 
   it('applique le multiplicateur propre à un type d’entreprise', () => {
@@ -40,14 +40,14 @@ describe('produceGoods', () => {
         companyMultipliers: { atelier: 1.25 },
       }),
     );
-    expect(next.stock).toBe(10);
+    expect(next.stock).toBe(5);
   });
 
   it('applique le bonus du travail fait dans l’entreprise', () => {
     const next = produceGoods(
       stateWith({ companies: { atelier: 2 }, workBoosts: { atelier: 2 } }),
     );
-    expect(next.stock).toBe(16);
+    expect(next.stock).toBe(8);
   });
 });
 
@@ -56,11 +56,11 @@ describe('sellGoods', () => {
 
   it('écoule le stock contre de l’argent et de la réputation', () => {
     const next = sellGoods(stateWith({ ...shop, stock: 10 }));
-    expect(next.stock).toBe(6);
-    expect(next.money).toBe(4 * 12);
-    expect(next.reputation).toBeCloseTo(4 * economyRules.reputationPerSale);
-    expect(next.ledger.current.sales).toBe(48);
-    expect(next.ledger.current.stockSold).toBe(4);
+    expect(next.stock).toBe(7);
+    expect(next.money).toBe(3 * 12);
+    expect(next.reputation).toBeCloseTo(3 * economyRules.reputationPerSale);
+    expect(next.ledger.current.sales).toBe(36);
+    expect(next.ledger.current.stockSold).toBe(3);
     expect(next.lastStatement?.stockout).toBe(false);
   });
 
@@ -81,7 +81,7 @@ describe('sellGoods', () => {
     const next = sellGoods(
       stateWith({ ...shop, stock: 10, reputationPerSaleMultiplier: 2 }),
     );
-    expect(next.reputation).toBeCloseTo(4 * economyRules.reputationPerSale * 2);
+    expect(next.reputation).toBeCloseTo(3 * economyRules.reputationPerSale * 2);
   });
 
   it('ne fait pas perdre de réputation sans commerce', () => {
@@ -98,8 +98,8 @@ describe('sellGoods', () => {
         workBoosts: { boutique: 1 },
       }),
     );
-    // Capacité 4 × 1,5 = 6 articles, 6 × 12 × 1,25 = 90.
-    expect(next.money).toBe(90);
+    // Capacité 3 × 1,5 = 4,5 soit 5 articles, 5 × 12 × 1,25 = 75.
+    expect(next.money).toBe(75);
     expect(next.workBoosts).toEqual({});
   });
 });
@@ -137,16 +137,16 @@ describe('résolution d’une période', () => {
       stock: 0,
     });
     const next = endPeriod({ ...state, gauge: state.gaugeCapacity });
-    // 4 articles produits puis vendus 48 € dans la même période, puis loyer 300.
-    expect(next.money).toBe(400 + 48 - 300);
+    // 2 articles produits puis vendus 24 € dans la même période, puis loyer 300.
+    expect(next.money).toBe(400 + 24 - 300);
     expect(next.stock).toBe(0);
     expect(next.period).toBe(1);
     expect(next.lastStatement).toMatchObject({ period: 0, unpaid: false });
     expect(next.ledger.last).toMatchObject({
-      sales: 48,
+      sales: 24,
       rent: 300,
-      stockProduced: 4,
-      stockSold: 4,
+      stockProduced: 2,
+      stockSold: 2,
     });
     expect(next.ledger.current.rent).toBe(0);
   });
