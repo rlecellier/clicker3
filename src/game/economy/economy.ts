@@ -39,12 +39,12 @@ export const periodProduction = (state: GameState) => {
   return Math.round(total * state.productionMultiplier);
 };
 
-// Étape 1 : les entreprises de production ajoutent au stock, dans la limite
-// de la capacité de l'entrepôt ; le reste est perdu. Le drapeau `stockFull`
-// est posé à l'étape 2, une fois le stock écoulé.
+// Étape 1 : les entreprises de production ajoutent leur production au stock,
+// sans limite : rien n'est perdu ici. La capacité de l'entrepôt s'applique à
+// l'étape 2, une fois les ventes faites.
 export const produceGoods = (state: GameState): GameState => {
   // Arrondi cumulé : la somme des parts vaut exactement la production totale.
-  const made: Record<string, number> = {};
+  const stockIn: Record<string, number> = {};
   let cumulated = 0;
   let produced = 0;
   for (const company of companies) {
@@ -54,37 +54,26 @@ export const produceGoods = (state: GameState): GameState => {
     cumulated += unitsOf(state, company, company.output);
     const share = Math.round(cumulated * state.productionMultiplier) - produced;
     produced += share;
-    made[company.id] = share;
-  }
-  const stored = Math.min(
-    produced,
-    Math.max(0, state.stockCapacity - state.stock),
-  );
-  // Entrepôt plein : les premières entreprises remplissent la place restante.
-  let room = stored;
-  const stockIn: Record<string, number> = {};
-  for (const [id, share] of Object.entries(made)) {
-    const kept = Math.min(share, room);
-    room -= kept;
-    if (kept === 0) {
-      continue;
+    if (share > 0) {
+      stockIn[company.id] = share;
     }
-    stockIn[id] = kept;
   }
   return withRecord(
     {
       ...state,
-      stock: state.stock + stored,
+      stock: state.stock + produced,
       lastStatement: {
         ...emptyStatement(state.period),
       },
     },
-    { stockProduced: stored, stockLost: produced - stored, stockIn },
+    { stockProduced: produced, stockIn },
   );
 };
 
-// Étape 2 : les commerces écoulent le stock contre de l'argent et un peu de
-// réputation ; un commerce qui ne peut pas tout servir est en rupture.
+// Étape 2 : les commerces écoulent d'abord tout le stock, production de la
+// période comprise, contre de l'argent et un peu de réputation ; un commerce
+// qui ne peut pas tout servir est en rupture. L'excédent est ensuite rangé
+// dans l'entrepôt ; seul ce qui dépasse sa capacité est perdu.
 export const sellGoods = (state: GameState): GameState => {
   let current = state;
   let stock = state.stock;
@@ -122,24 +111,23 @@ export const sellGoods = (state: GameState): GameState => {
     revenue * (state.salesMultiplier + activeBonus(state, 'sales')),
   );
   const statement = statementOf(state);
+  const lost = Math.max(0, stock - state.stockCapacity);
   return {
     ...current,
-    stock,
+    stock: stock - lost,
     money: current.money + earned,
     ledger: record(current.ledger, {
       sales: earned,
       stockSold: sold,
+      stockLost: lost,
       stockOut,
     }),
     workBoosts: {},
     lastStatement: {
       ...statement,
       stockout: isStockout,
-      // Plein = de la production perdue ET un entrepôt encore plein après les
-      // ventes ; sinon le joueur lirait « plein » devant un 0 / capacité.
-      stockFull:
-        (state.ledger.current.stockLost ?? 0) > 0 &&
-        stock >= state.stockCapacity,
+      // Plein = de la production perdue faute de place, après les ventes.
+      stockFull: lost > 0,
     },
   };
 };
