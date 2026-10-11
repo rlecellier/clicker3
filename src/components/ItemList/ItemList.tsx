@@ -1,5 +1,6 @@
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
+import { itemElementId } from './itemElementId';
 import styles from './ItemList.module.css';
 
 export type ListCondition = { label: string; isMet: boolean };
@@ -18,14 +19,27 @@ export type ListItem = {
   onAction: () => void;
 };
 
-type ItemListProperties = { caption: string; items: readonly ListItem[] };
+type ItemListProperties = {
+  caption: string;
+  items: readonly ListItem[];
+  // Ligne mise en évidence (ex. cible d'un lien).
+  highlightedId?: string;
+};
 
-export const ItemList = ({ caption, items }: ItemListProperties) => (
+export const ItemList = ({
+  caption,
+  items,
+  highlightedId,
+}: ItemListProperties) => (
   <section aria-label={caption}>
     <h3 className={styles.caption}>{caption}</h3>
     <ul className={styles.list}>
       {items.map((item) => (
-        <li key={item.id} className={styles.item}>
+        <li
+          key={item.id}
+          id={itemElementId(item.id)}
+          className={`${styles.item} ${item.id === highlightedId ? styles.highlighted : ''}`}
+        >
           <div className={styles.text}>
             <span className={styles.title}>
               {item.title}

@@ -57,3 +57,21 @@
 .missing {
   color: var(--color-alert);
 }
+
+.highlighted {
+  background: var(--color-note);
+  box-shadow: var(--bevel-out);
+  animation: pulse 1s ease-in-out 3;
+}
+
+@keyframes pulse {
+  50% {
+    background: var(--color-surface);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlighted {
+    animation: none;
+  }
+}
