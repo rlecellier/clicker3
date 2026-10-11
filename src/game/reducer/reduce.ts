@@ -1,8 +1,10 @@
+import { buyCompany } from '@game/companies';
 import { unlockDistrict } from '@game/districts';
 import { changeJob } from '@game/jobs';
 import { addGauge } from '@game/period';
 import { sleep } from '@game/sleep';
 import { study } from '@game/study';
+import { sellSurplus } from '@game/surplus';
 import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -26,6 +28,12 @@ export const reduce = (state: GameState, action: GameAction): GameState => {
     }
     case 'changeJob': {
       return changeJob(state, action.id);
+    }
+    case 'buyCompany': {
+      return buyCompany(state, action.id);
+    }
+    case 'sellSurplus': {
+      return sellSurplus(state);
     }
   }
 };
