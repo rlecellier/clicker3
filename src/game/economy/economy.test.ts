@@ -31,6 +31,16 @@ describe('produceGoods', () => {
     expect(next.stock).toBe(12);
   });
 
+  it('applique le multiplicateur propre à un type d’entreprise', () => {
+    const next = produceGoods(
+      stateWith({
+        companies: { atelier: 2 },
+        companyMultipliers: { atelier: 1.25 },
+      }),
+    );
+    expect(next.stock).toBe(10);
+  });
+
   it('applique le bonus du travail fait dans l’entreprise', () => {
     const next = produceGoods(
       stateWith({ companies: { atelier: 2 }, workBoosts: { atelier: 2 } }),
@@ -61,6 +71,13 @@ describe('sellGoods', () => {
     expect(next.lastStatement?.reputationLost).toBeCloseTo(
       economyRules.stockoutPenalty,
     );
+  });
+
+  it('applique le multiplicateur de réputation par vente', () => {
+    const next = sellGoods(
+      stateWith({ ...shop, stock: 10, reputationPerSaleMultiplier: 2 }),
+    );
+    expect(next.reputation).toBeCloseTo(4 * economyRules.reputationPerSale * 2);
   });
 
   it('ne fait pas perdre de réputation sans commerce', () => {
