@@ -9,7 +9,9 @@ type ProgressBarProperties = {
 
 export const ProgressBar = ({ label, value, max }: ProgressBarProperties) => (
   <Progress.Root className={styles.root} value={value} max={max}>
-    <Progress.Label className={styles.label}>{label}</Progress.Label>
+    <Progress.Label className={styles.label} title={label}>
+      {label}
+    </Progress.Label>
     <Progress.Track className={styles.track}>
       <Progress.Indicator className={styles.indicator} />
     </Progress.Track>
