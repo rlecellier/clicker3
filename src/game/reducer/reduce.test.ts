@@ -51,4 +51,18 @@ describe('reduce', () => {
     );
     expect(promoted.jobId).toBe('polyvalent');
   });
+
+  it('applique buyCompany et sellSurplus', () => {
+    const rich = {
+      ...startState,
+      money: 1000,
+      stats: { ...startState.stats, gestion: 10 },
+    };
+    const bought = reduce(rich, { type: 'buyCompany', id: 'atelier' });
+    expect(bought.companies).toEqual({ atelier: 1 });
+
+    const sold = reduce({ ...startState, stock: 10 }, { type: 'sellSurplus' });
+    expect(sold.stock).toBe(0);
+    expect(sold.money).toBeGreaterThan(0);
+  });
 });

@@ -5,4 +5,6 @@ export type GameAction =
   | { type: 'work'; target: string }
   | { type: 'study'; courseId: string }
   | { type: 'sleep' }
-  | { type: 'changeJob'; id: string };
+  | { type: 'changeJob'; id: string }
+  | { type: 'buyCompany'; id: string }
+  | { type: 'sellSurplus' };
