@@ -48,6 +48,10 @@ export type GameState = {
 
   stats: Record<StatId, number>;
   markers: StatId[];
+  // Nombre maximum de marqueurs détenus.
+  maxMarkers: number;
+  // Conversion du sommeil, selon le logement (studio : 1).
+  sleepMultiplier: number;
 
   /** Graine du générateur aléatoire. */
   seed: number;

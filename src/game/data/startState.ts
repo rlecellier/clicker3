@@ -23,6 +23,8 @@ export const startState: GameState = {
 
   stats: { metier: 0, gestion: 0, intelligence: 0, endurance: 0 },
   markers: [],
+  maxMarkers: 5,
+  sleepMultiplier: 1,
 
   seed: 1999,
 
