@@ -31,4 +31,24 @@ describe('reduce', () => {
     });
     expect(next).toBe(startState);
   });
+
+  it('applique work, study, sleep et changeJob', () => {
+    const worked = reduce(startState, { type: 'work', target: 'job' });
+    expect(worked.money).toBeGreaterThan(0);
+
+    const studied = reduce(worked, { type: 'study', courseId: 'metier' });
+    expect(studied.money).toBeLessThan(worked.money);
+
+    const rested = reduce(
+      { ...startState, markers: ['metier'] },
+      { type: 'sleep' },
+    );
+    expect(rested.stats.metier).toBe(1);
+
+    const promoted = reduce(
+      { ...startState, stats: { ...startState.stats, metier: 10 } },
+      { type: 'changeJob', id: 'polyvalent' },
+    );
+    expect(promoted.jobId).toBe('polyvalent');
+  });
 });
