@@ -1,8 +1,10 @@
+import type { lifePhases } from './lifePhases';
+
 export type GameStatus = 'playing' | 'dead';
 
 export type StatId = 'metier' | 'gestion' | 'intelligence' | 'endurance';
 
-export type LifePhase = 'youngAdult' | 'entrepreneur' | 'boss' | 'senior';
+export type LifePhase = (typeof lifePhases)[number];
 
 export type GameEvent = {
   /** Période à laquelle l'événement s'est produit. */
