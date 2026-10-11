@@ -13,7 +13,6 @@ describe('produceGoods', () => {
     const next = produceGoods(stateWith({ companies: { atelier: 3 } }));
     expect(next.stock).toBe(6);
     expect(next.ledger.current.stockProduced).toBe(6);
-    expect(next.lastStatement?.stockFull).toBe(false);
   });
 
   it('perd la production au-delà de la capacité du stock', () => {
@@ -23,7 +22,6 @@ describe('produceGoods', () => {
     expect(next.stock).toBe(50);
     expect(next.ledger.current.stockProduced).toBe(5);
     expect(next.ledger.current.stockLost).toBe(1);
-    expect(next.lastStatement?.stockFull).toBe(true);
   });
 
   it('applique le multiplicateur de production', () => {
@@ -53,6 +51,24 @@ describe('produceGoods', () => {
 
 describe('sellGoods', () => {
   const shop = { companies: { boutique: 1 } };
+
+  it('signale le stock plein seulement s’il reste plein après les ventes', () => {
+    const overflow = {
+      stockCapacity: 50,
+      ledger: {
+        ...startState.ledger,
+        current: { ...startState.ledger.current, stockLost: 4 },
+      },
+    };
+    expect(
+      sellGoods(stateWith({ ...overflow, ...shop, stock: 50 })).lastStatement
+        ?.stockFull,
+    ).toBe(false);
+    expect(
+      sellGoods(stateWith({ ...overflow, companies: {}, stock: 50 }))
+        .lastStatement?.stockFull,
+    ).toBe(true);
+  });
 
   it('écoule le stock contre de l’argent et de la réputation', () => {
     const next = sellGoods(stateWith({ ...shop, stock: 10 }));
