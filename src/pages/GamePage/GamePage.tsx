@@ -49,11 +49,6 @@ export const GamePage = () => {
         <dl className={styles.counters}>
           <Stat label="Argent" value={screen.counters.money} />
           <Stat label="Stock" value={screen.counters.stock} />
-          <Stat label="Réputation" value={screen.counters.reputation} />
-          <Stat
-            label="Palier de réputation"
-            value={screen.counters.reputationTier}
-          />
         </dl>
         <Note minLines={2}>{screen.objective}</Note>
         <div className={styles.actions}>
@@ -99,7 +94,7 @@ export const GamePage = () => {
           max={screen.brain.max}
         />
       </Window>
-      <Window title="Compétences et stats">
+      <Window title="Compétences et réputation">
         {screen.stats.map((stat) => (
           <ProgressBar
             key={stat.id}
@@ -108,6 +103,13 @@ export const GamePage = () => {
             max={stat.max}
           />
         ))}
+        <dl className={styles.reputation}>
+          <Stat label="Réputation" value={screen.counters.reputation} />
+          <Stat
+            label="Palier de réputation"
+            value={screen.counters.reputationTier}
+          />
+        </dl>
       </Window>
       <Window title="Emploi">
         <ItemList caption="Postes" items={screen.jobs} />
