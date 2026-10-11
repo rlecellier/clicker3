@@ -24,6 +24,13 @@ Conventions du projet : voir `.claude/adr/0001-project-structure.md`.
   `function Nom() {}`. Cette règle prime sur les exemples en `function` des
   skills (`react-dev`, etc.). Elle est appliquée par ESLint (`func-style`).
 
+## Issue avant MR
+
+Quand une demande ne référence pas d'issue, on écrit d'abord l'issue (contexte,
+périmètre, critères de fin) avant d'ouvrir la MR, de préférence avant de
+commencer à coder. La MR référence ensuite l'issue (`Closes #N`). Une issue =
+une branche = une MR.
+
 ## Merge des MR
 
 - **Toujours en « rebase and merge »** : on garde les commits unitaires (skill
