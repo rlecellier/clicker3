@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { upgrades } from '@game/data';
-import { amountOf, counter, itemOf, longPress, preloadSave } from './helpers';
+import {
+  amountOf,
+  counter,
+  itemOf,
+  longPress,
+  openTab,
+  preloadSave,
+} from './helpers';
 
 // On possède déjà toutes les améliorations hors parcours, pour n'acheter que
 // celles du parcours, dans l'ordre des prix.
@@ -26,30 +33,37 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     },
   });
   await page.goto('/jeu');
-  await expect(page).toHaveURL('/jeu');
-  await page.getByRole('tab', { name: 'Améliorations' }).click();
+  await expect(page).toHaveURL('/jeu/vie');
   const work = page.getByRole('button', { name: /Travailler/ });
   const workOn = page.getByText('Appui long : couper l’automatique');
+  const openUpgrades = async () => {
+    await openTab(page, 'investir');
+    await page.getByRole('tab', { name: 'Améliorations' }).click();
+  };
 
   // Sans amélioration d'automatisation, aucun appui long ne s'annonce.
   await expect(page.getByText(/Appui long/)).toBeHidden();
 
   // Le premier collaborateur fait de vous un dirigeant.
+  await openUpgrades();
   await itemOf(page, 'Premier collaborateur')
     .getByRole('button', { name: 'Acheter' })
     .click();
+  await openTab(page, 'vie');
   await expect(
     page.getByText('Dirigeant (sans équipe de direction)'),
   ).toBeVisible();
 
   // Le tableau de bord remplace les comptes simplifiés.
-  await page.getByRole('tab', { name: 'Comptabilité' }).click();
+  await openTab(page, 'comptes');
   await expect(
     page.getByRole('table', { name: 'Comptes (version simplifiée)' }),
   ).toBeVisible();
+  await openUpgrades();
   await itemOf(page, 'Tableau de bord')
     .getByRole('button', { name: 'Acheter' })
     .click();
+  await openTab(page, 'comptes');
   await expect(
     page.getByRole('table', { name: 'Tableau de bord' }),
   ).toBeVisible();
@@ -64,9 +78,11 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await page.getByRole('tab', { name: 'Comptabilité' }).click();
 
   // L'automatisation s'achète, coupée au départ.
+  await openUpgrades();
   await itemOf(page, 'Procédure de travail')
     .getByRole('button', { name: 'Acheter' })
     .click();
+  await openTab(page, 'vie');
   await expect(page.getByText('Appui long : automatique')).toHaveCount(1);
 
   // Un appui long sur Travailler l'active : le travail rapporte seul. Le clic
