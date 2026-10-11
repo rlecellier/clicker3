@@ -13,14 +13,15 @@ déclarée.
 
 Logiciel de gestion de 1999 : fenêtres biseautées, barres de titre bleues,
 tableaux, jauge à blocs. Aucun néon, pas de mode sombre. Mobile d'abord
-(480×560), colonne de `40rem` max. Le décalage vient du texte, pas des
+(480×560) : sidebar à gauche (icônes seules sous `40rem`, ADR 0008), contenu
+en colonne de `40rem` max. Le décalage vient du texte, pas des
 illustrations. Voix administrative pince-sans-rire.
 
 ## Checklist
 
 1. **Réutiliser avant de créer.** Composants existants (`@component/…`) :
    `Title`, `Window`, `Button`, `ProgressBar`, `DataTable`, `Badge`,
-   `InfoPanel`, `Tabs`, `Stat` (dans un `<dl>`), `Note`, `CharacterHeader`,
+   `InfoPanel`, `Tabs`, `Sidebar`, `Stat` (dans un `<dl>`), `Note`, `CharacterHeader`,
    `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`, `EventLog`,
    `EventToast`, `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
@@ -45,7 +46,7 @@ illustrations. Voix administrative pince-sans-rire.
    - Imports par alias (`@component/…`, `@hook/…`, `@game/…`), jamais `../`.
 6. **Séparation** : composant visuel (props seulement, pas de test) → hook de
    vue dans `src/hooks/` (`useGameScreen`, `useInvestScreen`,
-   `useJournalScreen`) → page orchestratrice (`GamePage`) qui ne fait que
+   `useJournalScreen`) → page orchestratrice (`LifePage`…) qui ne fait que
    brancher.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;
    raison de blocage via `describeRequirement` (« Argent insuffisant »,
