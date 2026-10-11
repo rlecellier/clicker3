@@ -24,7 +24,8 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
 3. Attendre pendant le sommeil (il vient seul quand les marqueurs sont pleins).
 4. Étudier la stat qui manque au prochain achat, si la formation est achetée et
    que l'argent suffit largement.
-5. Vendre le surplus tant qu'aucun commerce n'existe.
+5. Vendre le surplus tant qu'aucun commerce n'existe et que le stock approche
+   du plein.
 6. Sinon travailler : à l'emploi, ou dans l'entreprise qui limite la chaîne si
    cela rapporte plus.
 
@@ -36,7 +37,7 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
   rythme de l'auto : deux actions par seconde, ADR 0005).
 - **Une fois le travail automatique actif, le joueur virtuel lâche la souris**
   (ADR 0005) : il ne fait plus que des achats. Le reste du temps il **attend**
-  (`waitStepMs`, 5 s par pas) ; ce temps compte comme attente, pas comme jeu actif.
+  (`waitStepMs`, 1 s par pas) ; ce temps compte comme attente, pas comme jeu actif.
 - Durée de jeu actif = actions manuelles × cadence. Durée totale = jeu actif +
   attente. La cible de 30 à 60 minutes porte sur le jeu actif ; la zone morte
   se mesure sur la durée totale, car c'est ce que le joueur ressent.
@@ -60,12 +61,11 @@ zone morte ne dépasse une minute, que le travail automatique arrive entre 35 et
 absence ne le tue pas. `npm run sim` affiche aussi la liste des zones mortes de
 plus d'une minute.
 
-## Dernier relevé (valeurs équilibrées, V1-24)
+## Dernier relevé (après la vente avant plafond d'entrepôt)
 
-- Jeu actif : **36 min 28 s** (cible 30 à 60), plus 149 min 45 s d'attente.
-- Phases : toutes atteintes (patron à 27 ans).
-- Plus longue zone morte : 56 s ; aucune au-delà d'une minute.
-- Premier employé à 27 ans, travail automatique
-  à 44 ans.
+- Jeu actif : **30 min 37 s** (cible 30 à 60), plus 18 min 39 s d'attente.
+- Phases : toutes atteintes (patron à 25 ans).
+- Plus longue zone morte : 59 s ; aucune au-delà d'une minute.
+- Premier employé à 25 ans, travail automatique à 40 ans.
 
 Détail des valeurs et limites : [equilibrage.md](equilibrage.md).
