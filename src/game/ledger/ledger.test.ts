@@ -101,9 +101,8 @@ describe('invariants sur une partie jouée', () => {
     stats: { metier: 200, gestion: 200, intelligence: 200, endurance: 200 },
     reputation: 50,
     reputationEarned: 50,
-    upgrades: ['procedure-travail', 'rythme-sommeil'],
+    upgrades: ['procedure-travail'],
     autoWork: true,
-    autoSleep: true,
   };
 
   const script: GameAction[] = [
@@ -115,7 +114,6 @@ describe('invariants sur une partie jouée', () => {
     { type: 'buyCompany', id: 'boutique' },
     { type: 'study', courseId: 'metier' },
     { type: 'work', target: 'job' },
-    { type: 'sleep' },
     { type: 'sellSurplus' },
     { type: 'changeJob', id: 'polyvalent' },
     { type: 'unlockDistrict', id: 'hauts-fourneaux' },

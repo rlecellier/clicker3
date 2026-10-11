@@ -15,13 +15,13 @@ mortes.
 
 Une stratégie gloutonne : à chaque action, dans cet ordre.
 
-1. Activer le travail ou le sommeil automatique dès que l'amélioration est achetée.
+1. Activer le travail automatique dès que l'amélioration est achetée.
 2. Acheter : le meilleur emploi, un quartier à débloquer, ou **le moins cher**
    des achats utiles (améliorations, et l'entreprise qui équilibre production
    et vente). Les achats qui alourdissent loyer ou salaires doivent rester
    couverts par les recettes de la dernière période. On ne produit pas au-delà
    de la capacité de l'entrepôt.
-3. Dormir quand les marqueurs sont pleins (sauf sommeil automatique actif).
+3. Attendre pendant le sommeil (il vient seul quand les marqueurs sont pleins).
 4. Étudier la stat qui manque au prochain achat, si la formation est achetée et
    que l'argent suffit largement.
 5. Vendre le surplus tant qu'aucun commerce n'existe.
@@ -35,8 +35,7 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
 - Les actions automatiques tournent **en parallèle** (règles de `autoTick`,
   rythme de l'auto : deux actions par seconde, ADR 0005).
 - **Une fois le travail automatique actif, le joueur virtuel lâche la souris**
-  (ADR 0005) : il ne fait plus que des achats, et dort quand les marqueurs sont
-  pleins faute de sommeil automatique. Le reste du temps il **attend**
+  (ADR 0005) : il ne fait plus que des achats. Le reste du temps il **attend**
   (`waitStepMs`, 5 s par pas) ; ce temps compte comme attente, pas comme jeu actif.
 - Durée de jeu actif = actions manuelles × cadence. Durée totale = jeu actif +
   attente. La cible de 30 à 60 minutes porte sur le jeu actif ; la zone morte
@@ -66,7 +65,7 @@ plus d'une minute.
 - Jeu actif : **36 min 28 s** (cible 30 à 60), plus 149 min 45 s d'attente.
 - Phases : toutes atteintes (patron à 27 ans).
 - Plus longue zone morte : 56 s ; aucune au-delà d'une minute.
-- Premier employé à 27 ans, sommeil automatique à 37 ans, travail automatique
+- Premier employé à 27 ans, travail automatique
   à 44 ans.
 
 Détail des valeurs et limites : [equilibrage.md](equilibrage.md).

@@ -1,13 +1,22 @@
 import { Badge } from '@component/Badge';
 import styles from './MarkerTrack.module.css';
 
-type MarkerTrackProperties = { count: number; max: number };
+type MarkerTrackProperties = {
+  count: number;
+  max: number;
+  isSleeping: boolean;
+};
 
-// Marqueurs détenus (x/max). Plein : les suivants sont perdus, il faut dormir.
-export const MarkerTrack = ({ count, max }: MarkerTrackProperties) => (
+// Le cerveau et ses marqueurs (x/max). Plein, il s'endort et se vide marqueur
+// par marqueur.
+export const MarkerTrack = ({
+  count,
+  max,
+  isSleeping,
+}: MarkerTrackProperties) => (
   <div className={styles.track}>
     <span>
-      Marqueurs {count}/{max}
+      Cerveau {count}/{max}
     </span>
     <span className={styles.slots} aria-hidden="true">
       {Array.from({ length: max }, (_, index) => (
@@ -17,6 +26,6 @@ export const MarkerTrack = ({ count, max }: MarkerTrackProperties) => (
         />
       ))}
     </span>
-    {count >= max ? <Badge tone="alert">Dormir !</Badge> : null}
+    {isSleeping ? <Badge tone="alert">Zzz</Badge> : null}
   </div>
 );

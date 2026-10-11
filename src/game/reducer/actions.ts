@@ -4,14 +4,13 @@ export type GameAction =
   | { type: 'unlockDistrict'; id: string }
   | { type: 'work'; target: string }
   | { type: 'study'; courseId: string }
-  | { type: 'sleep' }
   | { type: 'changeJob'; id: string }
   | { type: 'buyCompany'; id: string }
   | { type: 'sellSurplus' }
   | { type: 'buyUpgrade'; id: string }
   // Annule une amélioration possédée : ses effets disparaissent, sans remboursement.
   | { type: 'cancelUpgrade'; id: string }
-  | { type: 'setAuto'; action: 'work' | 'sleep'; isEnabled: boolean }
+  | { type: 'setAuto'; action: 'work'; isEnabled: boolean }
   // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
   // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.
   | { type: 'autoTick'; elapsedMs: number }

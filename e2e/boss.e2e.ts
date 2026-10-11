@@ -7,7 +7,6 @@ import { amountOf, counter, itemOf, longPress, preloadSave } from './helpers';
 const journey = new Set([
   'premier-collaborateur',
   'tableau-de-bord',
-  'rythme-sommeil',
   'procedure-travail',
 ]);
 
@@ -30,7 +29,6 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await expect(page).toHaveURL('/jeu');
   await page.getByRole('tab', { name: 'Améliorations' }).click();
   const work = page.getByRole('button', { name: /Travailler/ });
-  const sleep = page.getByRole('button', { name: /Dormir/ });
   const workOn = page.getByText('Appui long : couper l’automatique');
 
   // Sans amélioration d'automatisation, aucun appui long ne s'annonce.
@@ -59,14 +57,11 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     page.getByRole('cell', { name: '· Vente du surplus' }),
   ).toBeVisible();
 
-  // Les automatisations s'achètent, coupées au départ.
-  await itemOf(page, 'Rythme de sommeil optimisé')
-    .getByRole('button', { name: 'Acheter' })
-    .click();
+  // L'automatisation s'achète, coupée au départ.
   await itemOf(page, 'Procédure de travail')
     .getByRole('button', { name: 'Acheter' })
     .click();
-  await expect(page.getByText('Appui long : automatique')).toHaveCount(2);
+  await expect(page.getByText('Appui long : automatique')).toHaveCount(1);
 
   // Un appui long sur Travailler l'active : le travail rapporte seul. Le clic
   // qui suit le relâchement ne compte pas comme un travail manuel.
@@ -85,11 +80,4 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   const stopped = await money();
   await page.clock.runFor(20_000);
   expect(await money()).toBe(stopped);
-
-  // Le sommeil automatique s'active de la même façon.
-  await longPress(page, sleep);
-  await expect(page.getByText('Sommeil automatique activé.')).toBeVisible();
-  await expect(page.getByText('Appui long : couper l’automatique')).toHaveCount(
-    1,
-  );
 });

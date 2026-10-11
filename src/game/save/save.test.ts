@@ -186,6 +186,25 @@ describe('contenu corrompu', () => {
   });
 });
 
+describe('migration de la version 1', () => {
+  it('retire le sommeil automatique et endort personne', () => {
+    const text = JSON.stringify({
+      version: 1,
+      state: {
+        ...withoutKey('isSleeping'),
+        version: 1,
+        autoSleep: true,
+        upgrades: ['procedure-travail', 'rythme-sommeil'],
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.upgrades).toEqual(['procedure-travail']);
+    expect(result.ok && result.state.isSleeping).toBe(false);
+    expect(result.ok && result.state.version).toBe(startState.version);
+    expect(result.ok && 'autoSleep' in result.state).toBe(false);
+  });
+});
+
 describe('migrations', () => {
   const v2: SaveOptions = {
     currentVersion: 2,

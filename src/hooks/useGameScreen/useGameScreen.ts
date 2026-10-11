@@ -17,7 +17,6 @@ import {
 import { canChangeJob } from '@game/jobs';
 import { canSpendReputation } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
-import { canSleep } from '@game/sleep';
 import { tierOf } from '@game/stats';
 import { canStudy } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
@@ -31,6 +30,7 @@ const FEEDBACK_MS = 2500;
 const START_TEXT =
   'Bienvenue dans l’euro. Votre compte est crédité de 0 €, ce qui est un bon début.';
 const ENDED = 'Partie terminée';
+const QUEUED = 'Vous dormez. Cela sera fait au réveil.';
 
 export type ActionView = {
   detail?: string;
@@ -84,6 +84,10 @@ export const useGameScreen = () => {
     [],
   );
 
+  // Pendant le sommeil, travail et étude sont gardés pour le réveil.
+  const sayOrQueue = (message: string, run: () => void) =>
+    say(state.isSleeping ? QUEUED : message, run);
+
   const isOver = state.status === 'dead';
   const job = jobs.find((candidate) => candidate.id === state.jobId);
 
@@ -92,24 +96,12 @@ export const useGameScreen = () => {
       job === undefined ? undefined : `Salaire : ${formatMoney(job.salary)}`,
     reason: isOver ? ENDED : 'Aucun emploi',
     isDisabled: !canWork(state, JOB_TARGET),
-    run: say(
+    run: sayOrQueue(
       state.jobId === 'interim' && state.period === 0
         ? 'Adéquat Intérim vous remercie de votre confiance et de votre flexibilité.'
         : 'Vous avez travaillé. Cela a été noté.',
       () => {
         actions.work(JOB_TARGET);
-      },
-    ),
-  };
-
-  const sleepAction: ActionView = {
-    detail: 'Convertit les marqueurs en points',
-    reason: isOver ? ENDED : 'Aucun marqueur à convertir',
-    isDisabled: !canSleep(state),
-    run: say(
-      'Vous récupérez. Votre employeur le sait et en prend note.',
-      () => {
-        actions.sleep();
       },
     ),
   };
@@ -173,47 +165,36 @@ export const useGameScreen = () => {
           detail: `${course.name} · ${formatMoney(course.cost)} · ${statLabels[course.stat]}`,
           reason: isOver ? ENDED : 'Argent insuffisant',
           isDisabled: !canStudy(state, course.id),
-          run: say('Vous avez étudié. Personne ne vous l’a demandé.', () => {
-            actions.study(course.id);
-          }),
+          run: sayOrQueue(
+            'Vous avez étudié. Personne ne vous l’a demandé.',
+            () => {
+              actions.study(course.id);
+            },
+          ),
         };
 
-  // Appui long sur Travailler ou Dormir : active ou coupe l'action
-  // automatique, une fois l'amélioration achetée.
-  const toggleAuto = (action: 'work' | 'sleep') => {
-    const isOn = action === 'work' ? state.autoWork : state.autoSleep;
-    const name = action === 'work' ? 'Travail' : 'Sommeil';
-    return () => {
-      actions.setAuto(action, !isOn);
-      setFeedback(`${name} automatique ${isOn ? 'coupé' : 'activé'}.`);
-    };
+  // Appui long sur Travailler : active ou coupe le travail automatique, une
+  // fois l'amélioration achetée.
+  const toggleAuto = () => {
+    const isOn = state.autoWork;
+    actions.setAuto('work', !isOn);
+    setFeedback(`Travail automatique ${isOn ? 'coupé' : 'activé'}.`);
   };
   const workPress = useLongPress(
     workAction.run,
-    hasAutomation(state, 'work') ? toggleAuto('work') : undefined,
+    hasAutomation(state, 'work') ? toggleAuto : undefined,
   );
-  const sleepPress = useLongPress(
-    sleepAction.run,
-    hasAutomation(state, 'sleep') ? toggleAuto('sleep') : undefined,
-  );
-  const withAuto = (
-    view: ActionView,
-    action: 'work' | 'sleep',
-    gesture: ReturnType<typeof useLongPress>,
-  ): ActionView =>
-    hasAutomation(state, action)
-      ? {
-          ...view,
-          run: gesture.onClick,
-          press: gesture.press,
-          isAuto: action === 'work' ? state.autoWork : state.autoSleep,
-          autoHint: (action === 'work' ? state.autoWork : state.autoSleep)
-            ? 'Appui long : couper l’automatique'
-            : 'Appui long : automatique',
-        }
-      : view;
-  const work = withAuto(workAction, 'work', workPress);
-  const sleep = withAuto(sleepAction, 'sleep', sleepPress);
+  const work: ActionView = hasAutomation(state, 'work')
+    ? {
+        ...workAction,
+        run: workPress.onClick,
+        press: workPress.press,
+        isAuto: state.autoWork,
+        autoHint: state.autoWork
+          ? 'Appui long : couper l’automatique'
+          : 'Appui long : automatique',
+      }
+    : workAction;
 
   return {
     isOver,
@@ -230,7 +211,15 @@ export const useGameScreen = () => {
       stock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
       reputation: formatDecimal(state.reputation),
     },
-    markers: { count: state.markers.length, max: state.maxMarkers },
+    brain: {
+      count: state.markers.length,
+      max: state.maxMarkers,
+      isSleeping: state.isSleeping,
+      // Marqueurs déjà vidés pendant ce sommeil.
+      sleepProgress: state.isSleeping
+        ? state.maxMarkers - state.markers.length
+        : 0,
+    },
     stats: statIds.map((id) => {
       const tier = tierOf(state, id);
       const thresholds = statTierThresholds[id];
@@ -244,7 +233,7 @@ export const useGameScreen = () => {
         max: next === undefined ? 1 : next - start,
       };
     }),
-    actions: { work, sleep, sellSurplus },
+    actions: { work, sellSurplus },
     study: {
       action: studyAction,
       choices: courseChoices,

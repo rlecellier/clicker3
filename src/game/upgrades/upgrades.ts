@@ -21,7 +21,7 @@ export const hasCourse = (state: GameState, courseId: string) =>
     (effect) => effect.type === 'course' && effect.courseId === courseId,
   );
 
-export const hasAutomation = (state: GameState, action: 'work' | 'sleep') =>
+export const hasAutomation = (state: GameState, action: 'work') =>
   ownedEffects(state).some(
     (effect) => effect.type === 'automation' && effect.action === action,
   );

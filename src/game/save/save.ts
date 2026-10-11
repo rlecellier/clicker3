@@ -26,10 +26,23 @@ export type SaveOptions = {
   migrations: Readonly<Record<number, Migration>>;
 };
 
-// Une seule version aujourd'hui : aucune migration à jouer.
 export const defaultSaveOptions: SaveOptions = {
   currentVersion: startState.version,
-  migrations: {},
+  migrations: {
+    // Version 2 : le sommeil n'est plus une action (ni son automatisation).
+    1: (raw) => {
+      const { upgrades, ...kept } = raw;
+      delete kept.autoSleep;
+      return {
+        ...kept,
+        upgrades: Array.isArray(upgrades)
+          ? upgrades.filter((id) => id !== 'rythme-sommeil')
+          : upgrades,
+        isSleeping: false,
+        queuedActions: [],
+      };
+    },
+  },
 };
 
 const statIds = Object.keys(startState.stats);
@@ -107,6 +120,15 @@ const isActiveEffect = (value: unknown) =>
   isFiniteNumber(value.value) &&
   isFiniteNumber(value.until);
 
+const isQueue = (value: unknown) =>
+  Array.isArray(value) &&
+  value.every(
+    (item) =>
+      isRecord(item) &&
+      ((item.type === 'work' && typeof item.target === 'string') ||
+        (item.type === 'study' && typeof item.courseId === 'string')),
+  );
+
 // Contenu des champs « vides » du modèle (objets, tableaux) : types des
 // éléments et ids contre les données du jeu.
 const hasValidContent = (raw: RawState) =>
@@ -114,6 +136,7 @@ const hasValidContent = (raw: RawState) =>
   isNumberRecord(raw.workBoosts, companyIds) &&
   isNumberRecord(raw.companyMultipliers, companyIds) &&
   isNumberRecord(raw.jobSalaryFactors, jobIds) &&
+  isQueue(raw.queuedActions) &&
   isRecord(raw.flags) &&
   Object.values(raw.flags).every((flag) => typeof flag === 'boolean') &&
   isIdList(raw.upgrades, upgradeIds) &&

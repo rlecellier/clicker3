@@ -49,7 +49,7 @@ sa marque avant que le temps lui manque.
   quand la précédente est amusante.
 - **Idle vs simulation** : si le joueur doit tout micro-gérer (sommeil, humeur,
   relations), le jeu cesse d'être idle. Règle : tout doit pouvoir être
-  automatisé ou se dérouler seul (travail et sommeil automatiques).
+  automatisé ou se dérouler seul (travail automatique, sommeil qui vient seul).
 - **Rythme d'une vie** : 30 à 60 minutes de jeu actif par vie, à tenir lors de
   l'équilibrage.
 

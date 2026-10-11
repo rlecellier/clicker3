@@ -11,7 +11,7 @@ const START = 1_000_000;
 
 const automated: GameState = {
   ...startState,
-  upgrades: ['procedure-travail', 'rythme-sommeil'],
+  upgrades: ['procedure-travail'],
   autoWork: true,
 };
 

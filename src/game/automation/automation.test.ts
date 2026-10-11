@@ -3,7 +3,6 @@ import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from '@game/work';
 import {
-  afterManualAction,
   autoIntervalMs,
   autoTick,
   canEnableAuto,
@@ -17,12 +16,11 @@ const firstJob = jobs[0];
 
 const automated: GameState = {
   ...startState,
-  upgrades: ['procedure-travail', 'rythme-sommeil'],
+  upgrades: ['procedure-travail'],
   autoWork: true,
-  autoSleep: true,
 };
 
-const workOnly: GameState = { ...automated, autoSleep: false };
+const workOnly = automated;
 
 describe('rythme', () => {
   it('le travail idle simule deux clics par seconde', () => {
@@ -71,12 +69,10 @@ describe('interrupteurs', () => {
     const owner = { ...startState, upgrades: ['procedure-travail'] };
     expect(canEnableAuto(owner, 'work')).toBe(true);
     expect(setAuto(owner, 'work', true).autoWork).toBe(true);
-    expect(setAuto(owner, 'sleep', true)).toBe(owner);
   });
 
   it('couper est toujours possible', () => {
     expect(setAuto(automated, 'work', false).autoWork).toBe(false);
-    expect(setAuto(automated, 'sleep', false).autoSleep).toBe(false);
   });
 
   it('un interrupteur sans l’amélioration n’agit pas', () => {
@@ -86,7 +82,7 @@ describe('interrupteurs', () => {
   });
 
   it('le temps n’avance pas sans action automatique active', () => {
-    const off = { ...automated, autoWork: false, autoSleep: false };
+    const off = { ...automated, autoWork: false };
     expect(autoTick(off, 100 * autoIntervalMs)).toBe(off);
     expect(catchUp(off, 100 * autoIntervalMs).state).toBe(off);
     expect(catchUp(off, 100 * autoIntervalMs).summary.actions).toBe(0);
@@ -98,66 +94,83 @@ describe('interrupteurs', () => {
   });
 });
 
-describe('sommeil automatique', () => {
-  const full: GameState = {
-    ...automated,
+describe('sommeil', () => {
+  const asleep: GameState = {
+    ...startState,
+    isSleeping: true,
     markers: ['metier', 'metier', 'gestion', 'gestion', 'gestion'],
   };
+  const sleepIntervalMs =
+    automationRules.sleepDurationMs / startState.maxMarkers;
+  const perMarker = actionRules.sleep.gauge / startState.maxMarkers;
 
-  it('dort quand les marqueurs sont pleins', () => {
-    const next = autoTick(full, autoIntervalMs);
-    expect(next.markers).toEqual([]);
-    expect(next.gauge).toBe(actionRules.sleep.gauge);
-    expect(next.money).toBe(0);
+  it('vide un marqueur à chaque délai, même sans travail automatique', () => {
+    const next = autoTick(asleep, 2 * sleepIntervalMs);
+    expect(next.markers).toEqual(['gestion', 'gestion', 'gestion']);
+    expect(next.stats.metier).toBe(2);
+    expect(next.gauge).toBe(2 * perMarker);
+    expect(next.isSleeping).toBe(true);
   });
 
-  it('rapporte 2× moins de points', () => {
-    const next = autoTick(full, autoIntervalMs);
-    // 2 × 0,5 = 1 point de Métier, 3 × 0,5 = 1,5 → 2 de Gestion.
-    expect(next.stats.metier).toBe(1);
-    expect(next.stats.gestion).toBe(2);
+  it('ne fait rien avant le délai', () => {
+    const next = autoTick(asleep, sleepIntervalMs - 1);
+    expect(next.markers).toHaveLength(5);
+    expect(next.gauge).toBe(0);
   });
 
-  it('travaille tant que les marqueurs ne sont pas pleins', () => {
-    const next = autoTick({ ...full, markers: ['metier'] }, autoIntervalMs);
-    expect(next.gauge).toBe(actionRules.work.gauge);
+  it('dure toujours le même temps, quelle que soit la capacité du cerveau', () => {
+    const big: GameState = {
+      ...startState,
+      maxMarkers: 10,
+      isSleeping: true,
+      markers: Array.from({ length: 10 }, () => 'metier' as const),
+    };
+    expect(autoTick(big, automationRules.sleepDurationMs).isSleeping).toBe(
+      false,
+    );
+    expect(autoTick(asleep, automationRules.sleepDurationMs).isSleeping).toBe(
+      false,
+    );
+    expect(autoTick(big, automationRules.sleepDurationMs - 1).isSleeping).toBe(
+      true,
+    );
+  });
+
+  it('rejoue au réveil les gestes manuels gardés', () => {
+    const queued: GameState = {
+      ...asleep,
+      queuedActions: [{ type: 'work', target: 'job' }],
+    };
+    const next = autoTick(queued, automationRules.sleepDurationMs);
+    expect(next.queuedActions).toEqual([]);
     expect(next.money).toBeGreaterThan(0);
   });
 
-  it('seul, ne fait rien tant que les marqueurs ne sont pas pleins', () => {
-    const sleepOnly: GameState = {
-      ...full,
-      autoWork: false,
-      markers: ['metier'],
-    };
-    const next = autoTick(sleepOnly, 10 * autoIntervalMs);
-    expect(next.gauge).toBe(0);
-    expect(next.markers).toEqual(['metier']);
-    expect(next.autoElapsed).toBe(0);
+  it('ne garde pas le travail automatique pour le réveil', () => {
+    const next = autoTick(
+      { ...asleep, upgrades: automated.upgrades, autoWork: true },
+      automationRules.sleepDurationMs - 1,
+    );
+    expect(next.queuedActions).toEqual([]);
+    expect(next.money).toBe(0);
   });
-});
 
-describe('sommeil automatique après un geste manuel', () => {
-  const full: GameState = {
-    ...automated,
-    markers: ['metier', 'metier', 'gestion', 'gestion', 'gestion'],
-  };
-
-  it('dort dès que les marqueurs sont pleins, sans attendre le tic', () => {
-    const next = afterManualAction(full);
+  it('se réveille quand le dernier marqueur est vidé', () => {
+    const next = autoTick(asleep, 5 * sleepIntervalMs);
     expect(next.markers).toEqual([]);
+    expect(next.isSleeping).toBe(false);
     expect(next.gauge).toBe(actionRules.sleep.gauge);
-    expect(next.stats.metier).toBe(1);
+    expect(next.stats.gestion).toBe(3);
   });
 
-  it('attend que les marqueurs soient pleins', () => {
-    const partial = { ...full, markers: ['metier' as const] };
-    expect(afterManualAction(partial)).toBe(partial);
-  });
-
-  it('ne fait rien sans l’interrupteur', () => {
-    const off = { ...full, autoSleep: false };
-    expect(afterManualAction(off)).toBe(off);
+  it('le travail automatique attend le réveil', () => {
+    const next = autoTick(
+      { ...asleep, upgrades: automated.upgrades, autoWork: true },
+      5 * sleepIntervalMs,
+    );
+    expect(next.money).toBe(0);
+    const later = autoTick(next, autoIntervalMs);
+    expect(later.money).toBeGreaterThan(0);
   });
 });
 

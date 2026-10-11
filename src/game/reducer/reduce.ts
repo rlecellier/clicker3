@@ -1,4 +1,4 @@
-import { afterManualAction, autoTick, setAuto } from '@game/automation';
+import { autoTick, setAuto } from '@game/automation';
 import { buyCompany } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
@@ -6,7 +6,7 @@ import { changeJob } from '@game/jobs';
 import { addGauge } from '@game/period';
 import { triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
-import { sleep } from '@game/sleep';
+import { queueAction, settleSleep } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
 import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
@@ -26,13 +26,14 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return unlockDistrict(state, action.id);
     }
     case 'work': {
-      return afterManualAction(work(state, action.target));
+      return state.isSleeping
+        ? queueAction(state, action)
+        : work(state, action.target);
     }
     case 'study': {
-      return afterManualAction(study(state, action.courseId));
-    }
-    case 'sleep': {
-      return sleep(state);
+      return state.isSleeping
+        ? queueAction(state, action)
+        : study(state, action.courseId);
     }
     case 'changeJob': {
       return changeJob(state, action.id);
@@ -63,5 +64,8 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
 
 // La phase de vie suit les achats et les événements sont évalués après chaque
 // action (ceux de fin de période l'ont déjà été dans `endPeriod`).
-export const reduce = (state: GameState, action: GameAction): GameState =>
-  triggerEvents(updatePhase(applyAction(state, action)));
+// Un cerveau plein endort le personnage ; au réveil, ses gestes gardés se rejouent.
+export const reduce = (state: GameState, action: GameAction): GameState => {
+  const applied = settleSleep(applyAction(state, action));
+  return triggerEvents(updatePhase(applied));
+};

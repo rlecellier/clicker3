@@ -156,7 +156,6 @@ Ils fixent la voix ; ce sont des exemples, pas le texte final.
 | Écran titre                    | « Sainte-Croissance. Ville en mouvement. » / Bouton : « Démarrer ma vie »                         |
 | Début (1er janvier 1999)       | « Bienvenue dans l'euro. Votre compte est crédité de 0 €, ce qui est un bon début. »            |
 | Premier emploi                 | « Adéquat Intérim vous remercie de votre confiance et de votre flexibilité. »                   |
-| Dormir                         | « Vous récupérez. Votre employeur le sait et en prend note. »                                   |
 | Loyer prélevé                  | « Votre bail a été renouvelé à des conditions plus ambitieuses. »                               |
 | Rupture de stock               | « Vos clients découvrent la rareté. Ils ne vous en sont pas reconnaissants. »                   |
 | Réputation, palier 3           | « Vous êtes un acteur majeur. Personne ne sait de quoi. »                                       |

@@ -20,7 +20,7 @@ export type UpgradeEffect =
   // Un employé de plus (salaire dans `payroll`).
   | { type: 'employee' }
   // Rien d'actif ici : branché dans V1-11.
-  | { type: 'automation'; action: 'work' | 'sleep' }
+  | { type: 'automation'; action: 'work' }
   | { type: 'dashboard' };
 
 export type Upgrade = {
@@ -194,14 +194,6 @@ export const upgrades: readonly Upgrade[] = [
     price: 24_000,
     requirement: { type: 'phase', phase: 'boss' },
     effects: [{ type: 'automation', action: 'work' }],
-  },
-  {
-    id: 'rythme-sommeil',
-    name: 'Rythme de sommeil optimisé',
-    description: 'Vous dormez quand les chiffres le disent. Ils ont raison.',
-    price: 12_000,
-    requirement: stat('intelligence', 2),
-    effects: [{ type: 'automation', action: 'sleep' }],
   },
   {
     id: 'tableau-de-bord',

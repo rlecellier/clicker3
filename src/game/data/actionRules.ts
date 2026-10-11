@@ -13,6 +13,8 @@ export const actionRules = {
     markerVariance: 0.3,
   },
   sleep: {
+    // Coût en jauge de temps d'un sommeil complet (cerveau plein), réparti
+    // sur les marqueurs.
     gauge: 40,
     // Points de stat par marqueur consommé, avant le multiplicateur du logement.
     pointsPerMarker: 1,

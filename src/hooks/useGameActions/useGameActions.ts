@@ -12,9 +12,6 @@ export const useGameActions = () => {
       study: (courseId: string) => {
         dispatch({ type: 'study', courseId });
       },
-      sleep: () => {
-        dispatch({ type: 'sleep' });
-      },
       changeJob: (id: string) => {
         dispatch({ type: 'changeJob', id });
       },
@@ -33,7 +30,7 @@ export const useGameActions = () => {
       unlockDistrict: (id: string) => {
         dispatch({ type: 'unlockDistrict', id });
       },
-      setAuto: (action: 'work' | 'sleep', isEnabled: boolean) => {
+      setAuto: (action: 'work', isEnabled: boolean) => {
         dispatch({ type: 'setAuto', action, isEnabled });
       },
       restart: () => {
