@@ -7,6 +7,7 @@ import { ItemList } from '@component/ItemList';
 import { LedgerTable } from '@component/LedgerTable';
 import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
+import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
@@ -158,6 +159,9 @@ export const GamePage = () => {
             },
           ]}
         />
+      </Window>
+      <Window title="Ville">
+        <PageLink to="/ville">Plan de Sainte-Croissance</PageLink>
       </Window>
       {screen.autos.length === 0 ? null : (
         <Window title="Automatisation">
