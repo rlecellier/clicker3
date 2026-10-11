@@ -48,6 +48,7 @@ token.
 | `--font-mono`            | Courier : texte à chasse fixe                                |
 | `--font-size`            | Taille de base (0,875 rem)                                   |
 | `--space`                | Unité d'espacement (0,5 rem) ; multiples ou fractions        |
+| `--touch-target`         | Taille minimale d'une cible tactile (2,75 rem, soit 44 px)   |
 | `--bevel-out`            | Biseau en relief (fenêtre, bouton, onglet)                   |
 | `--bevel-in`             | Biseau en creux (tableau, jauge)                             |
 
@@ -66,13 +67,13 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | `Title`       | `children` ; rend un `h1`                                                                                                                           | Titre de page                                  |
 | `Window`      | `title`, `children`, `actions?` (zone à droite de la barre de titre) ; section nommée par `title`                                                   | Tout bloc de contenu d'une page                |
-| `Button`      | `variant` (`default`, `primary`, `danger`), `size` (`normal`, `large`), `isDisabled`, `isPending`, `onClick`, `type` ; base `@base-ui/react/button` | Action simple sans détail ni raison de blocage |
+| `Button`      | `variant` (`default`, `primary`, `danger`), `size` (`normal`, `large`), `isDisabled`, `isPending`, `onClick`, `type`, `shortcut?` (`aria-keyshortcuts`) ; base `@base-ui/react/button` | Action simple sans détail ni raison de blocage |
 | `ProgressBar` | `label`, `value`, `max` ; Base UI Progress                                                                                                          | Jauge (temps, compétence)                      |
 | `DataTable`   | `caption`, `columns` (`id`, `header`, `isNumeric?`), `rows` (`id`, `cells`)                                                                         | Données tabulaires                             |
-| `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état)                |
+| `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état), compteur de la sidebar |
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
 | `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?`, `value?` + `onValueChange?` (mode contrôlé) ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
-| `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
+| `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`, `accessibleLabel?`, `shortcut?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
 | `GameHeader`  | `money` (texte formaté), `date` (texte formaté), `gauge` (`value`, `max`) ; réutilise `Stat` et `ProgressBar`, hauteur fixe sur une ligne | En-tête fixe de l'écran de jeu (argent, date) |
 | `Stat`        | `label`, `value` ; à placer dans un `<dl>`                                                                                                          | Couple libellé / valeur                        |
 | `Note`        | `children`, `minLines?` (hauteur réservée), `to?` (le post-it devient un lien) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
@@ -83,7 +84,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | `CharacterHeader` | `name`, `age`, `date`, `phase` (textes déjà formatés)                                                                          | En-tête du personnage                                      |
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
-| `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `onClick`                          | Action de jeu ; l'appui long (`press`) active l'automatique |
+| `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `shortcut?`, `onClick`                          | Action de jeu ; l'appui long (`press`) active l'automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
@@ -109,6 +110,15 @@ distinct ; sinon, composer les existants.
 
 ## 4. Accessibilité
 
+- **Navigation** : la `Sidebar` est un `<nav>` nommé (`label`) de vrais liens
+  `NavLink` ; l'onglet actif porte `aria-current="page"`. Le libellé d'un lien
+  est son `aria-label` (icônes décoratives en `aria-hidden`).
+- **Badges** : un badge de la sidebar est muet pour les lecteurs d'écran ;
+  c'est `accessibleLabel` qui porte l'information (« Courrier, 3 messages non
+  lus », « Emploi, 2 nouveautés »). Ne jamais mettre un compteur sans lui.
+- **Raccourcis** : une action qui a une touche déclare `shortcut` (`Button`,
+  `ActionButton`, `Sidebar`), rendu en `aria-keyshortcuts`, et la touche
+  figure dans l'infobulle ou le libellé.
 - **Rôles et noms** : `Window` et `ItemList` sont des `section` nommées
   (`aria-label`) ; `EventLog` est une liste nommée ; les tableaux ont une
   légende (`caption`). Les widgets Base UI (`Tabs`, `Menu`, `Progress`,
