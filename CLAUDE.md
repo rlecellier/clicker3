@@ -14,6 +14,9 @@ ordinaire n'a pas à le modifier.
 
 Conventions du projet : voir `.claude/adr/0001-project-structure.md`.
 
+**UI** : guide de style dans `docs/ui/guide-de-style.md` et skill
+`.claude/skills/ui-style/` (à suivre pour tout composant ou page).
+
 ## Règles de code
 
 - **Pas de `function` déclarée.** Composants, hooks et helpers s'écrivent
