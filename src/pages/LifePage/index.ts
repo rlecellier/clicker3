@@ -1,0 +1,1 @@
+export { LifePage } from './LifePage';

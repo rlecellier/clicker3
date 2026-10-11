@@ -1,17 +1,15 @@
 import { CityMap } from '@component/CityMap';
 import { DistrictSheet } from '@component/DistrictSheet';
 import { ImpactGauges } from '@component/ImpactGauges';
-import { PageLink } from '@component/PageLink';
 import { Window } from '@component/Window';
 import { useCityScreen } from '@hook/useCityScreen';
-import styles from './CityPage.module.css';
 
-// Orchestrateur : branche `useCityScreen` sur les composants visuels.
+// Onglet « Ville » : orchestrateur de `useCityScreen`.
 export const CityPage = () => {
   const city = useCityScreen();
 
   return (
-    <main className={styles.page}>
+    <>
       <Window title="Plan de Sainte-Croissance">
         <CityMap
           title="Plan de la ville"
@@ -26,7 +24,6 @@ export const CityPage = () => {
           <DistrictSheet {...city.sheet} />
         </Window>
       )}
-      <PageLink to="/jeu">Retour à ma vie</PageLink>
-    </main>
+    </>
   );
 };
