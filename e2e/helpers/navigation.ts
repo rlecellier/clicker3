@@ -15,12 +15,16 @@ const tabLabels = {
 
 export type TabSlug = keyof typeof tabLabels;
 
+// Nom accessible d'un onglet : le libellé, éventuellement suivi d'une précision
+// (« Courrier, 3 messages non lus »).
+const tabName = (slug: TabSlug) => new RegExp(`^${tabLabels[slug]}(,|$)`);
+
 // Ouvre un onglet par la sidebar, comme le ferait le joueur, et vérifie que
 // l'URL le reflète.
 export const openTab = async (page: Page, slug: TabSlug) => {
   await page
     .getByRole('navigation', { name: 'Navigation du jeu' })
-    .getByRole('link', { name: tabLabels[slug], exact: true })
+    .getByRole('link', { name: tabName(slug) })
     .click();
   await expect(page).toHaveURL(`/jeu/${slug}`);
 };
