@@ -1,5 +1,6 @@
 import { Menu } from '@base-ui/react/menu';
 import { Button } from '@component/Button';
+import type { PressHandlers } from '@hook/useHoldRepeat';
 import styles from './SplitActionButton.module.css';
 
 export type SplitChoice = {
@@ -20,6 +21,8 @@ type SplitActionButtonProperties = {
   choices: readonly SplitChoice[];
   selectedId: string;
   onSelect: (id: string) => void;
+  // Appui maintenu sur le geste : répétition de l'action.
+  press?: PressHandlers;
   // Touche du raccourci clavier.
   shortcut?: string;
   onClick: () => void;
@@ -36,12 +39,13 @@ export const SplitActionButton = ({
   choices,
   selectedId,
   onSelect,
+  press,
   shortcut,
   onClick,
 }: SplitActionButtonProperties) => (
   <div className={styles.action}>
     <div className={styles.split}>
-      <div className={styles.main}>
+      <div className={styles.main} {...press}>
         <Button
           size="large"
           isDisabled={isDisabled}
