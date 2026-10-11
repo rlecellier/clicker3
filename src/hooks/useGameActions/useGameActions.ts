@@ -36,9 +36,6 @@ export const useGameActions = () => {
       setAuto: (action: 'work', isEnabled: boolean) => {
         dispatch({ type: 'setAuto', action, isEnabled });
       },
-      restart: () => {
-        dispatch({ type: 'restart' });
-      },
     }),
     [dispatch],
   );

@@ -15,8 +15,8 @@ export type GameContextValue = {
   dismissAbsence: () => void;
   // Une partie est sauvegardée : sans elle, on reste à l'écran titre.
   hasSave: boolean;
-  // Commence une vie neuve et la sauvegarde.
-  startGame: () => void;
+  // Commence une vie neuve avec ce premier emploi et la sauvegarde.
+  startGame: (jobId: string) => void;
   // Efface la sauvegarde et revient à une vie neuve non sauvegardée.
   eraseSave: () => void;
 };

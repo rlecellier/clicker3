@@ -11,11 +11,6 @@ import styles from './TitlePage.module.css';
 
 const prompts: Record<TitleConfirmation, { message: string; confirm: string }> =
   {
-    start: {
-      message:
-        'Une vie est déjà en cours. La recommencer l’archivera sans délai.',
-      confirm: 'Recommencer',
-    },
     erase: {
       message: 'Effacer la sauvegarde ? Votre exercice sera clos sans bilan.',
       confirm: 'Effacer',
@@ -34,9 +29,7 @@ export const TitlePage = () => {
         <Note>Ville en mouvement.</Note>
         {prompt === null ? (
           <div className={styles.actions}>
-            <Button variant="primary" size="large" onClick={title.askStart}>
-              Démarrer ma vie
-            </Button>
+            <PageLink to={screenPaths.newLife}>Démarrer ma vie</PageLink>
             {title.hasSave ? (
               <>
                 <PageLink to={screenPaths.game}>Reprendre</PageLink>

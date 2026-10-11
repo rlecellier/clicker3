@@ -2,7 +2,8 @@ import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { autoIntervalMs } from '@game/automation';
 import { startState } from '@game/data';
-import { createMemoryStorage, serialize } from '@game/save';
+import { newGame } from '@game/reducer';
+import { createMemoryStorage, loadGame, serialize } from '@game/save';
 import type { GameState } from '@game/state';
 import { GameProvider } from './GameProvider';
 import { useGameContext } from './useGameContext';
@@ -120,7 +121,7 @@ describe('sauvegarde', () => {
   it('sauvegarde périodiquement', () => {
     const { storage, result } = setup();
     act(() => {
-      result.current.startGame();
+      result.current.startGame('interim');
     });
     storage.clear();
     advance(5000);
@@ -138,7 +139,7 @@ describe('sauvegarde', () => {
     const { result, storage } = setup();
     expect(result.current.hasSave).toBe(false);
     act(() => {
-      result.current.startGame();
+      result.current.startGame('interim');
     });
     expect(result.current.hasSave).toBe(true);
     expect(storage.read()).not.toBeNull();
@@ -149,6 +150,36 @@ describe('sauvegarde', () => {
     expect(storage.read()).toBeNull();
     advance(5000);
     expect(storage.read()).toBeNull();
+  });
+
+  it('recommencer remplace toute la vie sauvegardée, rien ne survit', () => {
+    const played: GameState = {
+      ...startState,
+      period: 120,
+      money: 5000,
+      reputation: 8,
+      companies: { atelier: 2 },
+      upgrades: ['cartes-visite'],
+      districts: ['tilleuls', 'hauts-fourneaux'],
+      flags: { euro: true },
+      events: [{ period: 3, id: 'euro', text: 'Un événement.' }],
+      stats: { ...startState.stats, metier: 40 },
+      autoWork: true,
+      status: 'dead',
+    };
+    const storage = createMemoryStorage(serialize(played, START));
+    const { result } = setup(storage);
+    expect(result.current.state.period).toBe(120);
+    act(() => {
+      result.current.startGame('interim');
+    });
+    const fresh = newGame('interim');
+    expect(result.current.state).toEqual(fresh);
+    const saved = loadGame(storage);
+    expect(saved).toEqual({
+      ok: true,
+      state: { ...fresh, lastSeenAt: START },
+    });
   });
 
   it('sauvegarde à chaque achat', () => {
@@ -175,7 +206,7 @@ describe('sauvegarde', () => {
   it('sauvegarde quand l’onglet se cache et avant de quitter', () => {
     const { storage, result } = setup();
     act(() => {
-      result.current.startGame();
+      result.current.startGame('interim');
     });
     storage.clear();
     setHidden(true);

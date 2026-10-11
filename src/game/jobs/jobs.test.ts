@@ -1,6 +1,6 @@
 import { jobs, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
-import { changeJob } from './jobs';
+import { changeJob, startingJobs } from './jobs';
 
 describe('données des emplois', () => {
   it('liste les quatre emplois dans l’ordre', () => {
@@ -14,6 +14,12 @@ describe('données des emplois', () => {
 
   it('commence au premier emploi', () => {
     expect(startState.jobId).toBe('interim');
+  });
+});
+
+describe('startingJobs', () => {
+  it('ne propose que l’intérim, sans prérequis ni coût', () => {
+    expect(startingJobs.map((job) => job.id)).toEqual(['interim']);
   });
 });
 

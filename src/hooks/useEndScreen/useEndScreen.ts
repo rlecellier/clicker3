@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import type { FigureItem } from '@component/FigureList';
 import {
   formatAge,
@@ -5,13 +6,13 @@ import {
   formatDecimal,
   formatMoney,
 } from '@game/format';
-import { useGameActions } from '@hook/useGameActions';
+import { screenPaths } from '@hook/useGameFlow';
 import { useLifeSummary } from '@hook/useGameImpact';
 
 // « You died » : le bilan calculé depuis l'état et le geste pour rejouer.
 export const useEndScreen = () => {
   const summary = useLifeSummary();
-  const { restart } = useGameActions();
+  const navigate = useNavigate();
 
   const figures: FigureItem[] = [
     { label: 'Entreprises possédées', value: formatCount(summary.companies) },
@@ -20,5 +21,11 @@ export const useEndScreen = () => {
     { label: 'Réputation', value: formatDecimal(summary.reputation) },
   ];
 
-  return { figures, replay: restart };
+  return {
+    figures,
+    // Rejouer commence par le choix du premier emploi.
+    replay: () => {
+      void navigate(screenPaths.newLife);
+    },
+  };
 };

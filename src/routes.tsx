@@ -4,6 +4,7 @@ import { AbsencePage } from '@page/AbsencePage';
 import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
 import { GamePage } from '@page/GamePage';
+import { NewLifePage } from '@page/NewLifePage';
 import { ScreenGuard } from '@page/ScreenGuard';
 import { StyleguidePage } from '@page/StyleguidePage';
 import { TitlePage } from '@page/TitlePage';
@@ -24,6 +25,7 @@ export const router = createBrowserRouter(
       ),
       children: [
         { path: '/', element: <TitlePage /> },
+        { path: '/nouvelle-vie', element: <NewLifePage /> },
         {
           path: '/absence',
           element: (

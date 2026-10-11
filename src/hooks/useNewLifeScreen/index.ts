@@ -1,0 +1,1 @@
+export { useNewLifeScreen } from './useNewLifeScreen';

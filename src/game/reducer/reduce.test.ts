@@ -116,6 +116,21 @@ describe('reduce', () => {
     expect(played.period).toBe(0);
   });
 
+  it('restart prend le premier emploi choisi parmi les emplois de départ', () => {
+    expect(
+      reduce(startState, { type: 'restart', jobId: 'interim' }).jobId,
+    ).toBe('interim');
+  });
+
+  it('restart ignore un emploi qui n’est pas un emploi de départ', () => {
+    const restarted = reduce(startState, {
+      type: 'restart',
+      jobId: 'transformation',
+    });
+    expect(restarted).toEqual(newGame());
+    expect(restarted.jobId).toBe(startState.jobId);
+  });
+
   it('annule une amélioration sans rembourser', () => {
     const bought = reduce(
       { ...startState, money: 1000 },

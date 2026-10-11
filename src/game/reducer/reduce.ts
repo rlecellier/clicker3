@@ -2,7 +2,7 @@ import { autoTick, setAuto } from '@game/automation';
 import { buyCompany, buyWarehouse } from '@game/companies';
 import { startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
-import { changeJob } from '@game/jobs';
+import { changeJob, startingJobs } from '@game/jobs';
 import { addGauge } from '@game/period';
 import { triggerEvents } from '@game/events';
 import { updatePhase } from '@game/phases';
@@ -15,7 +15,12 @@ import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
 
 // Nouvelle vie : l'état de départ, avec les événements déjà présents au départ.
-export const newGame = (): GameState => triggerEvents(startState);
+// Un emploi qui n'est pas un emploi de départ est ignoré (on garde celui par défaut).
+export const newGame = (jobId?: string): GameState =>
+  triggerEvents({
+    ...startState,
+    jobId: startingJobs.find((job) => job.id === jobId)?.id ?? startState.jobId,
+  });
 
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
@@ -60,7 +65,7 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return autoTick(state, action.elapsedMs);
     }
     case 'restart': {
-      return newGame();
+      return newGame(action.jobId);
     }
   }
 };
