@@ -1,7 +1,10 @@
 import { ActionButton } from '@component/ActionButton';
 import { AutoSwitch } from '@component/AutoSwitch';
 import { CharacterHeader } from '@component/CharacterHeader';
+import { EventLog } from '@component/EventLog';
+import { EventToast } from '@component/EventToast';
 import { ItemList } from '@component/ItemList';
+import { LedgerTable } from '@component/LedgerTable';
 import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
@@ -10,16 +13,25 @@ import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
 import { useInvestScreen } from '@hook/useInvestScreen';
+import { useJournalScreen } from '@hook/useJournalScreen';
 import styles from './GamePage.module.css';
 
 // Orchestrateur : branche `useGameScreen` sur les composants visuels.
 export const GamePage = () => {
   const screen = useGameScreen();
   const invest = useInvestScreen();
+  const journal = useJournalScreen();
   const { work, sleep, sellSurplus } = screen.actions;
 
   return (
     <main className={styles.page}>
+      {journal.toast === null ? null : (
+        <EventToast
+          date={journal.toast.date}
+          text={journal.toast.text}
+          onDismiss={journal.toast.dismiss}
+        />
+      )}
       <Window title="Ma vie à Sainte-Croissance">
         <CharacterHeader {...screen.header} />
         {screen.intro === null ? null : <Note>{screen.intro}</Note>}
@@ -116,6 +128,32 @@ export const GamePage = () => {
               label: 'Quartiers (réputation)',
               content: (
                 <ItemList caption="Quartiers" items={invest.districts} />
+              ),
+            },
+          ]}
+        />
+      </Window>
+      <Window title="Courrier et comptabilité">
+        <Tabs
+          tabs={[
+            {
+              id: 'mail',
+              label: 'Courrier',
+              content: (
+                <EventLog
+                  entries={journal.entries}
+                  emptyText="Aucun courrier. La boîte aux lettres vous remercie de votre patience."
+                />
+              ),
+            },
+            {
+              id: 'ledger',
+              label: 'Comptabilité',
+              content: (
+                <LedgerTable
+                  caption={journal.ledger.caption}
+                  rows={journal.ledger.rows}
+                />
               ),
             },
           ]}
