@@ -24,7 +24,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(manager.getByRole('button', { name: 'Prendre' })).toBeDisabled();
   await polyvalent.getByRole('button', { name: 'Prendre' }).click();
   await expect(polyvalent.getByText('Actuel')).toBeVisible();
-  await expect(page.getByText('Salaire : 51')).toBeVisible();
+  await expect(page.getByText('Salaire : 76')).toBeVisible();
 
   // Rien à vendre sans stock.
   await expect(sellSurplus).toBeDisabled();

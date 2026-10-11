@@ -17,14 +17,14 @@ export const jobs: readonly Job[] = [
   {
     id: 'interim',
     name: 'Manutentionnaire intérimaire',
-    salary: 40,
+    salary: 60,
     reputation: 0.2,
     cost: 0,
   },
   {
     id: 'polyvalent',
     name: 'Employé polyvalent',
-    salary: 51,
+    salary: 76,
     reputation: 0.3,
     cost: 0,
     requirement: { type: 'stat', stat: 'metier', tier: 1 },
