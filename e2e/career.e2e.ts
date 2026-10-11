@@ -1,11 +1,17 @@
 import { expect, test } from '@playwright/test';
-import { amountOf, counter, itemOf, repeatUntil } from './helpers';
+import { startState } from '@game/data';
+import { SAVE_KEY, amountOf, counter, itemOf, repeatUntil } from './helpers';
 
 test('début de carrière : travailler, acheter un stage, étudier, s’endormir', async ({
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Démarrer ma vie' }).click();
+  await page.getByRole('link', { name: 'Démarrer ma vie' }).click();
+  await expect(page).toHaveURL('/nouvelle-vie');
+  await expect(
+    page.getByRole('heading', { name: 'Votre premier emploi' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(
     page.getByRole('heading', { name: 'Camille Morel' }),
   ).toBeVisible();
@@ -104,14 +110,20 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   ).toBeVisible();
   await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
 
-  // Recommencer la partie : la confirmation protège la vie en cours.
-  await page.getByRole('button', { name: 'Recommencer la partie' }).click();
+  // Recommencer la partie ramène au choix du premier emploi ; la
+  // confirmation protège la vie en cours.
+  await page.getByRole('link', { name: 'Recommencer la partie' }).click();
+  await expect(page).toHaveURL('/nouvelle-vie');
+  await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
     .getByRole('alertdialog')
     .getByRole('button', { name: 'Annuler' })
     .click();
+  await page.getByRole('link', { name: 'Retour' }).click();
+  await page.getByRole('link', { name: 'Reprendre' }).click();
   await expect(owned).toBeVisible();
-  await page.getByRole('button', { name: 'Recommencer la partie' }).click();
+  await page.getByRole('link', { name: 'Recommencer la partie' }).click();
+  await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
     .getByRole('alertdialog')
     .getByRole('button', { name: 'Recommencer' })
@@ -119,4 +131,22 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
   await expect(owned).toBeHidden();
   await expect(page.getByText('Bienvenue dans l’euro.')).toBeVisible();
+
+  // Rien de l'ancienne vie ne reste dans la mémoire du navigateur.
+  await page.reload();
+  const saved = await page.evaluate(
+    (key) => JSON.parse(localStorage.getItem(key) ?? '{}').state,
+    SAVE_KEY,
+  );
+  expect(saved).toMatchObject({
+    period: 0,
+    money: 0,
+    reputation: 0,
+    upgrades: [],
+    companies: {},
+    jobId: 'interim',
+    ledger: startState.ledger,
+    stats: startState.stats,
+    districts: startState.districts,
+  });
 });

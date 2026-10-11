@@ -30,7 +30,8 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await expectNoOverflow(page);
 
   // Démarrer une vie ; la recharger ramène dans la partie.
-  await page.getByRole('button', { name: 'Démarrer ma vie' }).click();
+  await page.getByRole('link', { name: 'Démarrer ma vie' }).click();
+  await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(page).toHaveURL('/jeu');
   await page.getByRole('button', { name: /Travailler/ }).click();
   await page.getByRole('link', { name: 'Plan de Sainte-Croissance' }).click();
@@ -55,6 +56,8 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
 
   // Rejouer recommence une vie neuve.
   await page.getByRole('button', { name: 'Rejouer' }).click();
+  await expect(page).toHaveURL('/nouvelle-vie');
+  await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(page).toHaveURL('/jeu');
   await page.reload();
   await expect(page).toHaveURL('/jeu');

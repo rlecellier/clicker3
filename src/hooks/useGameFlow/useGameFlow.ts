@@ -3,8 +3,9 @@ import { useGameContext } from '@context/GameContext';
 // L'écran où la partie doit se trouver, d'après son état.
 export type GameScreen = 'title' | 'absence' | 'end' | 'game';
 
-export const screenPaths: Record<GameScreen, string> = {
+export const screenPaths: Record<GameScreen | 'newLife', string> = {
   title: '/',
+  newLife: '/nouvelle-vie',
   absence: '/absence',
   end: '/fin',
   game: '/jeu',

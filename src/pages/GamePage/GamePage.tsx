@@ -1,7 +1,5 @@
 import { ActionButton } from '@component/ActionButton';
 import { CharacterHeader } from '@component/CharacterHeader';
-import { Button } from '@component/Button';
-import { ConfirmPrompt } from '@component/ConfirmPrompt';
 import { EventLog } from '@component/EventLog';
 import { EventToast } from '@component/EventToast';
 import { ItemList } from '@component/ItemList';
@@ -14,10 +12,10 @@ import { SplitActionButton } from '@component/SplitActionButton';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
+import { screenPaths } from '@hook/useGameFlow';
 import { useGameScreen } from '@hook/useGameScreen';
 import { useInvestScreen } from '@hook/useInvestScreen';
 import { useJournalScreen } from '@hook/useJournalScreen';
-import { useResetGame } from '@hook/useResetGame';
 import styles from './GamePage.module.css';
 
 // Orchestrateur : branche `useGameScreen` sur les composants visuels.
@@ -25,7 +23,6 @@ export const GamePage = () => {
   const screen = useGameScreen();
   const invest = useInvestScreen();
   const journal = useJournalScreen();
-  const reset = useResetGame();
   const { work, sellSurplus } = screen.actions;
   const { study } = screen;
 
@@ -201,19 +198,7 @@ export const GamePage = () => {
         </Window>
       )}
       <Window title="Partie">
-        {reset.isConfirming ? (
-          <ConfirmPrompt
-            message="Recommencer la partie ? La vie en cours sera archivée sans bilan."
-            confirmLabel="Recommencer"
-            cancelLabel="Annuler"
-            onConfirm={reset.confirm}
-            onCancel={reset.cancel}
-          />
-        ) : (
-          <Button variant="danger" onClick={reset.ask}>
-            Recommencer la partie
-          </Button>
-        )}
+        <PageLink to={screenPaths.newLife}>Recommencer la partie</PageLink>
       </Window>
     </main>
   );

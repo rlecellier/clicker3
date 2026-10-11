@@ -1,0 +1,1 @@
+export { NewLifePage } from './NewLifePage';

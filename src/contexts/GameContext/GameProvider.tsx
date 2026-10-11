@@ -130,8 +130,8 @@ export const GameProvider = ({
     }
   }, [startCount, save]);
 
-  const startGame = useCallback(() => {
-    dispatch({ type: 'restart' });
+  const startGame = useCallback((jobId: string) => {
+    dispatch({ type: 'restart', jobId });
     setAbsence(null);
     setHasSave(true);
     setStartCount((count) => count + 1);
