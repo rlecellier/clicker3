@@ -25,9 +25,22 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
   await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
   await expect(counter(page, 'Argent')).toHaveText(/^40\s€$/);
 
-  // Le stage est trop cher tant qu'on n'a pas travaillé assez.
+  // Seule la prochaine amélioration est proposée : trop chère, au départ.
+  const cards = itemOf(page, 'Cartes de visite');
   const stage = itemOf(page, 'Stage « Posture professionnelle »');
+  const owned = page.getByRole('region', { name: 'Obtenues', exact: true });
   await page.getByRole('tab', { name: 'Améliorations' }).click();
+  await expect(cards.getByRole('button', { name: 'Acheter' })).toBeDisabled();
+  await expect(stage).toBeHidden();
+  await repeatUntil(
+    () => work.click(),
+    async () => (await money()) >= 58,
+  );
+  await cards.getByRole('button', { name: 'Acheter' }).click();
+
+  // Obtenue, elle quitte la liste d'achat pour celle des améliorations
+  // obtenues, et la suivante (le stage) prend sa place.
+  await expect(owned.getByText('Cartes de visite')).toBeVisible();
   await expect(stage.getByRole('button', { name: 'Acheter' })).toBeDisabled();
   await repeatUntil(
     () => work.click(),
@@ -35,7 +48,7 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
   );
   await stage.getByRole('button', { name: 'Acheter' }).click();
   await expect(
-    stage.getByText('Acheté', { exact: true }).first(),
+    owned.getByText('Stage « Posture professionnelle »'),
   ).toBeVisible();
 
   // Le cursus apparaît ; étudier coûte de l'argent.
@@ -50,7 +63,8 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
   const before = await money();
   await course.getByRole('button', { name: 'Étudier' }).click();
   await expect(page.getByText('Vous avez étudié.')).toBeVisible();
-  expect(await money()).toBe(before - 20);
+  // L'étude coûte de l'argent (un loyer peut tomber avec elle).
+  expect(await money()).toBeLessThan(before);
 
   // Les marqueurs gagnés se convertissent en points de stat en dormant.
   await repeatUntil(
@@ -61,22 +75,27 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
     150,
   );
   const metier = page.getByRole('progressbar', { name: /^Métier/ });
+  const gauge = page.getByRole('progressbar', { name: 'Jauge de temps' });
   await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
+  const gaugeBefore = Number(await gauge.getAttribute('aria-valuenow'));
   await sleep.click();
+  // Dormir fait avancer la jauge de temps (ou passe la période).
+  await expect
+    .poll(async () => Number(await gauge.getAttribute('aria-valuenow')))
+    .not.toBe(gaugeBefore);
   await expect(page.getByText('Vous récupérez.')).toBeVisible();
   await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
 
-  // Les cartes de visite : un petit achat de plus pour la réputation.
-  const cards = itemOf(page, 'Cartes de visite');
-  await repeatUntil(
-    () => work.click(),
-    async () => cards.getByRole('button', { name: 'Acheter' }).isEnabled(),
-    150,
-  );
-  await cards.getByRole('button', { name: 'Acheter' }).click();
-  await expect(
-    cards.getByText('Acheté', { exact: true }).first(),
-  ).toBeVisible();
+  // Annuler une amélioration obtenue : elle disparaît, sans remboursement.
+  const beforeCancel = await money();
+  await owned
+    .getByRole('listitem')
+    .filter({ hasText: 'Cartes de visite' })
+    .getByRole('button', { name: 'Annuler' })
+    .click();
+  await expect(owned.getByText('Cartes de visite')).toBeHidden();
+  expect(await money()).toBe(beforeCancel);
+  await expect(cards.getByRole('button', { name: 'Acheter' })).toBeVisible();
 
   // Le courrier garde les messages reçus ; la comptabilité, les comptes.
   await page.getByRole('tab', { name: 'Courrier' }).click();
@@ -87,4 +106,20 @@ test('début de carrière : travailler, acheter un stage, étudier, dormir', asy
     page.getByRole('table', { name: 'Comptes (version simplifiée)' }),
   ).toBeVisible();
   await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
+
+  // Recommencer la partie : la confirmation protège la vie en cours.
+  await page.getByRole('button', { name: 'Recommencer la partie' }).click();
+  await page
+    .getByRole('alertdialog')
+    .getByRole('button', { name: 'Annuler' })
+    .click();
+  await expect(owned).toBeVisible();
+  await page.getByRole('button', { name: 'Recommencer la partie' }).click();
+  await page
+    .getByRole('alertdialog')
+    .getByRole('button', { name: 'Recommencer' })
+    .click();
+  await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
+  await expect(owned).toBeHidden();
+  await expect(page.getByText('Bienvenue dans l’euro.')).toBeVisible();
 });

@@ -1,44 +1,20 @@
 import type { ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
 import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
-import { companies, districts, upgrades } from '@game/data';
+import { companies, districts } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
 import { describeRequirement, formatCount, formatMoney } from '@game/format';
 import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState } from '@game/state';
-import { canBuyUpgrade, isOwned } from '@game/upgrades';
+import {
+  canBuyUpgrade,
+  canCancelUpgrade,
+  nextUpgrade,
+  upgradeById,
+} from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
-
-export type UpgradeGroup = { id: string; caption: string; items: ListItem[] };
-
-const categories = [
-  { id: 'courses', caption: 'Formations' },
-  { id: 'housing', caption: 'Logement' },
-  { id: 'storage', caption: 'Entrepôt et marqueurs' },
-  { id: 'staff', caption: 'Employés' },
-  { id: 'automation', caption: 'Automatisations' },
-  { id: 'gear', caption: 'Matériel et réputation' },
-] as const;
-
-type CategoryId = (typeof categories)[number]['id'];
-
-// Catégorie d'une amélioration : celle du premier de ses effets qui en désigne une.
-const effectCategories: Record<string, CategoryId> = {
-  course: 'courses',
-  housing: 'housing',
-  stockCapacity: 'storage',
-  maxMarkers: 'storage',
-  employee: 'staff',
-  automation: 'automation',
-  dashboard: 'automation',
-};
-
-const categoryOf = (upgrade: Upgrade): CategoryId =>
-  upgrade.effects
-    .map((effect) => effectCategories[effect.type])
-    .find((category) => category !== undefined) ?? 'gear';
 
 // Ce qui manque pour débloquer, sinon rien.
 const missing = (state: GameState, requirement?: Requirement) =>
@@ -100,43 +76,60 @@ export const useInvestScreen = () => {
     };
   });
 
-  const upgradeGroups: UpgradeGroup[] = categories.map((category) => ({
-    ...category,
-    items: upgrades
-      .filter((upgrade) => categoryOf(upgrade) === category.id)
-      .map((upgrade) => {
-        const isBought = isOwned(state, upgrade.id);
-        const extra = [
-          upgrade.rent === undefined
-            ? undefined
-            : `loyer +${formatMoney(upgrade.rent)}`,
-          upgrade.payroll === undefined
-            ? undefined
-            : `salaires +${formatMoney(upgrade.payroll)}`,
-        ].filter((part) => part !== undefined);
-        return {
-          id: upgrade.id,
-          title: upgrade.name,
-          badge: isBought ? 'Acheté' : undefined,
-          detail: [
-            upgrade.description,
-            formatMoney(upgrade.price),
-            ...extra,
-          ].join(' · '),
-          actionLabel: isBought ? 'Acheté' : 'Acheter',
-          isDisabled: !canBuyUpgrade(state, upgrade.id),
-          reason: reasonOf(
-            state,
-            isBought,
-            upgrade.requirement,
-            'Argent insuffisant',
-          ),
-          onAction: () => {
-            actions.buyUpgrade(upgrade.id);
+  const extraOf = (upgrade: Upgrade) =>
+    [
+      upgrade.rent === undefined
+        ? undefined
+        : `loyer +${formatMoney(upgrade.rent)}`,
+      upgrade.payroll === undefined
+        ? undefined
+        : `salaires +${formatMoney(upgrade.payroll)}`,
+    ].filter((part) => part !== undefined);
+
+  // Seule la prochaine amélioration est proposée à l'achat.
+  const next = nextUpgrade(state);
+  const nextUpgradeItems: ListItem[] =
+    next === undefined
+      ? []
+      : [
+          {
+            id: next.id,
+            title: next.name,
+            detail: [
+              next.description,
+              formatMoney(next.price),
+              ...extraOf(next),
+            ].join(' · '),
+            actionLabel: 'Acheter',
+            isDisabled: !canBuyUpgrade(state, next.id),
+            reason: reasonOf(
+              state,
+              false,
+              next.requirement,
+              'Argent insuffisant',
+            ),
+            onAction: () => {
+              actions.buyUpgrade(next.id);
+            },
           },
-        };
-      }),
-  }));
+        ];
+
+  // Les améliorations obtenues, dans l'ordre d'achat : on peut les annuler,
+  // sans rien récupérer.
+  const ownedUpgradeItems: ListItem[] = state.upgrades
+    .map((id) => upgradeById(id))
+    .filter((upgrade) => upgrade !== undefined)
+    .map((upgrade) => ({
+      id: upgrade.id,
+      title: upgrade.name,
+      detail: [upgrade.description, ...extraOf(upgrade)].join(' · '),
+      actionLabel: 'Annuler',
+      isDisabled: !canCancelUpgrade(state, upgrade.id),
+      reason: state.status === 'dead' ? 'Partie terminée' : undefined,
+      onAction: () => {
+        actions.cancelUpgrade(upgrade.id);
+      },
+    }));
 
   const districtItems: ListItem[] = districts.map((district) => {
     const isOpen = state.districts.includes(district.id);
@@ -166,7 +159,8 @@ export const useInvestScreen = () => {
       max: state.stockCapacity,
     },
     companies: companyItems,
-    upgradeGroups,
+    nextUpgrades: nextUpgradeItems,
+    ownedUpgrades: ownedUpgradeItems,
     districts: districtItems,
   };
 };

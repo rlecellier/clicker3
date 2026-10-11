@@ -1,2 +1,2 @@
 export { useGameScreen } from './useGameScreen';
-export type { ActionView, AutoView } from './useGameScreen';
+export type { ActionView } from './useGameScreen';

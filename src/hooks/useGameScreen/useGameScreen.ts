@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
-import { canEnableAuto } from '@game/automation';
 import { canSellSurplus } from '@game/surplus';
-import { courses, jobs, statTierThresholds, upgrades } from '@game/data';
+import { courses, jobs, statTierThresholds } from '@game/data';
 import {
   describeRequirement,
   formatAge,
@@ -21,10 +20,11 @@ import { canSleep } from '@game/sleep';
 import { tierOf } from '@game/stats';
 import { canStudy } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
-import { hasAutomation, hasCourse, isOwned } from '@game/upgrades';
+import { hasAutomation, hasCourse, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork } from '@game/work';
-import type { StatId } from '@game/state';
+import type { GameState, StatId } from '@game/state';
 import { useGameActions } from '@hook/useGameActions';
+import { useLongPress } from '@hook/useLongPress';
 
 const FEEDBACK_MS = 2500;
 const START_TEXT =
@@ -36,35 +36,24 @@ export type ActionView = {
   reason?: string;
   isDisabled: boolean;
   run: () => void;
-};
-
-export type AutoView = {
-  id: 'work' | 'sleep';
-  label: string;
-  isChecked: boolean;
-  onChange: (isChecked: boolean) => void;
+  // Action automatique du bouton, activée par un appui long.
+  isAuto?: boolean;
+  autoHint?: string;
+  press?: ReturnType<typeof useLongPress>['press'];
 };
 
 const statIds = Object.keys(statLabels) as StatId[];
 
 // Prochain achat visible : l'amélioration non achetée la moins chère qui est
 // déjà débloquée, sinon la moins chère avec ce qui lui manque.
-const nextObjective = (state: Parameters<typeof isUnlocked>[0]): string => {
-  const remaining = upgrades
-    .filter((upgrade) => !isOwned(state, upgrade.id))
-    .toSorted((first, second) => first.price - second.price);
-  const available = remaining.find(
-    (upgrade) =>
-      upgrade.requirement === undefined ||
-      isUnlocked(state, upgrade.requirement),
-  );
-  if (available !== undefined) {
-    return `Prochain achat : ${available.name} (${formatMoney(available.price)})`;
+const nextObjective = (state: GameState): string => {
+  const next = nextUpgrade(state);
+  if (next === undefined) {
+    return 'Plus rien à acheter pour le moment.';
   }
-  const locked = remaining[0];
-  return locked?.requirement === undefined
-    ? 'Plus rien à acheter pour le moment.'
-    : `Prochain déblocage : ${locked.name}. ${describeRequirement(locked.requirement)}`;
+  return next.requirement === undefined || isUnlocked(state, next.requirement)
+    ? `Prochain achat : ${next.name} (${formatMoney(next.price)})`
+    : `Prochain déblocage : ${next.name}. ${describeRequirement(next.requirement)}`;
 };
 
 // Tout ce que la page de jeu affiche et déclenche, prêt à brancher.
@@ -96,7 +85,7 @@ export const useGameScreen = () => {
   const isOver = state.status === 'dead';
   const job = jobs.find((candidate) => candidate.id === state.jobId);
 
-  const work: ActionView = {
+  const workAction: ActionView = {
     detail:
       job === undefined ? undefined : `Salaire : ${formatMoney(job.salary)}`,
     reason: isOver ? ENDED : 'Aucun emploi',
@@ -111,7 +100,7 @@ export const useGameScreen = () => {
     ),
   };
 
-  const sleep: ActionView = {
+  const sleepAction: ActionView = {
     detail: 'Convertit les marqueurs en points',
     reason: isOver ? ENDED : 'Aucun marqueur à convertir',
     isDisabled: !canSleep(state),
@@ -176,21 +165,42 @@ export const useGameScreen = () => {
       }),
     }));
 
-  const autos: AutoView[] = (
-    [
-      { id: 'work', label: 'Travail automatique', isChecked: state.autoWork },
-      { id: 'sleep', label: 'Sommeil automatique', isChecked: state.autoSleep },
-    ] as const
-  )
-    .filter(
-      (auto) => hasAutomation(state, auto.id) || canEnableAuto(state, auto.id),
-    )
-    .map((auto) => ({
-      ...auto,
-      onChange: (isChecked: boolean) => {
-        actions.setAuto(auto.id, isChecked);
-      },
-    }));
+  // Appui long sur Travailler ou Dormir : active ou coupe l'action
+  // automatique, une fois l'amélioration achetée.
+  const toggleAuto = (action: 'work' | 'sleep') => {
+    const isOn = action === 'work' ? state.autoWork : state.autoSleep;
+    const name = action === 'work' ? 'Travail' : 'Sommeil';
+    return () => {
+      actions.setAuto(action, !isOn);
+      setFeedback(`${name} automatique ${isOn ? 'coupé' : 'activé'}.`);
+    };
+  };
+  const workPress = useLongPress(
+    workAction.run,
+    hasAutomation(state, 'work') ? toggleAuto('work') : undefined,
+  );
+  const sleepPress = useLongPress(
+    sleepAction.run,
+    hasAutomation(state, 'sleep') ? toggleAuto('sleep') : undefined,
+  );
+  const withAuto = (
+    view: ActionView,
+    action: 'work' | 'sleep',
+    gesture: ReturnType<typeof useLongPress>,
+  ): ActionView =>
+    hasAutomation(state, action)
+      ? {
+          ...view,
+          run: gesture.onClick,
+          press: gesture.press,
+          isAuto: action === 'work' ? state.autoWork : state.autoSleep,
+          autoHint: (action === 'work' ? state.autoWork : state.autoSleep)
+            ? 'Appui long : couper l’automatique'
+            : 'Appui long : automatique',
+        }
+      : view;
+  const work = withAuto(workAction, 'work', workPress);
+  const sleep = withAuto(sleepAction, 'sleep', sleepPress);
 
   return {
     isOver,
@@ -224,7 +234,6 @@ export const useGameScreen = () => {
     actions: { work, sleep, sellSurplus },
     jobs: jobItems,
     courses: courseItems,
-    autos,
     objective: nextObjective(state),
     feedback,
   };
