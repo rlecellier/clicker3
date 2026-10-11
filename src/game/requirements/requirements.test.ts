@@ -23,6 +23,19 @@ describe('isUnlocked', () => {
     expect(isUnlocked(stateWith({ reputation: 5 }), requirement)).toBe(true);
   });
 
+  it('teste le palier de réputation d’après le total gagné', () => {
+    const requirement: Requirement = { type: 'reputationTier', tier: 1 };
+    const spent = stateWith({ reputation: 0, reputationEarned: 10 });
+    expect(isUnlocked(startState, requirement)).toBe(false);
+    expect(isUnlocked(spent, requirement)).toBe(true);
+  });
+
+  it('teste un quartier débloqué', () => {
+    const requirement: Requirement = { type: 'district', id: 'tilleuls' };
+    expect(isUnlocked(startState, requirement)).toBe(true);
+    expect(isUnlocked(stateWith({ districts: [] }), requirement)).toBe(false);
+  });
+
   it('teste la phase de vie atteinte ou dépassée', () => {
     const requirement: Requirement = { type: 'phase', phase: 'entrepreneur' };
     expect(isUnlocked(startState, requirement)).toBe(false);

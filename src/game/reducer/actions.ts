@@ -1,2 +1,3 @@
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
-export type GameAction = { type: 'addGauge'; amount: number };
+export type GameAction =
+  { type: 'addGauge'; amount: number } | { type: 'unlockDistrict'; id: string };

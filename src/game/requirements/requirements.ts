@@ -1,3 +1,4 @@
+import { reputationTierOf } from '@game/reputation';
 import { lifePhases } from '@game/state';
 import type { GameState, LifePhase, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
@@ -6,6 +7,9 @@ import { ageOf } from '@game/time';
 export type Requirement =
   | { type: 'stat'; stat: StatId; tier: number }
   | { type: 'reputation'; min: number }
+  // Palier de réputation, d'après le total gagné.
+  | { type: 'reputationTier'; tier: number }
+  | { type: 'district'; id: string }
   // Phase atteinte ou dépassée.
   | { type: 'phase'; phase: LifePhase }
   | { type: 'age'; min: number }
@@ -24,6 +28,12 @@ export const isUnlocked = (
     }
     case 'reputation': {
       return state.reputation >= requirement.min;
+    }
+    case 'reputationTier': {
+      return reputationTierOf(state) >= requirement.tier;
+    }
+    case 'district': {
+      return state.districts.includes(requirement.id);
     }
     case 'phase': {
       return (
