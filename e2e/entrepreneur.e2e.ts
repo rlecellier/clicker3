@@ -14,7 +14,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
 }) => {
   await preloadSave(page, {
     state: {
-      money: 2000,
+      money: 4000,
       stats: { metier: 10, gestion: 10, intelligence: 0, endurance: 0 },
     },
   });
@@ -148,4 +148,20 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(
     page.getByRole('tab', { name: 'Améliorations' }),
   ).toHaveAttribute('aria-selected', 'true');
+
+  // Les chiffres de l'écran Investir sont les valeurs finales : acheter un
+  // bonus de production change la production affichée, avant et après l'achat.
+  const collaborator = itemOf(page, 'Premier collaborateur');
+  await expect(collaborator).toContainText(
+    'Production de toutes les entreprises +110 %',
+  );
+  await expect(collaborator).toContainText(
+    'Production : 4 → 8 articles par période',
+  );
+  await collaborator.getByRole('button', { name: 'Acheter' }).click();
+  await expect(collaborator).toBeHidden();
+  await page.getByRole('tab', { name: 'Entreprises' }).click();
+  await expect(page.locator('#item-atelier')).toContainText(
+    '8 articles par période (2 × 4,2)',
+  );
 });
