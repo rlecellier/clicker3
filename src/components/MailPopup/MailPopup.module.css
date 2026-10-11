@@ -1,5 +1,6 @@
-.toast {
+.popup {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space);
@@ -11,6 +12,7 @@
 
 .body {
   display: flex;
+  flex: 1 1 12rem;
   flex-direction: column;
   min-width: 0;
 }
@@ -22,4 +24,11 @@
 
 .text {
   overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: calc(var(--space) / 2);
 }
