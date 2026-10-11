@@ -1,0 +1,78 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space);
+  background: var(--color-surface);
+  box-shadow:
+    var(--bevel-out),
+    2px 0 0 var(--color-surface-dark);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: var(--space);
+  border-top: 1px solid var(--color-surface-shadow);
+}
+
+.link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  min-height: 2.25rem;
+  padding: 0.25rem var(--space);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--bevel-out);
+  text-decoration: none;
+}
+
+.link[aria-current='page'] {
+  box-shadow: var(--bevel-in);
+  font-weight: bold;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.label {
+  min-width: 0;
+}
+
+.badge {
+  margin-left: auto;
+}
+
+/* Sous 40 rem (480 px compris) : icônes seules, badge posé sur l'angle. */
+@media (max-width: 40rem) {
+  .link {
+    justify-content: center;
+    padding: 0.25rem;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    margin-left: 0;
+  }
+}
