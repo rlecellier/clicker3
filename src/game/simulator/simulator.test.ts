@@ -1,3 +1,4 @@
+import { catchUp } from '@game/automation';
 import { startState } from '@game/data';
 import type { GameState } from '@game/state';
 import { simulatorConfig } from './config';
@@ -50,19 +51,37 @@ describe('simulateLife', () => {
     ]);
   });
 
-  // Critères de fin de la v1 (docs/game/v1.md § 10). Avec les valeurs
-  // provisoires, la vie dure environ 90 minutes de jeu actif et la plus longue
-  // zone morte environ 15 minutes (le travail automatique n'arrive qu'à 70 ans) :
-  // l'équilibrage est l'objet de V1-24, on réactive ces deux tests à ce moment-là.
-  it.skip('dure entre 30 et 60 minutes de jeu actif (V1-24)', () => {
+  // Critères de fin de la v1 (docs/game/v1.md § 10), équilibrés en V1-24
+  // (docs/game/equilibrage.md).
+  it('dure entre 30 et 60 minutes de jeu actif', () => {
     expect(result.activeMs).toBeGreaterThanOrEqual(simulatorConfig.targetMinMs);
     expect(result.activeMs).toBeLessThanOrEqual(simulatorConfig.targetMaxMs);
   });
 
-  it.skip('n’a pas de zone morte de plus d’une minute (V1-24)', () => {
+  it('n’a pas de zone morte de plus d’une minute', () => {
     expect(result.longestGapMs).toBeLessThanOrEqual(
       simulatorConfig.maxDeadZoneMs,
     );
+    expect(result.deadZones).toEqual([]);
+  });
+
+  it('active le travail automatique à mi-vie (ADR 0005)', () => {
+    const auto = result.milestones.find((entry) => entry.id === 'autoWork');
+    expect(auto?.age).toBeGreaterThanOrEqual(35);
+    expect(auto?.age).toBeLessThanOrEqual(45);
+  });
+
+  it('laisse mourir pendant une nuit d’absence si l’auto reste actif', () => {
+    const { autoWorkState } = result;
+    expect(autoWorkState).not.toBeNull();
+    if (autoWorkState === null) {
+      return;
+    }
+    const night = catchUp(autoWorkState, 8 * 60 * 60 * 1000);
+    expect(night.summary.died).toBe(true);
+    // Une courte absence ne tue pas.
+    const coffee = catchUp(autoWorkState, 10 * 60 * 1000);
+    expect(coffee.summary.died).toBe(false);
   });
 });
 
