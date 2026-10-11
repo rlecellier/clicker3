@@ -1,0 +1,27 @@
+.sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space);
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  padding: var(--space);
+}
+
+.sheet > section {
+  align-self: stretch;
+}
+
+.name {
+  font-size: 1rem;
+}
+
+.detail,
+.reason {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.reason {
+  color: var(--color-alert);
+}
