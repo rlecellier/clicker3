@@ -20,6 +20,9 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'city', label: 'Ville', slug: 'ville' },
 ];
 
+// Touche qui ouvre l'onglet de ce rang (1 à 7), dans l'ordre de la sidebar.
+export const tabShortcut = (index: number) => String(index + 1);
+
 export const DEFAULT_TAB_SLUG = 'vie';
 
 export const gamePath = (slug: string) => `${screenPaths.game}/${slug}`;
@@ -57,8 +60,13 @@ export const useGameTabs = () => {
   const { state } = useGameContext();
   const unread = unreadMail(state);
   return {
-    tabs: gameTabs.map((tab) => {
-      const item = { id: tab.id, label: tab.label, to: gamePath(tab.slug) };
+    tabs: gameTabs.map((tab, index) => {
+      const item = {
+        id: tab.id,
+        label: tab.label,
+        to: gamePath(tab.slug),
+        shortcut: tabShortcut(index),
+      };
       if (tab.id === 'mail') {
         return {
           ...item,

@@ -24,6 +24,7 @@ import { ageOf, dateOf } from '@game/time';
 import { hasAutomation, hasCourse, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork } from '@game/work';
 import type { GameState, StatId } from '@game/state';
+import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
 import { useLongPress } from '@hook/useLongPress';
@@ -70,7 +71,7 @@ export const useGameScreen = () => {
   const { state } = useGameContext();
   const actions = useGameActions();
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [chosenCourse, setChosenCourse] = useState<string | null>(null);
+  const { chosenCourse, setChosenCourse } = useCourseChoice();
 
   useEffect(() => {
     if (feedback === null) {
@@ -159,9 +160,7 @@ export const useGameScreen = () => {
   const availableCourses = courses.filter((course) =>
     hasCourse(state, course.id),
   );
-  const course =
-    availableCourses.find((candidate) => candidate.id === chosenCourse) ??
-    availableCourses[0];
+  const course = selectedCourse(state, chosenCourse);
   const courseChoices: SplitChoice[] = availableCourses.map((candidate) => ({
     id: candidate.id,
     label: candidate.name,
