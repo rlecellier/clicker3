@@ -3,5 +3,6 @@ export {
   canBuyCompany,
   companyById,
   companyCost,
+  fitsWarehouse,
   ownedCount,
 } from './companies';

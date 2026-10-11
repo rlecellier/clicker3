@@ -28,6 +28,17 @@ const unitsOf = (state: GameState, company: Company, perCopy: number) =>
   (state.companyMultipliers[company.id] ?? 1) *
   (1 + economyRules.workBonus * (state.workBoosts[company.id] ?? 0));
 
+// Articles produits par période, avant la limite de l'entrepôt.
+export const periodProduction = (state: GameState) => {
+  let total = 0;
+  for (const company of companies) {
+    if (company.kind === 'production') {
+      total += unitsOf(state, company, company.output);
+    }
+  }
+  return Math.round(total * state.productionMultiplier);
+};
+
 // Étape 1 : les entreprises de production ajoutent au stock, dans la limite
 // de la capacité de l'entrepôt ; le reste est perdu. Le drapeau `stockFull`
 // est posé à l'étape 2, une fois le stock écoulé.

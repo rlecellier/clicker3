@@ -1,6 +1,11 @@
 import type { ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
-import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
+import {
+  canBuyCompany,
+  companyCost,
+  fitsWarehouse,
+  ownedCount,
+} from '@game/companies';
 import { companies, districts } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
@@ -70,7 +75,14 @@ export const useInvestScreen = () => {
       detail: `${company.kind === 'production' ? 'Production' : 'Commerce'} · ${companyEffect(company)} · prochain : ${formatMoney(cost)}`,
       actionLabel: 'Acheter',
       isDisabled: !canBuy,
-      reason: reasonOf(state, false, company.requirement, 'Argent insuffisant'),
+      reason: reasonOf(
+        state,
+        false,
+        company.requirement,
+        fitsWarehouse(state, company.id)
+          ? 'Argent insuffisant'
+          : 'Entrepôt trop petit : agrandissez-le d’abord',
+      ),
       conditions: conditionsOf(state, company.requirement),
       onAction: () => {
         actions.buyCompany(company.id);
