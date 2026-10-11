@@ -1,0 +1,23 @@
+name: Feedback label
+
+# GitHub ignore les labels d'une issue créée par quelqu'un qui n'a pas les
+# droits de triage. Les issues du formulaire de feedback portent un marqueur ;
+# on pose le label ici, avec le token du workflow.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    if: contains(github.event.issue.body, '<!-- clicker3-feedback -->')
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          gh label create feedback --color 1f3a73 --description "Retour d'un joueur" --repo "$GITHUB_REPOSITORY" || true
+          gh issue edit "$NUMBER" --add-label feedback --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
