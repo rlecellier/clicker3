@@ -89,7 +89,8 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `effects?` (lignes d'effet chiffré, en gras, avant le `detail`), `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
-| `LedgerTable`     | `caption`, `rows` (`id`, `label`, `last`, `total`)                                                                             | Relevé de comptes (dernier montant et cumul)               |
+| `LedgerTable`     | `caption`, `rows` (`id`, `label`, `amount`, `share?`)                                                                          | Relevé de comptes d'une période (montant et part)          |
+| `LedgerSection`   | `title`, `help` (phrase visible qui explique la mécanique), `children`                                                         | Section titrée d'un relevé (« D'où vient l'argent ? »)     |
 
 ### Carte, indicateurs et écrans de début et de fin
 
@@ -212,7 +213,7 @@ Les règles ESLint (`unicorn` strict) imposent :
 
 1. **Composant visuel** (`src/components/`) : props seulement.
 2. **Hook de vue** (`src/hooks/`, ex. `useGameScreen`, `useInvestScreen`,
-   `useJournalScreen`) : état, calculs, appels au context ; renvoie des
+   `useAccountsScreen`) : état, calculs, appels au context ; renvoie des
    données prêtes à afficher (textes déjà formatés).
 3. **Page orchestratrice** (`src/pages/`, ex. `LifePage`) : branche les hooks
    sur les composants et ne fait rien d'autre.
