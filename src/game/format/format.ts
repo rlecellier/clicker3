@@ -28,6 +28,38 @@ export const formatCount = (value: number) => count.format(value);
 // Un chiffre après la virgule au plus (réputation).
 export const formatDecimal = (value: number) => decimal.format(value);
 
+const compactUnits = [
+  { from: 1e12, suffix: 'Bn' },
+  { from: 1e9, suffix: 'Md' },
+  { from: 1e6, suffix: 'M' },
+  { from: 1e3, suffix: 'k' },
+] as const;
+
+// Grand nombre abrégé : 1 000 → « 1k », 1 250 000 → « 1,2M ». Une décimale au
+// plus, tronquée (jamais arrondie à la hausse) ; sous 1 000, entier exact.
+export const formatCompact = (value: number) => {
+  const sign = value < 0 ? '-' : '';
+  const size = Math.abs(value);
+  const unit = compactUnits.find(({ from }) => size >= from);
+  if (unit === undefined) {
+    return `${sign}${count.format(Math.trunc(size))}`;
+  }
+  const scaled = Math.trunc(size / (unit.from / 10)) / 10;
+  return `${sign}${decimal.format(scaled)}${unit.suffix}`;
+};
+
+export const formatCompactMoney = (amount: number) =>
+  `${formatCompact(amount)} €`;
+
+// Variation signée (« +120 € », « −45 € »), abrégée comme le reste.
+export const formatBalance = (amount: number, unit = '') => {
+  const body = `${formatCompact(Math.abs(amount))}${unit}`;
+  if (amount > 0) {
+    return `+${body}`;
+  }
+  return amount < 0 ? `−${body}` : body;
+};
+
 const months = [
   'janvier',
   'février',

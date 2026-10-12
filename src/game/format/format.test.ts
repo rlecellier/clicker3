@@ -3,6 +3,9 @@ import {
   checkRequirement,
   describeEffect,
   describeRequirement,
+  formatBalance,
+  formatCompact,
+  formatCompactMoney,
   formatDate,
   formatMoney,
   formatPhase,
@@ -20,6 +23,44 @@ describe('formatMoney', () => {
 
   it('arrondit aux euros entiers', () => {
     expect(plain(formatMoney(12.6))).toBe('13 €');
+  });
+});
+
+describe('formatCompact', () => {
+  it('garde les petits nombres entiers', () => {
+    expect(formatCompact(0)).toBe('0');
+    expect(formatCompact(999)).toBe('999');
+  });
+
+  it('abrège par milliers, millions, milliards et billions', () => {
+    expect(formatCompact(1000)).toBe('1k');
+    expect(formatCompact(1_000_000)).toBe('1M');
+    expect(formatCompact(2_000_000_000)).toBe('2Md');
+    expect(formatCompact(3e12)).toBe('3Bn');
+  });
+
+  it('tronque à une décimale sans arrondir à la hausse', () => {
+    expect(formatCompact(1250)).toBe('1,2k');
+    expect(formatCompact(1999)).toBe('1,9k');
+    expect(formatCompact(999_999)).toBe('999,9k');
+  });
+
+  it('garde le signe des négatifs', () => {
+    expect(formatCompact(-1500)).toBe('-1,5k');
+  });
+});
+
+describe('formatCompactMoney', () => {
+  it('ajoute le symbole euro', () => {
+    expect(formatCompactMoney(1_500_000)).toBe('1,5M €');
+  });
+});
+
+describe('formatBalance', () => {
+  it('signe la variation', () => {
+    expect(formatBalance(120, ' €')).toBe('+120 €');
+    expect(formatBalance(-45_000, ' €')).toBe('−45k €');
+    expect(formatBalance(0)).toBe('0');
   });
 });
 
