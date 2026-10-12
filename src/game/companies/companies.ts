@@ -1,10 +1,10 @@
-import { companies, economyRules, findById, upgrades } from '@game/data';
+import { companies, economyRules, findById } from '@game/data';
 import { periodProduction } from '@game/economy';
 import { withRecord } from '@game/ledger';
 import { isRequirementMet } from '@game/requirements';
 import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
-import { isOwned } from '@game/upgrades';
+import { remainingUpgrades } from '@game/upgrades';
 
 export const companyById = (id: string) => findById(companies, id);
 
@@ -26,10 +26,8 @@ export const ownedCount = (state: GameState, id: string) =>
 // la partie, au pire on jette du stock.
 export const fitsWarehouse = (state: GameState, id: string) => {
   const company = companyById(id);
-  const canGrow = upgrades.some(
-    (upgrade) =>
-      !isOwned(state, upgrade.id) &&
-      upgrade.effects.some((effect) => effect.type === 'stockCapacity'),
+  const canGrow = remainingUpgrades(state).some((upgrade) =>
+    upgrade.effects.some((effect) => effect.type === 'stockCapacity'),
   );
   return (
     company?.kind !== 'production' ||

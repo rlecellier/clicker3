@@ -7,9 +7,12 @@ export {
   hasAutomation,
   hasCourse,
   hasDashboard,
+  hasEmployee,
   isOwned,
   nextUpgrade,
   ownedEffects,
+  ownsEffect,
   previewEffects,
+  remainingUpgrades,
   upgradeById,
 } from './upgrades';
