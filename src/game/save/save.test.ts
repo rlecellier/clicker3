@@ -37,17 +37,25 @@ describe('serialize / deserialize', () => {
     });
   });
 
-  it('garde un état identique quand l’horodatage est déjà celui de l’état', () => {
-    const stamped = { ...midGame, lastSeenAt: 99 };
-    const result = deserialize(serialize(stamped, 99));
-    expect(result).toEqual({ ok: true, state: stamped });
-  });
-
-  it('conserve un personnage mort', () => {
-    const dead: GameState = { ...midGame, status: 'dead', period: 684 };
-    const result = deserialize(serialize(dead, 5));
-    expect(result.ok && result.state.status).toBe('dead');
-    expect(result.ok && result.state.period).toBe(684);
+  it('conserve un personnage mort, un journal, des effets et des drapeaux', () => {
+    const state: GameState = {
+      ...midGame,
+      status: 'dead',
+      period: 684,
+      flags: { vu: true },
+      activeEffects: [
+        {
+          eventId: 'bulle-internet',
+          kind: 'sales',
+          value: 0.2,
+          until: 50,
+        },
+      ],
+    };
+    expect(deserialize(serialize(state, 5))).toEqual({
+      ok: true,
+      state: { ...state, lastSeenAt: 5 },
+    });
   });
 
   it('écrit le numéro de version', () => {
@@ -55,6 +63,17 @@ describe('serialize / deserialize', () => {
     expect(parsed).toMatchObject({
       version: defaultSaveOptions.currentVersion,
     });
+  });
+
+  it('accepte les champs qui valent null au départ', () => {
+    const state = {
+      ...startState,
+      jobId: null,
+      lastSeenAt: 12,
+      lastStatement: null,
+    };
+    const text = JSON.stringify({ version: 1, state });
+    expect(deserialize(text)).toEqual({ ok: true, state });
   });
 });
 
@@ -73,60 +92,9 @@ describe('rejet sans planter', () => {
     },
   );
 
-  it('rejette une version inconnue (plus récente)', () => {
-    const text = JSON.stringify({ version: 99, state: startState });
-    expect(failure(text)).toBe('unknown-version');
-  });
-
-  it.each([0, -1, 1.5])('rejette le numéro de version %d', (version) => {
+  it.each([99, 0, -1, 1.5])('rejette le numéro de version %d', (version) => {
     const text = JSON.stringify({ version, state: startState });
     expect(failure(text)).toBe('unknown-version');
-  });
-
-  it('rejette un champ manquant', () => {
-    const text = JSON.stringify({ version: 1, state: withoutKey('money') });
-    expect(failure(text)).toBe('invalid-state');
-  });
-
-  it('rejette un champ du mauvais type', () => {
-    const text = JSON.stringify({
-      version: 1,
-      state: { ...startState, money: 'beaucoup' },
-    });
-    expect(failure(text)).toBe('invalid-state');
-  });
-
-  it('rejette un sous-champ manquant', () => {
-    const text = JSON.stringify({
-      version: 1,
-      state: { ...startState, stats: { metier: 0 } },
-    });
-    expect(failure(text)).toBe('invalid-state');
-  });
-
-  it('rejette un statut, une phase ou un marqueur inconnus', () => {
-    for (const changes of [
-      { status: 'zombie' },
-      { phase: 'retraite' },
-      { markers: ['chance'] },
-    ]) {
-      const text = JSON.stringify({
-        version: 1,
-        state: { ...startState, ...changes },
-      });
-      expect(failure(text)).toBe('invalid-state');
-    }
-  });
-
-  it('accepte les champs qui valent null au départ', () => {
-    const state = {
-      ...startState,
-      jobId: null,
-      lastSeenAt: 12,
-      lastStatement: null,
-    };
-    const text = JSON.stringify({ version: 1, state });
-    expect(deserialize(text)).toEqual({ ok: true, state });
   });
 });
 
@@ -138,6 +106,12 @@ const legacy = () =>
 
 describe('contenu corrompu', () => {
   it.each([
+    ['un champ manquant', { money: undefined }],
+    ['un champ du mauvais type', { money: 'beaucoup' }],
+    ['un sous-champ manquant', { stats: { metier: 0 } }],
+    ['un statut inconnu', { status: 'zombie' }],
+    ['une phase inconnue', { phase: 'retraite' }],
+    ['un marqueur inconnu', { markers: ['chance'] }],
     ['un compteur qui n’est pas un nombre', { companies: { atelier: 'x' } }],
     ['une entreprise inconnue', { companies: { fantome: 1 } }],
     ['un multiplicateur infini', { companyMultipliers: { atelier: Infinity } }],
@@ -166,25 +140,6 @@ describe('contenu corrompu', () => {
       state: { ...startState, ...changes },
     });
     expect(failure(text)).toBe('invalid-state');
-  });
-
-  it('accepte un état joué, avec journal, effets et drapeaux', () => {
-    const state = {
-      ...midGame,
-      flags: { vu: true },
-      activeEffects: [
-        {
-          eventId: 'bulle-internet',
-          kind: 'sales' as const,
-          value: 0.2,
-          until: 50,
-        },
-      ],
-    };
-    expect(deserialize(serialize(state, 1))).toEqual({
-      ok: true,
-      state: { ...state, lastSeenAt: 1 },
-    });
   });
 });
 
@@ -719,17 +674,12 @@ describe('migration de la version 7', () => {
     expect('last' in ledger).toBe(false);
   });
 
-  it('laisse les ventilations vides et conserve les totaux', () => {
-    const { ledger } = loadV7();
-    const old = JSON.parse(saveV7).state.ledger.total;
-    expect(ledger.total).toMatchObject(old);
-    expect(ledger.total.purchasesBy).toEqual({});
-    expect(ledger.current.wagesBy).toEqual({});
-  });
-
-  it('déduit le stock de départ de la période en cours', () => {
+  it('conserve les totaux, vide les ventilations et déduit le stock de départ', () => {
     const { ledger, stock } = loadV7();
     const { current } = ledger;
+    expect(ledger.total).toMatchObject(JSON.parse(saveV7).state.ledger.total);
+    expect(ledger.total.purchasesBy).toEqual({});
+    expect(current.wagesBy).toEqual({});
     expect(
       current.stockStart +
         current.stockProduced -
