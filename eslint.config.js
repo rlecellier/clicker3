@@ -95,6 +95,26 @@ export default tseslint.config(
     },
   },
   {
+    // Pages orchestratrices : elles branchent un hook d'écran, sans calcul.
+    files: ['src/pages/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            relativeParent,
+            folderTraversal,
+            {
+              group: ['@game/*', '@context/*', '@view/*'],
+              message:
+                'Une page ne fait que brancher : le calcul va dans son hook d’écran.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Fonctions pures état → props : ni React, ni hooks, ni context, ni pages.
     files: ['src/views/**'],
     rules: {
