@@ -34,7 +34,12 @@ impossible, la raison s'affiche sous le bouton.
 
 Travaille à votre emploi : vous gagnez le salaire du poste (affiché sous le
 bouton, tous bonus et malus compris : « Rapporte 60 € par clic ») et de la
-réputation, avec 30 % de chance d'obtenir un marqueur de Métier. Remplit la
+réputation. Le salaire n'est versé qu'**à la fin de la période**, avec les
+ventes, avant le loyer : chaque clic fait donc monter la balance d'argent, pas
+votre argent. Une balance positive annonce que votre argent va augmenter à la
+clôture.
+
+Travailler a 30 % de chance de donner un marqueur de Métier et remplit la
 jauge de 10. Touche : T.
 
 Une fois la **Procédure de travail** achetée, un appui long active ou coupe le

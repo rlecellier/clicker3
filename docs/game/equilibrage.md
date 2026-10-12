@@ -104,13 +104,13 @@ Raisons principales :
 | Paliers de stat P1 à P4           | 2, 9, 41, 81                 | 10, 30, 70, 150  |
 | Paliers de réputation             | 6, 100, 170 (gagnée cumulée) | 10, 30, 80       |
 | Coût des quartiers                | 1, 22, 33                    | 5, 15, 40        |
-| Salaires des emplois              | 60, 76, 250, 1 600           | 40, 70, 200, 600 |
+| Salaires des emplois              | 60, 80, 250, 1 600           | 40, 70, 200, 600 |
 | Coût en réputation emplois 3 et 4 | 10, 9                        | 5, 15            |
 | Études (coût par action)          | 20, 150, 190, 260            | 20, 60, 150, 300 |
 
 La réputation par vente reste 0,02. Le stage (150 €) et l'étude du Métier (20 €)
 restent inchangés pour les parcours e2e. Le salaire de l'emploi 1 passe de 40 à
-60 € et celui de l'emploi 2 de 51 à 76 € avec l'argent négatif (voir ci-dessous). Les
+60 € et celui de l'emploi 2 de 51 à 80 € avec l'argent négatif (voir ci-dessous). Les
 événements historiques et les indicateurs d'impact n'ont pas été modifiés : les
 mesures ne l'ont pas exigé.
 
