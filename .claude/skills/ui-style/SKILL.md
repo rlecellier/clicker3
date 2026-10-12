@@ -29,7 +29,9 @@ illustrations. Voix administrative pince-sans-rire.
    `SplitActionButton` (`press` : appui maintenu, `shortcut`), `ItemList`
    (`effects`, `highlightedId`), `EventLog`, `MailPopup` (popup non modale),
    `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
-   `PageLink`, `FigureList`, `ConfirmPrompt`.
+   `PageLink`, `FigureList`, `ConfirmPrompt`, `ScreenPage` (écran hors jeu),
+   `WithBadge` (titre + badge), `Balance` (variation signée), `ActionInfo`
+   (détail ou raison sous un bouton).
    Toute action de bouton se joue au toucher : un tap = une action (voir la
    politique de test dans `CLAUDE.md`), vérifié par `tap()` dans un parcours e2e.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
