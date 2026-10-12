@@ -33,8 +33,9 @@ impossible, la raison s'affiche sous le bouton.
 ### Travailler
 
 Travaille à votre emploi : vous gagnez le salaire du poste (affiché sous le
-bouton : « Salaire : 60 € ») et de la réputation, avec 30 % de chance d'obtenir un
-marqueur de Métier. Remplit la jauge de 10. Touche : T.
+bouton, tous bonus et malus compris : « Rapporte 60 € par clic ») et de la
+réputation, avec 30 % de chance d'obtenir un marqueur de Métier. Remplit la
+jauge de 10. Touche : T.
 
 Une fois la **Procédure de travail** achetée, un appui long active ou coupe le
 travail automatique : le bouton affiche alors « Appui long : couper l'automatique »

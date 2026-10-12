@@ -1,9 +1,107 @@
-import { actionRules, automationRules, jobs, startState } from '@game/data';
+import {
+  actionRules,
+  automationRules,
+  jobs,
+  startState,
+  upgrades,
+} from '@game/data';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
-import { work } from './work';
+import { buyCompany } from '@game/companies';
+import { endPeriod, periodOutlook } from '@game/period';
+import { buyUpgrade } from '@game/upgrades';
+import { jobWage, work } from './work';
 
 const firstJob = jobs[0];
+
+const salesUpgrade = upgrades.find((upgrade) =>
+  upgrade.effects.some((effect) => effect.type === 'salesBonus'),
+);
+
+describe('jobWage et balance de la période', () => {
+  const trading = {
+    ...startState,
+    money: 5000,
+    stock: 4,
+    companies: { ...startState.companies, atelier: 1, boutique: 1 },
+  };
+
+  // Ce que `work` verse vraiment sur un clic.
+  const paid = (state: GameState, isAuto = false) =>
+    work(state, 'job', isAuto).money - state.money;
+
+  it('annonce ce que rapporte un clic', () => {
+    expect(jobWage(startState)).toBe(paid(startState));
+  });
+
+  it('applique le malus de vieillesse et la moitié en automatique', () => {
+    const senior = { ...startState, period: 12 * 42 };
+    expect(jobWage(senior)).toBeLessThan(jobWage(startState));
+    expect(jobWage(senior)).toBe(paid(senior));
+    expect(jobWage(startState, true)).toBe(paid(startState, true));
+    expect(jobWage(senior, true)).toBe(paid(senior, true));
+  });
+
+  it('vaut 0 sans emploi', () => {
+    expect(jobWage({ ...startState, jobId: null })).toBe(0);
+  });
+
+  it('fait monter la balance exactement du salaire à chaque clic', () => {
+    let state: GameState = trading;
+    for (let click = 0; click < 3; click += 1) {
+      const before = periodOutlook(state).money;
+      const wage = jobWage(state);
+      state = work(state);
+      expect(state.period).toBe(0);
+      expect(periodOutlook(state).money).toBe(before + wage);
+    }
+  });
+
+  const ready: GameState = {
+    ...trading,
+    money: 1_000_000,
+    stock: 50,
+    reputationEarned: 1000,
+    stats: { ...startState.stats, gestion: 10 },
+  };
+
+  // Argent de la période = argent actuel moins ce qui a déjà bougé dedans.
+  const closingGap = (state: GameState) => {
+    const { current } = state.ledger;
+    const moved =
+      current.wages +
+      current.sales +
+      current.surplus +
+      current.otherIncome -
+      (current.rent +
+        current.payroll +
+        current.purchases +
+        current.studies +
+        current.otherExpenses +
+        current.interest);
+    return endPeriod(state).money - (state.money - moved);
+  };
+
+  it('suit un achat qui change la production', () => {
+    const bought = buyCompany(ready, 'atelier');
+    expect(bought.companies.atelier).toBe(2);
+    expect(periodOutlook(bought).stock).toBeGreaterThan(
+      periodOutlook(ready).stock,
+    );
+    expect(periodOutlook(bought).money).toBe(closingGap(bought));
+  });
+
+  it('suit une amélioration qui change les ventes', () => {
+    expect(salesUpgrade).toBeDefined();
+    const id = salesUpgrade?.id ?? '';
+    const price = salesUpgrade?.price ?? 0;
+    const before = periodOutlook(ready).money;
+    const bought = buyUpgrade(ready, id);
+    expect(bought.upgrades).toContain(id);
+    expect(periodOutlook(bought).money).toBe(closingGap(bought));
+    expect(periodOutlook(bought).money).toBeGreaterThan(before - price);
+  });
+});
 
 describe('work', () => {
   it('verse le salaire et un peu de réputation', () => {
