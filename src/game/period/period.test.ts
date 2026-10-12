@@ -1,7 +1,7 @@
 import { startState } from '@game/data';
 import { ageOf } from '@game/time';
 import { deepFreeze } from '@test/deepFreeze';
-import { addGauge, endPeriod } from './period';
+import { addGauge, endPeriod, periodOutlook } from './period';
 
 const capacity = startState.gaugeCapacity;
 
@@ -74,6 +74,38 @@ describe('addGauge', () => {
     // Le but du test est justement l'aller-retour JSON.
     // eslint-disable-next-line unicorn/prefer-structured-clone
     expect(JSON.parse(JSON.stringify(next))).toEqual(next);
+  });
+});
+
+describe('periodOutlook', () => {
+  it('compte le loyer à venir dans la balance', () => {
+    const rich = { ...startState, money: 1000 };
+    expect(periodOutlook(rich).money).toBe(-startState.rent);
+  });
+
+  it('prévoit la variation d’argent et de stock de la clôture', () => {
+    const state = {
+      ...startState,
+      money: 500,
+      stock: 10,
+      companies: { ...startState.companies, atelier: 1, boutique: 1 },
+    };
+    const outlook = periodOutlook(state);
+    const end = endPeriod(state);
+    expect(outlook.money).toBe(end.money - state.money);
+    expect(outlook.stock).toBe(end.stock - state.ledger.current.stockStart);
+  });
+
+  it('ajoute ce qui est déjà dépensé dans la période', () => {
+    const state = {
+      ...startState,
+      money: 1000,
+      ledger: {
+        ...startState.ledger,
+        current: { ...startState.ledger.current, purchases: 40 },
+      },
+    };
+    expect(periodOutlook(state).money).toBe(-40 - startState.rent);
   });
 });
 
