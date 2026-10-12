@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -17,11 +18,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  # Ne déploie que si le jeu a changé depuis le dernier déploiement réussi :
+  # une modification de docs, de CI ou de tests e2e ne change pas le site.
+  changes:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    outputs:
+      game: ${{ steps.diff.outputs.game }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          game=true
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            last=$(gh run list --workflow=deploy.yml --status=success \
+              --json headSha --jq '.[0].headSha // empty')
+            if [ -n "$last" ] && git cat-file -e "$last^{commit}" 2>/dev/null; then
+              if git diff --quiet "$last" HEAD -- \
+                src index.html package.json package-lock.json \
+                vite.config.ts tsconfig.json .github/workflows/deploy.yml; then
+                game=false
+              fi
+            fi
+          fi
+          echo "game=$game" >> "$GITHUB_OUTPUT"
+          echo "Le jeu a changé : $game"
+
+  deploy:
+    needs: changes
+    if: needs.changes.outputs.game == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
