@@ -123,48 +123,36 @@ describe('buyUpgrade', () => {
 });
 
 describe('effets', () => {
-  it('cursus : ouvre l’étude d’une stat', () => {
+  it('cursus, logement, entrepôt et marqueurs : capacités et accès', () => {
     expect(hasCourse(rich, 'metier')).toBe(false);
     expect(hasCourse(buy(rich, 'stage-posture'), 'metier')).toBe(true);
+
+    const housed = buy(rich, 'studio-renove');
+    expect(housed.sleepMultiplier).toBe(1.5);
+    expect(housed.housingId).toBe('studio-renove');
+    expect(buy(housed, 'pavillon-tilleuls').sleepMultiplier).toBe(2.5);
+
+    const stocked = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
+    expect(stocked.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
+
+    const noted = buy(buy(rich, 'carnet-notes'), 'application-productivite');
+    expect(noted.maxMarkers).toBe(rich.maxMarkers + 2 + 3);
   });
 
-  it('logement : multiplicateur de sommeil', () => {
-    const next = buy(rich, 'studio-renove');
-    expect(next.sleepMultiplier).toBe(1.5);
-    expect(next.housingId).toBe('studio-renove');
-    expect(buy(next, 'pavillon-tilleuls').sleepMultiplier).toBe(2.5);
-  });
-
-  it('entrepôt : capacité du stock multipliée', () => {
-    const next = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
-    expect(next.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
-  });
-
-  it('marqueurs : maximum augmenté', () => {
-    const next = buy(buy(rich, 'carnet-notes'), 'application-productivite');
-    expect(next.maxMarkers).toBe(rich.maxMarkers + 2 + 3);
-  });
-
-  it('production : globale ou propre à un type d’entreprise', () => {
+  it('multiplicateurs de production, de ventes et de réputation', () => {
     expect(buy(rich, 'premier-collaborateur').productionMultiplier).toBe(2.1);
     expect(buy(rich, 'camionnette').companyMultipliers).toEqual({
       atelier: 1.15,
     });
-  });
 
-  it('ventes et réputation par vente', () => {
-    const next = buy(rich, 'plan-communication');
-    expect(next.salesMultiplier).toBe(1.3);
-    expect(next.reputationPerSaleMultiplier).toBe(1.5);
-  });
+    const advertised = buy(rich, 'plan-communication');
+    expect(advertised.salesMultiplier).toBe(1.3);
+    expect(advertised.reputationPerSaleMultiplier).toBe(1.5);
 
-  it('toutes les entreprises : production et ventes', () => {
-    const next = buy(rich, 'equipe-collaborateurs');
-    expect(next.productionMultiplier).toBe(1.6);
-    expect(next.salesMultiplier).toBe(1.6);
-  });
+    const team = buy(rich, 'equipe-collaborateurs');
+    expect(team.productionMultiplier).toBe(1.6);
+    expect(team.salesMultiplier).toBe(1.6);
 
-  it('réputation gagnée par le travail', () => {
     expect(buy(rich, 'cartes-visite').workReputationMultiplier).toBe(1.25);
   });
 
