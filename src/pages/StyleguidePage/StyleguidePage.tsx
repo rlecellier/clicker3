@@ -47,8 +47,8 @@ export const StyleguidePage = () => (
         resources={{
           money: { value: '1,2k €', exact: '1 250 €' },
           stock: { value: '12 / 50', exact: '12 / 50' },
-          reputation: { tier: 1, max: 3, label: 'Réputation : palier 1 sur 3' },
         }}
+        reputation={{ tier: 1, max: 3, label: 'Réputation : palier 1 sur 3' }}
         date="janvier 1999"
         gauge={{ value: 6, max: 10 }}
       />
@@ -56,8 +56,8 @@ export const StyleguidePage = () => (
         resources={{
           money: { value: '-1,2M €', exact: '-1 234 567 €' },
           stock: { value: '50k / 50k', exact: '50 000 / 50 000' },
-          reputation: { tier: 3, max: 3, label: 'Réputation : palier 3 sur 3' },
         }}
+        reputation={{ tier: 3, max: 3, label: 'Réputation : palier 3 sur 3' }}
         date="décembre 2026"
         gauge={{ value: 10, max: 10 }}
       />

@@ -10,7 +10,7 @@ import { reputationTiers } from '@game/data';
 import { reputationTierProgress } from '@game/reputation';
 import { dateOf } from '@game/time';
 
-// Ressources (argent, stock, palier de réputation), date et jauge de temps de
+// Ressources (argent, stock), palier de réputation, date et jauge de temps de
 // l'en-tête fixe.
 export const useGameHeader = () => {
   const { state } = useGameContext();
@@ -25,12 +25,12 @@ export const useGameHeader = () => {
         value: `${formatCompact(state.stock)} / ${formatCompact(state.stockCapacity)}`,
         exact: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
       },
-      reputation: {
-        tier,
-        // « Inconnu » (palier 0) n'a pas d'étoile.
-        max: reputationTiers.length - 1,
-        label: `Réputation : palier ${tier} sur ${reputationTiers.length - 1} · ${name}`,
-      },
+    },
+    reputation: {
+      tier,
+      // « Inconnu » (palier 0) n'a pas d'étoile.
+      max: reputationTiers.length - 1,
+      label: `Réputation : palier ${tier} sur ${reputationTiers.length - 1} · ${name}`,
     },
     date: formatDate(dateOf(state)),
     gauge: { value: state.gauge, max: state.gaugeCapacity },
