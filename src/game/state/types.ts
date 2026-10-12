@@ -116,6 +116,12 @@ export type LifeSpan = {
 export type QueuedAction =
   { type: 'work'; target: string } | { type: 'study'; courseId: string };
 
+/** Action qui remplit la jauge de temps (une couleur chacune à l'écran). */
+export type GaugeKind = 'study' | 'work' | 'sleep';
+
+/** Part de la jauge remplie par une action, dans l'ordre où elles ont eu lieu. */
+export type GaugeSegment = { kind: GaugeKind; amount: number };
+
 export type GameState = {
   version: number;
   characterName: string;
@@ -125,6 +131,8 @@ export type GameState = {
   period: number;
   /** Remplissage de la jauge de temps de la période en cours. */
   gauge: number;
+  /** Ce qui remplit la jauge, dans l'ordre (leur somme vaut `gauge`). */
+  gaugeSegments: GaugeSegment[];
   /** Remplissage à partir duquel une période passe. */
   gaugeCapacity: number;
   status: GameStatus;

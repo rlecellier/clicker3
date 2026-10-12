@@ -212,7 +212,7 @@ describe('invariants sur une partie jouée', () => {
     { type: 'buyUpgrade', id: 'bts-opportunites' },
     { type: 'autoTick', elapsedMs: 6000 },
     { type: 'work', target: 'boutique' },
-    { type: 'addGauge', amount: 140 },
+    { type: 'addGauge', amount: 140, kind: 'work' },
   ];
 
   const play = (steps: number) => {
@@ -340,10 +340,10 @@ describe('invariants sur une partie jouée', () => {
 
   it('remet à zéro la « dernière période » à chaque période', () => {
     let state = rich;
-    state = reduce(state, { type: 'addGauge', amount: 100 });
+    state = reduce(state, { type: 'addGauge', amount: 100, kind: 'work' });
     const first = lastPeriodReport(state);
     expect(first.rent).toBe(startState.rent);
-    state = reduce(state, { type: 'addGauge', amount: 100 });
+    state = reduce(state, { type: 'addGauge', amount: 100, kind: 'work' });
     expect(lastPeriodReport(state).rent).toBe(startState.rent);
     expect(totals(state).rent).toBe(2 * startState.rent);
   });
@@ -353,7 +353,11 @@ describe('invariants sur une partie jouée', () => {
       ...rich,
       companies: { atelier: 2, boutique: 2 },
     };
-    const after = reduce(before, { type: 'addGauge', amount: 100 });
+    const after = reduce(before, {
+      type: 'addGauge',
+      amount: 100,
+      kind: 'work',
+    });
     const report = lastPeriodReport(after);
     expect(after.money - before.money).toBe(report.net);
     expect(report.sales).toBeGreaterThan(0);

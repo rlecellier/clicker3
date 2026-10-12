@@ -10,7 +10,7 @@ import {
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
 import { isPlaying } from '@game/state';
-import type { GameState } from '@game/state';
+import type { GameState, GaugeKind, GaugeSegment } from '@game/state';
 import { ageOf } from '@game/time';
 
 /** Étape 4 : le personnage vieillit d'une période, et meurt à l'âge fixé. */
@@ -23,6 +23,7 @@ export const ageCharacter = (state: GameState): GameState => {
 export const resetGauge = (state: GameState): GameState => ({
   ...state,
   gauge: Math.max(0, state.gauge - state.gaugeCapacity),
+  gaugeSegments: dropFromStart(state.gaugeSegments, state.gaugeCapacity),
 });
 
 /**
@@ -44,6 +45,33 @@ export const settleAccounts = (state: GameState): GameState => {
     settled = step(settled);
   }
   return settled;
+};
+
+// Retire `amount` de jauge en commençant par les plus anciens segments.
+const dropFromStart = (
+  segments: GaugeSegment[],
+  amount: number,
+): GaugeSegment[] => {
+  let left = amount;
+  return segments
+    .map((segment) => {
+      const removed = Math.min(segment.amount, left);
+      left -= removed;
+      return { ...segment, amount: segment.amount - removed };
+    })
+    .filter((segment) => segment.amount > 0);
+};
+
+// Ajoute un segment, en le fusionnant au dernier s'il est de même nature.
+const appendSegment = (
+  segments: GaugeSegment[],
+  kind: GaugeKind,
+  amount: number,
+): GaugeSegment[] => {
+  const last = segments.at(-1);
+  return last?.kind === kind
+    ? [...segments.slice(0, -1), { kind, amount: last.amount + amount }]
+    : [...segments, { kind, amount }];
 };
 
 export const endPeriod = (state: GameState): GameState => {
@@ -72,14 +100,22 @@ export const periodOutlook = (state: GameState) => ({
  * passe ; une grosse quantité peut en faire passer plusieurs. Rien ne se passe
  * une fois le personnage mort.
  */
-export const addGauge = (state: GameState, amount: number): GameState => {
+export const addGauge = (
+  state: GameState,
+  amount: number,
+  kind: GaugeKind,
+): GameState => {
   if (state.gaugeCapacity <= 0) {
     throw new RangeError('gaugeCapacity doit être strictement positive');
   }
   if (!isPlaying(state) || amount <= 0) {
     return state;
   }
-  let next: GameState = { ...state, gauge: state.gauge + amount };
+  let next: GameState = {
+    ...state,
+    gauge: state.gauge + amount,
+    gaugeSegments: appendSegment(state.gaugeSegments, kind, amount),
+  };
   while (isPlaying(next) && next.gauge >= next.gaugeCapacity) {
     next = endPeriod(next);
   }

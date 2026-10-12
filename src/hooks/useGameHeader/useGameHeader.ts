@@ -32,6 +32,13 @@ export const useGameHeader = () => {
       label: `Réputation : palier ${tier} sur ${reputationTiers.length - 1} · ${name}`,
     },
     date: formatPeriodDate(state),
-    gauge: { value: state.gauge, max: state.gaugeCapacity },
+    gauge: {
+      value: state.gauge,
+      max: state.gaugeCapacity,
+      segments: state.gaugeSegments.map(({ kind, amount }) => ({
+        tone: kind,
+        value: amount,
+      })),
+    },
   };
 };

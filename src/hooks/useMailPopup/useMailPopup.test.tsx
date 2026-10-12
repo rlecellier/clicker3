@@ -35,7 +35,11 @@ const setup = (path: string) => {
 const receive = (result: ReturnType<typeof setup>['result']) => {
   const before = result.current.game.state.mailReceived;
   act(() => {
-    result.current.game.dispatch({ type: 'addGauge', amount: 250 });
+    result.current.game.dispatch({
+      type: 'addGauge',
+      amount: 250,
+      kind: 'work',
+    });
   });
   expect(result.current.game.state.mailReceived).toBeGreaterThan(before);
 };

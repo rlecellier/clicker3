@@ -54,7 +54,11 @@ describe('useMailScreen', () => {
       false,
     );
     act(() => {
-      result.current.game.dispatch({ type: 'addGauge', amount: 250 });
+      result.current.game.dispatch({
+        type: 'addGauge',
+        amount: 250,
+        kind: 'work',
+      });
     });
     expect(result.current.game.state.mailRead).toBe(
       result.current.game.state.mailReceived,

@@ -51,5 +51,5 @@ export const study = (state: GameState, courseId: string): GameState => {
     markerChance,
     markerVariance,
   );
-  return addGauge(withMarker, gauge);
+  return addGauge(withMarker, gauge, 'study');
 };

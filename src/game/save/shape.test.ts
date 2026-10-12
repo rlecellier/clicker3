@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 10,
+    version: 11,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -29,6 +29,7 @@ describe('forme de l’état', () => {
       'flags',
       'gauge',
       'gaugeCapacity',
+      'gaugeSegments',
       'housingId',
       'isSleeping',
       'jobId',

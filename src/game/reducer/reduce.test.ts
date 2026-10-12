@@ -9,7 +9,11 @@ import { newGame, reduce } from './reduce';
 
 describe('reduce', () => {
   it('applique addGauge', () => {
-    const next = reduce(startState, { type: 'addGauge', amount: 250 });
+    const next = reduce(startState, {
+      type: 'addGauge',
+      amount: 250,
+      kind: 'work',
+    });
     expect(next.period).toBe(3);
     expect(next.gauge).toBe(40);
   });
@@ -22,7 +26,7 @@ describe('reduce', () => {
 
   it('laisse l’état d’origine intact', () => {
     const before = structuredClone(startState);
-    reduce(startState, { type: 'addGauge', amount: 250 });
+    reduce(startState, { type: 'addGauge', amount: 250, kind: 'work' });
     expect(startState).toEqual(before);
   });
 
@@ -97,7 +101,7 @@ describe('reduce', () => {
       upgrades: ['stage-posture'],
     });
     const actions: GameAction[] = [
-      { type: 'addGauge', amount: 500 },
+      { type: 'addGauge', amount: 500, kind: 'work' },
       { type: 'unlockDistrict', id: 'hauts-fourneaux' },
       { type: 'work', target: 'job' },
       { type: 'study', courseId: 'metier' },
