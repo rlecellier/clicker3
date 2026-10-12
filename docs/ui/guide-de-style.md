@@ -3,8 +3,8 @@
 Référence humaine pour créer ou modifier l'UI. La version courte, destinée aux
 agents, est le skill `.claude/skills/ui-style/SKILL.md`. La page `/styleguide`
 (développement seulement, voir
-[ADR 0006](../../.claude/adr/0006-decisions-visuelles-v1.md)) montre les
-composants de base en situation : lancer `npm run dev` puis ouvrir
+[ADR 0006](../../.claude/adr/0006-decisions-visuelles-v1.md)) montre
+tous les composants du § 3 en situation : lancer `npm run dev` puis ouvrir
 `/styleguide`.
 
 ## 1. Principes
@@ -85,7 +85,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `CharacterHeader` | `name`, `age`, `date`, `phase` (textes déjà formatés)                                                                          | En-tête du personnage                                      |
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `shortcut?`, `onClick`                          | Action de jeu ; `press` : appui maintenu = 4 clics par seconde, appui long = automatique |
-| `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
+| `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `press?`, `shortcut?`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `effects?` (lignes d'effet chiffré, en gras, avant le `detail`), `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
@@ -118,8 +118,8 @@ distinct ; sinon, composer les existants.
   c'est `accessibleLabel` qui porte l'information (« Courrier, 3 messages non
   lus », « Emploi, 2 nouveautés »). Ne jamais mettre un compteur sans lui.
 - **Raccourcis** : une action qui a une touche déclare `shortcut` (`Button`,
-  `ActionButton`, `Sidebar`), rendu en `aria-keyshortcuts`, et la touche
-  figure dans l'infobulle ou le libellé.
+  `ActionButton`, `SplitActionButton`, `Sidebar`), rendu en
+  `aria-keyshortcuts`, et la touche figure dans l'infobulle ou le libellé.
 - **Rôles et noms** : `Window` et `ItemList` sont des `section` nommées
   (`aria-label`) ; `EventLog` est une liste nommée ; les tableaux ont une
   légende (`caption`). Les widgets Base UI (`Tabs`, `Menu`, `Progress`,
@@ -226,5 +226,5 @@ Les règles ESLint (`unicorn` strict) imposent :
 4. Partir d'un composant Base UI pour les widgets interactifs (bouton, onglets,
    menu…).
 5. Ne pas écrire de test pour un composant uniquement visuel.
-6. L'ajouter à `/styleguide` seulement s'il illustre la doc ; mettre à jour ce
-   guide et le skill.
+6. L'ajouter à `/styleguide` (un composant du tableau § 3 sans démo est un
+   oubli) ; mettre à jour ce guide et le skill.

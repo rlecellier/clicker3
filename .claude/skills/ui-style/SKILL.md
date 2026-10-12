@@ -21,12 +21,14 @@ illustrations. Voix administrative pince-sans-rire.
 ## Checklist
 
 1. **Réutiliser avant de créer.** Composants existants (`@component/…`) :
-   `Title`, `Window`, `Button`, `ProgressBar`, `DataTable`, `Badge`,
-   `InfoPanel`, `Tabs` (contrôlé avec `value` + `onValueChange`), `Sidebar`
-   (items `badge`, `badgeTone`, `accessibleLabel`, `shortcut`), `GameHeader`,
-   `Stat` (dans un `<dl>`), `Note` (`minLines`, `to`), `CharacterHeader`,
-   `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`
-   (`highlightedId`), `EventLog`, `MailPopup` (popup non modale), `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
+   `Title`, `Window`, `Button`, `ProgressBar` (`size="small"` sous un bouton),
+   `DataTable`, `Badge`, `InfoPanel`, `Tabs` (contrôlé avec `value` +
+   `onValueChange`), `Sidebar` (items `badge`, `badgeTone`, `accessibleLabel`,
+   `shortcut`), `GameHeader`, `Stat` (dans un `<dl>`), `Note` (`minLines`,
+   `to`), `CharacterHeader`, `MarkerTrack`, `ActionButton` et
+   `SplitActionButton` (`press` : appui maintenu, `shortcut`), `ItemList`
+   (`effects`, `highlightedId`), `EventLog`, `MailPopup` (popup non modale),
+   `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
@@ -54,6 +56,8 @@ illustrations. Voix administrative pince-sans-rire.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;
    raison de blocage via `describeRequirement` (« Argent insuffisant »,
    « Palier Gestion 2 requis ») ; ne jamais griser sans dire pourquoi.
+   Toute valeur que des modificateurs changent s'affiche dans sa version
+   finale (`@game/economy`), jamais en valeur de base.
 8. **Hauteurs stables** : tout texte dynamique a une hauteur réservée
    (`min-height` en `lh`, ellipse sur une ligne, deux lignes tronquées pour
    un détail), et ce qui apparaît en cours de partie occupe déjà sa place :
