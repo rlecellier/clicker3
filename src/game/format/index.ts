@@ -10,6 +10,7 @@ export {
   formatDate,
   formatDecimal,
   formatMoney,
+  formatPeriodDate,
   formatPhase,
   statLabels,
 } from './format';

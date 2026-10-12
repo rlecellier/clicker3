@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { EventLogEntry } from '@component/EventLog';
 import { useGameContext } from '@context/GameContext';
-import { formatDate } from '@game/format';
+import { formatPeriodDate } from '@game/format';
 import { unreadMail } from '@game/mail';
 import type { JournalEntry } from '@game/state';
-import { dateOf } from '@game/time';
 
 const keyOf = (entry: JournalEntry) => `${entry.period}-${entry.id}`;
 
@@ -29,7 +28,7 @@ export const useMailScreen = () => {
     .toReversed()
     .map((entry, index) => ({
       id: keyOf(entry),
-      date: formatDate(dateOf({ ...state, period: entry.period })),
+      date: formatPeriodDate(state, entry.period),
       text: entry.text,
       isNew: index < fresh,
     }));

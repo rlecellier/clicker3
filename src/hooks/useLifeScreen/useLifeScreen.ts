@@ -5,7 +5,7 @@ import {
   describeRequirement,
   formatAge,
   formatBalance,
-  formatDate,
+  formatPeriodDate,
   formatMoney,
   formatPhase,
   statLabels,
@@ -15,7 +15,7 @@ import { periodOutlook } from '@game/period';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
-import { ageOf, dateOf } from '@game/time';
+import { ageOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork, jobWage } from '@game/work';
 import type { GameState } from '@game/state';
@@ -193,7 +193,7 @@ export const useLifeScreen = () => {
     header: {
       name: state.characterName,
       age: formatAge(ageOf(state)),
-      date: formatDate(dateOf(state)),
+      date: formatPeriodDate(state),
       phase: formatPhase(state),
     },
     // Balances de la période en cours (prévision à la clôture).

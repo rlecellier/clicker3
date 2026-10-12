@@ -7,6 +7,7 @@ import {
   formatCompact,
   formatCompactMoney,
   formatDate,
+  formatPeriodDate,
   formatMoney,
   formatPhase,
 } from './format';
@@ -61,6 +62,15 @@ describe('formatBalance', () => {
     expect(formatBalance(120, ' €')).toBe('+120 €');
     expect(formatBalance(-45_000, ' €')).toBe('−45k €');
     expect(formatBalance(0)).toBe('0');
+  });
+});
+
+describe('formatPeriodDate', () => {
+  it('date la période en cours, ou une autre période de la vie', () => {
+    expect(formatPeriodDate(startState)).toBe('janvier 1999');
+    expect(formatPeriodDate({ ...startState, period: 5 }, 13)).toBe(
+      'février 2000',
+    );
   });
 });
 
