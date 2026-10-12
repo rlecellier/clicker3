@@ -25,10 +25,10 @@ import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
 import type { PressHandlers } from '@hook/useHoldRepeat';
+import { ENDED, NO_MONEY } from '@view/purchase';
 
 const START_TEXT =
   'Bienvenue dans l’euro. Votre compte est crédité de 0 €, ce qui est un bon début.';
-const ENDED = 'Partie terminée';
 const QUEUED = 'Vous dormez. Cela sera fait au réveil.';
 
 type BaseAction = {
@@ -124,7 +124,7 @@ export const useLifeScreen = () => {
       ? null
       : {
           detail: `${course.name} · ${formatMoney(course.cost)} · ${statLabels[course.stat]}`,
-          reason: isOver ? ENDED : 'Argent insuffisant',
+          reason: isOver ? ENDED : NO_MONEY,
           isDisabled: !canStudy(state, course.id),
           run: sayOrQueue(
             'Vous avez étudié. Personne ne vous l’a demandé.',

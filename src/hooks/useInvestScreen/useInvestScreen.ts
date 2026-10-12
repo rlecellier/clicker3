@@ -10,7 +10,6 @@ import {
 } from '@game/companies';
 import { companies, districts, economyRules } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
-import { canUnlockDistrict } from '@game/districts';
 import {
   finalPrice,
   outputPerCopy,
@@ -19,14 +18,13 @@ import {
   salesCapacity,
 } from '@game/economy';
 import {
-  checkRequirement,
   describeEffect,
   formatCount,
   formatDecimal,
   formatMoney,
 } from '@game/format';
-import { isUnlocked } from '@game/requirements';
-import type { Requirement } from '@game/requirements';
+import { canUnlockDistrict } from '@game/districts';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 import {
   availableUpgrades,
@@ -36,29 +34,14 @@ import {
   upgradeById,
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
-
-// Les prérequis à afficher en vert ou en rouge, seulement s'il en manque.
-const conditionsOf = (state: GameState, requirement?: Requirement) =>
-  requirement !== undefined && !isUnlocked(state, requirement)
-    ? checkRequirement(state, requirement)
-    : undefined;
-
-// Pourquoi l'achat est impossible : rien si déjà fait, sinon la fin de partie,
-// le déblocage manquant ou, à défaut, le manque de ressource.
-const reasonOf = (
-  state: GameState,
-  isDone: boolean,
-  requirement: Requirement | undefined,
-  shortage: string,
-) => {
-  if (isDone) {
-    return;
-  }
-  if (state.status === 'dead') {
-    return 'Partie terminée';
-  }
-  return conditionsOf(state, requirement) === undefined ? shortage : undefined;
-};
+import {
+  ENDED,
+  NO_MONEY,
+  NO_REPUTATION,
+  missingConditions,
+  ownedBadge,
+  unavailableReason,
+} from '@view/purchase';
 
 const stockLabel = (state: GameState) => {
   if (state.lastStatement?.stockout === true) {
@@ -126,19 +109,17 @@ export const useInvestScreen = () => {
     return {
       id: company.id,
       title: company.name,
-      badge: owned > 0 ? `${formatCount(owned)} possédé(s)` : undefined,
+      badge: ownedBadge(owned),
       detail: `${company.kind === 'production' ? 'Production' : 'Commerce'} · ${companyEffect(state, company)} · prochain : ${formatMoney(cost)}`,
       actionLabel: 'Acheter',
       isDisabled: !canBuy,
-      reason: reasonOf(
-        state,
-        false,
-        company.requirement,
-        fitsWarehouse(state, company.id)
-          ? 'Argent insuffisant'
+      reason: unavailableReason(state, {
+        requirement: company.requirement,
+        shortage: fitsWarehouse(state, company.id)
+          ? NO_MONEY
           : 'Entrepôt trop petit : agrandissez-le d’abord',
-      ),
-      conditions: conditionsOf(state, company.requirement),
+      }),
+      conditions: missingConditions(state, company.requirement),
       onAction: () => {
         actions.buyCompany(company.id);
       },
@@ -148,14 +129,11 @@ export const useInvestScreen = () => {
   const warehouseItem: ListItem = {
     id: 'warehouse',
     title: 'Petit entrepôt',
-    badge:
-      state.warehouses > 0
-        ? `${formatCount(state.warehouses)} possédé(s)`
-        : undefined,
+    badge: ownedBadge(state.warehouses),
     detail: `Stockage · +${formatCount(economyRules.warehouse.capacity)} de capacité de stock · prochain : ${formatMoney(warehouseCost(state.warehouses))}`,
     actionLabel: 'Acheter',
     isDisabled: !canBuyWarehouse(state),
-    reason: reasonOf(state, false, undefined, 'Argent insuffisant'),
+    reason: unavailableReason(state, { shortage: NO_MONEY }),
     onAction: () => {
       actions.buyWarehouse();
     },
@@ -174,8 +152,11 @@ export const useInvestScreen = () => {
       ].join(' · '),
       actionLabel: 'Acheter',
       isDisabled: !canBuyUpgrade(state, upgrade.id),
-      reason: reasonOf(state, false, upgrade.requirement, 'Argent insuffisant'),
-      conditions: conditionsOf(state, upgrade.requirement),
+      reason: unavailableReason(state, {
+        requirement: upgrade.requirement,
+        shortage: NO_MONEY,
+      }),
+      conditions: missingConditions(state, upgrade.requirement),
       onAction: () => {
         actions.buyUpgrade(upgrade.id);
       },
@@ -194,7 +175,7 @@ export const useInvestScreen = () => {
       detail: [upgrade.description, ...extraOf(upgrade)].join(' · '),
       actionLabel: 'Annuler',
       isDisabled: !canCancelUpgrade(state, upgrade.id),
-      reason: state.status === 'dead' ? 'Partie terminée' : undefined,
+      reason: isPlaying(state) ? undefined : ENDED,
       onAction: () => {
         actions.cancelUpgrade(upgrade.id);
       },
@@ -209,15 +190,14 @@ export const useInvestScreen = () => {
       detail: `${district.description} · ${formatCount(district.cost)} de réputation`,
       actionLabel: isOpen ? 'Ouvert' : 'Débloquer',
       isDisabled: !canUnlockDistrict(state, district.id),
-      reason: reasonOf(
-        state,
-        isOpen,
-        district.requirement,
-        'Réputation insuffisante',
-      ),
+      reason: unavailableReason(state, {
+        isDone: isOpen,
+        requirement: district.requirement,
+        shortage: NO_REPUTATION,
+      }),
       conditions: isOpen
         ? undefined
-        : conditionsOf(state, district.requirement),
+        : missingConditions(state, district.requirement),
       onAction: () => {
         actions.unlockDistrict(district.id);
       },

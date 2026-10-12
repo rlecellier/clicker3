@@ -16,6 +16,7 @@ export default defineConfig({
       '@game': fromRoot('./src/game'),
       '@context': fromRoot('./src/contexts'),
       '@test': fromRoot('./src/test'),
+      '@view': fromRoot('./src/views'),
     },
   },
   test: {
