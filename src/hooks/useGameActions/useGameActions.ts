@@ -27,6 +27,9 @@ export const useGameActions = () => {
       buyUpgrade: (id: string) => {
         dispatch({ type: 'buyUpgrade', id });
       },
+      buyBoost: (id: string) => {
+        dispatch({ type: 'buyBoost', id });
+      },
       cancelUpgrade: (id: string) => {
         dispatch({ type: 'cancelUpgrade', id });
       },

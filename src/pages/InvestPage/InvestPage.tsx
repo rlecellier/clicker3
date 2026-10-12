@@ -35,16 +35,23 @@ export const InvestPage = () => {
           {
             id: 'upgrades',
             label: 'Améliorations',
-            content:
-              invest.availableUpgrades.length === 0 ? (
-                <Note>Plus rien à acheter pour le moment.</Note>
-              ) : (
+            content: (
+              <>
+                {invest.availableUpgrades.length === 0 ? (
+                  <Note>Plus rien à acheter pour le moment.</Note>
+                ) : (
+                  <ItemList
+                    caption="Améliorations"
+                    items={invest.availableUpgrades}
+                    highlightedId={target.highlightedId}
+                  />
+                )}
                 <ItemList
-                  caption="Améliorations"
-                  items={invest.availableUpgrades}
-                  highlightedId={target.highlightedId}
+                  caption="Coups de pouce (temporaires)"
+                  items={invest.boosts}
                 />
-              ),
+              </>
+            ),
           },
           {
             id: 'districts',

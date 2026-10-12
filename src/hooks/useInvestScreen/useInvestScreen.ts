@@ -8,7 +8,8 @@ import {
   ownedCount,
   warehouseCost,
 } from '@game/companies';
-import { companies, districts } from '@game/data';
+import { boostById, canBuyBoost, isBoostActive } from '@game/boosts';
+import { boosts, companies, districts } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import {
   finalPrice,
@@ -18,6 +19,7 @@ import {
   salesCapacity,
 } from '@game/economy';
 import {
+  describeBoost,
   describeEffect,
   formatCount,
   formatDecimal,
@@ -163,6 +165,35 @@ export const useInvestScreen = () => {
     }),
   );
 
+  // Coups de pouce : achetables à nouveau une fois l'effet écoulé.
+  const boostItems: ListItem[] = boosts.map((boost) => {
+    const active = state.activeEffects.find(
+      (effect) => effect.eventId === boost.id && effect.until > state.period,
+    );
+    return {
+      id: boost.id,
+      title: boost.name,
+      badge:
+        active === undefined
+          ? undefined
+          : `Actif, encore ${formatCount(active.until - state.period)} mois`,
+      effects: [describeBoost(boost)],
+      detail: [boost.description, formatMoney(boost.price)].join(' · '),
+      actionLabel: 'Acheter',
+      isDisabled: !canBuyBoost(state, boost.id),
+      reason: isBoostActive(state, boost.id)
+        ? 'Déjà actif'
+        : unavailableReason(state, {
+            requirement: boostById(boost.id)?.requirement,
+            shortage: NO_MONEY,
+          }),
+      conditions: missingConditions(state, boost.requirement),
+      onAction: () => {
+        actions.buyBoost(boost.id);
+      },
+    };
+  });
+
   // Les améliorations obtenues, dans l'ordre d'achat : on peut les annuler,
   // sans rien récupérer.
   const ownedUpgradeItems: ListItem[] = state.upgrades
@@ -195,6 +226,7 @@ export const useInvestScreen = () => {
     },
     companies: [...companyItems, warehouseItem],
     availableUpgrades: availableUpgradeItems,
+    boosts: boostItems,
     ownedUpgrades: ownedUpgradeItems,
     districts: districtItems,
   };

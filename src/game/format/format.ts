@@ -5,7 +5,7 @@ import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
 import { companyById } from '@game/companies';
 import { reputationTiers, statTierThresholds } from '@game/data';
-import type { UpgradeEffect } from '@game/data';
+import type { Boost, UpgradeEffect } from '@game/data';
 import { isUnlocked } from '@game/requirements';
 import { courseById } from '@game/study';
 import { upgradeById } from '@game/upgrades';
@@ -193,6 +193,22 @@ const formatBonus = (bonus: number) => `+${formatDecimal(bonus * 100)} %`;
 
 // « ×2,5 » : un facteur multiplicatif.
 const formatFactor = (factor: number) => `×${formatDecimal(factor)}`;
+
+// Ce que fait un coup de pouce, en chiffres, et pour combien de temps.
+export const describeBoost = (boost: Boost): string => {
+  const duration = `${formatCount(boost.duration)} mois`;
+  switch (boost.kind) {
+    case 'markerChance': {
+      return `Chance de marqueur ${formatBonus(boost.value)} pendant ${duration}`;
+    }
+    case 'studyMarkers': {
+      return `Étudier donne ${formatCount(1 + boost.value)} chances de marqueur pendant ${duration}`;
+    }
+    case 'sleepBoost': {
+      return `Conversion du sommeil ${formatFactor(1 + boost.value)} pendant ${duration}`;
+    }
+  }
+};
 
 // Ce que fait un effet d'amélioration, en chiffres : quoi est multiplié ou
 // ajouté, et sur quoi. Généré depuis les `effects`, jamais écrit à la main.
