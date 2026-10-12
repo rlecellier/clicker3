@@ -1,13 +1,13 @@
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
 import { Window } from '@component/Window';
-import { useGameScreen } from '@hook/useGameScreen';
+import { useSkillsScreen } from '@hook/useSkillsScreen';
 import { useSeenTab } from '@hook/useSeenTab';
 import styles from './SkillsPage.module.css';
 
-// Onglet « Compétences » : orchestrateur de `useGameScreen`.
+// Onglet « Compétences » : orchestrateur de `useSkillsScreen`.
 export const SkillsPage = () => {
-  const screen = useGameScreen();
+  const screen = useSkillsScreen();
   useSeenTab('skills');
 
   return (
@@ -21,10 +21,7 @@ export const SkillsPage = () => {
         />
       ))}
       <dl className={styles.reputation}>
-        <Stat
-          label="Réputation disponible"
-          value={screen.counters.reputation}
-        />
+        <Stat label="Réputation disponible" value={screen.reputation} />
       </dl>
     </Window>
   );

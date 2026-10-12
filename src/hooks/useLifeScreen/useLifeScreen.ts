@@ -1,39 +1,31 @@
-import { useCallback, useEffect, useState } from 'react';
-import type { ListItem } from '@component/ItemList';
 import type { SplitChoice } from '@component/SplitActionButton';
 import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
-import { jobs } from '@game/data';
 import {
-  checkRequirement,
   describeRequirement,
   formatAge,
   formatBalance,
-  formatCount,
   formatDate,
-  formatDecimal,
   formatMoney,
   formatPhase,
   statLabels,
 } from '@game/format';
-import { canChangeJob, jobById } from '@game/jobs';
+import { jobById } from '@game/jobs';
 import { periodOutlook } from '@game/period';
-import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork, jobWage } from '@game/work';
-import { statIds } from '@game/state';
 import type { GameState } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
+import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
 import type { PressHandlers } from '@hook/useHoldRepeat';
 
-const FEEDBACK_MS = 2500;
 const START_TEXT =
   'Bienvenue dans l’euro. Votre compte est crédité de 0 €, ce qui est un bon début.';
 const ENDED = 'Partie terminée';
@@ -75,32 +67,13 @@ const nextObjective = (
   };
 };
 
-// Tout ce que la page de jeu affiche et déclenche, prêt à brancher.
-export const useGameScreen = () => {
+// Onglet Vie : balance de la période, personnage, prochain objectif, actions
+// (travailler, étudier, vendre le surplus) et leur retour, cerveau.
+export const useLifeScreen = () => {
   const { state } = useGameContext();
   const actions = useGameActions();
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const { feedback, setFeedback, say } = useFeedback();
   const { chosenCourse, setChosenCourse } = useCourseChoice();
-
-  useEffect(() => {
-    if (feedback === null) {
-      return;
-    }
-    const timer = setTimeout(() => {
-      setFeedback(null);
-    }, FEEDBACK_MS);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [feedback]);
-
-  const say = useCallback(
-    (message: string, run: () => void) => () => {
-      run();
-      setFeedback(message);
-    },
-    [],
-  );
 
   // Pendant le sommeil, travail et étude sont gardés pour le réveil.
   const sayOrQueue = (message: string, run: () => void) =>
@@ -136,37 +109,6 @@ export const useGameScreen = () => {
       actions.sellSurplus();
     }),
   };
-
-  const jobItems: ListItem[] = jobs.map((candidate) => {
-    const isCurrent = candidate.id === state.jobId;
-    const conditions =
-      isCurrent || candidate.requirement === undefined
-        ? undefined
-        : checkRequirement(state, candidate.requirement);
-    const hasMissing = conditions?.some((condition) => !condition.isMet);
-    const isShortOnReputation = !canSpendReputation(state, candidate.cost);
-    const reason =
-      !isCurrent && hasMissing !== true && isShortOnReputation
-        ? 'Réputation insuffisante'
-        : undefined;
-    return {
-      id: candidate.id,
-      title: candidate.name,
-      detail: `Salaire ${formatMoney(candidate.salary)}${
-        candidate.cost > 0
-          ? ` · ${formatCount(candidate.cost)} de réputation`
-          : ''
-      }`,
-      badge: isCurrent ? 'Actuel' : undefined,
-      actionLabel: 'Prendre',
-      isDisabled: !canChangeJob(state, candidate.id),
-      reason,
-      conditions,
-      onAction: say('Votre nouveau poste a été communiqué en interne.', () => {
-        actions.changeJob(candidate.id);
-      }),
-    };
-  });
 
   // Cursus choisi par la flèche ; à défaut, le premier étudiable.
   const availableCourses = studiableCourses(state);
@@ -234,16 +176,6 @@ export const useGameScreen = () => {
       ? null
       : { ...studyAction, run: studyPress.onClick, press: studyPress.press };
 
-  const skillBars = statIds.map((id) => {
-    const progress = statProgress(state, id);
-    return {
-      id,
-      label: `${statLabels[id]} · palier ${progress.tier} · ${progress.isMax ? 'max' : `${formatCount(progress.points)} pts`}`,
-      value: progress.value,
-      max: progress.max,
-    };
-  });
-
   // Mini-jauge sous « Étudier » : même progression, libellé court.
   const courseProgress =
     course === undefined ? undefined : statProgress(state, course.stat);
@@ -256,17 +188,6 @@ export const useGameScreen = () => {
           max: courseProgress.max,
         };
 
-  // Même format que les compétences ; le palier se calcule sur le cumul gagné.
-  const reputation = reputationTierProgress(state);
-  const reputationBar = {
-    id: 'reputation',
-    label: `Réputation · palier ${reputation.tier} · ${reputation.name} · ${
-      reputation.isMax ? 'max' : `${formatCount(state.reputationEarned)} gagnés`
-    }`,
-    value: reputation.value,
-    max: reputation.max,
-  };
-
   return {
     isOver,
     header: {
@@ -275,7 +196,6 @@ export const useGameScreen = () => {
       date: formatDate(dateOf(state)),
       phase: formatPhase(state),
     },
-    counters: { reputation: formatDecimal(state.reputation) },
     // Balances de la période en cours (prévision à la clôture).
     balances: {
       money: formatBalance(outlook.money, ' €'),
@@ -290,7 +210,6 @@ export const useGameScreen = () => {
         ? state.maxMarkers - state.markers.length
         : 0,
     },
-    stats: [...skillBars, reputationBar],
     actions: { work, sellSurplus },
     study: {
       action: studyView,
@@ -299,7 +218,6 @@ export const useGameScreen = () => {
       selectedId: course?.id ?? '',
       select: setChosenCourse,
     },
-    jobs: jobItems,
     objective: {
       text: objective.text,
       to:

@@ -52,7 +52,7 @@ illustrations. Voix administrative pince-sans-rire.
      `undefined` inutile en `return`.
    - Imports par alias (`@component/…`, `@hook/…`, `@game/…`), jamais `../`.
 6. **Séparation** : composant visuel (props seulement, pas de test) → hook de
-   vue dans `src/hooks/` (`useGameScreen`, `useInvestScreen`,
+   vue dans `src/hooks/` (`useLifeScreen`, `useInvestScreen`,
    `useAccountsScreen`) → page orchestratrice (`LifePage`…) qui ne fait que
    brancher.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;
