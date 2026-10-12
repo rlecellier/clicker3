@@ -1,7 +1,8 @@
 import { gameTabs, tabShortcut } from '@hook/useGameTabs';
+import type { GameTabId } from '@hook/useGameTabs';
 
 export type ShortcutAction =
-  { type: 'openTab'; slug: string } | { type: 'work' } | { type: 'study' };
+  { type: 'openTab'; tab: GameTabId } | { type: 'work' } | { type: 'study' };
 
 // Touches de travail et d'étude (affichées par `aria-keyshortcuts`).
 export const WORK_SHORTCUT = 't';
@@ -14,7 +15,7 @@ export const shortcutTable: Readonly<Record<string, ShortcutAction>> = {
   ...Object.fromEntries(
     gameTabs.map((tab, index): [string, ShortcutAction] => [
       tabShortcut(index),
-      { type: 'openTab', slug: tab.slug },
+      { type: 'openTab', tab: tab.id },
     ]),
   ),
   [WORK_SHORTCUT]: { type: 'work' },

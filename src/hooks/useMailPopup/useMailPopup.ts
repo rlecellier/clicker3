@@ -3,10 +3,10 @@ import { useLocation } from 'react-router';
 import { useGameContext } from '@context/GameContext';
 import { formatDate } from '@game/format';
 import { dateOf } from '@game/time';
-import { gamePath } from '@hook/useGameTabs';
+import { tabPath } from '@hook/useGameTabs';
 import { readingTime } from './readingTime';
 
-const MAIL_PATH = gamePath('courrier');
+const MAIL_PATH = tabPath('mail');
 
 // Popup de courrier : signale un message qui arrive pendant la partie, sans
 // jamais le marquer comme lu (seul l'onglet Courrier le fait). Une seule popup

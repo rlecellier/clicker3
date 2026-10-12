@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react';
 import { createBrowserRouter, Navigate, Outlet } from 'react-router';
 import { GameProvider } from '@context/GameContext';
-import { DEFAULT_TAB_SLUG, gamePath } from '@hook/useGameTabs';
+import { DEFAULT_TAB, gameTabs, tabPath } from '@hook/useGameTabs';
+import type { GameTabId } from '@hook/useGameTabs';
 import { AbsencePage } from '@page/AbsencePage';
 import { AccountsPage } from '@page/AccountsPage';
 import { CityPage } from '@page/CityPage';
@@ -16,7 +18,24 @@ import { SkillsPage } from '@page/SkillsPage';
 import { StyleguidePage } from '@page/StyleguidePage';
 import { TitlePage } from '@page/TitlePage';
 
-const toDefaultTab = <Navigate to={gamePath(DEFAULT_TAB_SLUG)} replace />;
+const toDefaultTab = <Navigate to={tabPath(DEFAULT_TAB)} replace />;
+
+// La page de chaque onglet : un onglet sans page ne compile pas.
+const tabPages: Record<GameTabId, ReactNode> = {
+  mail: <MailPage />,
+  life: <LifePage />,
+  skills: <SkillsPage />,
+  jobs: <JobsPage />,
+  invest: <InvestPage />,
+  accounts: <AccountsPage />,
+  city: <CityPage />,
+};
+
+// Une route `/jeu/<slug>` par onglet, dans l'ordre de la sidebar.
+const tabRoutes = gameTabs.map((tab) => ({
+  path: tab.slug,
+  element: tabPages[tab.id],
+}));
 
 // `/styleguide` n'existe qu'en développement.
 const developmentRoutes = import.meta.env.DEV
@@ -63,13 +82,7 @@ export const router = createBrowserRouter(
               element: <GamePage />,
               children: [
                 { index: true, element: toDefaultTab },
-                { path: 'courrier', element: <MailPage /> },
-                { path: 'vie', element: <LifePage /> },
-                { path: 'competences', element: <SkillsPage /> },
-                { path: 'emploi', element: <JobsPage /> },
-                { path: 'investir', element: <InvestPage /> },
-                { path: 'comptes', element: <AccountsPage /> },
-                { path: 'ville', element: <CityPage /> },
+                ...tabRoutes,
                 // Onglet inconnu : retour à l'onglet par défaut.
                 { path: '*', element: toDefaultTab },
               ],
@@ -77,7 +90,7 @@ export const router = createBrowserRouter(
             // Ancien lien vers le plan de la ville.
             {
               path: '/ville',
-              element: <Navigate to={gamePath('ville')} replace />,
+              element: <Navigate to={tabPath('city')} replace />,
             },
           ],
         },

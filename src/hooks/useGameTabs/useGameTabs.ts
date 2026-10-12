@@ -1,4 +1,5 @@
 import { useGameContext } from '@context/GameContext';
+import { findById } from '@game/data';
 import { unreadMail } from '@game/mail';
 import { newItems, noveltyTabs } from '@game/novelty';
 import type { NoveltyTab } from '@game/novelty';
@@ -10,6 +11,7 @@ export type GameTabId =
 export type GameTab = { id: GameTabId; label: string; slug: string };
 
 // Ordre de la sidebar ; les slugs sont les routes `/jeu/<slug>` (ADR 0008).
+// Seul endroit où un slug est écrit : le reste passe par `tabPath(id)`.
 export const gameTabs: readonly GameTab[] = [
   { id: 'mail', label: 'Courrier', slug: 'courrier' },
   { id: 'life', label: 'Vie', slug: 'vie' },
@@ -23,9 +25,12 @@ export const gameTabs: readonly GameTab[] = [
 // Touche qui ouvre l'onglet de ce rang (1 à 7), dans l'ordre de la sidebar.
 export const tabShortcut = (index: number) => String(index + 1);
 
-export const DEFAULT_TAB_SLUG = 'vie';
+export const DEFAULT_TAB: GameTabId = 'life';
 
-export const gamePath = (slug: string) => `${screenPaths.game}/${slug}`;
+const slugOf = (id: GameTabId) => findById(gameTabs, id)?.slug ?? '';
+
+// Route d'un onglet de l'écran de jeu (`/jeu/<slug>`).
+export const tabPath = (id: GameTabId) => `${screenPaths.game}/${slugOf(id)}`;
 
 const maxBadge = 99;
 
@@ -45,7 +50,7 @@ const mailLabel = (unread: number) => {
 export const UPGRADE_PARAM = 'amelioration';
 
 export const upgradePath = (upgradeId: string) =>
-  `${gamePath('investir')}?${UPGRADE_PARAM}=${encodeURIComponent(upgradeId)}`;
+  `${tabPath('invest')}?${UPGRADE_PARAM}=${encodeURIComponent(upgradeId)}`;
 
 const isNoveltyTab = (id: GameTabId): id is NoveltyTab =>
   (noveltyTabs as readonly string[]).includes(id);
@@ -64,7 +69,7 @@ export const useGameTabs = () => {
       const item = {
         id: tab.id,
         label: tab.label,
-        to: gamePath(tab.slug),
+        to: tabPath(tab.id),
         shortcut: tabShortcut(index),
       };
       if (tab.id === 'mail') {

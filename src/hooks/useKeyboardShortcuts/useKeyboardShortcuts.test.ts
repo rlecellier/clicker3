@@ -38,8 +38,8 @@ describe('useKeyboardShortcuts', () => {
     for (const index of gameTabs.keys()) {
       press(String(index + 1));
     }
-    expect(handlers.openTab.mock.calls.map(([slug]) => slug)).toEqual(
-      gameTabs.map((tab) => tab.slug),
+    expect(handlers.openTab.mock.calls.map(([tab]) => tab)).toEqual(
+      gameTabs.map((tab) => tab.id),
     );
   });
 

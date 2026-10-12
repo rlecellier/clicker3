@@ -1,9 +1,9 @@
 export {
-  DEFAULT_TAB_SLUG,
+  DEFAULT_TAB,
   UPGRADE_PARAM,
-  gamePath,
   gameTabs,
   upgradePath,
+  tabPath,
   tabShortcut,
   useGameTabs,
 } from './useGameTabs';
