@@ -80,6 +80,9 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `ResourceTile` | `icon` (`money`, `stock`), `label`, `balance` (variation signée de la période) ; tuile carrée à placer par deux dans un `<dl>` en grille | Balances de la période (page Vie) |
 | `Stat`        | `label`, `value`, `exact?` (infobulle), `balance?` (variation signée) ; à placer dans un `<dl>`                                                                                                  | Couple libellé / valeur                        |
 | `Note`        | `children`, `minLines?` (hauteur réservée), `to?` (le post-it devient un lien) ; post-it jaune                                                                                          | Message d'ambiance ou rappel                   |
+| `Balance`     | `balance` (variation signée), `className?` ; rend un `<dd>` vert en hausse, rouge en baisse | Balance de la période dans `Stat` et `ResourceTile` |
+| `WithBadge`   | `children`, `badge?` ; le texte suivi d'un `Badge` `info` | Titre avec repère (« Actuel », « Ouvert ») |
+| `ScreenPage`  | `children` ; `<main>` en colonne centrée de `40rem` | Écran hors jeu (titre, nouvelle vie, absence, fin) |
 
 ### Page de jeu
 
@@ -89,6 +92,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `shortcut?`, `onClick`                          | Action de jeu ; `press` : appui maintenu = 4 clics par seconde, appui long = automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `press?`, `shortcut?`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
+| `ActionInfo`      | `detail?`, `reason?`, `isDisabled` ; deux lignes réservées, texte complet en infobulle | Sous un bouton d'action : la raison du blocage, sinon le détail (dans `ActionButton` et `SplitActionButton`) |
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `effects?` (lignes d'effet chiffré, en gras, avant le `detail`), `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
 | `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
