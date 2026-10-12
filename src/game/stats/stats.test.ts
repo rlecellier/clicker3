@@ -1,5 +1,5 @@
 import { startState } from '@game/data';
-import { statProgress, tierOf } from './stats';
+import { statProgress, tierAt, tierOf, tierProgress } from './stats';
 
 const withPoints = (metier: number) => ({
   ...startState,
@@ -62,6 +62,40 @@ describe('statProgress', () => {
   it('est pleine au dernier palier', () => {
     expect(statProgress(withPoints(81), 'metier')).toMatchObject({
       tier: 4,
+      value: 1,
+      max: 1,
+      isMax: true,
+    });
+  });
+});
+
+describe('tierProgress', () => {
+  const thresholds = [2, 9, 41];
+
+  it('compte les seuils franchis', () => {
+    expect(tierAt(thresholds, 0)).toBe(0);
+    expect(tierAt(thresholds, 9)).toBe(2);
+    expect(tierAt(thresholds, 100)).toBe(3);
+  });
+
+  it('mesure la progression dans le palier en cours', () => {
+    expect(tierProgress(thresholds, 1)).toEqual({
+      tier: 0,
+      value: 1,
+      max: 2,
+      isMax: false,
+    });
+    expect(tierProgress(thresholds, 12)).toEqual({
+      tier: 2,
+      value: 3,
+      max: 32,
+      isMax: false,
+    });
+  });
+
+  it('remplit la barre au dernier palier', () => {
+    expect(tierProgress(thresholds, 41)).toEqual({
+      tier: 3,
       value: 1,
       max: 1,
       isMax: true,

@@ -9,7 +9,7 @@ import {
 } from '@game/data';
 import { emptyFigures } from '@game/ledger';
 import { markAllSeen } from '@game/novelty';
-import { lifePhases } from '@game/state';
+import { lifePhases, statIds } from '@game/state';
 import type { GameState } from '@game/state';
 
 export type SaveFailure =
@@ -151,8 +151,6 @@ export const defaultSaveOptions: SaveOptions = {
   },
 };
 
-const statIds = Object.keys(startState.stats);
-
 const isRecord = (value: unknown): value is RawState =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -288,7 +286,9 @@ const isValidState = (raw: RawState): raw is GameState => {
     lifePhases.includes(phase as GameState['phase']) &&
     Array.isArray(markers) &&
     markers.every(
-      (marker) => typeof marker === 'string' && statIds.includes(marker),
+      (marker) =>
+        typeof marker === 'string' &&
+        (statIds as readonly string[]).includes(marker),
     ) &&
     hasValidContent(raw)
   );

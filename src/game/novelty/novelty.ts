@@ -3,13 +3,13 @@ import {
   districts,
   jobs,
   reputationTiers,
-  statTierThresholds,
   upgrades,
 } from '@game/data';
 import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import { reputationTierOf } from '@game/reputation';
-import type { GameState, StatId } from '@game/state';
+import { statIds } from '@game/state';
+import type { GameState } from '@game/state';
 import { tierOf } from '@game/stats';
 
 // Onglets qui signalent des nouveautés (Courrier a son propre compteur).
@@ -18,8 +18,6 @@ export const noveltyTabs = ['skills', 'jobs', 'invest', 'city'] as const;
 export type NoveltyTab = (typeof noveltyTabs)[number];
 
 type Candidate = { id: string; requirement?: Requirement };
-
-const statIds = Object.keys(statTierThresholds) as StatId[];
 
 // Un élément sans condition est ouvert dès le départ : il n'a rien de nouveau.
 const unlockedIds = (

@@ -1,5 +1,6 @@
 import { companies } from './companies';
 import type { Requirement } from '@game/requirements';
+import type { StatId } from '@game/state';
 
 export type UpgradeEffect =
   // Étudier donne des marqueurs de la stat du cursus.
@@ -42,10 +43,11 @@ const anyCompany: Requirement = {
   of: companies.map((company) => ({ type: 'company', id: company.id })),
 };
 
-const stat = (
-  name: 'metier' | 'gestion' | 'intelligence' | 'endurance',
-  tier: number,
-): Requirement => ({ type: 'stat', stat: name, tier });
+const stat = (name: StatId, tier: number): Requirement => ({
+  type: 'stat',
+  stat: name,
+  tier,
+});
 
 // Les 20 améliorations (docs/game/ameliorations-et-evenements.md).
 // Prix et effets calés en V1-24 (docs/game/equilibrage.md).

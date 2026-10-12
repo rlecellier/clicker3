@@ -2,7 +2,8 @@ import { ageOf } from '@game/time';
 import { districts } from '@game/data';
 import { isAutoActive, isTimeRunning } from '@game/automation';
 import { newGame, reduce } from '@game/reducer';
-import type { GameState, StatId } from '@game/state';
+import { statIds } from '@game/state';
+import type { GameState } from '@game/state';
 import { tierOf } from '@game/stats';
 import { lastPeriodReport } from '@game/ledger';
 import { simulatorConfig } from './config';
@@ -56,8 +57,6 @@ export type SimulationResult = {
   curve: CurvePoint[];
   finalState: GameState;
 };
-
-const statIds: StatId[] = ['metier', 'gestion', 'intelligence', 'endurance'];
 
 const totalCompanies = (state: GameState) =>
   Object.values(state.companies).reduce((sum, count) => sum + count, 0);

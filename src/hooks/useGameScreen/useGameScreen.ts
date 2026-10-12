@@ -25,7 +25,8 @@ import { canStudy, studiableCourses } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { JOB_TARGET, canWork, jobWage } from '@game/work';
-import type { GameState, StatId } from '@game/state';
+import { statIds } from '@game/state';
+import type { GameState } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
@@ -54,8 +55,6 @@ export type ActionView = BaseAction & {
 };
 
 const noop = () => {};
-
-const statIds = Object.keys(statLabels) as StatId[];
 
 // Prochain achat visible : l'amélioration non achetée la moins chère qui est
 // déjà débloquée, sinon la moins chère avec ce qui lui manque.
