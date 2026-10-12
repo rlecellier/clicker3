@@ -1,11 +1,11 @@
-import { startState, upgrades } from '@game/data';
+import { findById, startState, upgrades } from '@game/data';
 import type { UpgradeEffect } from '@game/data';
 import { withRecord } from '@game/ledger';
-import { isUnlocked } from '@game/requirements';
+import { isRequirementMet } from '@game/requirements';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 
-export const upgradeById = (id: string) =>
-  upgrades.find((candidate) => candidate.id === id);
+export const upgradeById = (id: string) => findById(upgrades, id);
 
 export const isOwned = (state: GameState, id: string) =>
   state.upgrades.includes(id);
@@ -111,12 +111,11 @@ export const previewEffects = (state: GameState, id: string): GameState => {
 export const canBuyUpgrade = (state: GameState, id: string) => {
   const upgrade = upgradeById(id);
   return (
-    state.status === 'playing' &&
+    isPlaying(state) &&
     upgrade !== undefined &&
     !isOwned(state, id) &&
     state.money >= upgrade.price &&
-    (upgrade.requirement === undefined ||
-      isUnlocked(state, upgrade.requirement))
+    isRequirementMet(state, upgrade.requirement)
   );
 };
 
@@ -227,9 +226,7 @@ const revertEffect = (
 };
 
 export const canCancelUpgrade = (state: GameState, id: string) =>
-  state.status === 'playing' &&
-  upgradeById(id) !== undefined &&
-  isOwned(state, id);
+  isPlaying(state) && upgradeById(id) !== undefined && isOwned(state, id);
 
 // Annule une amélioration possédée : ses effets, son loyer et ses salaires
 // disparaissent, mais le prix payé n'est pas rendu. Si l'annulation est
@@ -259,11 +256,8 @@ export const nextUpgrade = (state: GameState) => {
     .filter((upgrade) => !isOwned(state, upgrade.id))
     .toSorted((first, second) => first.price - second.price);
   return (
-    remaining.find(
-      (upgrade) =>
-        upgrade.requirement === undefined ||
-        isUnlocked(state, upgrade.requirement),
-    ) ?? remaining[0]
+    remaining.find((upgrade) => isRequirementMet(state, upgrade.requirement)) ??
+    remaining[0]
   );
 };
 
@@ -274,7 +268,7 @@ export const availableUpgrades = (state: GameState) => {
     .filter((upgrade) => !isOwned(state, upgrade.id))
     .toSorted((first, second) => first.price - second.price);
   const isOpen = (upgrade: (typeof upgrades)[number]) =>
-    upgrade.requirement === undefined || isUnlocked(state, upgrade.requirement);
+    isRequirementMet(state, upgrade.requirement);
   const locked = remaining.find((upgrade) => !isOpen(upgrade));
   return [
     ...remaining.filter((upgrade) => isOpen(upgrade)),

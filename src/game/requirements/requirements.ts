@@ -47,6 +47,12 @@ const statementFlag = (state: GameState, flag: StatementFlag) => {
   }
 };
 
+// Condition facultative d'une donnée : remplie quand il n'y en a pas.
+export const isRequirementMet = (
+  state: GameState,
+  requirement: Requirement | undefined,
+) => requirement === undefined || isUnlocked(state, requirement);
+
 export const isUnlocked = (
   state: GameState,
   requirement: Requirement,

@@ -1,4 +1,4 @@
-import { events, journalLimit } from '@game/data';
+import { events, findById, journalLimit } from '@game/data';
 import type { EventEffect, GameEvent } from '@game/data';
 import { expireEffects } from '@game/effects';
 import { withRecord } from '@game/ledger';
@@ -7,8 +7,7 @@ import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import { lifeFigures } from '@game/summary';
 
-export const eventById = (id: string) =>
-  events.find((candidate) => candidate.id === id);
+export const eventById = (id: string) => findById(events, id);
 
 const renderText = (state: GameState, text: string) => {
   const summary = lifeFigures(state);

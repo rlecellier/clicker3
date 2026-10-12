@@ -6,6 +6,7 @@ export { courses } from './courses';
 export type { Course } from './courses';
 export { districts } from './districts';
 export type { District } from './districts';
+export { findById } from './findById';
 export { economyRules, ledgerHistoryLength } from './economyRules';
 export { events, journalLimit } from './events';
 export { impactRules } from './impactRules';

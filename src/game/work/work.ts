@@ -11,13 +11,14 @@ import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
 import { manualFactor } from '@game/phases';
 import { gainReputation } from '@game/reputation';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 
 // Cible du travail : l'emploi, ou (à partir de V1-07) l'id d'une entreprise.
 export const JOB_TARGET = 'job';
 
 export const canWork = (state: GameState, target: string) => {
-  if (state.status !== 'playing') {
+  if (!isPlaying(state)) {
     return false;
   }
   return target === JOB_TARGET

@@ -4,6 +4,7 @@ import { companies } from './companies';
 import { courses } from './courses';
 import { districts } from './districts';
 import { events } from './events';
+import { findById } from './findById';
 import { impactRules } from './impactRules';
 import { jobs } from './jobs';
 import { startState } from './startState';
@@ -153,5 +154,17 @@ describe('cohérence des données', () => {
         of: [{ type: 'any', of: [{ type: 'company', id: 'bakery' }] }],
       }),
     ).toEqual(['company:bakery']);
+  });
+});
+
+describe('findById', () => {
+  it('trouve un élément par son id', () => {
+    expect(findById(jobs, 'interim')?.name).toBe(jobs[0]?.name);
+  });
+
+  it('rend undefined pour un id inconnu ou absent', () => {
+    expect(findById(jobs, 'inconnu')).toBeUndefined();
+    expect(findById(jobs, null)).toBeUndefined();
+    expect(findById(jobs, undefined)).toBeUndefined();
   });
 });

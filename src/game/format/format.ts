@@ -2,14 +2,11 @@ import type { Requirement } from '@game/requirements';
 import type { GameDate } from '@game/time';
 import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
-import {
-  companies,
-  courses,
-  reputationTiers,
-  statTierThresholds,
-} from '@game/data';
+import { companyById } from '@game/companies';
+import { reputationTiers, statTierThresholds } from '@game/data';
 import type { UpgradeEffect } from '@game/data';
 import { isUnlocked } from '@game/requirements';
+import { courseById } from '@game/study';
 import { upgradeById } from '@game/upgrades';
 
 const money = new Intl.NumberFormat('fr-FR', {
@@ -198,9 +195,7 @@ const formatFactor = (factor: number) => `×${formatDecimal(factor)}`;
 export const describeEffect = (effect: UpgradeEffect): string => {
   switch (effect.type) {
     case 'course': {
-      const course = courses.find(
-        (candidate) => candidate.id === effect.courseId,
-      );
+      const course = courseById(effect.courseId);
       return course === undefined
         ? 'Étudier donne des marqueurs'
         : `Étudier donne des marqueurs ${statLabels[course.stat]}`;
@@ -218,7 +213,7 @@ export const describeEffect = (effect: UpgradeEffect): string => {
       const target =
         effect.companyId === undefined
           ? 'de toutes les entreprises'
-          : `de ${companies.find((company) => company.id === effect.companyId)?.name ?? effect.companyId}`;
+          : `de ${companyById(effect.companyId)?.name ?? effect.companyId}`;
       return `Production ${target} ${formatBonus(effect.bonus)}`;
     }
     case 'salesBonus': {

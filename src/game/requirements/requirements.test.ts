@@ -1,6 +1,6 @@
 import { startState } from '@game/data';
 import type { GameState } from '@game/state';
-import { isUnlocked } from './requirements';
+import { isRequirementMet, isUnlocked } from './requirements';
 import type { Requirement } from './requirements';
 
 const stateWith = (changes: Partial<GameState>): GameState => ({
@@ -101,5 +101,21 @@ describe('isUnlocked', () => {
       };
       expect(isUnlocked(state, nested)).toBe(true);
     });
+  });
+});
+
+describe('isRequirementMet', () => {
+  it('est remplie sans condition', () => {
+    expect(isRequirementMet(startState, undefined)).toBe(true);
+  });
+
+  it('suit isUnlocked quand il y a une condition', () => {
+    const requirement: Requirement = { type: 'reputation', min: 5 };
+    expect(isRequirementMet(stateWith({ reputation: 4 }), requirement)).toBe(
+      false,
+    );
+    expect(isRequirementMet(stateWith({ reputation: 5 }), requirement)).toBe(
+      true,
+    );
   });
 });

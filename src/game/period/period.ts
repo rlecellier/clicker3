@@ -9,6 +9,7 @@ import {
 } from '@game/economy';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 import { ageOf } from '@game/time';
 
@@ -75,11 +76,11 @@ export const addGauge = (state: GameState, amount: number): GameState => {
   if (state.gaugeCapacity <= 0) {
     throw new RangeError('gaugeCapacity doit être strictement positive');
   }
-  if (state.status === 'dead' || amount <= 0) {
+  if (!isPlaying(state) || amount <= 0) {
     return state;
   }
   let next: GameState = { ...state, gauge: state.gauge + amount };
-  while (next.status === 'playing' && next.gauge >= next.gaugeCapacity) {
+  while (isPlaying(next) && next.gauge >= next.gaugeCapacity) {
     next = endPeriod(next);
   }
   return next;

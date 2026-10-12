@@ -1,16 +1,19 @@
-import { actionRules, courses, statTierThresholds } from '@game/data';
+import { actionRules, courses, findById, statTierThresholds } from '@game/data';
 import { withRecord } from '@game/ledger';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 import { tierOf } from '@game/stats';
 import { hasCourse } from '@game/upgrades';
+
+export const courseById = (id: string) => findById(courses, id);
 
 // Un cursus est étudiable s'il est débloqué et que sa stat n'est pas déjà au
 // dernier palier : au-delà, payer ne rapporterait plus rien. Source unique pour
 // les règles, le choix du cursus, le bouton et le raccourci.
 export const isStudiable = (state: GameState, courseId: string) => {
-  const course = courses.find((candidate) => candidate.id === courseId);
+  const course = courseById(courseId);
   return (
     course !== undefined &&
     hasCourse(state, courseId) &&
@@ -22,9 +25,9 @@ export const studiableCourses = (state: GameState) =>
   courses.filter((course) => isStudiable(state, course.id));
 
 export const canStudy = (state: GameState, courseId: string) => {
-  const course = courses.find((candidate) => candidate.id === courseId);
+  const course = courseById(courseId);
   return (
-    state.status === 'playing' &&
+    isPlaying(state) &&
     course !== undefined &&
     isStudiable(state, courseId) &&
     state.money >= course.cost
@@ -33,7 +36,7 @@ export const canStudy = (state: GameState, courseId: string) => {
 
 // Coûte un peu d'argent, donne (peut-être) un marqueur de la stat du cursus.
 export const study = (state: GameState, courseId: string): GameState => {
-  const course = courses.find((candidate) => candidate.id === courseId);
+  const course = courseById(courseId);
   if (course === undefined || !canStudy(state, courseId)) {
     return state;
   }

@@ -2,6 +2,7 @@ import { afterAction } from '@game/afterAction';
 import { automationRules } from '@game/data';
 import { eventById, fireEvent } from '@game/events';
 import { sleepStep, sleepStepMs } from '@game/sleep';
+import { isPlaying } from '@game/state';
 import type { GameState, JournalEntry } from '@game/state';
 import { ageOf } from '@game/time';
 import { hasAutomation } from '@game/upgrades';
@@ -28,7 +29,7 @@ export const isTimeRunning = (state: GameState) =>
   isAutoActive(state, 'work') || state.isSleeping;
 
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
-  state.status === 'playing' && hasAutomation(state, action);
+  isPlaying(state) && hasAutomation(state, action);
 
 // Active ou coupe un interrupteur. Couper est toujours possible ; activer
 // demande l'amélioration.
@@ -65,17 +66,14 @@ const runAuto = (
   elapsedMs: number,
   onAction?: (before: GameState, after: GameState) => void,
 ): GameState => {
-  if (elapsedMs <= 0 || state.status === 'dead' || !isTimeRunning(state)) {
+  if (elapsedMs <= 0 || !isPlaying(state) || !isTimeRunning(state)) {
     return state;
   }
   let current: GameState = {
     ...state,
     autoElapsed: state.autoElapsed + elapsedMs,
   };
-  while (
-    current.status === 'playing' &&
-    current.autoElapsed >= stepIntervalMs(current)
-  ) {
+  while (isPlaying(current) && current.autoElapsed >= stepIntervalMs(current)) {
     const acted = autoStep(current);
     if (acted === current) {
       return { ...current, autoElapsed: 0 };
@@ -126,7 +124,7 @@ export const catchUp = (state: GameState, elapsedMs: number): CatchUpResult => {
   });
   const comeback = eventById('retour-absence');
   const next =
-    comeback !== undefined && actions > 0 && replayed.status === 'playing'
+    comeback !== undefined && actions > 0 && isPlaying(replayed)
       ? fireEvent(replayed, comeback)
       : replayed;
   const comebackEntry = next === replayed ? undefined : next.events.at(-1);

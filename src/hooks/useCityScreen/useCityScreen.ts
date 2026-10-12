@@ -4,6 +4,7 @@ import type { MapDistrict } from '@component/CityMap';
 import { useGameContext } from '@context/GameContext';
 import { ownedCount } from '@game/companies';
 import { companies, districts } from '@game/data';
+import { districtById } from '@game/districts';
 import { describeRequirement, formatCount } from '@game/format';
 import { districtOfCompany } from '@game/impact';
 import type { ImpactValue } from '@game/impact';
@@ -58,7 +59,8 @@ export const useCityScreen = () => {
       })),
   }));
 
-  const district = districts.find((candidate) => candidate.id === selectedId);
+  const district =
+    selectedId === undefined ? undefined : districtById(selectedId);
   const item = invest.districts.find(
     (candidate) => candidate.id === selectedId,
   );
