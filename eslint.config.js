@@ -75,6 +75,26 @@ export default tseslint.config(
     },
   },
   {
+    // Composants visuels : des props seulement, ni règles, ni hooks, ni context.
+    files: ['src/components/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            relativeParent,
+            folderTraversal,
+            {
+              group: ['@game/*', '@hook/*', '@context/*', '@page/*', '@view/*'],
+              message:
+                'Un composant visuel ne reçoit que des props : le hook d’écran fait le reste.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Fonctions pures état → props : ni React, ni hooks, ni context, ni pages.
     files: ['src/views/**'],
     rules: {

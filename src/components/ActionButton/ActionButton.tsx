@@ -1,7 +1,21 @@
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
-import type { PressHandlers } from '@hook/useHoldRepeat';
 import styles from './ActionButton.module.css';
+
+// Gestes d'un appui maintenu, à poser sur le conteneur du bouton (fournis par
+// le hook `useHoldRepeat`).
+export type PressHandlers = {
+  onPointerDown: (event?: { button?: number }) => void;
+  onPointerUp: () => void;
+  onPointerLeave: () => void;
+  onPointerCancel: () => void;
+  onKeyDown: (event: {
+    key: string;
+    repeat: boolean;
+    preventDefault: () => void;
+  }) => void;
+  onContextMenu: (event: { preventDefault: () => void }) => void;
+};
 
 type ActionButtonProperties = {
   label: string;

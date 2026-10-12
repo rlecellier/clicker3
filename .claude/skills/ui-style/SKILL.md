@@ -51,6 +51,8 @@ illustrations. Voix administrative pince-sans-rire.
    - Pas de ternaire imbriqué (helper), `toReversed()`/`toSorted()`, pas de
      `undefined` inutile en `return`.
    - Imports par alias (`@component/…`, `@hook/…`, `@game/…`), jamais `../`.
+   - Un composant n'importe ni `@game`, ni `@hook`, ni `@context`, ni `@view`
+     (imposé par ESLint) : ses types d'entrée sont déclarés chez lui.
 6. **Séparation** : composant visuel (props seulement, pas de test) → hook de
    vue dans `src/hooks/` (`useLifeScreen`, `useInvestScreen`,
    `useAccountsScreen`) → page orchestratrice (`LifePage`…) qui ne fait que

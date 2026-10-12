@@ -1,3 +1,4 @@
+import type { PressHandlers } from '@component/ActionButton';
 import type { SplitChoice } from '@component/SplitActionButton';
 import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
@@ -24,7 +25,6 @@ import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
 import { upgradePath } from '@hook/useGameTabs';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
-import type { PressHandlers } from '@hook/useHoldRepeat';
 import { ENDED, NO_MONEY } from '@view/purchase';
 
 const START_TEXT =

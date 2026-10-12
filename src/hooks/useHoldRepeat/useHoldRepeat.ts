@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import type { PressHandlers } from '@component/ActionButton';
 
 // Durée d'appui à partir de laquelle un appui devient « long » (bascule de
 // l'automatique). À ajuster après essais en jeu.
@@ -10,20 +11,6 @@ export const HOLD_REPEAT_MS = 250;
 // Délai pendant lequel le clic natif qui suit un relâchement est ignoré. Sur
 // écran tactile, ce clic arrive juste après `pointerup` (et `pointerleave`).
 const CLICK_GRACE_MS = 400;
-
-// Gestes à poser sur le conteneur du bouton.
-export type PressHandlers = {
-  onPointerDown: (event?: { button?: number }) => void;
-  onPointerUp: () => void;
-  onPointerLeave: () => void;
-  onPointerCancel: () => void;
-  onKeyDown: (event: {
-    key: string;
-    repeat: boolean;
-    preventDefault: () => void;
-  }) => void;
-  onContextMenu: (event: { preventDefault: () => void }) => void;
-};
 
 type HoldRepeatOptions = {
   onClick: () => void;
