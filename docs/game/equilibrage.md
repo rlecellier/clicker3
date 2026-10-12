@@ -170,9 +170,18 @@ fixes en caisse avant d'acheter.
 
 ## Vérification de la v1.5 (issue #108)
 
-- 2026-10-11 — v1.5 : sortie du simulateur inchangée. `npm run sim` (graine
-  1999) sur `main` après la dernière MR de la v1.5 (`4d5a5d2`) et sur le
-  dernier commit avant #97 (`e8cd2a1`) donne exactement la même sortie, rapport
-  et courbe CSV (`--csv`) compris : 30 min 37 s de jeu actif, plus longue zone
-  morte 0 min 59 s, 1 837 actions. Une sauvegarde réelle de la v1 (version 5)
-  traverse les migrations jusqu'à la version 7 (`save.test.ts`).
+- 2026-10-12 — v1.5 (comparaison refaite, tous les changements de `src/game/`
+  inclus) : sortie du simulateur inchangée. `npm run sim` (graine 1999) sur
+  `main` (`7a7832b`) et sur le dernier commit avant #97 (`e8cd2a1`, extrait
+  dans un dossier séparé) donne exactement la même sortie, rapport et courbe
+  CSV (`--csv`) compris, comparés octet à octet : 30 min 37 s de jeu actif,
+  plus longue zone morte 0 min 59 s, 1 837 actions. Les changements de
+  `src/game/` depuis `e8cd2a1` sont des refontes ou des ajouts sans effet sur
+  l'équilibrage : #112 (historique du ledger, sauvegarde version 8), #125
+  (valeurs finales d'entreprise extraites dans `economy.ts`), #129 (`canStudy`
+  refuse un cursus dont la stat est au dernier palier, ce que le simulateur
+  n'atteint pas), #122 (`statProgress`), ainsi que le courrier, les nouveautés
+  par onglet (sauvegarde version 7), la progression du palier de réputation et
+  la description chiffrée des améliorations. #116 (appui maintenu) ne touche
+  pas `src/game/`. Une sauvegarde réelle de la v1 (version 5) traverse les
+  migrations jusqu'à la version 8 (`save.test.ts`).
