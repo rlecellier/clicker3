@@ -28,7 +28,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await page.clock.install();
   await preloadSave(page, {
     state: {
-      money: 100_000,
+      money: 200_000,
       companies: { atelier: 1 },
       phase: 'entrepreneur',
       // La procédure de travail demande Métier, Gestion et Intelligence au
