@@ -8,7 +8,6 @@ import {
   formatMoney,
 } from '@game/format';
 import { dateOf } from '@game/time';
-import { useAbsenceSummary } from '@hook/useAbsenceSummary';
 
 // Une longue absence peut semer des centaines de lettres : on garde les plus
 // récentes.
@@ -22,8 +21,7 @@ const plural = (count: number, one: string, many: string) =>
 
 // « Pendant votre absence » : le résumé du rattrapage, prêt à afficher.
 export const useAbsenceScreen = () => {
-  const { absence, dismissAbsence } = useAbsenceSummary();
-  const { state } = useGameContext();
+  const { state, absence, dismissAbsence } = useGameContext();
 
   if (absence === null) {
     return null;
