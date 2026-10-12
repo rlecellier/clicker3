@@ -1,0 +1,7 @@
+.positive {
+  color: var(--color-ok);
+}
+
+.negative {
+  color: var(--color-alert);
+}

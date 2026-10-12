@@ -32,11 +32,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.positive {
-  color: var(--color-ok);
-}
-
-.negative {
-  color: var(--color-alert);
-}
