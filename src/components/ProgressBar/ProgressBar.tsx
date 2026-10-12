@@ -10,6 +10,9 @@ type ProgressBarProperties = {
   size?: 'normal' | 'small';
   // Élément à droite du libellé, sur la même ligne.
   aside?: ReactNode;
+  // Remplissage par nature, dans l'ordre : chaque part prend sa couleur. Sans
+  // `segments`, la barre est d'une seule couleur (bleu).
+  segments?: { tone: 'study' | 'work' | 'sleep'; value: number }[];
 };
 
 export const ProgressBar = ({
@@ -18,6 +21,7 @@ export const ProgressBar = ({
   max,
   size = 'normal',
   aside,
+  segments,
 }: ProgressBarProperties) => (
   <Progress.Root
     className={`${styles.root} ${size === 'small' ? styles.small : ''}`}
@@ -31,7 +35,19 @@ export const ProgressBar = ({
       {aside}
     </div>
     <Progress.Track className={styles.track}>
-      <Progress.Indicator className={styles.indicator} />
+      {segments === undefined ? (
+        <Progress.Indicator className={styles.indicator} />
+      ) : (
+        <div className={styles.segments}>
+          {segments.map(({ tone, value: part }, index) => (
+            <div
+              key={index}
+              className={`${styles.indicator} ${styles[tone]}`}
+              style={{ width: `${(part / max) * 100}%` }}
+            />
+          ))}
+        </div>
+      )}
     </Progress.Track>
   </Progress.Root>
 );

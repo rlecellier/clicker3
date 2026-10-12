@@ -7,7 +7,11 @@ type GameHeaderProperties = {
   resources: Parameters<typeof ResourceBar>[0];
   reputation: Parameters<typeof ReputationStars>[0];
   date: string;
-  gauge: { value: number; max: number };
+  gauge: {
+    value: number;
+    max: number;
+    segments: Parameters<typeof ProgressBar>[0]['segments'];
+  };
 };
 
 // En-tête fixe de l'écran de jeu, sur toute la largeur : les ressources sur
@@ -27,6 +31,7 @@ export const GameHeader = ({
       label={date}
       value={gauge.value}
       max={gauge.max}
+      segments={gauge.segments}
     />
   </header>
 );
