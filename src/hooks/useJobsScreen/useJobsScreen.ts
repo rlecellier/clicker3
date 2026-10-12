@@ -3,8 +3,8 @@ import { useGameContext } from '@context/GameContext';
 import { jobs } from '@game/data';
 import { checkRequirement, formatCount, formatMoney } from '@game/format';
 import { canChangeJob } from '@game/jobs';
-import { canSpendReputation } from '@game/reputation';
 import { useGameActions } from '@hook/useGameActions';
+import { NO_REPUTATION, unavailableReason } from '@view/purchase';
 
 // Onglet Emploi : les postes, l'actuel en tête de badge, chacun avec ses
 // conditions et la réputation à payer.
@@ -18,12 +18,6 @@ export const useJobsScreen = () => {
       isCurrent || candidate.requirement === undefined
         ? undefined
         : checkRequirement(state, candidate.requirement);
-    const hasMissing = conditions?.some((condition) => !condition.isMet);
-    const isShortOnReputation = !canSpendReputation(state, candidate.cost);
-    const reason =
-      !isCurrent && hasMissing !== true && isShortOnReputation
-        ? 'Réputation insuffisante'
-        : undefined;
     return {
       id: candidate.id,
       title: candidate.name,
@@ -35,7 +29,11 @@ export const useJobsScreen = () => {
       badge: isCurrent ? 'Actuel' : undefined,
       actionLabel: 'Prendre',
       isDisabled: !canChangeJob(state, candidate.id),
-      reason,
+      reason: unavailableReason(state, {
+        isDone: isCurrent,
+        requirement: candidate.requirement,
+        shortage: NO_REPUTATION,
+      }),
       conditions,
       onAction: () => {
         actions.changeJob(candidate.id);

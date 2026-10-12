@@ -21,7 +21,8 @@
       "@hook/*": ["./src/hooks/*"],
       "@game/*": ["./src/game/*"],
       "@context/*": ["./src/contexts/*"],
-      "@test/*": ["./src/test/*"]
+      "@test/*": ["./src/test/*"],
+      "@view/*": ["./src/views/*"]
     }
   },
   "include": [

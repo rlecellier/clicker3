@@ -75,6 +75,35 @@ export default tseslint.config(
     },
   },
   {
+    // Fonctions pures état → props : ni React, ni hooks, ni context, ni pages.
+    files: ['src/views/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            relativeParent,
+            folderTraversal,
+            {
+              group: [
+                'react',
+                'react/*',
+                'react-dom',
+                'react-dom/*',
+                'react-router',
+                '@hook/*',
+                '@context/*',
+                '@page/*',
+              ],
+              message:
+                'src/views/ ne contient que des fonctions pures : les hooks les appellent.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['*.config.{js,ts}'],
     rules: { 'unicorn/prefer-module': 'off' },
   },
