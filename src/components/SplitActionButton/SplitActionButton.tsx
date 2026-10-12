@@ -1,6 +1,6 @@
 import { Menu } from '@base-ui/react/menu';
+import type { PressHandlers } from '@component/ActionButton';
 import { Button } from '@component/Button';
-import type { PressHandlers } from '@hook/useHoldRepeat';
 import styles from './SplitActionButton.module.css';
 
 export type SplitChoice = {
