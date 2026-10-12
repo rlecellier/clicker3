@@ -1,30 +1,27 @@
 import { ProgressBar } from '@component/ProgressBar';
-import { Stat } from '@component/Stat';
+import { ResourceBar } from '@component/ResourceBar';
 import styles from './GameHeader.module.css';
 
 type GameHeaderProperties = {
-  money: string;
-  // Montant exact, en infobulle.
-  exactMoney: string;
-  // Variation d'argent de la période en cours, signée.
-  balance: string;
+  resources: Parameters<typeof ResourceBar>[0];
   date: string;
   gauge: { value: number; max: number };
 };
 
-// En-tête fixe de l'écran de jeu : l'argent et la date, dont la barre se
-// remplit au fil de la période, sur une seule ligne et à hauteur constante.
+// En-tête fixe de l'écran de jeu, sur toute la largeur : les ressources sur
+// une ligne, puis la date dont la barre se remplit au fil de la période.
 export const GameHeader = ({
-  money,
-  exactMoney,
-  balance,
+  resources,
   date,
   gauge,
 }: GameHeaderProperties) => (
   <header className={styles.header}>
-    <dl className={styles.money}>
-      <Stat label="Argent" value={money} exact={exactMoney} balance={balance} />
-    </dl>
-    <ProgressBar label={date} value={gauge.value} max={gauge.max} />
+    <ResourceBar {...resources} />
+    <ProgressBar
+      size="small"
+      label={date}
+      value={gauge.value}
+      max={gauge.max}
+    />
   </header>
 );

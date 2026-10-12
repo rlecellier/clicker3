@@ -22,26 +22,28 @@ export const GamePage = () => {
 
   return (
     <div className={styles.layout}>
-      <Sidebar
-        label="Navigation du jeu"
-        items={tabs.map((tab) => ({
-          ...tab,
-          icon: <SidebarIcon id={tab.id} />,
-        }))}
-        footer={{ ...footer, icon: <SidebarIcon id="new-life" /> }}
-      />
-      <div className={styles.main}>
-        <GameHeader {...header} />
-        <main className={styles.content}>
-          <div className={styles.page}>
-            <Outlet context={courseChoice} />
-          </div>
-        </main>
-        {mailPopup && (
-          <div className={styles.popup}>
-            <MailPopup {...mailPopup} />
-          </div>
-        )}
+      <GameHeader {...header} />
+      <div className={styles.body}>
+        <Sidebar
+          label="Navigation du jeu"
+          items={tabs.map((tab) => ({
+            ...tab,
+            icon: <SidebarIcon id={tab.id} />,
+          }))}
+          footer={{ ...footer, icon: <SidebarIcon id="new-life" /> }}
+        />
+        <div className={styles.main}>
+          <main className={styles.content}>
+            <div className={styles.page}>
+              <Outlet context={courseChoice} />
+            </div>
+          </main>
+          {mailPopup && (
+            <div className={styles.popup}>
+              <MailPopup {...mailPopup} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
