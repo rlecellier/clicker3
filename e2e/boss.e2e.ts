@@ -31,9 +31,9 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
       money: 100_000,
       companies: { atelier: 1 },
       phase: 'entrepreneur',
-      // Gestion et intelligence sont au dernier palier : leurs cursus sont
-      // débloqués mais inutiles.
-      stats: { metier: 0, gestion: 81, intelligence: 81, endurance: 0 },
+      // La procédure de travail demande Métier, Gestion et Intelligence au
+      // dernier niveau et Endurance 7 : seul le cursus d'Endurance reste utile.
+      stats: { metier: 700, gestion: 700, intelligence: 700, endurance: 350 },
       upgrades: upgrades
         .filter(
           (upgrade) =>
@@ -60,17 +60,13 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   // encore progresser.
   await page.getByRole('button', { name: 'Choisir le cursus' }).click();
   const courseMenu = page.getByRole('menuitemradio');
-  await expect(courseMenu).toHaveCount(2);
-  await expect(courseMenu.filter({ hasText: /Posture/ })).toHaveCount(1);
+  await expect(courseMenu).toHaveCount(1);
   await expect(courseMenu.filter({ hasText: /Dépassement/ })).toHaveCount(1);
 
   // La mini-jauge sous « Étudier » suit le cursus choisi.
   await page.keyboard.press('Escape');
   const miniGauge = (stat: string) =>
     page.getByRole('progressbar', { name: new RegExp(`^${stat} · palier`) });
-  await expect(miniGauge('Métier')).toBeVisible();
-  await page.getByRole('button', { name: 'Choisir le cursus' }).click();
-  await courseMenu.filter({ hasText: /Dépassement/ }).click();
   await expect(miniGauge('Endurance')).toBeVisible();
   await expect(miniGauge('Métier')).toBeHidden();
 
@@ -145,6 +141,10 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
 
   // L'automatisation s'achète, coupée au départ.
   await openUpgrades();
+  // Un coup de pouce s'achète pour quelques mois : il devient actif.
+  const ginkgo = itemOf(page, 'Cure de ginkgo biloba');
+  await ginkgo.getByRole('button', { name: 'Acheter' }).click();
+  await expect(ginkgo.getByText(/Actif, encore/)).toBeVisible();
   await itemOf(page, 'Procédure de travail')
     .getByRole('button', { name: 'Acheter' })
     .click();
@@ -183,7 +183,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     state: {
       money: 100_000,
       phase: 'entrepreneur',
-      stats: { metier: 81, gestion: 81, intelligence: 81, endurance: 81 },
+      stats: { metier: 700, gestion: 700, intelligence: 700, endurance: 700 },
       upgrades: upgrades.map((upgrade) => upgrade.id),
     },
   });
