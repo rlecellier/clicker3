@@ -1,5 +1,5 @@
 import { startState } from '@game/data';
-import { ageOf, dateOf } from './time';
+import { ageOf, dateAt, dateOf } from './time';
 
 describe('ageOf', () => {
   it('part de l’âge de départ', () => {
@@ -36,5 +36,14 @@ describe('dateOf', () => {
       period: 3,
     };
     expect(dateOf(state)).toEqual({ year: 2000, month: 2 });
+  });
+});
+
+describe('dateAt', () => {
+  it('date une période quelconque de la vie', () => {
+    expect(dateAt(startState.life, 13)).toEqual({ year: 2000, month: 2 });
+    expect(dateAt(startState.life, startState.period)).toEqual(
+      dateOf(startState),
+    );
   });
 });

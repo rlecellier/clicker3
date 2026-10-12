@@ -3,12 +3,11 @@ import {
   formatCompact,
   formatCompactMoney,
   formatCount,
-  formatDate,
+  formatPeriodDate,
   formatMoney,
 } from '@game/format';
 import { reputationTiers } from '@game/data';
 import { reputationTierProgress } from '@game/reputation';
-import { dateOf } from '@game/time';
 
 // Ressources (argent, stock), palier de réputation, date et jauge de temps de
 // l'en-tête fixe.
@@ -32,7 +31,7 @@ export const useGameHeader = () => {
       max: reputationTiers.length - 1,
       label: `Réputation : palier ${tier} sur ${reputationTiers.length - 1} · ${name}`,
     },
-    date: formatDate(dateOf(state)),
+    date: formatPeriodDate(state),
     gauge: { value: state.gauge, max: state.gaugeCapacity },
   };
 };

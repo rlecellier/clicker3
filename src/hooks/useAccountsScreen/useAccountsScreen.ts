@@ -3,13 +3,12 @@ import type { LedgerRow } from '@component/LedgerTable';
 import { useGameContext } from '@context/GameContext';
 import { companyById } from '@game/companies';
 import { companies } from '@game/data';
-import { formatCount, formatDate, formatMoney } from '@game/format';
+import { formatCount, formatPeriodDate, formatMoney } from '@game/format';
 import { periodReports, totals } from '@game/ledger';
 import type { LedgerReport } from '@game/ledger';
 import type { GameState } from '@game/state';
 import { jobById } from '@game/jobs';
 import { courseById } from '@game/study';
-import { dateOf } from '@game/time';
 import { hasDashboard, upgradeById } from '@game/upgrades';
 
 const TOTAL_ID = 'total';
@@ -280,7 +279,7 @@ const selectionsOf = (state: GameState) => {
       label: 'Période en cours',
       selection: {
         report: current,
-        date: formatDate(dateOf({ ...state, period: current.period })),
+        date: formatPeriodDate(state, current.period),
         isCurrent: true,
         stockStart: current.stockStart,
         stockEnd: state.stock,
@@ -294,7 +293,7 @@ const selectionsOf = (state: GameState) => {
       label: `Il y a ${ago} mois`,
       selection: {
         report,
-        date: formatDate(dateOf({ ...state, period: report.period })),
+        date: formatPeriodDate(state, report.period),
         isCurrent: false,
         stockStart: report.stockStart,
         stockEnd: report.stockEnd,

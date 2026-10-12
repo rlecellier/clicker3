@@ -3,11 +3,10 @@ import type { FigureItem } from '@component/FigureList';
 import { useGameContext } from '@context/GameContext';
 import {
   formatCount,
-  formatDate,
+  formatPeriodDate,
   formatDecimal,
   formatMoney,
 } from '@game/format';
-import { dateOf } from '@game/time';
 
 // Une longue absence peut semer des centaines de lettres : on garde les plus
 // récentes.
@@ -45,7 +44,7 @@ export const useAbsenceScreen = () => {
     .slice(0, MAX_EVENTS)
     .map((entry, index) => ({
       id: `${entry.id}-${entry.period}-${index}`,
-      date: formatDate(dateOf({ ...state, period: entry.period })),
+      date: formatPeriodDate(state, entry.period),
       text: entry.text,
       isNew: false,
     }));

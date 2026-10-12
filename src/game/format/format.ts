@@ -1,4 +1,5 @@
 import type { Requirement } from '@game/requirements';
+import { dateAt } from '@game/time';
 import type { GameDate } from '@game/time';
 import type { GameState, LifePhase, StatId } from '@game/state';
 import { isSenior } from '@game/phases';
@@ -75,6 +76,10 @@ const months = [
 // « janvier 1999 ».
 export const formatDate = ({ year, month }: GameDate) =>
   `${months[month - 1] ?? ''} ${year}`;
+
+// Date d'une période de la vie (la période en cours par défaut).
+export const formatPeriodDate = (state: GameState, period = state.period) =>
+  formatDate(dateAt(state.life, period));
 
 export const formatAge = (age: number) => `${age} ans`;
 

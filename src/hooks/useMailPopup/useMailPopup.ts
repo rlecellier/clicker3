@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { useGameContext } from '@context/GameContext';
-import { formatDate } from '@game/format';
-import { dateOf } from '@game/time';
+import { formatPeriodDate } from '@game/format';
 import { tabPath } from '@hook/useGameTabs';
 import { readingTime } from './readingTime';
 
@@ -55,7 +54,7 @@ export const useMailPopup = () => {
     return null;
   }
   return {
-    date: formatDate(dateOf({ ...state, period: latest.period })),
+    date: formatPeriodDate(state, latest.period),
     text,
     otherCount: count - 1,
     mailPath: MAIL_PATH,
