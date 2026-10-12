@@ -36,6 +36,7 @@ du mois comprise, dans la limite de leur capacité (voir
 | Ligne                | Ce qu'elle compte                                                                                  |
 | -------------------- | -------------------------------------------------------------------------------------------------- |
 | Loyer                | Le loyer prélevé à la fin du mois, logements achetés compris                                       |
+| Train de vie         | Courses, transport, téléphone : 470 € au studio de départ, plus cher avec chaque logement           |
 | Salaires versés      | Les salaires de vos employés, prélevés à la fin du mois (à ne pas confondre avec vos propres « Salaires » en recettes) |
 | Intérêts             | Les 5 % prélevés sur une dette (argent négatif)                                                    |
 | Achats               | Ce que vous avez payé pour des entreprises, des petits entrepôts et des améliorations, avec une ligne par achat (« · Entrepôt » pour les petits entrepôts) |
@@ -78,14 +79,15 @@ Un tableau à trois colonnes.
 
 ## Un exemple
 
-Un mois où vous travaillez sept fois à l'intérim, avec deux ateliers
-d'assemblage et une boutique, dans le studio de départ :
+Un mois où vous travaillez six fois à l'intérim (trois actions à 320 €, puis
+deux heures supplémentaires à 400 € et une à 432 €, la jauge étant pleine),
+avec deux ateliers d'assemblage et une boutique, dans le studio de départ :
 
-- Recettes : « Salaires » 420 € (7 × 60 €), « Ventes des commerces » 36 €
-  (3 articles à 12 €), total 456 €.
-- Dépenses : « Loyer » 300 €.
+- Recettes : « Salaires » 2 192 €, « Ventes des commerces » 36 € (3 articles à
+  12 €), total 2 228 €.
+- Dépenses : « Loyer » 300 €, « Train de vie » 470 €, total 770 €.
 - Stock : début 0, entrées 4, sorties 3, perdu 0, fin 1.
-- Solde : +156 €.
+- Solde : +1 458 €.
 
 ## Quand « Détail indisponible » apparaît
 

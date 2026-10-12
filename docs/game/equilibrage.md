@@ -319,3 +319,67 @@ part déplace ces cas limites.
 Sauvegarde en version 12 : les deux améliorations renommées sont migrées
 (identifiants, nouveautés vues), les points de stat sont gardés ; les coups de
 pouce n'ajoutent aucun champ (nouveaux genres d'`activeEffects`).
+
+## Axe E : salaires, train de vie, heures supplémentaires, employés (issue #166)
+
+- 2026-10-12 — Une période est une **journée type** de 24 h (8 h de travail,
+  8 h de sommeil, 8 h libres) que le jeu fait passer comme un mois : les repères
+  mensuels s'appliquent tels quels. Le salaire d'un emploi rémunère les 8 h de
+  la journée.
+
+**Règles** (`src/game/overtime`, `actionRules.work.overtime`). Les 8 h valent
+**30 de jauge de travail** (la jauge fait 70, un sommeil en coûte 40 : il en
+reste 30, soit trois actions). Au-delà, sans déblocage, l'action est payée en
+heures supplémentaires : **+25 %** de 30 à 50 de jauge, **+35 %** ensuite (le
+code du travail dit +25 % puis +50 % ; recalé au simulateur), et elle coûte
+**35 % de jauge de plus** (la fatigue : la période passe plus vite et le
+sommeil arrive plus tôt). La jauge de travail de la période se lit dans
+`gaugeSegments` : l'état ne change pas pour cette règle. `jobWage` annonce ce
+que l'action verse vraiment, heures sup. comprises, et l'onglet Vie le signale
+(« heures sup. +25 % »).
+
+**Train de vie** (`economyRules.livingCosts`) : courses, transport, téléphone,
+prélevés à chaque clôture avec le loyer et affichés dans les comptes : 470 € au
+studio, puis 520, 670 et 920 € aux logements suivants. Le ledger gagne `living`
+(sauvegarde en version 13, migration `living: 0`).
+
+**Valeurs** (recalées au simulateur par recherche locale sur les critères de la
+v1) :
+
+| Donnée | Avant | Après |
+| ------ | ----- | ----- |
+| Salaire par action (mois de 8 h) : intérim | 60 | 320 (960 €) |
+| Employé polyvalent | 80 | 430 (1 290 €) |
+| Chargé de mission | 250 | 680 (2 040 €) |
+| Directeur adjoint de la transformation | 1 600 | 2 000 (6 000 €) |
+| Premier collaborateur | 1 600 €, 230 €/mois, production +110 % | 800 €, 1 450 €/mois, production +170 % |
+| Équipe de collaborateurs | 37 000 €, 3 600 €/mois, tout +60 % | 22 000 €, 7 000 €/mois, tout +90 % |
+| Directeur de la transformation | 310 000 €, 45 000 €/mois, tout +300 % | 80 000 €, 15 000 €/mois, tout +500 % |
+| Assistante de direction (axe B) | 1 500 €, 800 €/mois | 7 500 €, 1 600 €/mois, tout +35 % |
+
+Le coût employeur d'un salarié vaut au moins le SMIC chargé (1 300 €), contrôlé
+par `data.test.ts` avec la crédibilité des salaires (800 à 8 000 € par mois), le
+train de vie de chaque logement et la cohérence des heures sup. Le test « dix ans
+d'intérim sans dette » (`jobs.test.ts`) reste vert.
+
+**Mesures** (`npm run sim`, graine 1999, après la fusion de #191), avant → après :
+
+| Mesure | Avant | Après |
+| ------ | ----- | ----- |
+| Jeu actif | 31 min 13 s | 31 min 22 s |
+| Plus longue zone morte | 0 min 52 s | 0 min 49 s |
+| Travail automatique | 41 ans, minute 28,6 | 43 ans, minute 29,6 |
+| Dernier niveau d'une stat | minute 28,5 | minute 29,6 |
+
+Avec les seuls salaires réalistes (avant recalage des employés), la vie durait
+39 min, le travail automatique arrivait à 52 ans et cinq zones mortes dépassaient
+la minute. Garde-fous : le contrôle d'utilité de l'agenda électronique réussit
+maintenant (retiré de `knownGuardrailFailures`) ; restent connus le studio rénové,
+le pavillon, les cartes de visite et la camionnette. Les marges restent faibles
+(zone morte 49 s sur 60 s, jeu actif 31 min sur 30).
+
+Écarts à la proposition : les salaires sont donnés **par action** (un mois =
+trois actions payées normalement) ; le directeur arrive plus tôt (80 000 € au
+lieu de 310 000 €) mais coûte 15 000 € par mois. Un salaire réaliste accélère le
+début de partie, alors que les prix des entreprises (axe C) sont encore ceux de
+la v1 : ils seront recalés avec l'axe C.
