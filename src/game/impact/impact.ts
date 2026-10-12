@@ -21,10 +21,7 @@ const saturate = (amount: number, half: number) =>
 
 // Quartier où se pose le bâtiment d'une entreprise : le sien, sinon les Tilleuls.
 export const districtOfCompany = (state: GameState, company: Company) => {
-  const wanted: string | undefined =
-    impactRules.companyDistricts[
-      company.id as keyof typeof impactRules.companyDistricts
-    ];
+  const wanted = impactRules.companyDistricts[company.id];
   return wanted !== undefined && state.districts.includes(wanted)
     ? wanted
     : impactRules.homeDistrict;
@@ -91,9 +88,7 @@ const indicatorsOf = (
 ];
 
 const residentWealthOf = (districtId: string) =>
-  (impactRules.inequality.residentWealth as Record<string, number>)[
-    districtId
-  ] ?? 0;
+  impactRules.inequality.residentWealth[districtId] ?? 0;
 
 /**
  * Indicateurs d'impact de la ville et de chaque quartier débloqué, de 0 à
