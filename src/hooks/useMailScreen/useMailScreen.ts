@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { EventLogEntry } from '@component/EventLog';
 import { useGameContext } from '@context/GameContext';
-import { formatPeriodDate } from '@game/format';
 import { unreadMail } from '@game/mail';
-import type { JournalEntry } from '@game/state';
-
-const keyOf = (entry: JournalEntry) => `${entry.period}-${entry.id}`;
+import { journalEntry } from '@view/journal';
 
 // Courrier : le journal, du plus récent au plus ancien. Ouvrir l'onglet lit le
 // courrier, y compris les messages qui arrivent pendant qu'il est ouvert.
@@ -24,14 +20,9 @@ export const useMailScreen = () => {
     }
   }, [unread, dispatch]);
 
-  const entries: EventLogEntry[] = state.events
+  const entries = state.events
     .toReversed()
-    .map((entry, index) => ({
-      id: keyOf(entry),
-      date: formatPeriodDate(state, entry.period),
-      text: entry.text,
-      isNew: index < fresh,
-    }));
+    .map((entry, index) => journalEntry(state, entry, index < fresh));
 
   return { entries };
 };

@@ -1,12 +1,8 @@
 import type { EventLogEntry } from '@component/EventLog';
 import type { FigureItem } from '@component/FigureList';
 import { useGameContext } from '@context/GameContext';
-import {
-  formatCount,
-  formatPeriodDate,
-  formatDecimal,
-  formatMoney,
-} from '@game/format';
+import { formatCount, formatDecimal, formatMoney } from '@game/format';
+import { journalEntry } from '@view/journal';
 
 // Une longue absence peut semer des centaines de lettres : on garde les plus
 // récentes.
@@ -42,12 +38,7 @@ export const useAbsenceScreen = () => {
   const events: EventLogEntry[] = absence.events
     .toReversed()
     .slice(0, MAX_EVENTS)
-    .map((entry, index) => ({
-      id: `${entry.id}-${entry.period}-${index}`,
-      date: formatPeriodDate(state, entry.period),
-      text: entry.text,
-      isNew: false,
-    }));
+    .map((entry) => journalEntry(state, entry));
 
   return { figures, events, hasDied: absence.died, dismiss: dismissAbsence };
 };

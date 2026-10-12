@@ -1,0 +1,1 @@
+export { journalEntry } from './journal';
