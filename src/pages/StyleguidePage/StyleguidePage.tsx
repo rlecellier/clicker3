@@ -50,7 +50,15 @@ export const StyleguidePage = () => (
         }}
         reputation={{ tier: 1, max: 3, label: 'Réputation : palier 1 sur 3' }}
         date="janvier 1999"
-        gauge={{ value: 6, max: 10 }}
+        gauge={{
+          value: 6,
+          max: 10,
+          segments: [
+            { tone: 'study', value: 2 },
+            { tone: 'work', value: 3 },
+            { tone: 'sleep', value: 1 },
+          ],
+        }}
       />
       <GameHeader
         resources={{
@@ -59,7 +67,7 @@ export const StyleguidePage = () => (
         }}
         reputation={{ tier: 3, max: 3, label: 'Réputation : palier 3 sur 3' }}
         date="décembre 2026"
-        gauge={{ value: 10, max: 10 }}
+        gauge={{ value: 10, max: 10, segments: [{ tone: 'work', value: 10 }] }}
       />
       <dl className={styles.stats}>
         <ResourceTile icon="money" label="Argent" balance="+120 €" />

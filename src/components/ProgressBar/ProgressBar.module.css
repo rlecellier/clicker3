@@ -31,12 +31,30 @@
 
 /* Blocs bleus d'époque plutôt qu'un aplat continu. */
 .indicator {
+  --block-color: var(--color-primary);
   height: 100%;
   background: repeating-linear-gradient(
     90deg,
-    var(--color-primary) 0 8px,
+    var(--block-color) 0 8px,
     transparent 8px 10px
   );
+}
+
+.segments {
+  display: flex;
+  height: 100%;
+}
+
+.study {
+  --block-color: var(--color-gauge-study);
+}
+
+.work {
+  --block-color: var(--color-gauge-work);
+}
+
+.sleep {
+  --block-color: var(--color-gauge-sleep);
 }
 
 /* Version mini : piste basse, blocs plus fins. */
@@ -48,7 +66,7 @@
 .small .indicator {
   background: repeating-linear-gradient(
     90deg,
-    var(--color-primary) 0 5px,
+    var(--block-color) 0 5px,
     transparent 5px 7px
   );
 }

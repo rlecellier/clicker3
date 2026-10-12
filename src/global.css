@@ -16,6 +16,10 @@
   --color-ok: #1a6b1a;
   --color-alert-text: #ffffff;
   --color-focus: #b35c00;
+  /* Jauge de temps : une couleur par action. */
+  --color-gauge-study: #1f3a73;
+  --color-gauge-work: #1a6b1a;
+  --color-gauge-sleep: #6a3d8f;
 
   --font-sans: Tahoma, Verdana, 'Segoe UI', Arial, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
