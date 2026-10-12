@@ -20,6 +20,7 @@ import {
   ownsEffect,
   nextUpgrade,
 } from './upgrades';
+import { withModifiers } from './modifiers';
 
 const rich: GameState = {
   ...startState,
@@ -255,6 +256,34 @@ const derived = (state: GameState) => ({
   workReputationMultiplier: state.workReputationMultiplier,
   reputationPerSaleMultiplier: state.reputationPerSaleMultiplier,
   upgrades: state.upgrades,
+});
+
+describe('valeurs dérivées', () => {
+  it('un loyer augmenté par un événement reste juste après une annulation', () => {
+    const housed = buyUpgrade(rich, 'studio-renove');
+    const raised = withModifiers({ ...housed, rentFactor: 1.05 });
+    expect(raised.rent).toBe(Math.round(334 * 1.05));
+    // Avant : 351 − 34 = 317 au lieu de 300 × 1,05.
+    expect(cancelUpgrade(raised, 'studio-renove').rent).toBe(
+      Math.round(300 * 1.05),
+    );
+  });
+
+  it('la capacité de stock reste entière, quel que soit l’ordre des achats', () => {
+    const shelved = buyUpgrade(rich, 'etageres-kit');
+    const withWarehouse = withModifiers({ ...shelved, warehouses: 1 });
+    expect(withWarehouse.stockCapacity).toBe((50 + 25) * 13);
+    // Avant : (650 + 25) / 13 = 51,92…
+    expect(cancelUpgrade(withWarehouse, 'etageres-kit').stockCapacity).toBe(75);
+  });
+
+  it('un état déjà à jour ne change pas', () => {
+    let state = rich;
+    for (const upgrade of upgrades) {
+      state = buyUpgrade(state, upgrade.id);
+    }
+    expect(withModifiers(state)).toEqual(state);
+  });
 });
 
 describe('acheter puis annuler', () => {

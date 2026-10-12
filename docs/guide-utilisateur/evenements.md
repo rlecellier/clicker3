@@ -24,8 +24,9 @@ partant de janvier 1999.
 | Janvier 2030        | « Votre poste a été optimisé par un outil qui ne dort pas. Félicitations pour votre évolution. »                 | Salaire des postes 1 et 2 −20 %, pour de bon                                                      |
 | Janvier 2045        | « Il fait très chaud à Sainte-Croissance. La climatisation est un service premium. »                             | Loyer +10 %, salaires des employés +10 %                                                          |
 
-Les hausses de loyer s'appliquent à l'ensemble du loyer que vous payez à cet
-instant, logements compris.
+Les hausses de loyer et de salaires sont définitives : elles s'appliquent à tout
+le loyer et à tous les salaires d'employés, logements et employés pris plus tard
+compris. Annuler un logement retire son loyer, hausse comprise.
 
 ## La vie par âge
 

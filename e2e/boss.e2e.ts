@@ -12,8 +12,10 @@ import {
   preloadSave,
 } from './helpers';
 
-// On possède déjà toutes les améliorations hors parcours, pour n'acheter que
-// celles du parcours, dans l'ordre des prix.
+// On possède déjà les améliorations hors parcours, pour n'acheter que celles du
+// parcours, dans l'ordre des prix. Celles qui ajoutent un loyer ou des salaires
+// en sont exclues : la balance de la période reste sous 1 000 €, affichée à
+// l'euro près, pour lire le gain exact d'un clic.
 const journey = new Set([
   'premier-collaborateur',
   'tableau-de-bord',
@@ -33,8 +35,13 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
       // débloqués mais inutiles.
       stats: { metier: 0, gestion: 81, intelligence: 81, endurance: 0 },
       upgrades: upgrades
-        .map((upgrade) => upgrade.id)
-        .filter((id) => !journey.has(id)),
+        .filter(
+          (upgrade) =>
+            !journey.has(upgrade.id) &&
+            upgrade.rent === undefined &&
+            upgrade.payroll === undefined,
+        )
+        .map((upgrade) => upgrade.id),
     },
   });
   await page.goto('/jeu');

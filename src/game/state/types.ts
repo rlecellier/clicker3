@@ -156,10 +156,17 @@ export type GameState = {
   seed: number;
 
   jobId: string | null;
+  // Valeurs dérivées des améliorations, des petits entrepôts et des facteurs
+  // d'événements : logement, loyer, salaires des employés, capacité de stock,
+  // marqueurs maximum, multiplicateurs. Elles ne s'écrivent que par
+  // `withModifiers` (@game/upgrades), jamais à la main.
   housingId: string;
   rent: number;
   // Salaires des employés prélevés à chaque période.
   payroll: number;
+  // Facteurs cumulés des événements sur le loyer et les salaires (1 au départ).
+  rentFactor: number;
+  payrollFactor: number;
   /** Nombre d'exemplaires possédés, par type d'entreprise. */
   companies: Record<string, number>;
   upgrades: string[];

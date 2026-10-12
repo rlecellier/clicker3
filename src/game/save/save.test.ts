@@ -114,7 +114,10 @@ describe('contenu corrompu', () => {
     ['un marqueur inconnu', { markers: ['chance'] }],
     ['un compteur qui n’est pas un nombre', { companies: { atelier: 'x' } }],
     ['une entreprise inconnue', { companies: { fantome: 1 } }],
-    ['un multiplicateur infini', { companyMultipliers: { atelier: Infinity } }],
+    [
+      'un facteur de salaire infini',
+      { jobSalaryFactors: { interim: Infinity } },
+    ],
     ['un bonus de travail inconnu', { workBoosts: { fantome: 1 } }],
     [
       'un facteur de salaire sur un emploi inconnu',
@@ -693,6 +696,38 @@ describe('migration de la version 7', () => {
     old.state.period = 0;
     const result = deserialize(JSON.stringify(old));
     expect(result.ok && result.state.ledger.history).toEqual([]);
+  });
+});
+
+// Une partie v9 : studio rénové, étagères (×13), puis un petit entrepôt
+// acheté après elles (+25 non agrandi), loyer augmenté par l'euro (×1,05).
+const saveV9 = () => {
+  const state: Record<string, unknown> = {
+    ...startState,
+    version: 9,
+    upgrades: ['studio-renove', 'etageres-kit'],
+    housingId: 'studio-renove',
+    sleepMultiplier: 1.5,
+    warehouses: 1,
+    stockCapacity: 50 * 13 + 25,
+    rent: Math.round((300 + 34) * 1.05),
+  };
+  delete state.rentFactor;
+  delete state.payrollFactor;
+  return JSON.stringify({ version: 9, state });
+};
+
+describe('migration de la version 9', () => {
+  it('garde le loyer et en déduit le facteur des événements', () => {
+    const result = deserialize(saveV9());
+    expect(result.ok && result.state.rent).toBe(Math.round(334 * 1.05));
+    expect(result.ok && result.state.rentFactor).toBeCloseTo(351 / 334);
+    expect(result.ok && result.state.payrollFactor).toBe(1);
+  });
+
+  it('agrandit aussi les petits entrepôts : la capacité ne baisse jamais', () => {
+    const result = deserialize(saveV9());
+    expect(result.ok && result.state.stockCapacity).toBe((50 + 25) * 13);
   });
 });
 

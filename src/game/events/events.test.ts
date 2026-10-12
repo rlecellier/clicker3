@@ -1,3 +1,4 @@
+import { withModifiers } from '@game/upgrades';
 import { events, journalLimit, startState } from '@game/data';
 import { endPeriod } from '@game/period';
 import type { GameState } from '@game/state';
@@ -213,9 +214,15 @@ describe('effets', () => {
   });
 
   it('augmente loyer et salaires, réduit l’argent (crise financière)', () => {
-    const next = triggerEvents(stateAt(116, { money: 1000, payroll: 1000 }));
-    expect(next.rent).toBeGreaterThan(startState.rent);
-    expect(next.payroll).toBe(1100);
+    const withEmployee = withModifiers(
+      stateAt(116, { money: 1000, upgrades: ['premier-collaborateur'] }),
+    );
+    const next = triggerEvents(withEmployee);
+    // L'euro fiduciaire (+5 %, période 36) survient en même temps.
+    expect(next.rentFactor).toBeCloseTo(1.05 * 1.1);
+    expect(next.rent).toBe(Math.round(startState.rent * 1.05 * 1.1));
+    expect(next.payrollFactor).toBeCloseTo(1.1);
+    expect(next.payroll).toBe(Math.round(withEmployee.payroll * 1.1));
     expect(next.money).toBeLessThan(1000);
   });
 });
