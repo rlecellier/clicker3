@@ -22,7 +22,12 @@ export const LifePage = () => {
     <Window title="Ma vie à Sainte-Croissance">
       <CharacterHeader {...screen.header} />
       <dl className={styles.counters}>
-        <Stat label="Stock" value={screen.counters.stock} />
+        <Stat
+          label="Stock"
+          value={screen.counters.stock}
+          exact={screen.counters.exactStock}
+          balance={screen.counters.stockBalance}
+        />
       </dl>
       <Note minLines={2} to={screen.objective.to}>
         {screen.objective.text}

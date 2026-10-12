@@ -20,3 +20,30 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.withBalance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.5em;
+  align-items: baseline;
+}
+
+.withBalance .label {
+  grid-column: 1 / -1;
+}
+
+.balance {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.positive {
+  color: var(--color-ok);
+}
+
+.negative {
+  color: var(--color-alert);
+}
