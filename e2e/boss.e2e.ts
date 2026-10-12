@@ -160,6 +160,10 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     await work.boundingBox(),
     await sellSurplus.boundingBox(),
   ];
+  // La page défile (fenêtre des balances au-dessus) : on mesure depuis le haut.
+  await page.getByRole('main').evaluate((main) => {
+    main.scrollTop = 0;
+  });
   const boxesBefore = await boxes();
   await preloadSave(page, {
     state: {
