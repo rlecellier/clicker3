@@ -1,9 +1,9 @@
 import { ageOf } from '@game/time';
-import { districts } from '@game/data';
+import { districts, statTierThresholds } from '@game/data';
 import { isAutoActive, isTimeRunning } from '@game/automation';
 import { newGame, reduce } from '@game/reducer';
 import { statIds } from '@game/state';
-import type { GameState } from '@game/state';
+import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { lastPeriodReport } from '@game/ledger';
 import { simulatorConfig } from './config';
@@ -31,6 +31,18 @@ export type CurvePoint = {
   revenue: number;
 };
 
+/** Achat d'une amélioration, avec les points de stat déjà gagnés à ce moment. */
+export type UpgradePurchase = {
+  id: string;
+  minutes: number;
+  statPoints: number;
+};
+
+export type SimulationOptions = {
+  // Améliorations que le joueur virtuel n'achète jamais (test d'utilité).
+  excludedUpgrades?: readonly string[];
+};
+
 export type DeadZone = { atMinutes: number; minutes: number };
 
 export type SimulationResult = {
@@ -55,8 +67,22 @@ export type SimulationResult = {
   // État au moment où le travail automatique s'active (pour tester l'absence).
   autoWorkState: GameState | null;
   curve: CurvePoint[];
+  upgradePurchases: UpgradePurchase[];
+  // Minute où chaque stat atteint son dernier palier (absente : jamais).
+  statMaxMinutes: Partial<Record<StatId, number>>;
+  // Points de stat utiles gagnés pendant toute la vie (plafonnés au dernier palier).
+  statPointsTotal: number;
   finalState: GameState;
 };
+
+// Points qui comptent : au-delà du dernier palier, un point ne débloque rien.
+const statPointsOf = (state: GameState) =>
+  statIds.reduce(
+    (sum, stat) =>
+      sum +
+      Math.min(state.stats[stat], statTierThresholds[stat].at(-1) ?? Infinity),
+    0,
+  );
 
 const totalCompanies = (state: GameState) =>
   Object.values(state.companies).reduce((sum, count) => sum + count, 0);
@@ -98,7 +124,9 @@ const phasesOf = (state: GameState): SimulationPhase[] => {
  */
 export const simulateLife = (
   start: GameState = newGame(),
+  options: SimulationOptions = {},
 ): SimulationResult => {
+  const excluded = new Set(options.excludedUpgrades);
   const { humanCadenceMs, maxSteps, waitStepMs } = simulatorConfig;
   let state = start;
   let activeMs = 0;
@@ -115,6 +143,8 @@ export const simulateLife = (
   const reached = new Set<string>();
   const phases = new Set<SimulationPhase>(['youngAdult']);
   const curve: CurvePoint[] = [];
+  const upgradePurchases: UpgradePurchase[] = [];
+  const statMaxMinutes: Partial<Record<StatId, number>> = {};
 
   const elapsedMs = () => activeMs + waitMs;
   const minutes = () => elapsedMs() / 60_000;
@@ -172,6 +202,25 @@ export const simulateLife = (
     for (const phase of phasesOf(state)) {
       phases.add(phase);
     }
+    for (const stat of statIds) {
+      if (
+        statMaxMinutes[stat] === undefined &&
+        tierOf(state, stat) >= statTierThresholds[stat].length
+      ) {
+        statMaxMinutes[stat] = minutes();
+      }
+    }
+  };
+  const notePurchases = (before: GameState) => {
+    for (const id of state.upgrades) {
+      if (!before.upgrades.includes(id)) {
+        upgradePurchases.push({
+          id,
+          minutes: minutes(),
+          statPoints: statPointsOf(state),
+        });
+      }
+    }
   };
 
   sample();
@@ -181,7 +230,7 @@ export const simulateLife = (
       break;
     }
     const before = state;
-    const action = chooseAction(state);
+    const action = chooseAction(state, excluded);
     const after = action === undefined ? state : reduce(state, action);
     // Rien à faire (ou action sans effet) : le joueur attend les automatismes.
     const isWaiting = after === state;
@@ -206,6 +255,7 @@ export const simulateLife = (
     state = hasAuto
       ? reduce(after, { type: 'autoTick', elapsedMs: stepMs })
       : after;
+    notePurchases(before);
     if (hasProgressed(before, state)) {
       noteProgress();
     }
@@ -233,6 +283,9 @@ export const simulateLife = (
     deadZones,
     autoWorkState,
     curve,
+    upgradePurchases,
+    statMaxMinutes,
+    statPointsTotal: statPointsOf(state),
     finalState: state,
   };
 };
