@@ -18,6 +18,7 @@ import {
   statLabels,
 } from '@game/format';
 import { canChangeJob } from '@game/jobs';
+import { periodOutlook } from '@game/period';
 import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
@@ -275,9 +276,7 @@ export const useGameScreen = () => {
     counters: {
       stock: `${formatCompact(state.stock)} / ${formatCompact(state.stockCapacity)}`,
       exactStock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
-      stockBalance: formatBalance(
-        state.stock - state.ledger.current.stockStart,
-      ),
+      stockBalance: formatBalance(periodOutlook(state).stock),
       reputation: formatDecimal(state.reputation),
     },
     brain: {

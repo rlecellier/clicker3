@@ -1,1 +1,7 @@
-export { addGauge, ageCharacter, endPeriod, resetGauge } from './period';
+export {
+  addGauge,
+  ageCharacter,
+  endPeriod,
+  periodOutlook,
+  resetGauge,
+} from './period';

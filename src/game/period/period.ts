@@ -31,6 +31,31 @@ export const endPeriod = (state: GameState): GameState => {
 };
 
 /**
+ * Balance prévue de la période en cours, telle qu'elle sera à sa clôture :
+ * ce qui est déjà encaissé ou payé, plus ce que la fin de période apportera
+ * (production, ventes) ou prélèvera (loyer, salaires, intérêts). L'état reçu
+ * n'est pas modifié.
+ */
+export const periodOutlook = (state: GameState) => {
+  const sold = sellGoods(produceGoods(state));
+  const closing = chargeInterest(chargeExpenses(sold));
+  const { current } = state.ledger;
+  const earned =
+    current.wages + current.sales + current.surplus + current.otherIncome;
+  const spent =
+    current.rent +
+    current.payroll +
+    current.purchases +
+    current.studies +
+    current.otherExpenses +
+    current.interest;
+  return {
+    money: earned - spent + (closing.money - state.money),
+    stock: closing.stock - current.stockStart,
+  };
+};
+
+/**
  * Ajoute du temps à la jauge. Chaque fois qu'elle est pleine, une période
  * passe ; une grosse quantité peut en faire passer plusieurs. Rien ne se passe
  * une fois le personnage mort.
