@@ -4,7 +4,7 @@ import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { SplitActionButton } from '@component/SplitActionButton';
-import { Stat } from '@component/Stat';
+import { ResourceTile } from '@component/ResourceTile';
 import { Window } from '@component/Window';
 import { useGameScreen } from '@hook/useGameScreen';
 import { STUDY_SHORTCUT, WORK_SHORTCUT } from '@hook/useKeyboardShortcuts';
@@ -21,12 +21,16 @@ export const LifePage = () => {
   return (
     <Window title="Ma vie à Sainte-Croissance">
       <CharacterHeader {...screen.header} />
-      <dl className={styles.counters}>
-        <Stat
+      <dl className={styles.balances}>
+        <ResourceTile
+          icon="money"
+          label="Argent"
+          balance={screen.balances.money}
+        />
+        <ResourceTile
+          icon="stock"
           label="Stock"
-          value={screen.counters.stock}
-          exact={screen.counters.exactStock}
-          balance={screen.counters.stockBalance}
+          balance={screen.balances.stock}
         />
       </dl>
       <Note minLines={2} to={screen.objective.to}>

@@ -1,17 +1,12 @@
-/* Hauteur fixe : une ligne, quelle que soit la longueur du montant. */
+/* Hauteur fixe : une ligne de ressources, une barre de temps. */
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
-  align-items: end;
-  gap: var(--space);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   height: 4rem;
   box-sizing: border-box;
   padding: var(--space);
   box-shadow: var(--bevel-out);
   background: var(--color-surface);
-}
-
-.money {
-  margin: 0;
-  min-width: 0;
 }

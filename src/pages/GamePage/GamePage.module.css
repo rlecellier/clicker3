@@ -1,7 +1,15 @@
 /* Seule la zone de contenu défile : la sidebar reste fixe. */
 .layout {
   display: flex;
+  flex-direction: column;
   height: 100dvh;
+}
+
+/* Sous l'en-tête pleine largeur : sidebar et contenu se partagent le reste. */
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 
 .main {

@@ -21,6 +21,7 @@ import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { SplitActionButton } from '@component/SplitActionButton';
+import { ResourceTile } from '@component/ResourceTile';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
 import { Title } from '@component/Title';
@@ -43,19 +44,27 @@ export const StyleguidePage = () => (
   <main className={styles.page}>
     <Window title="Guide de style" actions={<Badge tone="info">v1</Badge>}>
       <GameHeader
-        money="1,2k €"
-        exactMoney="1 250 €"
-        balance="+120 €"
+        resources={{
+          money: { value: '1,2k €', exact: '1 250 €' },
+          stock: { value: '12 / 50', exact: '12 / 50' },
+          reputation: { tier: 1, max: 3, label: 'Réputation : palier 1 sur 3' },
+        }}
         date="janvier 1999"
         gauge={{ value: 6, max: 10 }}
       />
       <GameHeader
-        money="-1,2M €"
-        exactMoney="-1 234 567 €"
-        balance="−45k €"
+        resources={{
+          money: { value: '-1,2M €', exact: '-1 234 567 €' },
+          stock: { value: '50k / 50k', exact: '50 000 / 50 000' },
+          reputation: { tier: 3, max: 3, label: 'Réputation : palier 3 sur 3' },
+        }}
         date="décembre 2026"
         gauge={{ value: 10, max: 10 }}
       />
+      <dl className={styles.stats}>
+        <ResourceTile icon="money" label="Argent" balance="+120 €" />
+        <ResourceTile icon="stock" label="Stock" balance="−45" />
+      </dl>
       <Title>Titre de page</Title>
       <CharacterHeader
         name="Camille Martin"

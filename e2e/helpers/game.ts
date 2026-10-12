@@ -2,9 +2,10 @@ import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { LONG_PRESS_MS } from '@hook/useHoldRepeat';
 
-// Valeur affichée d'un compteur de la page de jeu (« Argent », « Stock »…).
+// Valeur affichée d'une ressource de l'en-tête (« Argent », « Stock »…).
 export const counter = (page: Page, label: string): Locator =>
   page
+    .getByLabel('Ressources')
     .getByText(label, { exact: true })
     .locator('xpath=following-sibling::dd[1]');
 

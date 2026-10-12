@@ -1,0 +1,54 @@
+/* Une seule ligne, hauteur constante : les valeurs trop longues sont tronquées. */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  margin: 0;
+  min-width: 0;
+  min-height: 1.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.item > svg {
+  flex: none;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.value {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.stars {
+  display: flex;
+  margin: 0;
+  color: var(--color-primary);
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

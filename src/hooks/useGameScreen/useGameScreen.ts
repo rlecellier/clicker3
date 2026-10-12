@@ -9,7 +9,6 @@ import {
   describeRequirement,
   formatAge,
   formatBalance,
-  formatCompact,
   formatCount,
   formatDate,
   formatDecimal,
@@ -107,6 +106,7 @@ export const useGameScreen = () => {
   const sayOrQueue = (message: string, run: () => void) =>
     say(state.isSleeping ? QUEUED : message, run);
 
+  const outlook = periodOutlook(state);
   const objective = nextObjective(state);
   const isOver = state.status === 'dead';
   const job = jobs.find((candidate) => candidate.id === state.jobId);
@@ -275,11 +275,11 @@ export const useGameScreen = () => {
       date: formatDate(dateOf(state)),
       phase: formatPhase(state),
     },
-    counters: {
-      stock: `${formatCompact(state.stock)} / ${formatCompact(state.stockCapacity)}`,
-      exactStock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
-      stockBalance: formatBalance(periodOutlook(state).stock),
-      reputation: formatDecimal(state.reputation),
+    counters: { reputation: formatDecimal(state.reputation) },
+    // Balances de la période en cours (prévision à la clôture).
+    balances: {
+      money: formatBalance(outlook.money, ' €'),
+      stock: formatBalance(outlook.stock),
     },
     brain: {
       count: state.markers.length,
