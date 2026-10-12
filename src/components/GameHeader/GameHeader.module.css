@@ -1,7 +1,7 @@
 /* Hauteur fixe : une ligne, quelle que soit la longueur du montant. */
 .header {
   display: grid;
-  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
   align-items: end;
   gap: var(--space);
   height: 4rem;

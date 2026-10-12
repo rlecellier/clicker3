@@ -4,7 +4,9 @@ import { LONG_PRESS_MS } from '@hook/useHoldRepeat';
 
 // Valeur affichée d'un compteur de la page de jeu (« Argent », « Stock »…).
 export const counter = (page: Page, label: string): Locator =>
-  page.getByText(label, { exact: true }).locator('xpath=following-sibling::dd');
+  page
+    .getByText(label, { exact: true })
+    .locator('xpath=following-sibling::dd[1]');
 
 // Nombre d'un texte formaté (« 1 250 € », « 0,3 »), espaces insécables
 // comprises. Ne lit que le premier nombre (« 3 / 50 » donne 3).
@@ -19,7 +21,11 @@ export const numberOf = (text = ''): number => {
 };
 
 export const amountOf = async (locator: Locator) =>
-  numberOf((await locator.textContent()) ?? undefined);
+  numberOf(
+    (await locator.getAttribute('title')) ??
+      (await locator.textContent()) ??
+      undefined,
+  );
 
 // Ligne d'une liste (emploi, entreprise, amélioration, quartier) par son titre.
 export const itemOf = (page: Page, title: string | RegExp): Locator =>

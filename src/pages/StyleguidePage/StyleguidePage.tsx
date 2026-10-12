@@ -43,12 +43,16 @@ export const StyleguidePage = () => (
   <main className={styles.page}>
     <Window title="Guide de style" actions={<Badge tone="info">v1</Badge>}>
       <GameHeader
-        money="1 250 €"
+        money="1,2k €"
+        exactMoney="1 250 €"
+        balance="+120 €"
         date="janvier 1999"
         gauge={{ value: 6, max: 10 }}
       />
       <GameHeader
-        money="-1 234 567,89 €"
+        money="-1,2M €"
+        exactMoney="-1 234 567 €"
+        balance="−45k €"
         date="décembre 2026"
         gauge={{ value: 10, max: 10 }}
       />
@@ -134,7 +138,7 @@ export const StyleguidePage = () => (
       <ProgressBar label="Progression" value={6} max={10} />
       <ProgressBar label="Métier · palier 1" value={6} max={10} size="small" />
       <dl className={styles.stats}>
-        <Stat label="Argent" value="1 250 €" />
+        <Stat label="Argent" value="1,2k €" balance="+120 €" />
         <Stat label="Âge" value="23 ans" />
       </dl>
       <div className={styles.row}>

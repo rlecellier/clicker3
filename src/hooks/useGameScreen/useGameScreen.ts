@@ -8,6 +8,8 @@ import {
   checkRequirement,
   describeRequirement,
   formatAge,
+  formatBalance,
+  formatCompact,
   formatCount,
   formatDate,
   formatDecimal,
@@ -271,7 +273,11 @@ export const useGameScreen = () => {
       phase: formatPhase(state),
     },
     counters: {
-      stock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
+      stock: `${formatCompact(state.stock)} / ${formatCompact(state.stockCapacity)}`,
+      exactStock: `${formatCount(state.stock)} / ${formatCount(state.stockCapacity)}`,
+      stockBalance: formatBalance(
+        state.stock - state.ledger.current.stockStart,
+      ),
       reputation: formatDecimal(state.reputation),
     },
     brain: {
