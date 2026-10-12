@@ -54,6 +54,17 @@ jeu refuse l'achat tant qu'une amélioration d'entrepôt reste à acheter :
 Chaque achat est immédiat. Détail de chaque type dans
 [Les entreprises](entreprises.md).
 
+## Coups de pouce
+
+Sous la liste des améliorations, trois coups de pouce **temporaires** s'achètent
+et se rachètent une fois leur effet écoulé (un seul actif de chaque à la fois) :
+
+| Coup de pouce                              | Prix     | Durée   | Prérequis      | Effet                                      |
+| ------------------------------------------ | -------- | ------- | -------------- | ------------------------------------------ |
+| Cure de ginkgo biloba                      | 20 €     | 3 mois  | Intelligence 3 | Chance de marqueur +10 %                   |
+| Séminaire intensif « Mémoire totale »      | 4 500 €  | 6 mois  | Intelligence 5 | Étudier donne deux chances de marqueur     |
+| Clinique du sommeil de Montreux            | 25 000 € | 12 mois | Endurance 5    | Conversion du sommeil ×2 (avec le logement) |
+
 ## Améliorations
 
 La liste des achats uniques que vous pouvez faire. Elle montre toutes celles

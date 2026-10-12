@@ -253,3 +253,69 @@ fixes en caisse avant d'acheter.
   (`src/game/simulator/config.ts`) et affichés « CONNU » ; le test exige que les
   échecs soient exactement cette liste, donc chaque chantier d'équilibrage doit
   en retirer ceux qu'il corrige. Aucune donnée de `src/game/data/` n'a changé.
+
+## Stats sur 8 niveaux et boosts (issue #165)
+
+- 2026-10-12 — Axe A + B de [propositions-equilibrage.md](propositions-equilibrage.md).
+
+**Niveaux.** Les paliers 2, 9, 41, 81 deviennent 2, 6, 15, 35, 80, 170, 350 et
+700 points (`statTierThresholds`). Déblocages retenus (niveau de stat requis) :
+
+| Niveau | Métier | Gestion | Intelligence | Endurance |
+| -----: | ------ | ------- | ------------ | --------- |
+| 1 | Employé polyvalent, BTS | Licence | Agenda électronique, Coaching | Studio rénové |
+| 2 | | Atelier, Boutique | | |
+| 3 | Chargé de mission | Étagères, Premier collaborateur | Cure de ginkgo | Pavillon |
+| 4 | | Manufacture, Tableau de bord | Assistante de direction | |
+| 5 | | Hypermarché, Équipe | Séminaire intensif | Loft, Clinique du sommeil |
+| 6 | Directeur adjoint | Entrepôt logistique, Site délocalisé | | |
+| 7 | | Plateforme en ligne | | Procédure de travail |
+| 8 | Procédure de travail | Directeur de la transformation, Procédure de travail | Procédure de travail | |
+
+Écarts à la proposition : la procédure de travail (automatisme) demande les
+quatre stats presque au maximum (Métier, Gestion, Intelligence 8, Endurance 7) ;
+sans cela, l'auto arrivait à 37 ans et le jeu actif tombait sous 30 minutes. La
+clinique du sommeil s'ouvre à Endurance 5 et non 7 : au niveau 7, le joueur
+virtuel ne l'atteignait pas avant l'automatisation.
+
+**Boosts.** Logements ouverts aux niveaux 1, 3 et 5 d'Endurance, à 7 500,
+30 000 (avant 100 000) et 80 000 € (avant 190 000) ; coups de pouce achetables
+(`activeEffects`, action `buyBoost`) : cure de ginkgo (20 €, 3 mois, chance de
+marqueur +10 %), séminaire intensif (4 500 €, 6 mois, deux chances de marqueur
+par étude), clinique du sommeil (25 000 €, 12 mois, sommeil ×2). Le prix reste
+fixe (pas de ×1,5 par cure). Carnet de notes → **Agenda électronique** (chance
+de marqueur +30 %, 380 €). Application de productivité → **Assistante de
+direction** (1 500 €, salaire 800 €/mois, production et ventes +30 %) : sa
+version « marqueurs maximum +3 et sommeil plus court » était nuisible au
+simulateur (un cerveau plus grand et un sommeil plus court espacent ou
+raccourcissent le sommeil, qui fait passer le temps sans clic : plus de jeu
+actif pour rien). Procédure de travail : 160 000 € (avant 90 000).
+
+**Simulateur.** Le joueur virtuel n'étudie plus quand un achat moins cher
+n'attend que l'argent (sinon il épuisait sa caisse en études pour des niveaux
+lointains) et achète les coups de pouce tant qu'ils servent.
+
+**Mesures** (`npm run sim`, graine 1999), avant → après :
+
+| Mesure | Avant | Après |
+| ------ | ----- | ----- |
+| Jeu actif | 30 min 43 s | 31 min 13 s |
+| Plus longue zone morte | 1 min 00 s | 0 min 52 s |
+| Travail automatique | 39 ans, minute 26,9 | 41 ans, minute 28,6 |
+| Dernier niveau d'une stat | minute 28,0 (palier 4) | minute 28,5 (niveau 8) |
+| Part des points après l'achat : studio, pavillon, loft | 15,6 %, 0 %, 0 % | 89,9 %, 82,6 %, 72,5 % |
+| Part pour ginkgo, séminaire, clinique | n/a | 91,1 %, 69,2 %, 75,5 % |
+
+Garde-fous : tous les contrôles de boost et de stats vivantes réussissent. Utilité
+réussie pour le loft, l'assistante, les étagères, l'entrepôt, l'équipe et le plan
+de communication. Encore en échec (listés dans `knownGuardrailFailures`) :
+studio rénové, pavillon (un multiplicateur de plus ou de moins ne change ni
+l'âge de l'auto ni les recettes au-delà du bruit de ±2 % de la mesure),
+agenda électronique (4,x % : le séminaire et la cure couvrent déjà la chance de
+marqueur), cartes de visite et camionnette (hors périmètre). La mesure d'utilité
+est discrète (un an d'âge d'auto vaut 2,4 %) : un changement de données quelque
+part déplace ces cas limites.
+
+Sauvegarde en version 12 : les deux améliorations renommées sont migrées
+(identifiants, nouveautés vues), les points de stat sont gardés ; les coups de
+pouce n'ajoutent aucun champ (nouveaux genres d'`activeEffects`).

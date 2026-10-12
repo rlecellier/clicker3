@@ -12,14 +12,14 @@ Une compétence ne multiplie rien. Chaque **palier** atteint ouvre une porte : u
 poste, une entreprise, une amélioration. Le tableau dit ce que chaque palier
 débloque (les paliers sont à 2, 9, 41 et 81 points).
 
-| Compétence   | Palier 1                                                         | Palier 2                                                              | Palier 3                                                                 | Palier 4                    |
-| ------------ | ---------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------ | --------------------------- |
-| Métier       | Emploi « Employé polyvalent », BTS                               | Emploi « Chargé de mission » (avec la réputation 1)                   | Emploi « Directeur adjoint de la transformation » (avec la réputation 2 et le Directeur de la transformation) | Fin du cursus Métier        |
-| Gestion      | Atelier d'assemblage, Boutique, Licence, Étagères en kit         | Manufacture, Hypermarché (avec le Parc Horizon), Premier collaborateur, Tableau de bord | Site de production délocalisé, Plateforme en ligne (à partir de janvier 2000, avec le Pôle d'Excellence), Entrepôt logistique, Équipe de collaborateurs | Directeur de la transformation (avec la réputation 2) |
-| Intelligence | Coaching, Carnet de notes                                        |                                                                       | Application de productivité                                              | Fin du cursus Intelligence  |
-| Endurance    | Studio rénové                                                    | Pavillon aux Tilleuls                                                 | Loft au Pôle d'Excellence                                                |  Fin du cursus Endurance    |
+| Compétence   | Déblocages par palier                                                                                                      |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| Métier       | 1 : emploi « Employé polyvalent », BTS ; 3 : emploi « Chargé de mission » (avec la réputation 1) ; 6 : emploi « Directeur adjoint de la transformation » (avec la réputation 2 et le Directeur de la transformation) ; 8 : procédure de travail, fin du cursus |
+| Gestion      | 1 : Licence ; 2 : Atelier d'assemblage, Boutique ; 3 : Étagères en kit, Premier collaborateur ; 4 : Manufacture, Tableau de bord ; 5 : Hypermarché (avec le Parc Horizon), Équipe de collaborateurs ; 6 : Site de production délocalisé, Entrepôt logistique ; 7 : Plateforme en ligne (à partir de janvier 2000, avec le Pôle d'Excellence) ; 8 : Directeur de la transformation (avec la réputation 2), procédure de travail |
+| Intelligence | 1 : Coaching, Agenda électronique ; 3 : cure de ginkgo ; 4 : Assistante de direction ; 5 : séminaire intensif ; 8 : procédure de travail, fin du cursus |
+| Endurance    | 1 : Studio rénové ; 3 : Pavillon aux Tilleuls ; 5 : Loft au Pôle d'Excellence, clinique du sommeil ; 7 : procédure de travail ; 8 : fin du cursus |
 
-Une case vide veut dire que ce palier n'ouvre rien de précis. Le palier 4 ne sert qu'à
+Une case vide veut dire que ce palier n'ouvre rien de précis. Le palier 8 ne sert qu'à
 terminer un cursus : le jeu cesse alors de le proposer dans Étudier.
 
 Gestion est la compétence qui ouvre le plus : c'est elle qui fait grandir

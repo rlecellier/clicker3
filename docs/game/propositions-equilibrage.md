@@ -1,6 +1,6 @@
 # Propositions d'équilibrage (v1.6)
 
-> Statut : **décisions prises le 2026-10-12** (§ 6, issue #153). Rien n'est encore appliqué dans `src/game/data/` : chaque chantier a son issue.
+> Statut : **décisions prises le 2026-10-12** (§ 6, issue #153). Axes A et B appliqués (issue #165, voir [equilibrage.md](equilibrage.md#stats-sur-8-niveaux-et-boosts-issue-165)) ; les autres chantiers ont chacun leur issue.
 > Les valeurs en vigueur et leur preuve sont dans [equilibrage.md](equilibrage.md) ;
 > ce document part de mesures faites sur `main` (simulateur, graine 1999) et
 > propose des axes, avec des chiffres crédibles à caler ensuite au simulateur.

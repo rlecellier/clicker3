@@ -8,8 +8,8 @@ donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
 
 Les repères de lecture :
 
-- les **paliers** sont ceux de [Compétences](onglet-competences.md) : palier 1
-  à 2 points, palier 2 à 9 points, palier 3 à 41 points, palier 4 à 81 points ;
+- les **paliers** sont ceux de [Compétences](onglet-competences.md) : huit
+  paliers, de 2 points (palier 1) à 700 points (palier 8) ;
 - les **paliers de réputation** sont comptés sur la réputation gagnée : 6, 100 et
   170 ;
 - un **loyer** ou des **salaires** s'ajoutent à ce que le jeu prélève chaque
@@ -25,17 +25,17 @@ Les repères de lecture :
 | Licence d'économie appliquée      | 10 000 €   |                    | Gestion 1                                   | Ouvre l'étude de l'Intelligence                      |
 | Coaching « Dépassement de soi »   | 1 700 €    |                    | Intelligence 1                              | Ouvre l'étude de l'Endurance                         |
 | Studio rénové                     | 7 500 €    | loyer +34 €        | Endurance 1                                 | Sommeil ×1,5                                         |
-| Pavillon aux Tilleuls             | 100 000 €  | loyer +380 €       | Endurance 2                                 | Sommeil ×2,5                                         |
-| Loft au Pôle d'Excellence         | 190 000 €  | loyer +500 €       | Endurance 3                                 | Sommeil ×4                                           |
-| Étagères en kit                   | 2 900 €    |                    | Gestion 1                                   | Capacité du stock ×13                                |
-| Entrepôt logistique               | 31 000 €   |                    | Gestion 3                                   | Capacité du stock ×48                                |
-| Carnet de notes                   | 380 €      |                    | Intelligence 1                              | Marqueurs maximum +2                                 |
-| Application de productivité       | 33 000 €   |                    | Intelligence 3                              | Marqueurs maximum +3                                 |
-| Premier collaborateur             | 1 600 €    | salaires +230 €    | Gestion 2 et une entreprise                 | Production +110 %                                    |
-| Équipe de collaborateurs          | 37 000 €   | salaires +3 600 €  | Gestion 3 et réputation 1                   | Production et ventes +60 %                           |
-| Directeur de la transformation    | 310 000 €  | salaires +45 000 € | Gestion 4 et réputation 2                   | Production et ventes +300 %                          |
-| Procédure de travail              | 90 000 €   |                    | Phase « Dirigeant »                         | Travail automatique                                  |
-| Tableau de bord                   | 5 200 €    |                    | Gestion 2                                   | Comptes détaillés                                    |
+| Pavillon aux Tilleuls             | 30 000 €   | loyer +380 €       | Endurance 3                                 | Sommeil ×2,5                                         |
+| Loft au Pôle d'Excellence         | 80 000 €   | loyer +500 €       | Endurance 5                                 | Sommeil ×4                                           |
+| Étagères en kit                   | 2 900 €    |                    | Gestion 3                                   | Capacité du stock ×13                                |
+| Entrepôt logistique               | 31 000 €   |                    | Gestion 6                                   | Capacité du stock ×48                                |
+| Agenda électronique               | 380 €      |                    | Intelligence 1                              | Chance de marqueur +30 %                             |
+| Assistante de direction           | 1 500 €    | salaires +800 €    | Intelligence 4                              | Production et ventes +30 %                           |
+| Premier collaborateur             | 1 600 €    | salaires +230 €    | Gestion 3 et une entreprise                 | Production +110 %                                    |
+| Équipe de collaborateurs          | 37 000 €   | salaires +3 600 €  | Gestion 5 et réputation 1                   | Production et ventes +60 %                           |
+| Directeur de la transformation    | 310 000 €  | salaires +45 000 € | Gestion 8 et réputation 2                   | Production et ventes +300 %                          |
+| Procédure de travail              | 160 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
+| Tableau de bord                   | 5 200 €    |                    | Gestion 4                                   | Comptes détaillés                                    |
 | Cartes de visite                  | 58 €       |                    | Aucun                                       | Réputation du travail +25 %                          |
 | Camionnette d'occasion            | 16 000 €   |                    | Une entreprise                              | Production des ateliers +15 %                        |
 | Plan de communication             | 19 000 €   |                    | Réputation 2                                | Ventes +30 %, réputation par vente +50 %             |
@@ -107,15 +107,15 @@ points au lieu d'un. Chacun ajoute son loyer à celui que vous payez déjà.
 
 ### Pavillon aux Tilleuls
 
-- **Prix** : 100 000 €, **loyer** +380 € par mois. **Prérequis** : palier 2
-  d'Endurance (9 points).
+- **Prix** : 30 000 €, **loyer** +380 € par mois. **Prérequis** : palier 3
+  d'Endurance (15 points).
 - **Effet** : « Conversion du sommeil ×2,5 ».
 - **Sur quoi** : idem.
 
 ### Loft au Pôle d'Excellence
 
-- **Prix** : 190 000 €, **loyer** +500 € par mois. **Prérequis** : palier 3
-  d'Endurance (41 points).
+- **Prix** : 80 000 €, **loyer** +500 € par mois. **Prérequis** : palier 5
+  d'Endurance (80 points).
 - **Effet** : « Conversion du sommeil ×4 ».
 - **Sur quoi** : idem.
 
@@ -127,29 +127,33 @@ s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
 
 ### Étagères en kit
 
-- **Prix** : 2 900 €. **Prérequis** : palier 1 de Gestion (2 points).
+- **Prix** : 2 900 €. **Prérequis** : palier 3 de Gestion (15 points).
 - **Effet** : « Capacité du stock ×13 ».
 - **Sur quoi** : la capacité de l'entrepôt, qui passe de 50 à 650 articles
   (les petits entrepôts déjà achetés sont multipliés avec le reste).
 
 ### Entrepôt logistique
 
-- **Prix** : 31 000 €. **Prérequis** : palier 3 de Gestion (41 points).
+- **Prix** : 31 000 €. **Prérequis** : palier 6 de Gestion (170 points).
 - **Effet** : « Capacité du stock ×48 ».
 - **Sur quoi** : la capacité de l'entrepôt. Avec les Étagères en kit, 50 devient
   31 200.
 
-### Carnet de notes
+### Agenda électronique
 
 - **Prix** : 380 €. **Prérequis** : palier 1 d'Intelligence (2 points).
-- **Effet** : « Marqueurs maximum +2 », de 5 à 7.
-- **Sur quoi** : la taille du cerveau : plus de marqueurs avant le sommeil.
+- **Effet** : « Chance de marqueur +30 % » (la chance de départ est multipliée
+  par 1,3).
+- **Sur quoi** : le travail et l'étude, qui donnent plus souvent un marqueur.
 
-### Application de productivité
+### Assistante de direction
 
-- **Prix** : 33 000 €. **Prérequis** : palier 3 d'Intelligence (41 points).
-- **Effet** : « Marqueurs maximum +3 », de 7 à 10 avec le Carnet.
-- **Sur quoi** : la taille du cerveau.
+- **Prix** : 1 500 €, **salaires** +800 € par mois. **Prérequis** : palier 4
+  d'Intelligence (35 points).
+- **Effet** : « Production et ventes de toutes les entreprises +30 % ».
+- **Sur quoi** : toutes vos entreprises. Elle remplace l'ancienne application de
+  productivité, dont le seul effet (un cerveau plus grand) espaçait les
+  sommeils sans rien rapporter.
 
 ## Les employés
 
@@ -159,7 +163,7 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Premier collaborateur
 
-- **Prix** : 1 600 €, **salaires** +230 € par mois. **Prérequis** : palier 2 de
+- **Prix** : 1 600 €, **salaires** +230 € par mois. **Prérequis** : palier 3 de
   Gestion (9 points) et au moins une entreprise, de n'importe quel type.
 - **Effet** : « Un employé de plus » et « Production de toutes les entreprises
   +110 % ».
@@ -170,7 +174,7 @@ mois), augmente la production, et la première fait passer à la phase
 ### Équipe de collaborateurs
 
 - **Prix** : 37 000 €, **salaires** +3 600 € par mois. **Prérequis** : palier 3
-  de Gestion (41 points) et palier 1 de réputation (6 gagnés).
+  de Gestion (80 points, palier 5) et palier 1 de réputation (6 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
   entreprises +60 % ».
 - **Sur quoi** : la production de toutes les entreprises et le prix de vente de
@@ -179,7 +183,7 @@ mois), augmente la production, et la première fait passer à la phase
 ### Directeur de la transformation
 
 - **Prix** : 310 000 €, **salaires** +45 000 € par mois. **Prérequis** : palier 4
-  de Gestion (81 points) et palier 2 de réputation (100 gagnés).
+  de Gestion (700 points, palier 8) et palier 2 de réputation (100 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
   entreprises +300 % ».
 - **Sur quoi** : la production et le prix de vente. Il est aussi exigé pour le
@@ -189,14 +193,16 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Procédure de travail
 
-- **Prix** : 90 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé).
+- **Prix** : 160 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé)
+  et le dernier niveau de Métier, de Gestion et d'Intelligence (700 points
+  chacun) avec le palier 7 d'Endurance (350 points).
 - **Effet** : « Le travail se fait tout seul (mode automatique) ».
 - **Sur quoi** : le bouton Travailler, qui peut basculer en automatique par un
   appui long. Voir [Le travail automatique](actions.md#le-travail-automatique).
 
 ### Tableau de bord
 
-- **Prix** : 5 200 €. **Prérequis** : palier 2 de Gestion (9 points).
+- **Prix** : 5 200 €. **Prérequis** : palier 4 de Gestion (35 points).
 - **Effet** : « Affiche le tableau de bord dans les Comptes ».
 - **Sur quoi** : l'onglet [Comptes](onglet-comptes.md), qui passe de la version
   simplifiée aux cinq sections détaillées.
