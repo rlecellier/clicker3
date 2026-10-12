@@ -1,6 +1,14 @@
 import { startState } from '@game/data';
 import { grantMarker } from './markers';
 
+const count = (upgrades: string[]) => {
+  let state = { ...startState, upgrades, maxMarkers: 1000 };
+  for (let index = 0; index < 400; index++) {
+    state = grantMarker(state, 'metier', 0.5, 0);
+  }
+  return state.markers.length;
+};
+
 describe('grantMarker', () => {
   it('donne un marqueur quand la chance est certaine', () => {
     const next = grantMarker(startState, 'metier', 10, 0);
@@ -32,5 +40,13 @@ describe('grantMarker', () => {
     expect(grantMarker(startState, 'metier', 0.5, 0.5)).toEqual(
       grantMarker(startState, 'metier', 0.5, 0.5),
     );
+  });
+
+  it('relève la chance avec l’agenda électronique', () => {
+    const plain = count([]);
+    const noted = count(['agenda-electronique']);
+    expect(plain).toBeGreaterThan(150);
+    expect(plain).toBeLessThan(250);
+    expect(noted - plain).toBeGreaterThan(30);
   });
 });

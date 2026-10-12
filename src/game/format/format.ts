@@ -214,6 +214,9 @@ export const describeEffect = (effect: UpgradeEffect): string => {
     case 'maxMarkers': {
       return `Marqueurs maximum +${formatCount(effect.add)}`;
     }
+    case 'markerChance': {
+      return `Chance de marqueur ${formatBonus(effect.bonus)}`;
+    }
     case 'productionBonus': {
       const target =
         effect.companyId === undefined

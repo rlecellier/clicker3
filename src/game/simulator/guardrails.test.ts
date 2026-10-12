@@ -53,7 +53,7 @@ describe('test d’utilité', () => {
   });
 
   it('accepte une amélioration dont le retrait dégrade une mesure de 5 %', () => {
-    const check = utilityCheck(upgradeOf('carnet-notes'), reference, {
+    const check = utilityCheck(upgradeOf('agenda-electronique'), reference, {
       ...reference,
       revenueAtSixty: 940_000,
     });
@@ -61,11 +61,11 @@ describe('test d’utilité', () => {
   });
 
   it('refuse une amélioration inutile ou nuisible', () => {
-    const useless = utilityCheck(upgradeOf('carnet-notes'), reference, {
+    const useless = utilityCheck(upgradeOf('agenda-electronique'), reference, {
       ...reference,
       revenueAtSixty: 980_000,
     });
-    const harmful = utilityCheck(upgradeOf('carnet-notes'), reference, {
+    const harmful = utilityCheck(upgradeOf('agenda-electronique'), reference, {
       autoWorkAge: 38,
       revenueAtSixty: 1_100_000,
       activeMinutes: 29,
@@ -75,7 +75,7 @@ describe('test d’utilité', () => {
   });
 
   it('compte un travail automatique jamais atteint comme une dégradation', () => {
-    const check = utilityCheck(upgradeOf('carnet-notes'), reference, {
+    const check = utilityCheck(upgradeOf('agenda-electronique'), reference, {
       ...reference,
       autoWorkAge: Infinity,
     });
@@ -145,9 +145,9 @@ describe('simulation', () => {
 
   it('retire vraiment l’amélioration exclue', () => {
     const life = simulateLife(newGame(), {
-      excludedUpgrades: ['carnet-notes'],
+      excludedUpgrades: ['agenda-electronique'],
     });
-    expect(life.finalState.upgrades).not.toContain('carnet-notes');
+    expect(life.finalState.upgrades).not.toContain('agenda-electronique');
   });
 });
 

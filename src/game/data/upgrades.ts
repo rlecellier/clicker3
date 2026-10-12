@@ -9,6 +9,8 @@ export type UpgradeEffect =
   | { type: 'housing'; housingId: string; sleepMultiplier: number }
   | { type: 'stockCapacity'; factor: number }
   | { type: 'maxMarkers'; add: number }
+  // Chance de marqueur relevée de ce bonus (0,3 : 30 % de plus).
+  | { type: 'markerChance'; bonus: number }
   // Production +x, de tout le monde ou d'un seul type d'entreprise.
   | { type: 'productionBonus'; bonus: number; companyId?: string }
   | { type: 'salesBonus'; bonus: number }
@@ -137,21 +139,23 @@ export const upgrades: readonly Upgrade[] = [
     effects: [{ type: 'stockCapacity', factor: 48 }],
   },
   {
-    id: 'carnet-notes',
-    name: 'Carnet de notes',
+    id: 'agenda-electronique',
+    name: 'Agenda électronique',
     description:
-      'Écrire ses objectifs rend 30 % plus performant. Source : un carnet.',
+      'Écrire ses objectifs rend 30 % plus performant. Source : un agenda.',
     price: 380,
     requirement: stat('intelligence', 1),
-    effects: [{ type: 'maxMarkers', add: 2 }],
+    effects: [{ type: 'markerChance', bonus: 0.3 }],
   },
   {
-    id: 'application-productivite',
-    name: 'Application de productivité',
-    description: 'Vous avez maintenant une application pour vos applications.',
-    price: 33_000,
+    id: 'assistante-direction',
+    name: 'Assistante de direction',
+    description:
+      'Elle classe, relance et protège votre agenda. Vous ne savez plus ce que vous faisiez sans elle.',
+    price: 1500,
+    payroll: 800,
     requirement: stat('intelligence', 4),
-    effects: [{ type: 'maxMarkers', add: 3 }],
+    effects: [{ type: 'allBonus', bonus: 0.3 }],
   },
   // Employés
   {
@@ -193,10 +197,15 @@ export const upgrades: readonly Upgrade[] = [
     id: 'procedure-travail',
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
-    price: 90_000,
+    price: 160_000,
     requirement: {
       type: 'all',
-      of: [{ type: 'phase', phase: 'boss' }, stat('intelligence', 8)],
+      of: [
+        { type: 'phase', phase: 'boss' },
+        stat('intelligence', 8),
+        stat('gestion', 8),
+        stat('endurance', 6),
+      ],
     },
     effects: [{ type: 'automation', action: 'work' }],
   },
