@@ -1,7 +1,9 @@
+import { companies } from '@game/data';
 import {
   chargeExpenses,
   chargeInterest,
   produceGoods,
+  salesCapacity,
   sellGoods,
 } from '@game/economy';
 import { triggerEvents } from '@game/events';
@@ -35,6 +37,11 @@ export const endPeriod = (state: GameState): GameState => {
  * ce qui est déjà encaissé ou payé, plus ce que la fin de période apportera
  * (production, ventes) ou prélèvera (loyer, salaires, intérêts). L'état reçu
  * n'est pas modifié.
+ *
+ * La balance de stock est le déséquilibre production / ventes, pas la variation
+ * physique : stock vide, le manque (ventes possibles non servies) la rend
+ * négative ; stock plein, le surplus perdu la rend positive. Hors extrêmes,
+ * c'est exactement la variation du stock.
  */
 export const periodOutlook = (state: GameState) => {
   const sold = sellGoods(produceGoods(state));
@@ -49,9 +56,16 @@ export const periodOutlook = (state: GameState) => {
     current.studies +
     current.otherExpenses +
     current.interest;
+  const wanted = companies.reduce(
+    (total, company) => total + salesCapacity(state, company),
+    0,
+  );
+  const soldNow = sold.ledger.current.stockSold - current.stockSold;
+  const shortage = Math.max(0, wanted - soldNow);
+  const lost = sold.ledger.current.stockLost - current.stockLost;
   return {
     money: earned - spent + (closing.money - state.money),
-    stock: closing.stock - current.stockStart,
+    stock: closing.stock - current.stockStart + lost - shortage,
   };
 };
 

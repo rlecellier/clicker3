@@ -96,6 +96,28 @@ describe('periodOutlook', () => {
     expect(outlook.stock).toBe(end.stock - state.ledger.current.stockStart);
   });
 
+  it('reste négative à stock vide quand les ventes dépassent la production', () => {
+    const state = {
+      ...startState,
+      stock: 0,
+      companies: { ...startState.companies, boutique: 1 },
+    };
+    const end = endPeriod(state);
+    expect(end.stock).toBe(0);
+    expect(periodOutlook(state).stock).toBeLessThan(0);
+  });
+
+  it('reste positive à stock plein quand la production dépasse les ventes', () => {
+    const state = {
+      ...startState,
+      stock: startState.stockCapacity,
+      companies: { ...startState.companies, atelier: 5 },
+    };
+    const end = endPeriod(state);
+    expect(end.stock).toBe(state.stockCapacity);
+    expect(periodOutlook(state).stock).toBeGreaterThan(0);
+  });
+
   it('ajoute ce qui est déjà dépensé dans la période', () => {
     const state = {
       ...startState,
