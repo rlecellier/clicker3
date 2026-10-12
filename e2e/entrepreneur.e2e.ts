@@ -16,7 +16,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await preloadSave(page, {
     state: {
       money: 4000,
-      stats: { metier: 10, gestion: 10, intelligence: 0, endurance: 0 },
+      stats: { metier: 10, gestion: 15, intelligence: 0, endurance: 0 },
     },
   });
   await page.goto('/jeu');
