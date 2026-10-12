@@ -1,5 +1,5 @@
-import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
+import { WithBadge } from '@component/WithBadge';
 import { itemElementId } from './itemElementId';
 import styles from './ItemList.module.css';
 
@@ -44,13 +44,7 @@ export const ItemList = ({
         >
           <div className={styles.text}>
             <span className={styles.title}>
-              {item.title}
-              {item.badge === undefined ? null : (
-                <>
-                  {' '}
-                  <Badge tone="info">{item.badge}</Badge>
-                </>
-              )}
+              <WithBadge badge={item.badge}>{item.title}</WithBadge>
             </span>
             {item.effects === undefined || item.effects.length === 0 ? null : (
               <ul className={styles.effects}>

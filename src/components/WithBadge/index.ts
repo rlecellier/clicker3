@@ -1,0 +1,1 @@
+export { WithBadge } from './WithBadge';
