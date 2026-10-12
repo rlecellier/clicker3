@@ -18,6 +18,7 @@ import {
   hasEmployee,
   availableUpgrades,
   ownsEffect,
+  markerChanceBonus,
   nextUpgrade,
 } from './upgrades';
 import { withModifiers } from './modifiers';
@@ -138,8 +139,14 @@ describe('effets', () => {
     const stocked = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
     expect(stocked.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
 
-    const noted = buy(buy(rich, 'carnet-notes'), 'application-productivite');
-    expect(noted.maxMarkers).toBe(rich.maxMarkers + 2 + 3);
+    const noted = buy(rich, 'assistante-direction');
+    expect(noted.productionMultiplier).toBeCloseTo(1.3);
+    expect(noted.salesMultiplier).toBeCloseTo(1.3);
+    expect(noted.payroll).toBe(rich.payroll + 800);
+    expect(markerChanceBonus(rich)).toBe(0);
+    expect(markerChanceBonus(buy(rich, 'agenda-electronique'))).toBeCloseTo(
+      0.3,
+    );
   });
 
   it('multiplicateurs de production, de ventes et de réputation', () => {
@@ -188,9 +195,10 @@ describe('cancelUpgrade', () => {
 
   it('rend le loyer, le stock et les marqueurs', () => {
     const housed = buy(rich, 'studio-renove');
-    const equipped = buy(buy(housed, 'etageres-kit'), 'carnet-notes');
-    const next = cancelUpgrade(equipped, 'carnet-notes');
+    const equipped = buy(buy(housed, 'etageres-kit'), 'assistante-direction');
+    const next = cancelUpgrade(equipped, 'assistante-direction');
     expect(next.maxMarkers).toBe(rich.maxMarkers);
+    expect(next.payroll).toBe(rich.payroll);
     expect(next.rent).toBe(rich.rent + 34);
     expect(cancelUpgrade(next, 'etageres-kit').stockCapacity).toBe(
       rich.stockCapacity,
@@ -198,13 +206,11 @@ describe('cancelUpgrade', () => {
   });
 
   it('ne garde que les marqueurs qui tiennent encore', () => {
-    const bought = {
-      ...buy(rich, 'carnet-notes'),
+    const crowded = {
+      ...rich,
       markers: Array.from({ length: 7 }, () => 'metier' as const),
     };
-    expect(cancelUpgrade(bought, 'carnet-notes').markers).toHaveLength(
-      rich.maxMarkers,
-    );
+    expect(withModifiers(crowded).markers).toHaveLength(rich.maxMarkers);
   });
 
   it('un logement annulé revient au précédent encore possédé, sinon au départ', () => {

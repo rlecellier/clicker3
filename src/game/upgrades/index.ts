@@ -9,6 +9,7 @@ export {
   hasDashboard,
   hasEmployee,
   isOwned,
+  markerChanceBonus,
   nextUpgrade,
   ownedEffects,
   ownsEffect,

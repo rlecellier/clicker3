@@ -82,6 +82,7 @@ const addEffect = (derived: DerivedFields, effect: UpgradeEffect) => {
       return;
     }
     case 'stockCapacity':
+    case 'markerChance':
     case 'course':
     case 'employee':
     case 'automation':

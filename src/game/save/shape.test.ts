@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 11,
+    version: 12,
     keys: [
       'activeEffects',
       'autoElapsed',

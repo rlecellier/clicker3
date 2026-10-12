@@ -252,6 +252,41 @@ describe('migration de la version 6', () => {
   });
 });
 
+describe('migration de la version 11', () => {
+  const v11 = {
+    ...startState,
+    version: 11,
+    stats: { metier: 120, gestion: 40, intelligence: 90, endurance: 12 },
+    upgrades: ['stage-posture', 'carnet-notes', 'application-productivite'],
+    seenItems: {
+      ...startState.seenItems,
+      invest: ['upgrade:carnet-notes', 'company:atelier'],
+    },
+  };
+
+  it('renomme le carnet et l’application, sans perdre les points de stat', () => {
+    const result = deserialize(JSON.stringify({ version: 11, state: v11 }));
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    const { state } = result;
+    expect(state.upgrades).toEqual([
+      'stage-posture',
+      'agenda-electronique',
+      'assistante-direction',
+    ]);
+    expect(state.seenItems.invest).toEqual([
+      'upgrade:agenda-electronique',
+      'company:atelier',
+    ]);
+    expect(state.stats).toEqual(v11.stats);
+    expect(state.maxMarkers).toBe(startState.maxMarkers);
+    expect(state.productionMultiplier).toBeCloseTo(1.3);
+    expect(state.payroll).toBe(800);
+  });
+});
+
 // Sauvegarde écrite par le code de la v1 (commit e8cd2a1), version 5.
 const saveV5 = `{
   "version": 5,

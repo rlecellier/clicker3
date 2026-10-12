@@ -31,6 +31,17 @@ export const ownsEffect = <Type extends UpgradeEffect['type']>(
     )
     .some((effect) => isMatch(effect));
 
+// Chance de marqueur relevée par les améliorations possédées (0,3 : + 30 %).
+export const markerChanceBonus = (state: GameState) => {
+  let total = 0;
+  for (const effect of ownedEffects(state)) {
+    if (effect.type === 'markerChance') {
+      total += effect.bonus;
+    }
+  }
+  return total;
+};
+
 export const hasCourse = (state: GameState, courseId: string) =>
   ownsEffect(state, 'course', (effect) => effect.courseId === courseId);
 

@@ -50,8 +50,6 @@ export const guardrailConfig = {
 export const knownGuardrailFailures: readonly string[] = [
   'utility:studio-renove',
   'utility:pavillon-tilleuls',
-  'utility:carnet-notes',
-  'utility:application-productivite',
   'utility:cartes-visite',
   'utility:camionnette',
 ];

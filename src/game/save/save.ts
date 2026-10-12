@@ -63,6 +63,22 @@ const withFigureDefaults = (
 const factorOf = (current: unknown, base: number) =>
   isFiniteNumber(current) && base > 0 ? current / base : 1;
 
+// Améliorations renommées en version 12 : le carnet de notes devient l'agenda
+// électronique, l'application de productivité l'assistante de direction.
+const renamedUpgrades: Readonly<Record<string, string>> = {
+  'carnet-notes': 'agenda-electronique',
+  'application-productivite': 'assistante-direction',
+};
+
+const renameId = (id: unknown) =>
+  typeof id === 'string' ? (renamedUpgrades[id] ?? id) : id;
+
+// Les nouveautés vues sont rangées sous « upgrade:<id> ».
+const renameSeen = (id: unknown) =>
+  typeof id === 'string' && id.startsWith('upgrade:')
+    ? `upgrade:${renameId(id.slice('upgrade:'.length))}`
+    : id;
+
 export const defaultSaveOptions: SaveOptions = {
   currentVersion: startState.version,
   migrations: {
@@ -193,6 +209,35 @@ export const defaultSaveOptions: SaveOptions = {
           ? [{ kind: 'work', amount: raw.gauge }]
           : [],
     }),
+    // Version 12 : les 8 niveaux de stat gardent les points déjà gagnés (seuls
+    // les niveaux atteints changent), et deux améliorations changent d'id et
+    // d'effet : le carnet de notes (marqueurs maximum + 2) devient l'agenda
+    // électronique (chance de marqueur + 30 %), l'application de productivité
+    // (marqueurs maximum + 3) l'assistante de direction (production et ventes
+    // + 15 %, avec un salaire). Valeurs dérivées recalculées.
+    11: (raw) => {
+      const { seenItems } = raw;
+      const base = {
+        ...raw,
+        upgrades: Array.isArray(raw.upgrades)
+          ? raw.upgrades.map((id) => renameId(id))
+          : raw.upgrades,
+        seenItems: isRecord(seenItems)
+          ? Object.fromEntries(
+              Object.entries(seenItems).map(([tab, ids]) => [
+                tab,
+                Array.isArray(ids) ? ids.map((id) => renameSeen(id)) : ids,
+              ]),
+            )
+          : seenItems,
+      };
+      try {
+        return { ...base, ...withModifiers(base as unknown as GameState) };
+      } catch {
+        // Contenu inexploitable : la validation rejettera la sauvegarde.
+        return base;
+      }
+    },
   },
 };
 
