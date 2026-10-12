@@ -2,11 +2,11 @@ import {
   chargeExpenses,
   chargeInterest,
   payWages,
+  periodProduction,
+  periodSalesCapacity,
   produceGoods,
-  salesCapacity,
   sellGoods,
 } from '@game/economy';
-import { companies } from '@game/data';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
 import type { GameState } from '@game/state';
@@ -24,12 +24,31 @@ export const resetGauge = (state: GameState): GameState => ({
   gauge: Math.max(0, state.gauge - state.gaugeCapacity),
 });
 
+/**
+ * Étapes 1 à 3 : production, ventes, salaires gagnés, loyer et salaires
+ * versés, intérêts. Seule chaîne de la clôture : la résolution de période et
+ * la balance prévue l'appliquent toutes les deux.
+ */
+const closingSteps = [
+  produceGoods,
+  sellGoods,
+  payWages,
+  chargeExpenses,
+  chargeInterest,
+] as const;
+
+export const settleAccounts = (state: GameState): GameState => {
+  let settled = state;
+  for (const step of closingSteps) {
+    settled = step(settled);
+  }
+  return settled;
+};
+
 export const endPeriod = (state: GameState): GameState => {
-  const produced = produceGoods(state);
-  const sold = payWages(sellGoods(produced));
   // Le ledger se ferme avant les événements : ceux-ci surviennent au début de
   // la période suivante (ils sont datés d'elle) et s'y écrivent.
-  const charged = closePeriod(chargeInterest(chargeExpenses(sold)));
+  const charged = closePeriod(settleAccounts(state));
   return triggerEvents(resetGauge(ageCharacter(charged)));
 };
 
@@ -42,21 +61,10 @@ export const endPeriod = (state: GameState): GameState => {
  * capacité de vente de la période, sans tenir compte de l'entrepôt (stock
  * vide ou plein). L'état reçu n'est pas modifié.
  */
-export const periodOutlook = (state: GameState) => {
-  const produced = produceGoods(state);
-  const paid = payWages(sellGoods(produced));
-  const closing = chargeInterest(chargeExpenses(paid));
-  const production =
-    produced.ledger.current.stockProduced - state.ledger.current.stockProduced;
-  const sales = companies.reduce(
-    (total, company) => total + salesCapacity(state, company),
-    0,
-  );
-  return {
-    money: closing.money - state.money,
-    stock: production - sales,
-  };
-};
+export const periodOutlook = (state: GameState) => ({
+  money: settleAccounts(state).money - state.money,
+  stock: periodProduction(state) - periodSalesCapacity(state),
+});
 
 /**
  * Ajoute du temps à la jauge. Chaque fois qu'elle est pleine, une période

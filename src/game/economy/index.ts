@@ -7,7 +7,9 @@ export {
   periodProduction,
   productionShares,
   produceGoods,
+  periodSalesCapacity,
   salesCapacity,
+  salesFactor,
   sellGoods,
   wagesDueOf,
 } from './economy';

@@ -4,4 +4,5 @@ export {
   endPeriod,
   periodOutlook,
   resetGauge,
+  settleAccounts,
 } from './period';
