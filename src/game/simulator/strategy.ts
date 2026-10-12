@@ -1,6 +1,13 @@
 import { canEnableAuto, isAutoActive } from '@game/automation';
 import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
-import { companies, courses, districts, jobs, upgrades } from '@game/data';
+import {
+  companies,
+  courses,
+  districts,
+  economyRules,
+  jobs,
+  upgrades,
+} from '@game/data';
 import type { Company } from '@game/data';
 import { canUnlockDistrict } from '@game/districts';
 import { canChangeJob, jobById } from '@game/jobs';
@@ -161,7 +168,7 @@ const workTarget = (state: GameState): string => {
       (state.companyMultipliers[company.id] ?? 1);
     // Une action de travail ajoute `workBonus` de l'activité de l'entreprise.
     const gain =
-      0.5 *
+      economyRules.workBonus *
       units *
       (company.kind === 'commerce'
         ? company.price
