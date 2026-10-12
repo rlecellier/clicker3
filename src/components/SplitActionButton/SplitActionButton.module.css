@@ -64,36 +64,11 @@
   font-weight: bold;
 }
 
-.choiceDetail,
-.detail,
-.reason {
+.choiceDetail {
   font-size: 0.75rem;
-}
-
-.choiceDetail,
-.detail {
   color: var(--color-text-muted);
 }
 
 .choice[data-highlighted] .choiceDetail {
   color: var(--color-primary-text);
-}
-
-.reason {
-  color: var(--color-alert);
-}
-
-/* Hauteur fixe de deux lignes : le détail ou la raison ne fait pas sauter la
-   page, et un texte plus long est tronqué (le texte complet est en infobulle). */
-.info {
-  font-size: 0.75rem;
-  height: 2lh;
-  overflow: hidden;
-}
-
-.info > p {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
 }
