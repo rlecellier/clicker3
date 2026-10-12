@@ -3,6 +3,7 @@ import { startState } from '@game/data';
 import {
   SAVE_KEY,
   amountOf,
+  balanceOf,
   counter,
   itemOf,
   openTab,
@@ -41,11 +42,31 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // Aucun cursus au départ.
   await expect(page.getByRole('heading', { name: 'Études' })).toBeHidden();
 
-  // Travailler paie, et l'intérim remercie.
+  // Travailler ne paie pas tout de suite : le salaire est versé à la fin de la
+  // période. Il fait monter la balance (le loyer est déjà à payer), pas
+  // l'argent.
+  const rentBalance = await balanceOf(page, 'Argent');
+  expect(rentBalance).toBeLessThan(0);
   await work.click();
   await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
   expect(await workBox()).toEqual(workBoxAtStart);
-  await expect(counter(page, 'Argent')).toHaveText(/^60\s€$/);
+  await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
+  // Un peu plus de 60 : la dette à venir porte moins d'intérêts.
+  expect(await balanceOf(page, 'Argent')).toBeGreaterThanOrEqual(
+    rentBalance + 60,
+  );
+
+  // Jusqu'à une balance positive : à la clôture, l'argent monte de la balance.
+  await repeatUntil(
+    () => work.click(),
+    async () => (await balanceOf(page, 'Argent')) > 0,
+  );
+  const announcedGain = await balanceOf(page, 'Argent');
+  await repeatUntil(
+    () => work.click(),
+    async () => (await money()) > 0,
+  );
+  expect(await money()).toBeGreaterThanOrEqual(announcedGain);
 
   // Les améliorations disponibles sont toutes listées, même trop chères ; un
   // seul salaire suffit aux cartes de visite, pas au stage.
@@ -60,9 +81,12 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     await openTab(page, 'investir');
     await page.getByRole('tab', { name: 'Obtenues' }).click();
   };
+  const cashAtCards = await money();
   await openUpgrades();
   // L'en-tête fixe garde l'argent visible hors de l'onglet Vie.
-  await expect(counter(page, 'Argent')).toHaveText(/^60\s€$/);
+  await expect(counter(page, 'Argent')).toHaveText(
+    new RegExp(String.raw`^${cashAtCards}\s€$`),
+  );
   await expect(stage).toBeVisible();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await cards.getByRole('button', { name: 'Acheter' }).click();
@@ -102,24 +126,34 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await page
     .getByRole('menuitemradio', { name: /Posture professionnelle/ })
     .click();
+  const studyCost = 20;
   const before = await money();
+  const balanceBefore = await balanceOf(page, 'Argent');
   await page.getByRole('button', { name: 'Étudier' }).click();
   await expect(page.getByText('Vous avez étudié.')).toBeVisible();
-  // L'étude coûte de l'argent (un loyer peut tomber avec elle).
-  expect(await money()).toBeLessThan(before);
+  // L'étude se paie tout de suite et ne touche pas la balance. Si elle fait
+  // passer la période, la balance annoncée s'ajoute à l'argent.
+  const afterStudy = await money();
+  expect([before - studyCost, before - studyCost + balanceBefore]).toContain(
+    afterStudy,
+  );
 
   // Le raccourci E étudie le cursus choisi, depuis un autre onglet.
   await repeatUntil(
     () => work.click(),
     async () => (await money()) >= 20,
   );
-  const afterWork = await money();
+  const beforeShortcut = await money();
+  const balanceBeforeShortcut = await balanceOf(page, 'Argent');
   await page.keyboard.press('3');
   await expect(page).toHaveURL('/jeu/competences');
   await page.keyboard.press('e');
   await page.keyboard.press('2');
   await expect(page).toHaveURL('/jeu/vie');
-  await expect.poll(money).toBeLessThan(afterWork);
+  expect([
+    beforeShortcut - studyCost,
+    beforeShortcut - studyCost + balanceBeforeShortcut,
+  ]).toContain(await money());
 
   // Cerveau plein, le personnage s'endort tout seul : les marqueurs se vident
   // un à un et se convertissent en points de stat. Travailler est impossible

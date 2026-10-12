@@ -3,6 +3,7 @@ import { upgrades } from '@game/data';
 import {
   expectNoOverflow,
   amountOf,
+  balanceOf,
   numberOf,
   counter,
   itemOf,
@@ -109,25 +110,31 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   // qu'un clic seul, et plus rien une fois le doigt levé.
   await openTab(page, 'vie');
   const money = () => amountOf(counter(page, 'Argent'));
+  const balance = () => balanceOf(page, 'Argent');
+  // Argent et balance ensemble : l'automatisme agit sur l'un ou l'autre selon
+  // qu'une période se termine.
+  const snapshot = async () => `${await money()}|${await balance()}`;
   // Un tap sur écran tactile vaut un seul clic, pas deux : il rapporte
-  // exactement ce que le bouton annonce.
+  // exactement ce que le bouton annonce, dans la balance de la période.
   const announcement = page.getByText(/Rapporte \d/);
   await expect(announcement).toBeVisible();
   const announced = numberOf((await announcement.textContent()) ?? undefined);
   expect(announced).toBeGreaterThan(0);
-  const beforeClick = await money();
+  const cashBeforeClick = await money();
+  const beforeClick = await balance();
   await work.tap();
-  const oneClick = (await money()) - beforeClick;
+  const oneClick = (await balance()) - beforeClick;
   expect(oneClick).toBe(announced);
-  const beforeHold = await money();
+  expect(await money()).toBe(cashBeforeClick);
+  const beforeHold = await balance();
   await work.hover();
   await page.mouse.down();
   await page.clock.runFor(1000);
   await page.mouse.up();
-  const afterHold = await money();
+  const afterHold = await balance();
   expect(afterHold - beforeHold).toBeGreaterThanOrEqual(oneClick * 3);
   await page.clock.runFor(2000);
-  expect(await money()).toBe(afterHold);
+  expect(await balance()).toBe(afterHold);
 
   // L'automatisation s'achète, coupée au départ.
   await openUpgrades();
@@ -142,16 +149,16 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await longPress(page, work);
   await expect(workOn).toBeVisible();
   await expect(page.getByText('Travail automatique activé.')).toBeVisible();
-  const afterLongPress = await money();
+  const afterLongPress = await snapshot();
   await page.clock.runFor(1000);
-  await expect.poll(money).toBeGreaterThan(afterLongPress);
+  await expect.poll(snapshot).not.toBe(afterLongPress);
 
   // Un second appui long le coupe.
   await longPress(page, work);
   await expect(workOn).toBeHidden();
-  const stopped = await money();
+  const stopped = await snapshot();
   await page.clock.runFor(20_000);
-  expect(await money()).toBe(stopped);
+  expect(await snapshot()).toBe(stopped);
 
   // Quand tout est au dernier palier, « Étudier » disparaît sans que les
   // autres boutons bougent ; le raccourci E ne fait plus rien.
