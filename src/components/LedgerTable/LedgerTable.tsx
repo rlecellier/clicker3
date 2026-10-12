@@ -3,8 +3,9 @@ import { DataTable } from '@component/DataTable';
 export type LedgerRow = {
   id: string;
   label: string;
-  last: string;
-  total: string;
+  amount: string;
+  // Part du total de la section (« 42 % ») ; absente quand elle n'a pas de sens.
+  share?: string;
 };
 
 type LedgerTableProperties = {
@@ -14,8 +15,8 @@ type LedgerTableProperties = {
 
 const columns = [
   { id: 'label', header: 'Poste' },
-  { id: 'last', header: 'Dernière période', isNumeric: true },
-  { id: 'total', header: 'Cumulé', isNumeric: true },
+  { id: 'amount', header: 'Montant', isNumeric: true },
+  { id: 'share', header: 'Part', isNumeric: true },
 ] as const;
 
 export const LedgerTable = ({ caption, rows }: LedgerTableProperties) => (
@@ -24,7 +25,7 @@ export const LedgerTable = ({ caption, rows }: LedgerTableProperties) => (
     columns={columns}
     rows={rows.map((row) => ({
       id: row.id,
-      cells: [row.label, row.last, row.total],
+      cells: [row.label, row.amount, row.share ?? ''],
     }))}
   />
 );

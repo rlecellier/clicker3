@@ -5,6 +5,8 @@ import { DataTable } from '@component/DataTable';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
 import { ItemList } from '@component/ItemList';
+import { LedgerSection } from '@component/LedgerSection';
+import { LedgerTable } from '@component/LedgerTable';
 import { MailPopup } from '@component/MailPopup';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
@@ -132,6 +134,34 @@ export const StyleguidePage = () => (
         onPause={() => {}}
         onResume={() => {}}
       />
+      <LedgerSection
+        title="D’où vient l’argent ?"
+        help="Les commerces vendent tout le stock, production de la période comprise."
+      >
+        <LedgerTable
+          caption="Recettes"
+          rows={[
+            {
+              id: 'sales',
+              label: 'Ventes des commerces',
+              amount: '180 €',
+              share: '90 %',
+            },
+            {
+              id: 'sales-boutique',
+              label: '· Boutique',
+              amount: '180 €',
+              share: '90 %',
+            },
+            {
+              id: 'surplus',
+              label: 'Vente du surplus',
+              amount: '20 €',
+              share: '10 %',
+            },
+          ]}
+        />
+      </LedgerSection>
       <Tabs
         tabs={[
           { id: 'work', label: 'Travail', content: 'Contenu du travail.' },

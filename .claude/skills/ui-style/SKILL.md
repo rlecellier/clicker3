@@ -26,7 +26,7 @@ illustrations. Voix administrative pince-sans-rire.
    (items `badge`, `badgeTone`, `accessibleLabel`, `shortcut`), `GameHeader`,
    `Stat` (dans un `<dl>`), `Note` (`minLines`, `to`), `CharacterHeader`,
    `MarkerTrack`, `ActionButton`, `SplitActionButton`, `ItemList`
-   (`highlightedId`), `EventLog`, `MailPopup` (popup non modale), `LedgerTable`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
+   (`highlightedId`), `EventLog`, `MailPopup` (popup non modale), `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
@@ -49,7 +49,7 @@ illustrations. Voix administrative pince-sans-rire.
    - Imports par alias (`@component/…`, `@hook/…`, `@game/…`), jamais `../`.
 6. **Séparation** : composant visuel (props seulement, pas de test) → hook de
    vue dans `src/hooks/` (`useGameScreen`, `useInvestScreen`,
-   `useJournalScreen`) → page orchestratrice (`LifePage`…) qui ne fait que
+   `useAccountsScreen`) → page orchestratrice (`LifePage`…) qui ne fait que
    brancher.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;
    raison de blocage via `describeRequirement` (« Argent insuffisant »,
