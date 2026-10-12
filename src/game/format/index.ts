@@ -1,5 +1,6 @@
 export {
   checkRequirement,
+  describeBoost,
   describeEffect,
   describeRequirement,
   formatAge,
