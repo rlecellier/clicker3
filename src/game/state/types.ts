@@ -1,8 +1,9 @@
 import type { lifePhases } from './lifePhases';
+import type { statIds } from './stats';
 
 export type GameStatus = 'playing' | 'dead';
 
-export type StatId = 'metier' | 'gestion' | 'intelligence' | 'endurance';
+export type StatId = (typeof statIds)[number];
 
 export type LifePhase = (typeof lifePhases)[number];
 

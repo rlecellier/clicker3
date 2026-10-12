@@ -1,14 +1,15 @@
 import { statTierThresholds } from '@game/data';
 import type { GameState, StatId } from '@game/state';
 
-/** Palier atteint pour une stat : 0 (aucun) à 4 (P4). */
-export const tierOf = (state: GameState, stat: StatId) =>
-  statTierThresholds[stat].filter((threshold) => state.stats[stat] >= threshold)
-    .length;
+/**
+ * Palier atteint : nombre de seuils franchis (0 : aucun). Une seule règle pour
+ * les stats et la réputation.
+ */
+export const tierAt = (thresholds: readonly number[], points: number) =>
+  thresholds.filter((threshold) => points >= threshold).length;
 
-export type StatProgress = {
+export type TierProgress = {
   tier: number;
-  points: number;
   /** Points gagnés dans le palier en cours (1 au dernier palier). */
   value: number;
   /** Largeur du palier en cours (1 au dernier palier : jauge pleine). */
@@ -16,21 +17,28 @@ export type StatProgress = {
   isMax: boolean;
 };
 
-/** Progression d'une stat vers son prochain palier. */
-export const statProgress = (state: GameState, stat: StatId): StatProgress => {
-  const tier = tierOf(state, stat);
-  const thresholds = statTierThresholds[stat];
+/** Progression vers le prochain seuil, pour une barre de palier. */
+export const tierProgress = (
+  thresholds: readonly number[],
+  points: number,
+): TierProgress => {
+  const tier = tierAt(thresholds, points);
   const next = thresholds[tier];
-  const points = state.stats[stat];
   if (next === undefined) {
-    return { tier, points, value: 1, max: 1, isMax: true };
+    return { tier, value: 1, max: 1, isMax: true };
   }
   const start = tier === 0 ? 0 : (thresholds[tier - 1] ?? 0);
-  return {
-    tier,
-    points,
-    value: points - start,
-    max: next - start,
-    isMax: false,
-  };
+  return { tier, value: points - start, max: next - start, isMax: false };
 };
+
+/** Palier atteint pour une stat : 0 (aucun) à 4 (P4). */
+export const tierOf = (state: GameState, stat: StatId) =>
+  tierAt(statTierThresholds[stat], state.stats[stat]);
+
+export type StatProgress = TierProgress & { points: number };
+
+/** Progression d'une stat vers son prochain palier. */
+export const statProgress = (state: GameState, stat: StatId): StatProgress => ({
+  ...tierProgress(statTierThresholds[stat], state.stats[stat]),
+  points: state.stats[stat],
+});

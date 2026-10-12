@@ -1,6 +1,12 @@
 import { reputationTiers } from '@game/data';
 import { withRecord } from '@game/ledger';
 import type { GameState } from '@game/state';
+import { tierAt, tierProgress } from '@game/stats';
+
+// Seuils des paliers 1 à 3 (le palier 0 n'en a pas), sur le total gagné.
+const reputationThresholds = reputationTiers
+  .slice(1)
+  .map((tier) => tier.earned);
 
 export const gainReputation = (state: GameState, amount: number) =>
   amount > 0
@@ -40,20 +46,11 @@ export const spendReputation = (state: GameState, amount: number) =>
 
 // Palier d'après le total gagné : 0 (« Inconnu ») à 3.
 export const reputationTierOf = (state: GameState) =>
-  reputationTiers.filter((tier) => state.reputationEarned >= tier.earned)
-    .length - 1;
+  tierAt(reputationThresholds, state.reputationEarned);
 
 // Progression dans le palier courant, sur le total gagné (jamais sur le solde).
 // Au dernier palier : value = max = 1, comme pour les compétences.
 export const reputationTierProgress = (state: GameState) => {
-  const tier = reputationTierOf(state);
-  const start = reputationTiers[tier]?.earned ?? 0;
-  const next = reputationTiers[tier + 1];
-  return {
-    tier,
-    name: reputationTiers[tier]?.name ?? '',
-    value: next === undefined ? 1 : state.reputationEarned - start,
-    max: next === undefined ? 1 : next.earned - start,
-    isMax: next === undefined,
-  };
+  const progress = tierProgress(reputationThresholds, state.reputationEarned);
+  return { ...progress, name: reputationTiers[progress.tier]?.name ?? '' };
 };
