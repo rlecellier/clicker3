@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { startState } from '@game/data';
+import { jobs, startState } from '@game/data';
 import {
   SAVE_KEY,
   amountOf,
@@ -51,9 +51,9 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
   expect(await workBox()).toEqual(workBoxAtStart);
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
-  // Un peu plus de 60 : la dette à venir porte moins d'intérêts.
+  // Un peu plus que le salaire : la dette à venir porte moins d'intérêts.
   expect(await balanceOf(page, 'Argent')).toBeGreaterThanOrEqual(
-    rentBalance + 60,
+    rentBalance + (jobs[0]?.salary ?? 0),
   );
 
   // Jusqu'à une balance positive : à la clôture, l'argent monte de la balance.
@@ -69,7 +69,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   expect(await money()).toBeGreaterThanOrEqual(announcedGain);
 
   // Les améliorations disponibles sont toutes listées, même trop chères ; un
-  // seul salaire suffit aux cartes de visite, pas au stage.
+  // salaire par mois suffit désormais aux cartes de visite comme au stage.
   const cards = itemOf(page, 'Cartes de visite');
   const stage = itemOf(page, 'Stage « Posture professionnelle »');
   const owned = page.getByRole('region', { name: 'Obtenues', exact: true });
@@ -84,9 +84,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const cashAtCards = await money();
   await openUpgrades();
   // L'en-tête fixe garde l'argent visible hors de l'onglet Vie.
-  await expect(counter(page, 'Argent')).toHaveText(
-    new RegExp(String.raw`^${cashAtCards}\s€$`),
-  );
+  expect(await money()).toBe(cashAtCards);
   await expect(stage).toBeVisible();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await cards.getByRole('button', { name: 'Acheter' }).click();
@@ -94,7 +92,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // Obtenue, elle quitte la liste d'achat pour le sous-onglet des
   // améliorations obtenues ; le stage, déjà listé, reste à acheter.
   await expect(cards).toBeHidden();
-  await expect(stage.getByRole('button', { name: 'Acheter' })).toBeDisabled();
+  await expect(stage.getByRole('button', { name: 'Acheter' })).toBeEnabled();
   await page.getByRole('tab', { name: 'Obtenues' }).click();
   await expect(owned.getByText('Cartes de visite')).toBeVisible();
   await openTab(page, 'vie');

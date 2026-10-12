@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { jobs, upgrades } from '@game/data';
 import {
   amountOf,
   balanceOf,
@@ -46,7 +47,13 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
 
   // Le nouveau salaire s'affiche sur l'action ; rien à vendre sans stock.
   await openTab(page, 'vie');
-  await expect(page.getByText('Rapporte 80')).toBeVisible();
+  // (le salaire du polyvalent, 25 % de plus s'il est déjà en heures supplémentaires).
+  const polyvalentWage =
+    jobs.find((job) => job.id === 'polyvalent')?.salary ?? 0;
+  const announcedWage = new RegExp(
+    `Rapporte (${polyvalentWage}|${Math.round(polyvalentWage * 1.25)})`,
+  );
+  await expect(page.getByText(announcedWage)).toBeVisible();
   await expect(sellSurplus).toBeDisabled();
 
   // Un commerce sans production : à la fin de la période, rupture de stock.
@@ -67,7 +74,12 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await page.keyboard.press('5');
   await page.keyboard.press('t');
   await page.keyboard.press('2');
-  await expect.poll(balance).toBe(balanceBeforeKey + 80);
+  await expect
+    .poll(balance)
+    .toBeGreaterThanOrEqual(balanceBeforeKey + polyvalentWage);
+  expect(await balance()).toBeLessThanOrEqual(
+    balanceBeforeKey + Math.round(polyvalentWage * 1.25),
+  );
   await expect(page.getByText('Entrepreneur (statut déclaré)')).toBeVisible();
   for (let turn = 0; turn < 10; turn += 1) {
     await work.click();
@@ -102,7 +114,9 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(
     page
       .getByRole('list', { name: 'Courrier' })
-      .getByText('Vos clients découvrent la rareté.'),
+      .getByText('Vos clients découvrent la rareté.')
+      // Les heures sup. raccourcissent les périodes : la rupture a pu se répéter.
+      .first(),
   ).toBeVisible();
 
   // Les comptes se lisent période par période : une période terminée
@@ -166,16 +180,24 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   // Les chiffres de l'écran Investir sont les valeurs finales : acheter un
   // bonus de production change la production affichée, avant et après l'achat.
   const collaborator = itemOf(page, 'Premier collaborateur');
+  const hireBonus =
+    upgrades
+      .find((upgrade) => upgrade.id === 'premier-collaborateur')
+      ?.effects.find((effect) => effect.type === 'productionBonus')?.bonus ?? 0;
+  const produced = Math.round(4 * (1 + hireBonus));
+  const perCopy = (2 * (1 + hireBonus)).toLocaleString('fr-FR', {
+    maximumFractionDigits: 1,
+  });
   await expect(collaborator).toContainText(
-    'Production de toutes les entreprises +110 %',
+    `Production de toutes les entreprises +${Math.round(hireBonus * 100)} %`,
   );
   await expect(collaborator).toContainText(
-    'Production : 4 → 8 articles par période',
+    `Production : 4 → ${produced} articles par période`,
   );
   await collaborator.getByRole('button', { name: 'Acheter' }).click();
   await expect(collaborator).toBeHidden();
   await page.getByRole('tab', { name: 'Entreprises' }).click();
   await expect(page.locator('#item-atelier')).toContainText(
-    '8 articles par période (2 × 4,2)',
+    `${produced} articles par période (2 × ${perCopy})`,
   );
 });

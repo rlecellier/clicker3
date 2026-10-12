@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { upgrades } from '@game/data';
+import { economyRules, startState, upgrades } from '@game/data';
 import {
   expectNoOverflow,
   amountOf,
@@ -15,7 +15,13 @@ import {
 // On possède déjà les améliorations hors parcours, pour n'acheter que celles du
 // parcours, dans l'ordre des prix. Celles qui ajoutent un loyer ou des salaires
 // en sont exclues : la balance de la période reste sous 1 000 €, affichée à
-// l'euro près, pour lire le gain exact d'un clic.
+// l'euro près, pour lire le gain exact d'un clic. Le premier collaborateur,
+// acheté pendant le parcours, ajoute pourtant son salaire aux dépenses fixes :
+// des salaires déjà gagnés ramènent la balance de départ à -950 €.
+const hire = upgrades.find((upgrade) => upgrade.id === 'premier-collaborateur');
+const fixedExpenses =
+  startState.rent + economyRules.baseLivingCost + (hire?.payroll ?? 0);
+const startBalance = -950;
 const journey = new Set([
   'premier-collaborateur',
   'tableau-de-bord',
@@ -31,6 +37,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
       money: 200_000,
       companies: { atelier: 1 },
       phase: 'entrepreneur',
+      wagesDue: { interim: fixedExpenses + startBalance },
       // La procédure de travail demande Métier, Gestion et Intelligence au
       // dernier niveau et Endurance 7 : seul le cursus d'Endurance reste utile.
       stats: { metier: 700, gestion: 700, intelligence: 700, endurance: 350 },
@@ -132,7 +139,9 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   const beforeHold = await balance();
   await work.hover();
   await page.mouse.down();
-  await page.clock.runFor(1000);
+  // Un clic à l'appui, puis un toutes les 250 ms : trois en 600 ms. Plus, la
+  // période se terminerait et la balance repartirait de zéro.
+  await page.clock.runFor(600);
   await page.mouse.up();
   const afterHold = await balance();
   expect(afterHold - beforeHold).toBeGreaterThanOrEqual(oneClick * 3);
