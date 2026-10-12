@@ -45,7 +45,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
 
   // Le nouveau salaire s'affiche sur l'action ; rien à vendre sans stock.
   await openTab(page, 'vie');
-  await expect(page.getByText('Salaire : 76')).toBeVisible();
+  await expect(page.getByText('Rapporte 76')).toBeVisible();
   await expect(sellSurplus).toBeDisabled();
 
   // Un commerce sans production : à la fin de la période, rupture de stock.

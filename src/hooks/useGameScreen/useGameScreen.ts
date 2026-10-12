@@ -25,7 +25,7 @@ import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
 import { ageOf, dateOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
-import { JOB_TARGET, canWork } from '@game/work';
+import { JOB_TARGET, canWork, jobWage } from '@game/work';
 import type { GameState, StatId } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
@@ -113,7 +113,9 @@ export const useGameScreen = () => {
 
   const workAction: BaseAction = {
     detail:
-      job === undefined ? undefined : `Salaire : ${formatMoney(job.salary)}`,
+      job === undefined
+        ? undefined
+        : `Rapporte ${formatMoney(jobWage(state))} par clic`,
     reason: isOver ? ENDED : 'Aucun emploi',
     isDisabled: !canWork(state, JOB_TARGET),
     run: sayOrQueue(

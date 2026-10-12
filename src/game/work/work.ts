@@ -31,20 +31,27 @@ export const canWork = (state: GameState, target: string) => {
 const gainFactor = (state: GameState, isAuto: boolean) =>
   isAuto ? automationRules.yieldFactor : manualFactor(state);
 
+// Salaire d'une action de travail à l'emploi, tous modificateurs appliqués :
+// ce que l'action rapporte vraiment (0 sans emploi).
+export const jobWage = (state: GameState, isAuto = false) => {
+  const job = jobById(state.jobId);
+  return job === undefined
+    ? 0
+    : Math.round(
+        job.salary *
+          gainFactor(state, isAuto) *
+          (state.jobSalaryFactors[job.id] ?? 1),
+      );
+};
+
 // Travailler à son emploi : salaire et réputation de l'emploi.
-const workAtJob = (
-  state: GameState,
-  jobId: string | null,
-  isAuto: boolean,
-): GameState => {
-  const job = jobById(jobId);
+const workAtJob = (state: GameState, isAuto: boolean): GameState => {
+  const job = jobById(state.jobId);
   if (job === undefined) {
     return state;
   }
   const factor = gainFactor(state, isAuto);
-  const wage = Math.round(
-    job.salary * factor * (state.jobSalaryFactors[job.id] ?? 1),
-  );
+  const wage = jobWage(state, isAuto);
   return gainReputation(
     withRecord(
       { ...state, money: state.money + wage },
@@ -80,7 +87,7 @@ export const work = (
   const { gauge, markerChance, markerVariance } = actionRules.work;
   const isAtJob = target === JOB_TARGET;
   const done = isAtJob
-    ? workAtJob(state, state.jobId, isAuto)
+    ? workAtJob(state, isAuto)
     : workAtCompany(state, target, isAuto);
   const withMarker = grantMarker(
     done,
