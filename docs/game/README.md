@@ -12,6 +12,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
 | [simulateur.md](simulateur.md)                 | Simulateur de vie : méthode, mesures, dernier relevé    |
 | [equilibrage.md](equilibrage.md)               | Valeurs retenues, leur justification et la preuve au simulateur |
+| [propositions-equilibrage.md](propositions-equilibrage.md) | Propositions à trancher : chiffres crédibles, stats longues, boosts utiles |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
 | [ameliorations-et-evenements.md](ameliorations-et-evenements.md) | Les ~20 améliorations et les événements de la v1 (décidé) |
 | [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
