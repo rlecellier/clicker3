@@ -24,6 +24,8 @@ npm run lint && npx tsc --noEmit && npm run format:check
   questions à trancher.
 - [Notre jeu](docs/game/README.md) : concept, périmètre de la v1,
   équilibrage, simulateur.
+- [Guide du joueur](docs/guide-utilisateur/README.md) : comment le jeu
+  fonctionne, onglet par onglet, pour qui y joue.
 - [Guide de style de l'interface](docs/ui/guide-de-style.md) : tokens,
   composants, accessibilité, ton des textes.
 - [Conventions de structure](.claude/adr/0001-project-structure.md) (ADR).
