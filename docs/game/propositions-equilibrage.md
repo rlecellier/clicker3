@@ -1,6 +1,6 @@
 # Propositions d'équilibrage (v1.6)
 
-> Statut : **propositions à trancher** pour la v1.6 (décision et plan : issue #153). Rien n'est appliqué dans `src/game/data/`.
+> Statut : **décisions prises le 2026-10-12** (§ 6, issue #153). Rien n'est encore appliqué dans `src/game/data/` : chaque chantier a son issue.
 > Les valeurs en vigueur et leur preuve sont dans [equilibrage.md](equilibrage.md) ;
 > ce document part de mesures faites sur `main` (simulateur, graine 1999) et
 > propose des axes, avec des chiffres crédibles à caler ensuite au simulateur.
@@ -225,7 +225,7 @@ en pures données.
 | Emploi                                | Aujourd'hui (€/action, ≈ €/mois) | Proposé (€/action, ≈ €/mois) | Repère 1999        |
 | ------------------------------------- | -------------------------------: | ---------------------------: | ------------------ |
 | Manutentionnaire intérimaire          |                       60 / 340   |                   150 / 900  | SMIC + prime de précarité |
-| Employé polyvalent                    |                       76 / 430   |                 170 / 1 000  |                    |
+| Employé polyvalent                    |                       80 / 450   |                 170 / 1 000  |                    |
 | Chargé de mission                     |                    250 / 1 400   |                 330 / 2 000  | cadre débutant     |
 | Directeur adjoint de la transformation|                  1 600 / 9 000   |               1 000 / 6 000  | cadre dirigeant    |
 
@@ -291,3 +291,37 @@ Risques : les critères de la v1 ont peu de marge (30 min 37 s de jeu actif,
 zone morte de 59 s). Toute proposition passe par le simulateur avant d'être
 retenue, et ce document sera remplacé par les valeurs prouvées dans
 [equilibrage.md](equilibrage.md).
+
+## 6. Décisions (issue #153)
+
+| Axe | Décision | Raison |
+| --- | --- | --- |
+| **A** Stats sur 8 niveaux | **Retenu** tel quel (2, 6, 15, 35, 80, 170, 350, 700). Les valeurs exactes sont recalées au simulateur. | Les stats sont terminées à la minute 18 sur 49 : l'échelle doit porter toute la vie. |
+| **B** Boosts placés avant la fin | **Retenu** : logements ouverts aux niveaux 1, 3, 5 d'Endurance ; coups de pouce **légaux** (ginkgo, séminaire, clinique) achetables ; Agenda électronique et Assistante de direction pour les marqueurs. | Sept améliorations sur douze sont inutiles. Le moteur `activeEffects` existe déjà. |
+| **C** Entreprises à l'échelle réelle | **Retenu, échelle réelle** (boutique ≈ 60 000 €), avec micro-activités d'entrée, plafond par quartier et **montée en gamme**. Recalage complet au simulateur, temps de retour de 10 à 18 mois conservé. | Une boutique à 250 € et 432 entreprises en fin de vie ne sont pas crédibles. |
+| **D** Apport, crédit, découvert | **Modifié, variante légère** : prix affiché = apport, charges = mensualité, en données. Découvert de 5 % à 1,5 % par mois. **Pas de crédit débloqué par la réputation** (reporté). | Le même effet de jeu pour beaucoup moins de règles et de sauvegarde. |
+| **E** Salaires, train de vie, employés | **Retenu**, avec le **train de vie** et des **heures supplémentaires automatiques** (ci-dessous). | Salaires et coûts d'employés incohérents. |
+| **F** Améliorations à prix réels | **Retenu**, en dernier. « Heures sup. » **n'est plus une amélioration** : c'est une règle automatique (ci-dessous). | À faire une fois l'échelle posée. |
+| Coups de pouce illégaux (modafinil) | **Écarté** pour la v1.6, repris avec la voie illégale (v2). | Dépend du backlog v2. |
+
+### Heures supplémentaires : décision
+
+Une période est une **journée type** de 24 h : 8 h de travail, 8 h de sommeil,
+8 h de temps libre. Le jeu la fait passer comme un mois pour accélérer la
+partie, en supposant que tous les jours du mois sont identiques. Les repères
+mensuels (salaire, loyer) s'appliquent donc **tels quels** à la période.
+
+Le salaire d'un emploi rémunère les **8 h de travail** de la journée. Au-delà,
+les heures supplémentaires s'appliquent **automatiquement**, sans déblocage.
+
+Reste à régler à l'implémentation (issue de l'axe E) : la part de la jauge qui
+vaut 8 h de travail (la jauge fait 70, un sommeil en coûte 40) et le taux des
+heures supplémentaires (+25 %, puis +50 %).
+
+### Ordre retenu
+
+1. Garde-fous du simulateur (test d'utilité, part utile d'un boost, stats vivantes).
+2. A + B (stats longues, boosts).
+3. E (salaires, train de vie, heures supplémentaires, employés).
+4. C + D (entreprises réelles, apport et charges, montée en gamme).
+5. F (améliorations).
