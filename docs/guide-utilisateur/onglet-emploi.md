@@ -24,7 +24,7 @@ travail.
 | #   | Poste                                   | Salaire par action | Réputation gagnée par action | Coût en réputation | Conditions                                                                                      |
 | --- | --------------------------------------- | ------------------ | ---------------------------- | ------------------ | ----------------------------------------------------------------------------------------------- |
 | 1   | Manutentionnaire intérimaire            | 60 €               | 0,2                          | 0                  | Aucune. Poste du début                                                                          |
-| 2   | Employé polyvalent                      | 76 €               | 0,3                          | 0                  | Palier 1 de Métier (2 points)                                                                   |
+| 2   | Employé polyvalent                      | 80 €               | 0,3                          | 0                  | Palier 1 de Métier (2 points)                                                                   |
 | 3   | Chargé de mission                       | 250 €              | 0,5                          | 10                 | Palier 2 de Métier (9 points) et palier 1 de réputation (6 gagnés)                              |
 | 4   | Directeur adjoint de la transformation  | 1 600 €            | 0,8                          | 9                  | Palier 3 de Métier (41 points), palier 2 de réputation (100 gagnés) et amélioration « Directeur de la transformation » |
 
