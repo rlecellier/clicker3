@@ -14,16 +14,17 @@ describe('tierOf', () => {
   it('monte d’un palier quand le seuil est atteint', () => {
     expect(tierOf(withPoints(1), 'metier')).toBe(0);
     expect(tierOf(withPoints(2), 'metier')).toBe(1);
-    expect(tierOf(withPoints(40), 'metier')).toBe(2);
-    expect(tierOf(withPoints(41), 'metier')).toBe(3);
+    expect(tierOf(withPoints(5), 'metier')).toBe(1);
+    expect(tierOf(withPoints(6), 'metier')).toBe(2);
+    expect(tierOf(withPoints(699), 'metier')).toBe(7);
   });
 
   it('plafonne au dernier palier', () => {
-    expect(tierOf(withPoints(100_000), 'metier')).toBe(4);
+    expect(tierOf(withPoints(100_000), 'metier')).toBe(8);
   });
 
   it('ne regarde que la stat demandée', () => {
-    expect(tierOf(withPoints(81), 'gestion')).toBe(0);
+    expect(tierOf(withPoints(700), 'gestion')).toBe(0);
   });
 });
 
@@ -45,23 +46,23 @@ describe('statProgress', () => {
       max: 2,
     });
     expect(statProgress(withPoints(20), 'metier')).toMatchObject({
-      tier: 2,
-      value: 11,
-      max: 32,
+      tier: 3,
+      value: 5,
+      max: 20,
     });
   });
 
   it('repart de zéro quand le seuil est atteint pile', () => {
-    expect(statProgress(withPoints(9), 'metier')).toMatchObject({
+    expect(statProgress(withPoints(6), 'metier')).toMatchObject({
       tier: 2,
       value: 0,
-      max: 32,
+      max: 9,
     });
   });
 
   it('est pleine au dernier palier', () => {
-    expect(statProgress(withPoints(81), 'metier')).toMatchObject({
-      tier: 4,
+    expect(statProgress(withPoints(700), 'metier')).toMatchObject({
+      tier: 8,
       value: 1,
       max: 1,
       isMax: true,

@@ -102,9 +102,9 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Pavillon aux Tilleuls',
     description:
       'Quatre pièces, un crédit sur vingt-cinq ans. Le jardin est inclus.',
-    price: 100_000,
+    price: 30_000,
     rent: 380,
-    requirement: stat('endurance', 2),
+    requirement: stat('endurance', 3),
     effects: [
       { type: 'housing', housingId: 'pavillon-tilleuls', sleepMultiplier: 2.5 },
     ],
@@ -113,9 +113,9 @@ export const upgrades: readonly Upgrade[] = [
     id: 'loft-pole',
     name: "Loft au Pôle d'Excellence",
     description: 'Vue sur d’autres lofts. Prix « dynamique ».',
-    price: 190_000,
+    price: 80_000,
     rent: 500,
-    requirement: stat('endurance', 3),
+    requirement: stat('endurance', 5),
     effects: [{ type: 'housing', housingId: 'loft-pole', sleepMultiplier: 4 }],
   },
   // Entrepôt et marqueurs
@@ -124,7 +124,7 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Étagères en kit',
     description: 'Montage en une heure. Le fabricant dit trois.',
     price: 2900,
-    requirement: stat('gestion', 1),
+    requirement: stat('gestion', 3),
     effects: [{ type: 'stockCapacity', factor: 13 }],
   },
   {
@@ -133,7 +133,7 @@ export const upgrades: readonly Upgrade[] = [
     description:
       'Un hangar à la sortie du rond-point. Il y en avait déjà vingt.',
     price: 31_000,
-    requirement: stat('gestion', 3),
+    requirement: stat('gestion', 6),
     effects: [{ type: 'stockCapacity', factor: 48 }],
   },
   {
@@ -150,7 +150,7 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Application de productivité',
     description: 'Vous avez maintenant une application pour vos applications.',
     price: 33_000,
-    requirement: stat('intelligence', 3),
+    requirement: stat('intelligence', 4),
     effects: [{ type: 'maxMarkers', add: 3 }],
   },
   // Employés
@@ -161,7 +161,7 @@ export const upgrades: readonly Upgrade[] = [
       'Pas un salarié : un collaborateur. Il le saura à la fiche de paie.',
     price: 1600,
     payroll: 230,
-    requirement: { type: 'all', of: [stat('gestion', 2), anyCompany] },
+    requirement: { type: 'all', of: [stat('gestion', 3), anyCompany] },
     effects: [{ type: 'employee' }, { type: 'productionBonus', bonus: 1.1 }],
   },
   {
@@ -172,7 +172,7 @@ export const upgrades: readonly Upgrade[] = [
     payroll: 3600,
     requirement: {
       type: 'all',
-      of: [stat('gestion', 3), { type: 'reputationTier', tier: 1 }],
+      of: [stat('gestion', 5), { type: 'reputationTier', tier: 1 }],
     },
     effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 0.6 }],
   },
@@ -184,7 +184,7 @@ export const upgrades: readonly Upgrade[] = [
     payroll: 45_000,
     requirement: {
       type: 'all',
-      of: [stat('gestion', 4), { type: 'reputationTier', tier: 2 }],
+      of: [stat('gestion', 8), { type: 'reputationTier', tier: 2 }],
     },
     effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 3 }],
   },
@@ -194,7 +194,10 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
     price: 90_000,
-    requirement: { type: 'phase', phase: 'boss' },
+    requirement: {
+      type: 'all',
+      of: [{ type: 'phase', phase: 'boss' }, stat('intelligence', 8)],
+    },
     effects: [{ type: 'automation', action: 'work' }],
   },
   {
@@ -203,7 +206,7 @@ export const upgrades: readonly Upgrade[] = [
     description:
       'Dix indicateurs. Un seul qui compte, que vous ne regardez pas.',
     price: 5200,
-    requirement: stat('gestion', 2),
+    requirement: stat('gestion', 4),
     effects: [{ type: 'dashboard' }],
   },
   // Matériel et réputation

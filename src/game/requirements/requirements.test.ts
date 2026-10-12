@@ -11,8 +11,8 @@ const stateWith = (changes: Partial<GameState>): GameState => ({
 describe('isUnlocked', () => {
   it('teste un palier de stat', () => {
     const requirement: Requirement = { type: 'stat', stat: 'gestion', tier: 2 };
-    const low = stateWith({ stats: { ...startState.stats, gestion: 8 } });
-    const high = stateWith({ stats: { ...startState.stats, gestion: 9 } });
+    const low = stateWith({ stats: { ...startState.stats, gestion: 5 } });
+    const high = stateWith({ stats: { ...startState.stats, gestion: 6 } });
     expect(isUnlocked(low, requirement)).toBe(false);
     expect(isUnlocked(high, requirement)).toBe(true);
   });

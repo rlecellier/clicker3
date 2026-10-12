@@ -1,12 +1,13 @@
 import type { StatId } from '@game/state';
 
 /**
- * Points nécessaires pour atteindre les paliers P1 à P4 de chaque stat.
- * Valeurs calées en V1-24 (docs/game/equilibrage.md).
+ * Points nécessaires pour atteindre les 8 niveaux de chaque stat (progression
+ * géométrique, environ × 2 : docs/game/propositions-equilibrage.md axe A).
+ * Valeurs calées au simulateur (docs/game/equilibrage.md).
  */
 export const statTierThresholds: Record<StatId, readonly number[]> = {
-  metier: [2, 9, 41, 81],
-  gestion: [2, 9, 41, 81],
-  intelligence: [2, 9, 41, 81],
-  endurance: [2, 9, 41, 81],
+  metier: [2, 6, 15, 35, 80, 170, 350, 700],
+  gestion: [2, 6, 15, 35, 80, 170, 350, 700],
+  intelligence: [2, 6, 15, 35, 80, 170, 350, 700],
+  endurance: [2, 6, 15, 35, 80, 170, 350, 700],
 };

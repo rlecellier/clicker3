@@ -34,7 +34,7 @@ export const companies: readonly Company[] = [
     baseCost: 150,
     growth: 1.1,
     output: 2,
-    requirement: { type: 'stat', stat: 'gestion', tier: 1 },
+    requirement: { type: 'stat', stat: 'gestion', tier: 2 },
   },
   {
     id: 'boutique',
@@ -44,7 +44,7 @@ export const companies: readonly Company[] = [
     growth: 1.1,
     capacity: 3,
     price: 12,
-    requirement: { type: 'stat', stat: 'gestion', tier: 1 },
+    requirement: { type: 'stat', stat: 'gestion', tier: 2 },
   },
   {
     id: 'manufacture',
@@ -53,7 +53,7 @@ export const companies: readonly Company[] = [
     baseCost: 13_000,
     growth: 1.1,
     output: 99,
-    requirement: { type: 'stat', stat: 'gestion', tier: 2 },
+    requirement: { type: 'stat', stat: 'gestion', tier: 4 },
   },
   {
     id: 'hypermarche',
@@ -66,7 +66,7 @@ export const companies: readonly Company[] = [
     requirement: {
       type: 'all',
       of: [
-        { type: 'stat', stat: 'gestion', tier: 2 },
+        { type: 'stat', stat: 'gestion', tier: 5 },
         { type: 'district', id: 'parc-horizon' },
       ],
     },
@@ -78,7 +78,7 @@ export const companies: readonly Company[] = [
     baseCost: 53_000,
     growth: 1.1,
     output: 210,
-    requirement: { type: 'stat', stat: 'gestion', tier: 3 },
+    requirement: { type: 'stat', stat: 'gestion', tier: 6 },
   },
   {
     id: 'plateforme',
@@ -91,7 +91,7 @@ export const companies: readonly Company[] = [
     requirement: {
       type: 'all',
       of: [
-        { type: 'stat', stat: 'gestion', tier: 3 },
+        { type: 'stat', stat: 'gestion', tier: 7 },
         // Arrive vers 2000 (douzième période après le 1er janvier 1999).
         { type: 'period', min: 12 },
         { type: 'district', id: 'pole-excellence' },
