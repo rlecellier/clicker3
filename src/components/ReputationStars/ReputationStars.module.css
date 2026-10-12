@@ -1,0 +1,6 @@
+.stars {
+  display: flex;
+  flex: none;
+  font-size: 1rem;
+  color: var(--color-primary);
+}

@@ -4,7 +4,16 @@
   gap: 2px;
 }
 
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  min-width: 0;
+}
+
 .label {
+  min-width: 0;
   font-size: 0.75rem;
   color: var(--color-text-muted);
   /* Une seule ligne : un libellé long est tronqué, la barre ne bouge pas. */
