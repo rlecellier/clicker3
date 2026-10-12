@@ -29,6 +29,35 @@ export type SaveOptions = {
   migrations: Readonly<Record<number, Migration>>;
 };
 
+const isRecord = (value: unknown): value is RawState =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const isFiniteNumber = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isFinite(value);
+
+// Complète, par des valeurs par défaut, les chiffres d'un ledger d'avant la
+// version 8 (`current`, `last`, `total`). Les champs déjà présents gardent leur
+// valeur ; un contenu inexploitable est laissé à la validation.
+const withFigureDefaults = (
+  raw: RawState,
+  defaults: () => RawState,
+): RawState => {
+  const { ledger } = raw;
+  if (!isRecord(ledger)) {
+    return raw;
+  }
+  const fill = (figures: unknown) =>
+    isRecord(figures) ? { ...defaults(), ...figures } : figures;
+  return {
+    ...raw,
+    ledger: {
+      current: fill(ledger.current),
+      last: fill(ledger.last),
+      total: fill(ledger.total),
+    },
+  };
+};
+
 export const defaultSaveOptions: SaveOptions = {
   currentVersion: startState.version,
   migrations: {
@@ -46,41 +75,11 @@ export const defaultSaveOptions: SaveOptions = {
       };
     },
     // Version 3 : le ledger détaille le stock par origine et destination.
-    2: (raw) => {
-      const { ledger } = raw;
-      if (!isRecord(ledger)) {
-        return raw;
-      }
-      const withDetail = (figures: unknown) =>
-        isRecord(figures) ? { stockIn: {}, stockOut: {}, ...figures } : figures;
-      return {
-        ...raw,
-        ledger: {
-          current: withDetail(ledger.current),
-          last: withDetail(ledger.last),
-          total: withDetail(ledger.total),
-        },
-      };
-    },
+    2: (raw) => withFigureDefaults(raw, () => ({ stockIn: {}, stockOut: {} })),
     // Version 4 : les petits entrepôts.
     3: (raw) => ({ ...raw, warehouses: 0 }),
     // Version 5 : le ledger compte les intérêts de la dette.
-    4: (raw) => {
-      const { ledger } = raw;
-      if (!isRecord(ledger)) {
-        return raw;
-      }
-      const withInterest = (figures: unknown) =>
-        isRecord(figures) ? { interest: 0, ...figures } : figures;
-      return {
-        ...raw,
-        ledger: {
-          current: withInterest(ledger.current),
-          last: withInterest(ledger.last),
-          total: withInterest(ledger.total),
-        },
-      };
-    },
+    4: (raw) => withFigureDefaults(raw, () => ({ interest: 0 })),
     // Version 6 : les compteurs de courrier. Une partie existante démarre sans
     // message non lu.
     5: (raw) => {
@@ -106,23 +105,19 @@ export const defaultSaveOptions: SaveOptions = {
     // départ de la période en cours se déduit de ses flux ; celui des périodes
     // passées est inconnu (0).
     7: (raw) => {
-      const { ledger, period, stock } = raw;
+      const filled = withFigureDefaults(raw, () => ({
+        stockStart: 0,
+        stockEnd: 0,
+        salesBy: {},
+        wagesBy: {},
+        purchasesBy: {},
+        studiesBy: {},
+      }));
+      const { ledger, period, stock } = filled;
       if (!isRecord(ledger)) {
         return raw;
       }
-      const withDetail = (figures: unknown) =>
-        isRecord(figures)
-          ? {
-              stockStart: 0,
-              stockEnd: 0,
-              salesBy: {},
-              wagesBy: {},
-              purchasesBy: {},
-              studiesBy: {},
-              ...figures,
-            }
-          : figures;
-      const current = withDetail(ledger.current);
+      const { current } = ledger;
       if (
         isRecord(current) &&
         isFiniteNumber(stock) &&
@@ -134,14 +129,14 @@ export const defaultSaveOptions: SaveOptions = {
           stock - current.stockProduced + current.stockSold + current.stockLost;
       }
       return {
-        ...raw,
+        ...filled,
         ledger: {
           current,
           history:
             isFiniteNumber(period) && period > 0
-              ? [{ period: period - 1, figures: withDetail(ledger.last) }]
+              ? [{ period: period - 1, figures: ledger.last }]
               : [],
-          total: withDetail(ledger.total),
+          total: ledger.total,
         },
       };
     },
@@ -150,9 +145,6 @@ export const defaultSaveOptions: SaveOptions = {
     8: (raw) => ({ ...raw, wagesDue: {} }),
   },
 };
-
-const isRecord = (value: unknown): value is RawState =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
  * Texte de sauvegarde : `{ version, state }`. `now` (horodatage fourni par
@@ -188,9 +180,6 @@ const hasShapeOf = (template: unknown, value: unknown): boolean => {
 
 const isStringIn = (value: unknown, ids: ReadonlySet<string>) =>
   typeof value === 'string' && ids.has(value);
-
-const isFiniteNumber = (value: unknown): value is number =>
-  typeof value === 'number' && Number.isFinite(value);
 
 const idsOf = (list: readonly { id: string }[]) =>
   new Set(list.map((item) => item.id));
