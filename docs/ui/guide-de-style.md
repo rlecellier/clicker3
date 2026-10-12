@@ -175,6 +175,9 @@ distinct ; sinon, composer les existants.
   `aria-label`, pas de l'infobulle.
 - Les badges de la sidebar en icônes seules sont posés sur l'angle du lien,
   dans la barre : ils ne la font pas déborder.
+- Les projets e2e mobiles tournent en tactile (`hasTouch`) : un bouton d'action
+  se vérifie avec `tap()`. Sur écran tactile, `pointerleave` suit `pointerup`
+  avant le `click` natif ; un geste ne doit pas doubler l'action (#149).
 - Vérifier à 480×560 (viewport des tests e2e) et à 360×640 (petit Android,
   projet Playwright `petit-mobile`, qui rejoue `life.e2e.ts`) avant de livrer :
   aucun défilement horizontal, `openTab` le vérifie à chaque onglet.

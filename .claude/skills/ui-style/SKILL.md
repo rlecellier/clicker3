@@ -30,6 +30,8 @@ illustrations. Voix administrative pince-sans-rire.
    (`effects`, `highlightedId`), `EventLog`, `MailPopup` (popup non modale),
    `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`.
+   Toute action de bouton se joue au toucher : un tap = une action (voir la
+   politique de test dans `CLAUDE.md`), vérifié par `tap()` dans un parcours e2e.
 2. **Tokens uniquement**, jamais de valeur en dur (`src/global.css`) :
    couleurs `--color-desktop`, `--color-surface` (`-light`, `-shadow`,
    `-dark`), `--color-paper`, `--color-text` (`-muted`), `--color-primary`
