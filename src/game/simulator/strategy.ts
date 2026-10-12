@@ -39,10 +39,15 @@ const statNeeds = (
 
 // Stat à travailler : le premier palier qui manque pour l'achat le moins cher
 // dont on peut étudier la stat (une formation achetée).
-const neededStat = (state: GameState): StatId | undefined => {
+const neededStat = (
+  state: GameState,
+  excluded: ReadonlySet<string>,
+): StatId | undefined => {
   const goals = [
     ...upgrades
-      .filter((upgrade) => !isOwned(state, upgrade.id))
+      .filter(
+        (upgrade) => !isOwned(state, upgrade.id) && !excluded.has(upgrade.id),
+      )
       .map((upgrade) => ({
         cost: upgrade.price,
         requirement: upgrade.requirement,
@@ -113,7 +118,10 @@ type Purchase = { cost: number; action: GameAction };
 const reserveOf = (state: GameState) =>
   simulatorConfig.cashReserveMonths * (state.rent + state.payroll);
 
-const nextPurchase = (state: GameState): GameAction | undefined => {
+const nextPurchase = (
+  state: GameState,
+  excluded: ReadonlySet<string>,
+): GameAction | undefined => {
   const salary = jobById(state.jobId)?.salary ?? 0;
   const betterJob = jobs
     .filter((job) => job.salary > salary && canChangeJob(state, job.id))
@@ -130,6 +138,7 @@ const nextPurchase = (state: GameState): GameAction | undefined => {
   const purchases: Purchase[] = upgrades
     .filter(
       (upgrade) =>
+        !excluded.has(upgrade.id) &&
         canBuyUpgrade(state, upgrade.id) &&
         isCovered(state, (upgrade.rent ?? 0) + (upgrade.payroll ?? 0)),
     )
@@ -188,19 +197,24 @@ const workTarget = (state: GameState): string => {
  *
  * Une fois le travail automatique actif, il lâche la souris (ADR 0005) : il
  * ne fait plus que des achats. Il rend `undefined` quand il attend.
+ *
+ * `excluded` liste des améliorations qu'il n'achète jamais (test d'utilité).
  */
-export const chooseAction = (state: GameState): GameAction | undefined => {
+export const chooseAction = (
+  state: GameState,
+  excluded: ReadonlySet<string> = new Set(),
+): GameAction | undefined => {
   if (canEnableAuto(state, 'work') && !isAutoActive(state, 'work')) {
     return { type: 'setAuto', action: 'work', isEnabled: true };
   }
-  const purchase = nextPurchase(state);
+  const purchase = nextPurchase(state, excluded);
   if (purchase !== undefined) {
     return purchase;
   }
   if (state.isSleeping || isAutoActive(state, 'work')) {
     return undefined;
   }
-  const stat = neededStat(state);
+  const stat = neededStat(state, excluded);
   const course = courses.find((candidate) => candidate.stat === stat);
   if (
     course !== undefined &&
