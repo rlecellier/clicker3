@@ -210,3 +210,46 @@ fixes en caisse avant d'acheter.
   version 10 : la migration garde le loyer et les salaires (elle en déduit les
   facteurs d'événements) et la capacité de stock ne peut que grandir
   (`save.test.ts`).
+
+## Garde-fous du simulateur (issue #164)
+
+- 2026-10-12 — `npm run sim` affiche, après la courbe, trois contrôles
+  (`src/game/simulator/guardrails.ts`, décisions de
+  [propositions-equilibrage.md](propositions-equilibrage.md) § 4) :
+  1. **Utilité** : on rejoue la vie sans une amélioration (le joueur virtuel ne
+     l'achète jamais) ; elle doit dégrader d'au moins 5 % l'âge du travail
+     automatique, les recettes à 60 ans ou la durée de jeu active. Exemptés :
+     les formations, l'automatisation, le tableau de bord, le premier
+     collaborateur et le directeur de la transformation.
+  2. **Part utile d'un boost** (les logements pour l'instant) : au moins 50 %
+     des points de stat de la vie sont gagnés après son achat. On compte les
+     points **utiles**, plafonnés au dernier palier de chaque stat : un point
+     au-delà ne débloque rien (le Métier finit à 2 988 points pour un dernier
+     palier à 81).
+  3. **Stats vivantes** : le dernier palier d'au moins une stat est atteint
+     après la minute 25.
+
+  Sortie sur les valeurs actuelles (graine 1999), qui confirme le diagnostic :
+
+  | Contrôle                          | Résultat                               |
+  | --------------------------------- | -------------------------------------- |
+  | Utilité du studio rénové          | échec (travail auto −2,6 %, recettes −0,6 %) |
+  | Utilité du pavillon               | échec (aucun écart)                    |
+  | Utilité du loft                   | échec, nuisible (−5,1 % : il retarde le jeu) |
+  | Utilité du carnet de notes        | échec (aucun écart)                    |
+  | Utilité de l'application          | échec, nuisible (−2,8 % de recettes)   |
+  | Utilité des cartes de visite      | échec (aucun écart)                    |
+  | Boost : studio rénové             | échec, 15,6 % des points après l'achat |
+  | Boost : pavillon, loft            | échec, 0 % des points après l'achat    |
+  | Utilité des étagères, de l'entrepôt, de l'équipe, de la camionnette, du plan de communication | réussi |
+  | Stats vivantes                    | **réussi** : dernier palier à la minute 28,0 |
+
+  Écart au diagnostic : le contrôle « stats vivantes » réussit déjà, parce
+  qu'une stat atteint son dernier palier (P4) à la minute 28 ; seuls les
+  paliers *utiles* aux achats étaient finis à la minute 18. Il restera là pour
+  empêcher une régression avec les 8 niveaux de l'axe A.
+
+  Les échecs connus sont listés dans `knownGuardrailFailures`
+  (`src/game/simulator/config.ts`) et affichés « CONNU » ; le test exige que les
+  échecs soient exactement cette liste, donc chaque chantier d'équilibrage doit
+  en retirer ceux qu'il corrige. Aucune donnée de `src/game/data/` n'a changé.
