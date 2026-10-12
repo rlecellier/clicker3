@@ -1,7 +1,7 @@
 import { afterAction } from '@game/afterAction';
 import { autoTick, setAuto } from '@game/automation';
 import { buyCompany, buyWarehouse } from '@game/companies';
-import { startState } from '@game/data';
+import { findById, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { readMail } from '@game/mail';
@@ -22,8 +22,7 @@ export const newGame = (jobId?: string): GameState =>
   markAllSeen(
     triggerEvents({
       ...startState,
-      jobId:
-        startingJobs.find((job) => job.id === jobId)?.id ?? startState.jobId,
+      jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
     }),
   );
 

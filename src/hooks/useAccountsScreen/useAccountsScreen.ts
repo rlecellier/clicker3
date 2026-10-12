@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import type { LedgerRow } from '@component/LedgerTable';
 import { useGameContext } from '@context/GameContext';
-import { companies, courses, jobs } from '@game/data';
+import { companyById } from '@game/companies';
+import { companies } from '@game/data';
 import { formatCount, formatDate, formatMoney } from '@game/format';
 import { periodReports, totals } from '@game/ledger';
 import type { LedgerReport } from '@game/ledger';
 import type { GameState } from '@game/state';
+import { jobById } from '@game/jobs';
+import { courseById } from '@game/study';
 import { dateOf } from '@game/time';
 import { hasDashboard, upgradeById } from '@game/upgrades';
 
@@ -43,12 +46,13 @@ const share = (value: number, whole: number) =>
 const nameOfPurchase = (id: string) =>
   id === 'warehouse'
     ? 'Entrepôt'
-    : (companies.find((company) => company.id === id)?.name ??
-      upgradeById(id)?.name ??
-      id);
+    : (companyById(id)?.name ?? upgradeById(id)?.name ?? id);
 
-const nameOf = (id: string, list: readonly { id: string; name: string }[]) =>
-  list.find((item) => item.id === id)?.name ?? id;
+// Nom d'une source du relevé, ou son id quand elle n'existe plus.
+const nameOf = (
+  id: string,
+  byId: (id: string) => { name: string } | undefined,
+) => byId(id)?.name ?? id;
 
 const moneyRow = (
   id: string,
@@ -114,7 +118,7 @@ const incomeRows = (
       jobIds.map((id) =>
         moneyRow(
           `wages-${id}`,
-          nameOf(id, jobs),
+          nameOf(id, jobById),
           report.wagesBy[id] ?? 0,
           whole,
           true,
@@ -127,7 +131,7 @@ const incomeRows = (
       commerceIds.map((id) =>
         moneyRow(
           `sales-${id}`,
-          nameOf(id, companies),
+          nameOf(id, companyById),
           report.salesBy[id] ?? 0,
           whole,
           true,
@@ -163,7 +167,7 @@ const expenseRows = (report: LedgerReport, hasDetail: boolean): LedgerRow[] => {
     ...breakdown(
       moneyRow('studies', 'Études', report.studies, whole),
       Object.entries(report.studiesBy).map(([id, value]) =>
-        moneyRow(`studies-${id}`, nameOf(id, courses), value, whole, true),
+        moneyRow(`studies-${id}`, nameOf(id, courseById), value, whole, true),
       ),
       hasDetail,
     ),
@@ -203,7 +207,7 @@ const stockRows = (
     ...productionIds.map((id) =>
       countRow(
         `stockIn-${id}`,
-        `· ${nameOf(id, companies)}`,
+        `· ${nameOf(id, companyById)}`,
         report.stockIn[id] ?? 0,
       ),
     ),
@@ -211,7 +215,7 @@ const stockRows = (
     ...outIds.map((id) =>
       countRow(
         `stockOut-${id}`,
-        `· ${nameOf(id, companies)}`,
+        `· ${nameOf(id, companyById)}`,
         report.stockOut[id] ?? 0,
       ),
     ),

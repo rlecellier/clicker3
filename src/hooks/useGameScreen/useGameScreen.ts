@@ -16,7 +16,7 @@ import {
   formatPhase,
   statLabels,
 } from '@game/format';
-import { canChangeJob } from '@game/jobs';
+import { canChangeJob, jobById } from '@game/jobs';
 import { periodOutlook } from '@game/period';
 import { canSpendReputation, reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
@@ -66,12 +66,13 @@ const nextObjective = (
   if (next === undefined) {
     return { text: 'Plus rien à acheter pour le moment.' };
   }
+  const { requirement } = next;
   return {
     upgradeId: next.id,
     text:
-      next.requirement === undefined || isUnlocked(state, next.requirement)
+      requirement === undefined || isUnlocked(state, requirement)
         ? `Prochain achat : ${next.name} (${formatMoney(next.price)})`
-        : `Prochain déblocage : ${next.name}. ${describeRequirement(next.requirement)}`,
+        : `Prochain déblocage : ${next.name}. ${describeRequirement(requirement)}`,
   };
 };
 
@@ -109,7 +110,7 @@ export const useGameScreen = () => {
   const outlook = periodOutlook(state);
   const objective = nextObjective(state);
   const isOver = state.status === 'dead';
-  const job = jobs.find((candidate) => candidate.id === state.jobId);
+  const job = jobById(state.jobId);
 
   const workAction: BaseAction = {
     detail:

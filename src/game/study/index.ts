@@ -1,1 +1,7 @@
-export { canStudy, isStudiable, study, studiableCourses } from './study';
+export {
+  canStudy,
+  courseById,
+  isStudiable,
+  study,
+  studiableCourses,
+} from './study';

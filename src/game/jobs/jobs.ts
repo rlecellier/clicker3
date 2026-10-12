@@ -1,10 +1,10 @@
-import { jobs } from '@game/data';
-import { isUnlocked } from '@game/requirements';
+import { findById, jobs } from '@game/data';
+import { isRequirementMet } from '@game/requirements';
 import { canSpendReputation, spendReputation } from '@game/reputation';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 
-export const jobById = (id: string | null) =>
-  jobs.find((candidate) => candidate.id === id);
+export const jobById = (id: string | null) => findById(jobs, id);
 
 // Les emplois proposés au début d'une vie : ni prérequis ni réputation à payer.
 export const startingJobs = jobs.filter(
@@ -14,11 +14,11 @@ export const startingJobs = jobs.filter(
 export const canChangeJob = (state: GameState, id: string) => {
   const job = jobById(id);
   return (
-    state.status === 'playing' &&
+    isPlaying(state) &&
     job !== undefined &&
     state.jobId !== id &&
     canSpendReputation(state, job.cost) &&
-    (job.requirement === undefined || isUnlocked(state, job.requirement))
+    isRequirementMet(state, job.requirement)
   );
 };
 

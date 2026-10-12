@@ -1,12 +1,12 @@
-import { companies, economyRules, upgrades } from '@game/data';
+import { companies, economyRules, findById, upgrades } from '@game/data';
 import { periodProduction } from '@game/economy';
 import { withRecord } from '@game/ledger';
-import { isUnlocked } from '@game/requirements';
+import { isRequirementMet } from '@game/requirements';
+import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 import { isOwned } from '@game/upgrades';
 
-export const companyById = (id: string) =>
-  companies.find((candidate) => candidate.id === id);
+export const companyById = (id: string) => findById(companies, id);
 
 // Coût du prochain exemplaire, arrondi une seule fois (ADR 0002).
 export const companyCost = (id: string, owned: number) => {
@@ -44,12 +44,11 @@ export const fitsWarehouse = (state: GameState, id: string) => {
 export const canBuyCompany = (state: GameState, id: string) => {
   const company = companyById(id);
   return (
-    state.status === 'playing' &&
+    isPlaying(state) &&
     company !== undefined &&
     fitsWarehouse(state, id) &&
     state.money >= companyCost(id, ownedCount(state, id)) &&
-    (company.requirement === undefined ||
-      isUnlocked(state, company.requirement))
+    isRequirementMet(state, company.requirement)
   );
 };
 
@@ -77,7 +76,7 @@ export const warehouseCost = (owned: number) =>
   );
 
 export const canBuyWarehouse = (state: GameState) =>
-  state.status === 'playing' && state.money >= warehouseCost(state.warehouses);
+  isPlaying(state) && state.money >= warehouseCost(state.warehouses);
 
 // Ajoute de la capacité de stock ; sans condition, pour toujours pouvoir
 // s'en sortir d'un entrepôt trop petit.

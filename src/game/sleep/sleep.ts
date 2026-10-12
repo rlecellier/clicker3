@@ -1,5 +1,6 @@
 import { actionRules, automationRules } from '@game/data';
 import { addGauge } from '@game/period';
+import { isPlaying } from '@game/state';
 import type { GameState, QueuedAction } from '@game/state';
 import { study } from '@game/study';
 import { work } from '@game/work';
@@ -18,14 +19,14 @@ export const queueAction = (
   state: GameState,
   action: QueuedAction,
 ): GameState =>
-  state.status !== 'playing' || state.queuedActions.length >= MAX_QUEUED
+  !isPlaying(state) || state.queuedActions.length >= MAX_QUEUED
     ? state
     : { ...state, queuedActions: [...state.queuedActions, action] };
 
 // Le cerveau plein, le personnage s'endort (et plus rien d'autre ne se fait
 // tant qu'il dort). Rend l'état inchangé sinon.
 export const fallAsleep = (state: GameState): GameState =>
-  state.status === 'playing' &&
+  isPlaying(state) &&
   !state.isSleeping &&
   state.maxMarkers > 0 &&
   state.markers.length >= state.maxMarkers
@@ -36,7 +37,7 @@ export const fallAsleep = (state: GameState): GameState =>
 // selon le logement, et le temps passe. Le dernier marqueur consommé réveille.
 // Le sommeil complet coûte `actionRules.sleep.gauge` de jauge de temps.
 export const sleepStep = (state: GameState): GameState => {
-  if (!state.isSleeping || state.status !== 'playing') {
+  if (!state.isSleeping || !isPlaying(state)) {
     return state;
   }
   const [marker, ...rest] = state.markers;
@@ -68,7 +69,7 @@ const replayQueued = (state: GameState): GameState => {
   let current = state;
   while (
     !current.isSleeping &&
-    current.status === 'playing' &&
+    isPlaying(current) &&
     current.queuedActions.length > 0
   ) {
     const [action, ...rest] = current.queuedActions;

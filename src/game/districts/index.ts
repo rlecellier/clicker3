@@ -1,1 +1,1 @@
-export { canUnlockDistrict, unlockDistrict } from './districts';
+export { canUnlockDistrict, districtById, unlockDistrict } from './districts';
