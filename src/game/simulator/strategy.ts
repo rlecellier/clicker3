@@ -12,6 +12,7 @@ import {
   upgrades,
 } from '@game/data';
 import type { Company } from '@game/data';
+import { fixedExpensesOf } from '@game/economy';
 import { canUnlockDistrict } from '@game/districts';
 import { canChangeJob, jobById } from '@game/jobs';
 import { lastPeriodReport } from '@game/ledger';
@@ -124,13 +125,13 @@ const wantedCompany = (state: GameState): Company | undefined => {
 const isCovered = (state: GameState, extra: number) =>
   extra === 0 ||
   lastPeriodReport(state).revenue >=
-    simulatorConfig.expenseCover * (state.rent + state.payroll + extra);
+    simulatorConfig.expenseCover * (fixedExpensesOf(state) + extra);
 
 type Purchase = { cost: number; action: GameAction };
 
 // Argent à garder en caisse pour payer les dépenses fixes de la période suivante.
 const reserveOf = (state: GameState) =>
-  simulatorConfig.cashReserveMonths * (state.rent + state.payroll);
+  simulatorConfig.cashReserveMonths * fixedExpensesOf(state);
 
 const nextPurchase = (
   state: GameState,

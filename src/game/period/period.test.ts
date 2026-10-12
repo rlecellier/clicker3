@@ -1,4 +1,5 @@
 import { startState } from '@game/data';
+import { fixedExpensesOf } from '@game/economy';
 import { ageOf } from '@game/time';
 import { deepFreeze } from '@test/deepFreeze';
 import { addGauge, endPeriod, periodOutlook } from './period';
@@ -53,9 +54,11 @@ describe('addGauge', () => {
 
   it('fait payer l’intérêt de la dette en fin de période', () => {
     const next = addGauge({ ...startState, money: -1000 }, capacity, 'work');
-    // Loyer 300 prélevé : -1 300, puis 5 % d'intérêt.
-    expect(next.money).toBe(-1300 - 65);
-    expect(next.ledger.history[0]?.figures.interest).toBe(65);
+    // Loyer et train de vie prélevés, puis 5 % d'intérêt sur le solde.
+    const balance = -1000 - fixedExpensesOf(startState);
+    const interest = Math.ceil(-balance * 0.05);
+    expect(next.money).toBe(balance - interest);
+    expect(next.ledger.history[0]?.figures.interest).toBe(interest);
   });
 
   it('ne change plus rien une fois mort', () => {
@@ -78,9 +81,9 @@ describe('addGauge', () => {
 });
 
 describe('periodOutlook', () => {
-  it('compte le loyer à venir dans la balance', () => {
+  it('compte le loyer et le train de vie à venir dans la balance', () => {
     const rich = { ...startState, money: 1000 };
-    expect(periodOutlook(rich).money).toBe(-startState.rent);
+    expect(periodOutlook(rich).money).toBe(-fixedExpensesOf(startState));
   });
 
   it('prévoit la variation d’argent et de stock de la clôture', () => {
@@ -125,7 +128,7 @@ describe('periodOutlook', () => {
         current: { ...startState.ledger.current, purchases: 40 },
       },
     };
-    expect(periodOutlook(state).money).toBe(-startState.rent);
+    expect(periodOutlook(state).money).toBe(-fixedExpensesOf(startState));
   });
 });
 

@@ -1,6 +1,8 @@
 export {
   chargeExpenses,
   chargeInterest,
+  fixedExpensesOf,
+  livingCostOf,
   payWages,
   finalPrice,
   outputPerCopy,

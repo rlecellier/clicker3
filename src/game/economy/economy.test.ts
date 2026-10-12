@@ -6,6 +6,8 @@ import {
   chargeExpenses,
   chargeInterest,
   finalPrice,
+  fixedExpensesOf,
+  livingCostOf,
   outputPerCopy,
   periodProduction,
   produceGoods,
@@ -168,11 +170,38 @@ describe('ventilation des ventes par commerce', () => {
   });
 });
 
+const living = livingCostOf(startState);
+
+describe('livingCostOf', () => {
+  it('vaut le tarif de base au logement de départ', () => {
+    expect(living).toBe(economyRules.baseLivingCost);
+  });
+
+  it('monte avec le logement', () => {
+    const costs = Object.values(economyRules.livingCosts);
+    expect(Math.min(...costs)).toBeGreaterThan(living);
+    expect(livingCostOf(stateWith({ housingId: 'loft-pole' }))).toBeGreaterThan(
+      livingCostOf(stateWith({ housingId: 'studio-renove' })),
+    );
+  });
+
+  it('paie le tarif de base pour un logement inconnu', () => {
+    expect(livingCostOf(stateWith({ housingId: 'cabane' }))).toBe(living);
+  });
+
+  it('s’ajoute au loyer et aux salaires dans les dépenses fixes', () => {
+    expect(fixedExpensesOf(stateWith({ payroll: 100 }))).toBe(
+      300 + living + 100,
+    );
+  });
+});
+
 describe('chargeExpenses', () => {
-  it('prélève le loyer et les salaires', () => {
-    const next = chargeExpenses(stateWith({ money: 1000, payroll: 100 }));
-    expect(next.money).toBe(1000 - 300 - 100);
+  it('prélève le loyer, le train de vie et les salaires', () => {
+    const next = chargeExpenses(stateWith({ money: 5000, payroll: 100 }));
+    expect(next.money).toBe(5000 - 300 - living - 100);
     expect(next.ledger.current.rent).toBe(300);
+    expect(next.ledger.current.living).toBe(living);
     expect(next.ledger.current.payroll).toBe(100);
     expect(next.lastStatement?.paidExpenses).toBe(true);
     expect(next.lastStatement?.unpaid).toBe(false);
@@ -180,7 +209,7 @@ describe('chargeExpenses', () => {
 
   it('prélève tout et laisse l’argent passer en négatif (impayé)', () => {
     const next = chargeExpenses(stateWith({ money: 100, reputation: 5 }));
-    expect(next.money).toBe(100 - 300);
+    expect(next.money).toBe(100 - 300 - living);
     expect(next.reputation).toBe(5 - economyRules.unpaidPenalty);
     expect(next.lastStatement?.unpaid).toBe(true);
     expect(next.ledger.current.rent).toBe(300);
@@ -188,7 +217,7 @@ describe('chargeExpenses', () => {
   });
 
   it('n’est pas un impayé quand le solde reste à zéro', () => {
-    const next = chargeExpenses(stateWith({ money: 300 }));
+    const next = chargeExpenses(stateWith({ money: 300 + living }));
     expect(next.money).toBe(0);
     expect(next.lastStatement?.unpaid).toBe(false);
   });
@@ -203,12 +232,13 @@ describe('résolution d’une période', () => {
   it('suit l’ordre production, ventes, dépenses', () => {
     const state = stateWith({
       companies: { atelier: 1, boutique: 1 },
-      money: 400,
+      money: 1000,
       stock: 0,
     });
     const next = endPeriod({ ...state, gauge: state.gaugeCapacity });
-    // 2 articles produits puis vendus 24 € dans la même période, puis loyer 300.
-    expect(next.money).toBe(400 + 24 - 300);
+    // 2 articles produits puis vendus 24 € dans la même période, puis loyer 300
+    // et train de vie.
+    expect(next.money).toBe(1000 + 24 - 300 - living);
     expect(next.stock).toBe(0);
     expect(next.period).toBe(1);
     expect(next.lastStatement).toMatchObject({ period: 0, unpaid: false });

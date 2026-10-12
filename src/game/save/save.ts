@@ -238,6 +238,31 @@ export const defaultSaveOptions: SaveOptions = {
         return base;
       }
     },
+    // Version 13 : le ledger compte le train de vie (`living`). Le passé est
+    // inconnu : les périodes déjà jouées n'en ont pas payé (0).
+    12: (raw) => {
+      const { ledger } = raw;
+      if (!isRecord(ledger)) {
+        return raw;
+      }
+      const fill = (figures: unknown) =>
+        isRecord(figures) ? { living: 0, ...figures } : figures;
+      return {
+        ...raw,
+        ledger: {
+          ...ledger,
+          current: fill(ledger.current),
+          total: fill(ledger.total),
+          history: Array.isArray(ledger.history)
+            ? ledger.history.map((entry: unknown) =>
+                isRecord(entry)
+                  ? { ...entry, figures: fill(entry.figures) }
+                  : entry,
+              )
+            : ledger.history,
+        },
+      };
+    },
   },
 };
 

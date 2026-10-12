@@ -283,10 +283,10 @@ describe('coups de pouce actifs', () => {
   });
 });
 
-describe('migration de la version 11', () => {
+describe('migration de la version 12', () => {
   const v11 = {
     ...startState,
-    version: 11,
+    version: 12,
     stats: { metier: 120, gestion: 40, intelligence: 90, endurance: 12 },
     upgrades: ['stage-posture', 'carnet-notes', 'application-productivite'],
     seenItems: {
@@ -296,7 +296,7 @@ describe('migration de la version 11', () => {
   };
 
   it('renomme le carnet et l’application, sans perdre les points de stat', () => {
-    const result = deserialize(JSON.stringify({ version: 11, state: v11 }));
+    const result = deserialize(JSON.stringify({ version: 12, state: v11 }));
     expect(result.ok).toBe(true);
     if (!result.ok) {
       return;
@@ -865,5 +865,39 @@ describe('stockage', () => {
     saveGame(storage, midGame, 1);
     storage.clear();
     expect(loadGame(storage)).toBeNull();
+  });
+});
+
+// Une partie v12 : le ledger n'a pas encore de train de vie (`living`).
+const withoutLiving = (figures: typeof startState.ledger.total) => {
+  const { living, ...rest } = figures;
+  expect(living).toBe(0);
+  return { ...rest, rent: 900 };
+};
+
+describe('migration de la version 12', () => {
+  it('ajoute le train de vie à la période, à l’historique et au cumul', () => {
+    const old = withoutLiving(startState.ledger.total);
+    const text = JSON.stringify({
+      version: 12,
+      state: {
+        ...startState,
+        version: 12,
+        period: 2,
+        ledger: {
+          current: old,
+          history: [{ period: 1, figures: old }],
+          total: old,
+        },
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.ledger.current.living).toBe(0);
+    expect(result.ok && result.state.ledger.total.living).toBe(0);
+    expect(result.ok && result.state.ledger.history[0]?.figures.living).toBe(0);
+    // Le reste du ledger est conservé.
+    expect(result.ok && result.state.ledger.total.rent).toBe(900);
+    expect(result.ok && result.state.ledger.history[0]?.period).toBe(1);
+    expect(result.ok && result.state.version).toBe(startState.version);
   });
 });
