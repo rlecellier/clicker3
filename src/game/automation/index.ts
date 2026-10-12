@@ -4,6 +4,7 @@ export {
   canEnableAuto,
   catchUp,
   isAutoActive,
+  isTimeRunning,
   resume,
   setAuto,
 } from './automation';
