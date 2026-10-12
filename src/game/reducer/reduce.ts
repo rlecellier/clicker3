@@ -1,3 +1,4 @@
+import { afterAction } from '@game/afterAction';
 import { autoTick, setAuto } from '@game/automation';
 import { buyCompany, buyWarehouse } from '@game/companies';
 import { startState } from '@game/data';
@@ -7,8 +8,7 @@ import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { addGauge } from '@game/period';
 import { triggerEvents } from '@game/events';
-import { updatePhase } from '@game/phases';
-import { queueAction, settleSleep } from '@game/sleep';
+import { queueAction } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
 import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
@@ -81,10 +81,6 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
   }
 };
 
-// La phase de vie suit les achats et les événements sont évalués après chaque
-// action (ceux de fin de période l'ont déjà été dans `endPeriod`).
-// Un cerveau plein endort le personnage ; au réveil, ses gestes gardés se rejouent.
-export const reduce = (state: GameState, action: GameAction): GameState => {
-  const applied = settleSleep(applyAction(state, action));
-  return triggerEvents(updatePhase(applied));
-};
+// Sommeil, phase de vie et événements suivent chaque action (`afterAction`).
+export const reduce = (state: GameState, action: GameAction): GameState =>
+  afterAction(applyAction(state, action));
