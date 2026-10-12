@@ -1,19 +1,15 @@
-import { actionRules, upgrades } from '@game/data';
+import { actionRules } from '@game/data';
 import { lifePhases } from '@game/state';
 import type { GameState, LifePhase } from '@game/state';
 import { ageOf } from '@game/time';
+import { hasEmployee } from '@game/upgrades';
 
 // Phase de progression d'après l'état : Entrepreneur à la première entreprise,
 // Patron au premier employé. On ne redescend jamais.
 export const phaseOf = (state: GameState): LifePhase => {
-  const hasEmployee = upgrades.some(
-    (upgrade) =>
-      state.upgrades.includes(upgrade.id) &&
-      upgrade.effects.some((effect) => effect.type === 'employee'),
-  );
   const hasCompany = Object.values(state.companies).some((count) => count > 0);
   let reached: LifePhase = 'youngAdult';
-  if (hasEmployee) {
+  if (hasEmployee(state)) {
     reached = 'boss';
   } else if (hasCompany) {
     reached = 'entrepreneur';

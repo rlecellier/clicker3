@@ -15,7 +15,9 @@ import {
   hasAutomation,
   hasCourse,
   hasDashboard,
+  hasEmployee,
   availableUpgrades,
+  ownsEffect,
   nextUpgrade,
 } from './upgrades';
 
@@ -236,6 +238,57 @@ describe('cancelUpgrade', () => {
     expect(cancelUpgrade(rich, 'nulle-part')).toBe(rich);
     const dead = { ...buy(rich, 'cartes-visite'), status: 'dead' as const };
     expect(cancelUpgrade(dead, 'cartes-visite')).toBe(dead);
+  });
+});
+
+// Tout ce qu'une amélioration change, hors argent et comptes (non remboursés).
+const derived = (state: GameState) => ({
+  rent: state.rent,
+  payroll: state.payroll,
+  housingId: state.housingId,
+  sleepMultiplier: state.sleepMultiplier,
+  stockCapacity: state.stockCapacity,
+  maxMarkers: state.maxMarkers,
+  productionMultiplier: state.productionMultiplier,
+  salesMultiplier: state.salesMultiplier,
+  companyMultipliers: state.companyMultipliers,
+  workReputationMultiplier: state.workReputationMultiplier,
+  reputationPerSaleMultiplier: state.reputationPerSaleMultiplier,
+  upgrades: state.upgrades,
+});
+
+describe('acheter puis annuler', () => {
+  it.each(upgrades.map((upgrade) => [upgrade.id]))(
+    '%s : l’annulation défait exactement l’achat',
+    (id) => {
+      const bought = buyUpgrade(rich, id);
+      expect(bought.upgrades).toContain(id);
+      const cancelled = cancelUpgrade(bought, id);
+      expect(derived(cancelled)).toEqual({
+        ...derived(rich),
+        companyMultipliers: expect.any(Object),
+      });
+      for (const [company, multiplier] of Object.entries(
+        cancelled.companyMultipliers,
+      )) {
+        expect(multiplier).toBeCloseTo(rich.companyMultipliers[company] ?? 1);
+      }
+    },
+  );
+});
+
+describe('ownsEffect', () => {
+  it('trouve un effet possédé par son genre et son filtre', () => {
+    const owner = buyUpgrade(rich, 'stage-posture');
+    expect(ownsEffect(owner, 'course')).toBe(true);
+    expect(
+      ownsEffect(owner, 'course', (effect) => effect.courseId === 'metier'),
+    ).toBe(true);
+    expect(
+      ownsEffect(owner, 'course', (effect) => effect.courseId === 'gestion'),
+    ).toBe(false);
+    expect(ownsEffect(rich, 'course')).toBe(false);
+    expect(hasEmployee(buyUpgrade(rich, 'premier-collaborateur'))).toBe(true);
   });
 });
 
