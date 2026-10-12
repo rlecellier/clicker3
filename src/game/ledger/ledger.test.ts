@@ -15,17 +15,13 @@ import {
 } from './ledger';
 
 describe('record', () => {
-  it('ajoute l’écriture à la période en cours et au cumul', () => {
-    const ledger = record(emptyLedger(), { wages: 40, stockSold: 3 });
+  it('ajoute l’écriture à la période en cours et au cumul, et les cumule', () => {
+    let ledger = record(emptyLedger(), { wages: 40, stockSold: 3 });
     expect(ledger.current.wages).toBe(40);
     expect(ledger.total.wages).toBe(40);
     expect(ledger.total.stockSold).toBe(3);
     expect(ledger.history).toEqual([]);
-  });
 
-  it('cumule plusieurs écritures', () => {
-    let ledger = emptyLedger();
-    ledger = record(ledger, { wages: 40 });
     ledger = record(ledger, { wages: 70, rent: 300 });
     expect(ledger.current.wages).toBe(110);
     expect(ledger.current.rent).toBe(300);
@@ -41,12 +37,10 @@ describe('record', () => {
     expect(ledger.total.stockOut).toEqual({ surplus: 3 });
   });
 
-  it('ne modifie pas le livre reçu', () => {
+  it('n’altère pas son entrée et withRecord écrit dans l’état', () => {
     const frozen = deepFreeze(emptyLedger());
     expect(() => record(frozen, { sales: 1 })).not.toThrow();
-  });
 
-  it('withRecord écrit dans l’état', () => {
     const next = withRecord(startState, { studies: 20 });
     expect(next.ledger.total.studies).toBe(20);
     expect(startState.ledger.total.studies).toBe(0);
