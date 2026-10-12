@@ -73,9 +73,10 @@ moyenne, mais reste le plus souvent proche d'elle. Elle va de 15 % à 45 % pour 
 travail et d'environ 49 % à 91 % pour l'étude, ce qui évite les longues séries
 noires.
 
-Le cerveau contient 5 marqueurs au maximum, 7 avec le **Carnet de notes**,
-10 avec en plus l'**Application de productivité**. Il n'y a pas d'autre
-source de marqueurs dans cette version : Gestion, Intelligence et Endurance ne
+Le cerveau contient 5 marqueurs au maximum. L'**Agenda électronique** (+30 %)
+et l'**Assistante de direction** relèvent la chance d'en gagner, comme les
+coups de pouce temporaires de [Investir](onglet-investir.md). Il n'y a pas
+d'autre source de marqueurs dans cette version : Gestion, Intelligence et Endurance ne
 progressent que par l'étude.
 
 ## Dormir

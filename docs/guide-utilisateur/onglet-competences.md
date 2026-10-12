@@ -27,14 +27,18 @@ dépenser (un chiffre avec une décimale au plus).
 
 ## Les paliers des quatre compétences
 
-Les quatre compétences ont les mêmes quatre paliers.
+Les quatre compétences ont les mêmes huit niveaux (ou paliers).
 
 | Palier | Points à atteindre |
 | ------ | ------------------ |
 | 1      | 2                  |
-| 2      | 9                  |
-| 3      | 41                 |
-| 4      | 81                 |
+| 2      | 6                  |
+| 3      | 15                 |
+| 4      | 35                 |
+| 5      | 80                 |
+| 6      | 170                |
+| 7      | 350                |
+| 8      | 700                |
 
 Une compétence ne donne pas de bonus continu. Chaque palier **débloque** des
 achats, des postes ou des améliorations. Le détail est dans
