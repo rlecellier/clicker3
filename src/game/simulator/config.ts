@@ -24,3 +24,37 @@ export const simulatorConfig = {
   // ce multiple des dépenses futures.
   expenseCover: 1.5,
 } as const;
+
+// Garde-fous d'équilibrage (docs/game/propositions-equilibrage.md § 4).
+export const guardrailConfig = {
+  // Retirer une amélioration doit dégrader une mesure d'au moins 5 %.
+  minUtility: 0.05,
+  // Au moins 50 % des points de stat d'une vie sont gagnés après un boost.
+  minBoostShare: 0.5,
+  // Le dernier palier d'au moins une stat est atteint après cette minute.
+  statLivelyMinute: 25,
+  // Âge où l'on relève les recettes pour le test d'utilité.
+  revenueAge: 60,
+  // Exemptées du test d'utilité : formations, automatisation et employés
+  // obligatoires à la progression, tableau de bord (affichage seulement).
+  exemptUpgrades: [
+    'premier-collaborateur',
+    'directeur-transformation',
+    'tableau-de-bord',
+  ],
+} as const;
+
+// Échecs connus des garde-fous sur les valeurs actuelles (« genre:sujet »). Ils
+// prouvent le diagnostic (docs/game/propositions-equilibrage.md § 1) ; chaque
+// chantier d'équilibrage retire ceux qu'il corrige.
+export const knownGuardrailFailures: readonly string[] = [
+  'utility:studio-renove',
+  'utility:pavillon-tilleuls',
+  'utility:loft-pole',
+  'utility:carnet-notes',
+  'utility:application-productivite',
+  'utility:cartes-visite',
+  'boost:studio-renove',
+  'boost:pavillon-tilleuls',
+  'boost:loft-pole',
+];
