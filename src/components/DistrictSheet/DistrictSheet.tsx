@@ -1,7 +1,7 @@
-import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
 import { ImpactGauges } from '@component/ImpactGauges';
 import type { Gauge } from '@component/ImpactGauges';
+import { WithBadge } from '@component/WithBadge';
 import styles from './DistrictSheet.module.css';
 
 type DistrictSheetProperties = {
@@ -33,13 +33,7 @@ export const DistrictSheet = ({
 }: DistrictSheetProperties) => (
   <section className={styles.sheet} aria-label={`Fiche : ${name}`}>
     <h3 className={styles.name}>
-      {name}
-      {badge === undefined ? null : (
-        <>
-          {' '}
-          <Badge tone="info">{badge}</Badge>
-        </>
-      )}
+      <WithBadge badge={badge}>{name}</WithBadge>
     </h3>
     <p>{description}</p>
     <p className={styles.detail}>{detail}</p>
