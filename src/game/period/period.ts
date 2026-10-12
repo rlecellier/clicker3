@@ -1,11 +1,12 @@
-import { companies } from '@game/data';
 import {
   chargeExpenses,
   chargeInterest,
+  payWages,
   produceGoods,
   salesCapacity,
   sellGoods,
 } from '@game/economy';
+import { companies } from '@game/data';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
 import type { GameState } from '@game/state';
@@ -25,7 +26,7 @@ export const resetGauge = (state: GameState): GameState => ({
 
 export const endPeriod = (state: GameState): GameState => {
   const produced = produceGoods(state);
-  const sold = sellGoods(produced);
+  const sold = payWages(sellGoods(produced));
   // Le ledger se ferme avant les événements : ceux-ci surviennent au début de
   // la période suivante (ils sont datés d'elle) et s'y écrivent.
   const charged = closePeriod(chargeInterest(chargeExpenses(sold)));
@@ -33,39 +34,27 @@ export const endPeriod = (state: GameState): GameState => {
 };
 
 /**
- * Balance prévue de la période en cours, telle qu'elle sera à sa clôture :
- * ce qui est déjà encaissé ou payé, plus ce que la fin de période apportera
- * (production, ventes) ou prélèvera (loyer, salaires, intérêts). L'état reçu
- * n'est pas modifié.
- *
- * La balance de stock est le déséquilibre production / ventes, pas la variation
- * physique : stock vide, le manque (ventes possibles non servies) la rend
- * négative ; stock plein, le surplus perdu la rend positive. Hors extrêmes,
- * c'est exactement la variation du stock.
+ * Balance prévue de la période en cours. L'argent : sa variation exacte au
+ * passage de période. Ce qui est déjà payé (achats, études) est déjà dans
+ * l'argent, donc n'y figure pas ; elle compte ce que la clôture apportera
+ * (salaires gagnés, ventes) ou prélèvera (loyer, salaires versés, intérêts) :
+ * travailler la fait monter. Le stock : l'écart entre la production et la
+ * capacité de vente de la période, sans tenir compte de l'entrepôt (stock
+ * vide ou plein). L'état reçu n'est pas modifié.
  */
 export const periodOutlook = (state: GameState) => {
-  const sold = sellGoods(produceGoods(state));
-  const closing = chargeInterest(chargeExpenses(sold));
-  const { current } = state.ledger;
-  const earned =
-    current.wages + current.sales + current.surplus + current.otherIncome;
-  const spent =
-    current.rent +
-    current.payroll +
-    current.purchases +
-    current.studies +
-    current.otherExpenses +
-    current.interest;
-  const wanted = companies.reduce(
+  const produced = produceGoods(state);
+  const paid = payWages(sellGoods(produced));
+  const closing = chargeInterest(chargeExpenses(paid));
+  const production =
+    produced.ledger.current.stockProduced - state.ledger.current.stockProduced;
+  const sales = companies.reduce(
     (total, company) => total + salesCapacity(state, company),
     0,
   );
-  const soldNow = sold.ledger.current.stockSold - current.stockSold;
-  const shortage = Math.max(0, wanted - soldNow);
-  const lost = sold.ledger.current.stockLost - current.stockLost;
   return {
-    money: earned - spent + (closing.money - state.money),
-    stock: closing.stock - current.stockStart + lost - shortage,
+    money: closing.money - state.money,
+    stock: production - sales,
   };
 };
 

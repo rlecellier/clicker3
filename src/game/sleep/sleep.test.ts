@@ -1,3 +1,4 @@
+import { wagesDueOf } from '@game/economy';
 import { actionRules, startState } from '@game/data';
 import {
   fallAsleep,
@@ -128,7 +129,7 @@ describe('gestes gardés', () => {
     };
     const next = settleSleep(woke);
     expect(next.queuedActions).toEqual([]);
-    expect(next.money).toBeGreaterThan(0);
+    expect(wagesDueOf(next)).toBeGreaterThan(0);
   });
 
   it('garde la file tant que le cerveau est plein', () => {

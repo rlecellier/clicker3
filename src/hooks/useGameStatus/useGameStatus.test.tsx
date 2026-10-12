@@ -22,7 +22,6 @@ describe('useGameStatus et useGameActions', () => {
     act(() => {
       result.current.actions.work('job');
     });
-    expect(result.current.status.money).toBeGreaterThan(before.money);
     expect(result.current.status.gauge).toBeGreaterThan(before.gauge);
   });
 });

@@ -1,3 +1,4 @@
+import { wagesDueOf } from '@game/economy';
 import { actionRules, automationRules, jobs, startState } from '@game/data';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
@@ -30,10 +31,10 @@ describe('rythme', () => {
 
   it('ne joue rien avant le délai, puis une action à chaque délai', () => {
     const early = autoTick(workOnly, autoIntervalMs - 1);
-    expect(early.money).toBe(0);
+    expect(wagesDueOf(early)).toBe(0);
     expect(early.autoElapsed).toBe(autoIntervalMs - 1);
     const later = autoTick(early, 1);
-    expect(later.money).toBeGreaterThan(0);
+    expect(wagesDueOf(later)).toBeGreaterThan(0);
     expect(later.autoElapsed).toBe(0);
   });
 
@@ -48,10 +49,10 @@ describe('efficacité', () => {
   it('rapporte 2× moins qu’une action manuelle', () => {
     const auto = autoTick(workOnly, autoIntervalMs);
     const manual = work(startState);
-    expect(auto.money).toBe(
+    expect(wagesDueOf(auto)).toBe(
       Math.round((firstJob?.salary ?? 0) * automationRules.yieldFactor),
     );
-    expect(auto.money).toBe(manual.money / 2);
+    expect(wagesDueOf(auto)).toBe(wagesDueOf(manual) / 2);
     expect(auto.reputation).toBeCloseTo(manual.reputation / 2);
   });
 
@@ -143,7 +144,7 @@ describe('sommeil', () => {
     };
     const next = autoTick(queued, automationRules.sleepDurationMs);
     expect(next.queuedActions).toEqual([]);
-    expect(next.money).toBeGreaterThan(0);
+    expect(wagesDueOf(next)).toBeGreaterThan(0);
   });
 
   it('ne garde pas le travail automatique pour le réveil', () => {
@@ -168,9 +169,9 @@ describe('sommeil', () => {
       { ...asleep, upgrades: automated.upgrades, autoWork: true },
       5 * sleepIntervalMs,
     );
-    expect(next.money).toBe(0);
+    expect(wagesDueOf(next)).toBe(0);
     const later = autoTick(next, autoIntervalMs);
-    expect(later.money).toBeGreaterThan(0);
+    expect(wagesDueOf(later)).toBeGreaterThan(0);
   });
 });
 

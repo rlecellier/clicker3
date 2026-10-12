@@ -24,7 +24,7 @@ export const jobs: readonly Job[] = [
   {
     id: 'polyvalent',
     name: 'Employé polyvalent',
-    salary: 76,
+    salary: 80,
     reputation: 0.3,
     cost: 0,
     requirement: { type: 'stat', stat: 'metier', tier: 1 },

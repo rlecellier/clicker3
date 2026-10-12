@@ -145,6 +145,9 @@ export const defaultSaveOptions: SaveOptions = {
         },
       };
     },
+    // Version 9 : les salaires gagnés sont versés à la clôture de la période
+    // (`wagesDue`). Les sauvegardes existantes ont déjà tout encaissé.
+    8: (raw) => ({ ...raw, wagesDue: {} }),
   },
 };
 
@@ -242,6 +245,7 @@ const isQueue = (value: unknown) =>
 const hasValidContent = (raw: RawState) =>
   isNumberRecord(raw.companies, companyIds) &&
   isNumberRecord(raw.workBoosts, companyIds) &&
+  isNumberRecord(raw.wagesDue, jobIds) &&
   isNumberRecord(raw.companyMultipliers, companyIds) &&
   isNumberRecord(raw.jobSalaryFactors, jobIds) &&
   isQueue(raw.queuedActions) &&

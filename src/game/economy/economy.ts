@@ -180,6 +180,23 @@ export const sellGoods = (state: GameState): GameState => {
   };
 };
 
+// Salaires gagnés pendant la période et pas encore versés.
+export const wagesDueOf = (state: GameState) =>
+  Object.values(state.wagesDue).reduce((sum, amount) => sum + amount, 0);
+
+// Étape 2 bis : les salaires gagnés pendant la période sont versés avant les
+// dépenses, pour que le loyer puisse être couvert par le travail.
+export const payWages = (state: GameState): GameState => {
+  const wagesBy = Object.fromEntries(
+    Object.entries(state.wagesDue).filter(([, amount]) => amount !== 0),
+  );
+  const wages = wagesDueOf({ ...state, wagesDue: wagesBy });
+  return {
+    ...withRecord({ ...state, money: state.money + wages }, { wages, wagesBy }),
+    wagesDue: {},
+  };
+};
+
 // Étape 3 : loyer et salaires, toujours prélevés en entier : l'argent peut
 // devenir négatif (dette). Un solde négatif après les dépenses est un impayé :
 // la réputation baisse et l'événement `unpaid` est noté.
