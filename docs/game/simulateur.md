@@ -52,6 +52,12 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
 | Zone morte        | Plus long intervalle sans achat, déblocage ni palier de stat, jusqu'à la mort comprise |
 | Courbe            | Argent, stock, réputation, entreprises, améliorations, recettes par période |
 
+## Garde-fous d'équilibrage
+
+`npm run sim` affiche aussi le test d'utilité des améliorations, la part utile
+des boosts et les stats vivantes (`guardrails.ts`). Détail et relevé :
+[equilibrage.md](equilibrage.md#garde-fous-du-simulateur-issue-164).
+
 ## Critères de la v1
 
 Le test vérifie que la vie va à son terme, qu'elle est déterministe, que chaque
