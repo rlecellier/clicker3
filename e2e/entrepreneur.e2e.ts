@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import {
   amountOf,
+  balanceOf,
   counter,
   expectNoOverflow,
   itemOf,
@@ -45,7 +46,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
 
   // Le nouveau salaire s'affiche sur l'action ; rien à vendre sans stock.
   await openTab(page, 'vie');
-  await expect(page.getByText('Rapporte 76')).toBeVisible();
+  await expect(page.getByText('Rapporte 80')).toBeVisible();
   await expect(sellSurplus).toBeDisabled();
 
   // Un commerce sans production : à la fin de la période, rupture de stock.
@@ -59,12 +60,14 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(warehouse).toHaveAccessibleName(/vide/);
   await page.keyboard.press('2');
   await expect(page).toHaveURL('/jeu/vie');
-  const money = () => amountOf(counter(page, 'Argent'));
-  const moneyBeforeKey = await money();
+  // Le raccourci T travaille de partout : le salaire fait monter la balance
+  // de la période, il n'est versé qu'à la clôture.
+  const balance = () => balanceOf(page, 'Argent');
+  const balanceBeforeKey = await balance();
   await page.keyboard.press('5');
   await page.keyboard.press('t');
   await page.keyboard.press('2');
-  await expect.poll(money).toBeGreaterThan(moneyBeforeKey);
+  await expect.poll(balance).toBe(balanceBeforeKey + 80);
   await expect(page.getByText('Entrepreneur (statut déclaré)')).toBeVisible();
   for (let turn = 0; turn < 10; turn += 1) {
     await work.click();

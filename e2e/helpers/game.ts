@@ -28,6 +28,18 @@ export const amountOf = async (locator: Locator) =>
       undefined,
   );
 
+// Balance de la période en cours (tuile de l'onglet Vie), signée : « −240 € »
+// donne -240, « +60 € » donne 60.
+export const balanceOf = async (page: Page, label: string) => {
+  const text = await page
+    .getByRole('region', { name: 'Balance de la période' })
+    .getByText(label, { exact: true })
+    .locator('xpath=following-sibling::dd[1]')
+    .textContent();
+  const amount = numberOf((text ?? '').replace('−', '-'));
+  return amount;
+};
+
 // Ligne d'une liste (emploi, entreprise, amélioration, quartier) par son titre.
 export const itemOf = (page: Page, title: string | RegExp): Locator =>
   page.getByRole('listitem').filter({ hasText: title });
