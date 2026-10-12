@@ -49,6 +49,9 @@ une branche = une MR.
 - **Règles du jeu** dans `src/game/` : TypeScript pur, sans React, avec un état
   sérialisable et un reducer pur. Le temps vient de l'état, jamais de
   `Date.now()` dans les règles.
+- **Où ranger un calcul partagé, quels helpers réutiliser** : ADR 0009
+  (`.claude/adr/0009-couches-et-factorisation.md`). Les frontières des couches
+  sont imposées par ESLint.
 
 ## Politique de test
 
