@@ -18,6 +18,7 @@ import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
 import { ageOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
+import { isOvertime, overtimeWageFactor } from '@game/overtime';
 import { JOB_TARGET, canWork, jobWage } from '@game/work';
 import type { GameState } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
@@ -83,12 +84,16 @@ export const useLifeScreen = () => {
   const objective = nextObjective(state);
   const isOver = state.status === 'dead';
   const job = jobById(state.jobId);
+  // Au-delà des 8 h de la journée, les heures sup. s'appliquent seules.
+  const overtimeNote = isOvertime(state)
+    ? ` (heures sup. +${Math.round((overtimeWageFactor(state) - 1) * 100)} %)`
+    : '';
 
   const workAction: BaseAction = {
     detail:
       job === undefined
         ? undefined
-        : `Rapporte ${formatMoney(jobWage(state))} par clic`,
+        : `Rapporte ${formatMoney(jobWage(state))} par clic${overtimeNote}`,
     reason: isOver ? ENDED : 'Aucun emploi',
     isDisabled: !canWork(state, JOB_TARGET),
     run: sayOrQueue(

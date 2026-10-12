@@ -8,6 +8,7 @@ import {
 import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
+import { overtimeGaugeFactor, overtimeWageFactor } from '@game/overtime';
 import { addGauge } from '@game/period';
 import { manualFactor } from '@game/phases';
 import { gainReputation } from '@game/reputation';
@@ -31,14 +32,16 @@ export const canWork = (state: GameState, target: string) => {
 const gainFactor = (state: GameState, isAuto: boolean) =>
   isAuto ? automationRules.yieldFactor : manualFactor(state);
 
-// Salaire d'une action de travail à l'emploi, tous modificateurs appliqués :
-// ce que l'action rapporte vraiment (0 sans emploi).
+// Salaire d'une action de travail à l'emploi, tous modificateurs appliqués,
+// heures supplémentaires comprises : ce que l'action rapporte vraiment (0 sans
+// emploi).
 export const jobWage = (state: GameState, isAuto = false) => {
   const job = jobById(state.jobId);
   return job === undefined
     ? 0
     : Math.round(
         job.salary *
+          overtimeWageFactor(state) *
           gainFactor(state, isAuto) *
           (state.jobSalaryFactors[job.id] ?? 1),
       );
@@ -101,7 +104,7 @@ export const work = (
   );
   return addGauge(
     withMarker,
-    gauge * (1 + activeBonus(state, 'workSlow')),
+    gauge * (1 + activeBonus(state, 'workSlow')) * overtimeGaugeFactor(state),
     'work',
   );
 };
