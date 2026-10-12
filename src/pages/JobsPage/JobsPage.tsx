@@ -1,11 +1,11 @@
 import { ItemList } from '@component/ItemList';
 import { Window } from '@component/Window';
-import { useGameScreen } from '@hook/useGameScreen';
+import { useJobsScreen } from '@hook/useJobsScreen';
 import { useSeenTab } from '@hook/useSeenTab';
 
-// Onglet « Emploi » : orchestrateur de `useGameScreen`.
+// Onglet « Emploi » : orchestrateur de `useJobsScreen`.
 export const JobsPage = () => {
-  const screen = useGameScreen();
+  const screen = useJobsScreen();
   useSeenTab('jobs');
 
   return (

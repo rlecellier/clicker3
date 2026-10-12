@@ -6,15 +6,15 @@ import { ProgressBar } from '@component/ProgressBar';
 import { SplitActionButton } from '@component/SplitActionButton';
 import { ResourceTile } from '@component/ResourceTile';
 import { Window } from '@component/Window';
-import { useGameScreen } from '@hook/useGameScreen';
+import { useLifeScreen } from '@hook/useLifeScreen';
 import { STUDY_SHORTCUT, WORK_SHORTCUT } from '@hook/useKeyboardShortcuts';
 import styles from './LifePage.module.css';
 
 const noop = () => {};
 
-// Onglet « Vie » : orchestrateur de `useGameScreen`.
+// Onglet « Vie » : orchestrateur de `useLifeScreen`.
 export const LifePage = () => {
-  const screen = useGameScreen();
+  const screen = useLifeScreen();
   const { work, sellSurplus } = screen.actions;
   const { study } = screen;
 
