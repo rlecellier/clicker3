@@ -1,10 +1,17 @@
-import { findById, jobs } from '@game/data';
+import { actionRules, findById, jobs } from '@game/data';
+import type { Job } from '@game/data';
 import { isRequirementMet } from '@game/requirements';
 import { canSpendReputation, spendReputation } from '@game/reputation';
 import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 
 export const jobById = (id: string | null) => findById(jobs, id);
+
+// Salaire d'un mois (une journée type) : les 8 h de travail, au tarif normal,
+// sans heures supplémentaires ni malus d'âge.
+export const monthlyWage = (job: Job) =>
+  (job.salary * actionRules.work.overtime.regularGauge) /
+  actionRules.work.gauge;
 
 // Les emplois proposés au début d'une vie : ni prérequis ni réputation à payer.
 export const startingJobs = jobs.filter(

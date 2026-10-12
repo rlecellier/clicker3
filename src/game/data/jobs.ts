@@ -17,14 +17,14 @@ export const jobs: readonly Job[] = [
   {
     id: 'interim',
     name: 'Manutentionnaire intérimaire',
-    salary: 60,
+    salary: 320,
     reputation: 0.2,
     cost: 0,
   },
   {
     id: 'polyvalent',
     name: 'Employé polyvalent',
-    salary: 80,
+    salary: 430,
     reputation: 0.3,
     cost: 0,
     requirement: { type: 'stat', stat: 'metier', tier: 1 },
@@ -32,7 +32,7 @@ export const jobs: readonly Job[] = [
   {
     id: 'mission',
     name: 'Chargé de mission',
-    salary: 250,
+    salary: 680,
     reputation: 0.5,
     cost: 10,
     requirement: {
@@ -46,7 +46,7 @@ export const jobs: readonly Job[] = [
   {
     id: 'transformation',
     name: 'Directeur adjoint de la transformation',
-    salary: 1600,
+    salary: 2000,
     reputation: 0.8,
     cost: 9,
     requirement: {

@@ -9,11 +9,11 @@ export const economyRules = {
   // le loyer. Une période est un mois : repères mensuels de 1999 (issue #166).
   // Il monte avec le logement ; un logement absent de la table paie le tarif
   // de base.
-  baseLivingCost: 450,
+  baseLivingCost: 470,
   livingCosts: {
-    'studio-renove': 500,
-    'pavillon-tilleuls': 650,
-    'loft-pole': 900,
+    'studio-renove': 520,
+    'pavillon-tilleuls': 670,
+    'loft-pole': 920,
   } as Readonly<Record<string, number>>,
   // Coût employeur minimal d'un salarié (SMIC 1999 chargé, par mois) : aucun
   // employé ne coûte moins (contrôlé par data.test.ts).

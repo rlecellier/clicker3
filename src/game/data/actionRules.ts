@@ -11,17 +11,17 @@ export const actionRules = {
     // jauge fait 70 et un sommeil en coûte 40 : il en reste 30, que l'on compte
     // pour les 8 h de travail, celles que rémunère le salaire. Au-delà, le
     // travail de la période est payé en heures supplémentaires, sans déblocage :
-    // +25 % à partir de 30 de jauge de travail, +50 % à partir de 50 (comme les
-    // deux premières tranches du code du travail). Chaque action en heures sup.
-    // coûte aussi 20 % de jauge de plus : on est fatigué, la période passe plus
+    // +25 % à partir de 30 de jauge de travail, +35 % à partir de 50 (le code du
+    // travail dit +25 % puis +50 % ; recalé au simulateur). Chaque action en
+    // heures sup. coûte aussi 35 % de jauge de plus : on est fatigué, la période passe plus
     // vite et le sommeil arrive plus tôt.
     overtime: {
       regularGauge: 30,
       tiers: [
         { from: 30, wage: 1.25 },
-        { from: 50, wage: 1.5 },
+        { from: 50, wage: 1.35 },
       ],
-      gaugeSurcharge: 0.2,
+      gaugeSurcharge: 0.35,
     },
   },
   study: {

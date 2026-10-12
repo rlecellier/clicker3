@@ -2,7 +2,7 @@ import type { ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
 import { jobs } from '@game/data';
 import { checkRequirement, formatCount, formatMoney } from '@game/format';
-import { canChangeJob } from '@game/jobs';
+import { canChangeJob, monthlyWage } from '@game/jobs';
 import { useGameActions } from '@hook/useGameActions';
 import { NO_REPUTATION, unavailableReason } from '@view/purchase';
 
@@ -21,7 +21,7 @@ export const useJobsScreen = () => {
     return {
       id: candidate.id,
       title: candidate.name,
-      detail: `Salaire ${formatMoney(candidate.salary)}${
+      detail: `Salaire ${formatMoney(monthlyWage(candidate))} par mois (${formatMoney(candidate.salary)} par action)${
         candidate.cost > 0
           ? ` · ${formatCount(candidate.cost)} de réputation`
           : ''

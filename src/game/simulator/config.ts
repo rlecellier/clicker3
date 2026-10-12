@@ -49,7 +49,6 @@ export const guardrailConfig = {
 // chantier d'équilibrage retire ceux qu'il corrige.
 export const knownGuardrailFailures: readonly string[] = [
   'utility:studio-renove',
-  'utility:agenda-electronique',
   'utility:pavillon-tilleuls',
   'utility:cartes-visite',
   'utility:camionnette',
