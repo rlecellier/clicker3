@@ -1,9 +1,23 @@
 import { DataTable } from '@component/DataTable';
 import { LedgerSection } from '@component/LedgerSection';
 import { LedgerTable } from '@component/LedgerTable';
+import type { LedgerRow } from '@component/LedgerTable';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useAccountsScreen } from '@hook/useAccountsScreen';
+
+type LedgerSectionData = {
+  title: string;
+  help: string;
+  rows: readonly LedgerRow[];
+};
+
+// Une section des comptes : titre, aide, puis son tableau.
+const ledgerSection = (section: LedgerSectionData, caption: string) => (
+  <LedgerSection title={section.title} help={section.help}>
+    <LedgerTable caption={caption} rows={section.rows} />
+  </LedgerSection>
+);
 
 // Onglet « Comptes » : orchestrateur de `useAccountsScreen`.
 export const AccountsPage = () => {
@@ -20,24 +34,9 @@ export const AccountsPage = () => {
         />
       ) : (
         <>
-          <LedgerSection
-            title={dashboard.income.title}
-            help={dashboard.income.help}
-          >
-            <LedgerTable caption="Recettes" rows={dashboard.income.rows} />
-          </LedgerSection>
-          <LedgerSection
-            title={dashboard.expenses.title}
-            help={dashboard.expenses.help}
-          >
-            <LedgerTable caption="Dépenses" rows={dashboard.expenses.rows} />
-          </LedgerSection>
-          <LedgerSection
-            title={dashboard.stock.title}
-            help={dashboard.stock.help}
-          >
-            <LedgerTable caption="Stock" rows={dashboard.stock.rows} />
-          </LedgerSection>
+          {ledgerSection(dashboard.income, 'Recettes')}
+          {ledgerSection(dashboard.expenses, 'Dépenses')}
+          {ledgerSection(dashboard.stock, 'Stock')}
           <LedgerSection
             title={dashboard.buildings.title}
             help={dashboard.buildings.help}
@@ -48,15 +47,7 @@ export const AccountsPage = () => {
               rows={dashboard.buildings.rows}
             />
           </LedgerSection>
-          <LedgerSection
-            title={dashboard.reputation.title}
-            help={dashboard.reputation.help}
-          >
-            <LedgerTable
-              caption="Réputation"
-              rows={dashboard.reputation.rows}
-            />
-          </LedgerSection>
+          {ledgerSection(dashboard.reputation, 'Réputation')}
         </>
       )}
     </>
