@@ -5,7 +5,8 @@ import { canStudy } from '@game/study';
 import { JOB_TARGET, canWork } from '@game/work';
 import { selectedCourse } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
-import { gamePath } from '@hook/useGameTabs';
+import { tabPath } from '@hook/useGameTabs';
+import type { GameTabId } from '@hook/useGameTabs';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
 // Branche les raccourcis sur le jeu : navigation, travail (un clic simple,
@@ -17,8 +18,8 @@ export const useGameShortcuts = (chosenCourse: string | null) => {
 
   const handlers = useMemo(
     () => ({
-      openTab: (slug: string) => {
-        void navigate(gamePath(slug));
+      openTab: (tab: GameTabId) => {
+        void navigate(tabPath(tab));
       },
       work: () => {
         if (canWork(state, JOB_TARGET)) {

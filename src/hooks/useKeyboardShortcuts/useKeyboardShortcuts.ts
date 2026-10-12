@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import type { GameTabId } from '@hook/useGameTabs';
 import { shortcutFor } from './shortcuts';
 
 export type ShortcutHandlers = {
-  openTab: (slug: string) => void;
+  openTab: (tab: GameTabId) => void;
   work: () => void;
   study: () => void;
 };
@@ -18,7 +19,7 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
       }
       event.preventDefault();
       if (action.type === 'openTab') {
-        handlers.openTab(action.slug);
+        handlers.openTab(action.tab);
         return;
       }
       handlers[action.type]();
