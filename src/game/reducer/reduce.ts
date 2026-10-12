@@ -1,5 +1,6 @@
 import { afterAction } from '@game/afterAction';
 import { autoTick, setAuto } from '@game/automation';
+import { buyBoost } from '@game/boosts';
 import { buyCompany, buyWarehouse } from '@game/companies';
 import { findById, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
@@ -58,6 +59,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'buyUpgrade': {
       return buyUpgrade(state, action.id);
+    }
+    case 'buyBoost': {
+      return buyBoost(state, action.id);
     }
     case 'cancelUpgrade': {
       return cancelUpgrade(state, action.id);

@@ -136,7 +136,12 @@ describe('stats vivantes', () => {
 describe('simulation', () => {
   it('relève les achats et les points de stat de la vie', () => {
     const life = simulateLife();
-    expect(life.upgradePurchases.length).toBe(life.finalState.upgrades.length);
+    const ids = life.upgradePurchases.map((entry) => entry.id);
+    // Les améliorations, plus la première cure de chaque coup de pouce.
+    expect(
+      ids.filter((id) => life.finalState.upgrades.includes(id)),
+    ).toHaveLength(life.finalState.upgrades.length);
+    expect(ids).toContain('cure-ginkgo');
     expect(life.statPointsTotal).toBeGreaterThan(0);
     const points = life.upgradePurchases.map((entry) => entry.statPoints);
     expect(points).toEqual(points.toSorted((first, second) => first - second));

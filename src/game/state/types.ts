@@ -17,7 +17,14 @@ export type JournalEntry = {
 // Effet temporaire d'un événement (ex. bulle internet), jusqu'à une période.
 export type ActiveEffect = {
   eventId: string;
-  kind: 'sales' | 'workSlow';
+  kind:
+    | 'sales'
+    | 'workSlow'
+    // Coups de pouce achetés : chance de marqueur (+ part), marqueurs
+    // d'étude en plus, sommeil converti en plus (+ facteur).
+    | 'markerChance'
+    | 'studyMarkers'
+    | 'sleepBoost';
   value: number;
   // Période à partir de laquelle l'effet n'agit plus.
   until: number;

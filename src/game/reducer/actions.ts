@@ -12,6 +12,8 @@ export type GameAction =
   | { type: 'buyWarehouse' }
   | { type: 'sellSurplus' }
   | { type: 'buyUpgrade'; id: string }
+  // Coup de pouce temporaire (cure, séminaire, clinique).
+  | { type: 'buyBoost'; id: string }
   // Annule une amélioration possédée : ses effets disparaissent, sans remboursement.
   | { type: 'cancelUpgrade'; id: string }
   | { type: 'setAuto'; action: 'work'; isEnabled: boolean }

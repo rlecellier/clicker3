@@ -1,4 +1,5 @@
 import { actionRules, courses, findById, statTierThresholds } from '@game/data';
+import { activeBonus } from '@game/effects';
 import { withRecord } from '@game/ledger';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
@@ -45,11 +46,16 @@ export const study = (state: GameState, courseId: string): GameState => {
     { ...state, money: state.money - course.cost },
     { studies: course.cost, studiesBy: { [course.id]: course.cost } },
   );
-  const withMarker = grantMarker(
-    paid,
-    course.stat,
-    markerChance,
-    markerVariance,
-  );
+  // Un séminaire donne une chance de marqueur de plus à chaque étude.
+  const attempts = 1 + activeBonus(state, 'studyMarkers');
+  let withMarker = paid;
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    withMarker = grantMarker(
+      withMarker,
+      course.stat,
+      markerChance,
+      markerVariance,
+    );
+  }
   return addGauge(withMarker, gauge, 'study');
 };
