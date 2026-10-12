@@ -33,7 +33,10 @@ Go through every item. Fix what fails, do not push on a red item.
 - [ ] `npm run build` succeeds when the change touches build config, routing or
       dependencies.
 - [ ] Every new or changed user action is covered by at least one Playwright
-      journey. Purely visual components have no test (see `CLAUDE.md`).
+      journey, played with `tap()` as well as `click()` (the game is played
+      on touch screens). A press / gesture hook has a unit test with the real
+      touch event sequence. Purely visual components have no test (see
+      `CLAUDE.md`).
 - [ ] The code follows the project structure ADR (`.claude/adr/`): one folder
       per component / hook / context, `index.ts` per folder, aliases instead
       of `../`.

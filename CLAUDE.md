@@ -60,6 +60,18 @@ une branche = une MR.
   suite sous une dizaine. Toute action utilisateur fait partie d'au moins un
   parcours, mais on vérifie l'effet visible, pas chaque valeur.
 
+- **Le jeu se joue surtout au toucher.** Les projets Playwright mobiles
+  tournent en `hasTouch` : chaque type de bouton d'action (simple, appui
+  maintenu) se vérifie au moins une fois avec `tap()`, pas seulement `click()`,
+  car la souris ne reproduit pas l'ordre des événements tactiles (`pointerup`,
+  `pointerleave`, puis `click`). Un tap doit valoir **une** action, avec le gain
+  réellement affiché.
+- **Un hook de geste** (appui, appui long, répétition) se teste en unitaire
+  avec la séquence réelle d'un doigt (`pointerdown`, `pointerup`,
+  `pointerleave`, `click`) et celle de la souris, pas seulement un clic isolé.
+- **Un chiffre annoncé à l'écran** (gain d'un clic, balance) se compare à ce que
+  l'action produit vraiment, dans un parcours ou un test des règles.
+
 Rien d'autre n'est imposé : pas de test « par principe ».
 
 ## Fin de travail
