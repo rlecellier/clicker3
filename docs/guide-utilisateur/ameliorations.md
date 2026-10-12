@@ -1,0 +1,226 @@
+# Les améliorations
+
+[Sommaire](README.md) · Précédent : [Les actions](actions.md) · Suite : [Les autres sources de bonus](autres-bonus.md)
+
+Le jeu compte **19 améliorations**, toutes à achat unique, dans
+[Investir](onglet-investir.md), sous-onglet Améliorations. Cette page en
+donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
+
+Les repères de lecture :
+
+- les **paliers** sont ceux de [Compétences](onglet-competences.md) : palier 1
+  à 2 points, palier 2 à 9 points, palier 3 à 41 points, palier 4 à 81 points ;
+- les **paliers de réputation** sont comptés sur la réputation gagnée : 6, 100 et
+  170 ;
+- un **loyer** ou des **salaires** s'ajoutent à ce que le jeu prélève chaque
+  mois, tant que l'amélioration est possédée ;
+- les chiffres sont ceux affichés dans le jeu.
+
+## Vue d'ensemble
+
+| Amélioration                      | Prix       | Ajoute chaque mois | Prérequis                                   | Ce qu'elle fait                                      |
+| --------------------------------- | ---------- | ------------------ | ------------------------------------------- | ---------------------------------------------------- |
+| Stage « Posture professionnelle » | 150 €      |                    | Aucun                                       | Ouvre l'étude du Métier                              |
+| BTS « Gestion des opportunités »  | 1 500 €    |                    | Métier 1                                    | Ouvre l'étude de la Gestion                          |
+| Licence d'économie appliquée      | 10 000 €   |                    | Gestion 1                                   | Ouvre l'étude de l'Intelligence                      |
+| Coaching « Dépassement de soi »   | 1 700 €    |                    | Intelligence 1                              | Ouvre l'étude de l'Endurance                         |
+| Studio rénové                     | 7 500 €    | loyer +34 €        | Endurance 1                                 | Sommeil ×1,5                                         |
+| Pavillon aux Tilleuls             | 100 000 €  | loyer +380 €       | Endurance 2                                 | Sommeil ×2,5                                         |
+| Loft au Pôle d'Excellence         | 190 000 €  | loyer +500 €       | Endurance 3                                 | Sommeil ×4                                           |
+| Étagères en kit                   | 2 900 €    |                    | Gestion 1                                   | Capacité du stock ×13                                |
+| Entrepôt logistique               | 31 000 €   |                    | Gestion 3                                   | Capacité du stock ×48                                |
+| Carnet de notes                   | 380 €      |                    | Intelligence 1                              | Marqueurs maximum +2                                 |
+| Application de productivité       | 33 000 €   |                    | Intelligence 3                              | Marqueurs maximum +3                                 |
+| Premier collaborateur             | 1 600 €    | salaires +230 €    | Gestion 2 et une entreprise                 | Production +110 %                                    |
+| Équipe de collaborateurs          | 37 000 €   | salaires +3 600 €  | Gestion 3 et réputation 1                   | Production et ventes +60 %                           |
+| Directeur de la transformation    | 310 000 €  | salaires +45 000 € | Gestion 4 et réputation 2                   | Production et ventes +300 %                          |
+| Procédure de travail              | 90 000 €   |                    | Phase « Dirigeant »                         | Travail automatique                                  |
+| Tableau de bord                   | 5 200 €    |                    | Gestion 2                                   | Comptes détaillés                                    |
+| Cartes de visite                  | 58 €       |                    | Aucun                                       | Réputation du travail +25 %                          |
+| Camionnette d'occasion            | 16 000 €   |                    | Une entreprise                              | Production des ateliers +15 %                        |
+| Plan de communication             | 19 000 €   |                    | Réputation 2                                | Ventes +30 %, réputation par vente +50 %             |
+
+## Comment les bonus se combinent
+
+Les bonus d'un même genre **s'additionnent** entre eux, ils ne se multiplient
+pas. Un bonus de production « +110 % » ajoute 1,1 à un coefficient qui vaut 1 au
+départ.
+
+| Coefficient            | Départ | Premier collaborateur | + Équipe | + Directeur |
+| ---------------------- | ------ | --------------------- | -------- | ----------- |
+| Production (toutes)    | ×1     | ×2,1                  | ×2,7     | ×5,7        |
+| Prix de vente          | ×1     | ×1                    | ×1,6     | ×4,6        |
+
+Le Plan de communication ajoute encore 0,3 au prix de vente (×4,9 avec les
+trois). La bulle internet de 2000-2001 ajoute 0,2 pendant sa durée.
+La Camionnette d'occasion est à part : elle multiplie la production des
+seuls ateliers d'assemblage par 1,15, en plus du coefficient général.
+
+Un bonus de « ventes » agit sur le **prix** de chaque article vendu, pas sur le
+nombre d'articles qu'un commerce peut vendre.
+
+## Les formations
+
+Elles s'enchaînent : chacune demande un palier de la compétence ouverte par la
+précédente.
+
+### Stage « Posture professionnelle »
+
+- **Prix** : 150 €. **Prérequis** : aucun.
+- **Effet** : « Étudier donne des marqueurs Métier ». Ouvre le cursus Posture
+  professionnelle (20 € par séance).
+- **Sur quoi** : le bouton Étudier. Sans formation, il n'apparaît pas.
+
+### BTS « Gestion des opportunités »
+
+- **Prix** : 1 500 €. **Prérequis** : palier 1 de Métier (2 points).
+- **Effet** : « Étudier donne des marqueurs Gestion ». Ouvre le cursus Gestion
+  des opportunités (150 € par séance).
+- **Sur quoi** : l'étude, et donc la compétence Gestion, qui débloque les
+  entreprises.
+
+### Licence d'économie appliquée
+
+- **Prix** : 10 000 €. **Prérequis** : palier 1 de Gestion (2 points).
+- **Effet** : « Étudier donne des marqueurs Intelligence ». Ouvre le cursus
+  Économie appliquée (190 € par séance).
+- **Sur quoi** : l'étude, et donc la compétence Intelligence.
+
+### Coaching « Dépassement de soi »
+
+- **Prix** : 1 700 €. **Prérequis** : palier 1 d'Intelligence (2 points).
+- **Effet** : « Étudier donne des marqueurs Endurance ». Ouvre le cursus
+  Dépassement de soi (260 € par séance).
+- **Sur quoi** : l'étude, et donc la compétence Endurance, qui ouvre les logements.
+
+## Le logement
+
+Chaque logement améliore le **sommeil** : un marqueur vidé donne ×1,5, ×2,5 ou ×4
+points au lieu d'un. Chacun ajoute son loyer à celui que vous payez déjà.
+
+### Studio rénové
+
+- **Prix** : 7 500 €, **loyer** +34 € par mois. **Prérequis** : palier 1
+  d'Endurance (2 points).
+- **Effet** : « Conversion du sommeil ×1,5 ».
+- **Sur quoi** : les points gagnés à chaque marqueur dormi.
+
+### Pavillon aux Tilleuls
+
+- **Prix** : 100 000 €, **loyer** +380 € par mois. **Prérequis** : palier 2
+  d'Endurance (9 points).
+- **Effet** : « Conversion du sommeil ×2,5 ».
+- **Sur quoi** : idem.
+
+### Loft au Pôle d'Excellence
+
+- **Prix** : 190 000 €, **loyer** +500 € par mois. **Prérequis** : palier 3
+  d'Endurance (41 points).
+- **Effet** : « Conversion du sommeil ×4 ».
+- **Sur quoi** : idem.
+
+Les conversions ne se cumulent pas : c'est celle du dernier logement acheté qui
+s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
+[Obtenues](onglet-investir.md#obtenues) pour ne plus payer son loyer.
+
+## L'entrepôt et les marqueurs
+
+### Étagères en kit
+
+- **Prix** : 2 900 €. **Prérequis** : palier 1 de Gestion (2 points).
+- **Effet** : « Capacité du stock ×13 ».
+- **Sur quoi** : la capacité de l'entrepôt, qui passe de 50 à 650 articles
+  (les petits entrepôts déjà achetés sont multipliés avec le reste).
+
+### Entrepôt logistique
+
+- **Prix** : 31 000 €. **Prérequis** : palier 3 de Gestion (41 points).
+- **Effet** : « Capacité du stock ×48 ».
+- **Sur quoi** : la capacité de l'entrepôt. Avec les Étagères en kit, 50 devient
+  31 200.
+
+### Carnet de notes
+
+- **Prix** : 380 €. **Prérequis** : palier 1 d'Intelligence (2 points).
+- **Effet** : « Marqueurs maximum +2 », de 5 à 7.
+- **Sur quoi** : la taille du cerveau : plus de marqueurs avant le sommeil.
+
+### Application de productivité
+
+- **Prix** : 33 000 €. **Prérequis** : palier 3 d'Intelligence (41 points).
+- **Effet** : « Marqueurs maximum +3 », de 7 à 10 avec le Carnet.
+- **Sur quoi** : la taille du cerveau.
+
+## Les employés
+
+Chacune de ces trois améliorations ajoute un employé (des salaires à payer chaque
+mois), augmente la production, et la première fait passer à la phase
+« Dirigeant ».
+
+### Premier collaborateur
+
+- **Prix** : 1 600 €, **salaires** +230 € par mois. **Prérequis** : palier 2 de
+  Gestion (9 points) et au moins une entreprise, de n'importe quel type.
+- **Effet** : « Un employé de plus » et « Production de toutes les entreprises
+  +110 % ».
+- **Sur quoi** : la production de toutes les entreprises de production
+  (coefficient de ×1 à ×2,1). Ouvre la phase « Dirigeant (sans équipe de
+  direction) », donc la Procédure de travail.
+
+### Équipe de collaborateurs
+
+- **Prix** : 37 000 €, **salaires** +3 600 € par mois. **Prérequis** : palier 3
+  de Gestion (41 points) et palier 1 de réputation (6 gagnés).
+- **Effet** : « Un employé de plus » et « Production et ventes de toutes les
+  entreprises +60 % ».
+- **Sur quoi** : la production de toutes les entreprises et le prix de vente de
+  chaque article.
+
+### Directeur de la transformation
+
+- **Prix** : 310 000 €, **salaires** +45 000 € par mois. **Prérequis** : palier 4
+  de Gestion (81 points) et palier 2 de réputation (100 gagnés).
+- **Effet** : « Un employé de plus » et « Production et ventes de toutes les
+  entreprises +300 % ».
+- **Sur quoi** : la production et le prix de vente. Il est aussi exigé pour le
+  4ᵉ poste, Directeur adjoint de la transformation.
+
+## L'automatisation et le tableau de bord
+
+### Procédure de travail
+
+- **Prix** : 90 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé).
+- **Effet** : « Le travail se fait tout seul (mode automatique) ».
+- **Sur quoi** : le bouton Travailler, qui peut basculer en automatique par un
+  appui long. Voir [Le travail automatique](actions.md#le-travail-automatique).
+
+### Tableau de bord
+
+- **Prix** : 5 200 €. **Prérequis** : palier 2 de Gestion (9 points).
+- **Effet** : « Affiche le tableau de bord dans les Comptes ».
+- **Sur quoi** : l'onglet [Comptes](onglet-comptes.md), qui passe de la version
+  simplifiée aux cinq sections détaillées.
+
+## Matériel et réputation
+
+### Cartes de visite
+
+- **Prix** : 58 €. **Prérequis** : aucun. La moins chère du jeu.
+- **Effet** : « Réputation gagnée en travaillant +25 % ».
+- **Sur quoi** : la réputation que rapporte chaque action de travail (×1,25).
+  Elle ne change pas la réputation des ventes.
+
+### Camionnette d'occasion
+
+- **Prix** : 16 000 €. **Prérequis** : au moins une entreprise, de n'importe quel
+  type.
+- **Effet** : « Production de Atelier d'assemblage +15 % ».
+- **Sur quoi** : seulement l'Atelier d'assemblage, qui passe de 2 à 2,3 articles
+  par exemplaire, avant les autres bonus de production.
+
+### Plan de communication
+
+- **Prix** : 19 000 €. **Prérequis** : palier 2 de réputation (100 gagnés).
+- **Effet** : « Ventes +30 % » et « Réputation gagnée par vente +50 % ».
+- **Sur quoi** : le prix de vente de chaque article (coefficient + 0,3), et la
+  réputation que chaque article vendu rapporte (0,02 devient 0,03).
