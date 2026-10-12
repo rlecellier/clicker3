@@ -3,6 +3,7 @@ import { upgrades } from '@game/data';
 import {
   expectNoOverflow,
   amountOf,
+  numberOf,
   counter,
   itemOf,
   longPress,
@@ -108,10 +109,16 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   // qu'un clic seul, et plus rien une fois le doigt levé.
   await openTab(page, 'vie');
   const money = () => amountOf(counter(page, 'Argent'));
+  // Un tap sur écran tactile vaut un seul clic, pas deux : il rapporte
+  // exactement ce que le bouton annonce.
+  const announcement = page.getByText(/Rapporte \d/);
+  await expect(announcement).toBeVisible();
+  const announced = numberOf((await announcement.textContent()) ?? undefined);
+  expect(announced).toBeGreaterThan(0);
   const beforeClick = await money();
-  await work.click();
+  await work.tap();
   const oneClick = (await money()) - beforeClick;
-  expect(oneClick).toBeGreaterThan(0);
+  expect(oneClick).toBe(announced);
   const beforeHold = await money();
   await work.hover();
   await page.mouse.down();
