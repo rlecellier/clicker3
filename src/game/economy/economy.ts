@@ -68,17 +68,27 @@ export const outputPerCopy = (state: GameState, company: Company) =>
     ? unitsOf(state, company, company.output, 1) * state.productionMultiplier
     : unitsOf(state, company, company.capacity, 1);
 
+// Facteur appliqué au prix de chaque article vendu : multiplicateur des
+// améliorations et bonus temporaires des événements.
+export const salesFactor = (state: GameState) =>
+  state.salesMultiplier + activeBonus(state, 'sales');
+
 // Prix de vente final d'un article d'un commerce (bonus de vente compris).
 export const finalPrice = (state: GameState, company: Company) =>
-  company.kind === 'commerce'
-    ? company.price * (state.salesMultiplier + activeBonus(state, 'sales'))
-    : 0;
+  company.kind === 'commerce' ? company.price * salesFactor(state) : 0;
 
 // Capacité de vente entière d'un commerce par période, telle que vendue.
 export const salesCapacity = (state: GameState, company: Company) =>
   company.kind === 'commerce'
     ? Math.round(unitsOf(state, company, company.capacity))
     : 0;
+
+// Articles que tous les commerces peuvent vendre sur la période.
+export const periodSalesCapacity = (state: GameState) =>
+  companies.reduce(
+    (total, company) => total + salesCapacity(state, company),
+    0,
+  );
 
 // Étape 1 : les entreprises de production ajoutent leur production au stock,
 // sans limite : rien n'est perdu ici. La capacité de l'entrepôt s'applique à
@@ -145,13 +155,13 @@ export const sellGoods = (state: GameState): GameState => {
         ? loseReputation(current, economyRules.stockoutPenalty)
         : current;
   }
-  const salesFactor = state.salesMultiplier + activeBonus(state, 'sales');
-  const earned = Math.round(revenue * salesFactor);
+  const factor = salesFactor(state);
+  const earned = Math.round(revenue * factor);
   // Arrondi cumulé, comme `produceGoods` : la somme des parts vaut `earned`.
   const salesBy: Record<string, number> = {};
   let allocated = 0;
   for (const [id, cumulated] of cumulatedRevenues) {
-    const share = Math.round(cumulated * salesFactor) - allocated;
+    const share = Math.round(cumulated * factor) - allocated;
     allocated += share;
     if (share !== 0) {
       salesBy[id] = share;
