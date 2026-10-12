@@ -13,6 +13,7 @@ import { canUnlockDistrict } from '@game/districts';
 import { canChangeJob, jobById } from '@game/jobs';
 import { lastPeriodReport } from '@game/ledger';
 import type { GameAction } from '@game/reducer';
+import { isRequirementMet } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
@@ -37,8 +38,11 @@ const statNeeds = (
     : [];
 };
 
-// Stat à travailler : le premier palier qui manque pour l'achat le moins cher
-// dont on peut étudier la stat (une formation achetée).
+// Stat à travailler : le premier niveau qui manque pour l'achat le moins cher
+// dont on peut étudier la stat (une formation achetée). Dès qu'un achat moins
+// cher est débloqué et n'attend que l'argent, on n'étudie plus : on économise
+// (une étude coûte de l'argent, et les 8 niveaux laissent des stats à gagner
+// bien après les achats à portée).
 const neededStat = (
   state: GameState,
   excluded: ReadonlySet<string>,
@@ -51,10 +55,13 @@ const neededStat = (
       .map((upgrade) => ({
         cost: upgrade.price,
         requirement: upgrade.requirement,
+        isSaving: true,
       })),
     ...companies.map((company) => ({
       cost: companyCost(company.id, ownedCount(state, company.id)),
       requirement: company.requirement,
+      // Une entreprise ouverte s'achète par `wantedCompany`, pas en économisant.
+      isSaving: false,
     })),
   ].toSorted((first, second) => first.cost - second.cost);
   for (const goal of goals) {
@@ -64,6 +71,9 @@ const neededStat = (
     );
     if (missing !== undefined) {
       return missing.stat;
+    }
+    if (goal.isSaving && isRequirementMet(state, goal.requirement)) {
+      return undefined;
     }
   }
   return undefined;

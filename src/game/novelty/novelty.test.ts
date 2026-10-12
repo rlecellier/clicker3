@@ -20,14 +20,14 @@ describe('newItems', () => {
   });
 
   it('signale entreprises et améliorations dans Investir', () => {
-    const ids = newItems(withStats(2, 2), 'invest');
+    const ids = newItems(withStats(2, 6), 'invest');
     expect(ids.some((id) => id.startsWith('company:'))).toBe(true);
     expect(ids.some((id) => id.startsWith('upgrade:'))).toBe(true);
   });
 
   it('signale un palier de compétence', () => {
     expect(newItems(withStats(2), 'skills')).toEqual(['stat:metier:1']);
-    expect(newItems(withStats(9), 'skills')).toEqual([
+    expect(newItems(withStats(6), 'skills')).toEqual([
       'stat:metier:1',
       'stat:metier:2',
     ]);

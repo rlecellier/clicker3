@@ -38,7 +38,7 @@ export const jobs: readonly Job[] = [
     requirement: {
       type: 'all',
       of: [
-        { type: 'stat', stat: 'metier', tier: 2 },
+        { type: 'stat', stat: 'metier', tier: 3 },
         { type: 'reputationTier', tier: 1 },
       ],
     },
@@ -52,7 +52,7 @@ export const jobs: readonly Job[] = [
     requirement: {
       type: 'all',
       of: [
-        { type: 'stat', stat: 'metier', tier: 3 },
+        { type: 'stat', stat: 'metier', tier: 6 },
         { type: 'reputationTier', tier: 2 },
         // « Ouvre l'emploi 4 » : le Directeur de la transformation.
         { type: 'upgrade', id: 'directeur-transformation' },
