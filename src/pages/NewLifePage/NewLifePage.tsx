@@ -3,17 +3,17 @@ import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
 import { PageLink } from '@component/PageLink';
 import { Title } from '@component/Title';
+import { ScreenPage } from '@component/ScreenPage';
 import { Window } from '@component/Window';
 import { screenPaths } from '@hook/useGameFlow';
 import { useNewLifeScreen } from '@hook/useNewLifeScreen';
-import styles from './NewLifePage.module.css';
 
 // Orchestrateur : branche `useNewLifeScreen` sur les composants visuels.
 export const NewLifePage = () => {
   const newLife = useNewLifeScreen();
 
   return (
-    <main className={styles.page}>
+    <ScreenPage>
       <Window title="Première embauche">
         <Title>Votre premier emploi</Title>
         <Note>Il faut bien commencer quelque part.</Note>
@@ -30,6 +30,6 @@ export const NewLifePage = () => {
         )}
         <PageLink to={screenPaths.title}>Retour</PageLink>
       </Window>
-    </main>
+    </ScreenPage>
   );
 };

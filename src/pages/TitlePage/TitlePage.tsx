@@ -3,6 +3,7 @@ import { ConfirmPrompt } from '@component/ConfirmPrompt';
 import { Note } from '@component/Note';
 import { PageLink } from '@component/PageLink';
 import { Title } from '@component/Title';
+import { ScreenPage } from '@component/ScreenPage';
 import { Window } from '@component/Window';
 import { screenPaths } from '@hook/useGameFlow';
 import type { TitleConfirmation } from '@hook/useTitleScreen';
@@ -23,7 +24,7 @@ export const TitlePage = () => {
   const prompt = title.confirming === null ? null : prompts[title.confirming];
 
   return (
-    <main className={styles.page}>
+    <ScreenPage>
       <Window title="Sainte-Croissance">
         <Title>Sainte-Croissance</Title>
         <Note>Ville en mouvement.</Note>
@@ -49,6 +50,6 @@ export const TitlePage = () => {
           />
         )}
       </Window>
-    </main>
+    </ScreenPage>
   );
 };

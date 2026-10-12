@@ -2,9 +2,9 @@ import { Button } from '@component/Button';
 import { EventLog } from '@component/EventLog';
 import { FigureList } from '@component/FigureList';
 import { Note } from '@component/Note';
+import { ScreenPage } from '@component/ScreenPage';
 import { Window } from '@component/Window';
 import { useAbsenceScreen } from '@hook/useAbsenceScreen';
-import styles from './AbsencePage.module.css';
 
 // Orchestrateur : branche `useAbsenceScreen` sur les composants visuels.
 export const AbsencePage = () => {
@@ -15,7 +15,7 @@ export const AbsencePage = () => {
   }
 
   return (
-    <main className={styles.page}>
+    <ScreenPage>
       <Window title="Pendant votre absence">
         <Note>
           Pendant votre absence, la croissance a continué. Elle n’a pas demandé
@@ -30,6 +30,6 @@ export const AbsencePage = () => {
           {absence.hasDied ? 'Voir le bilan' : 'Reprendre ma vie'}
         </Button>
       </Window>
-    </main>
+    </ScreenPage>
   );
 };
