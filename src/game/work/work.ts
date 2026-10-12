@@ -99,5 +99,9 @@ export const work = (
     markerChance,
     markerVariance,
   );
-  return addGauge(withMarker, gauge * (1 + activeBonus(state, 'workSlow')));
+  return addGauge(
+    withMarker,
+    gauge * (1 + activeBonus(state, 'workSlow')),
+    'work',
+  );
 };

@@ -1,8 +1,9 @@
+import type { GaugeKind } from '@game/state';
 import type { NoveltyTab } from '@game/novelty';
 
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
 export type GameAction =
-  | { type: 'addGauge'; amount: number }
+  | { type: 'addGauge'; amount: number; kind: GaugeKind }
   | { type: 'unlockDistrict'; id: string }
   | { type: 'work'; target: string }
   | { type: 'study'; courseId: string }

@@ -54,7 +54,7 @@ export const sleepStep = (state: GameState): GameState => {
     markers: rest,
     isSleeping: rest.length > 0,
   };
-  return addGauge(slept, gauge / state.maxMarkers);
+  return addGauge(slept, gauge / state.maxMarkers, 'sleep');
 };
 
 const play = (state: GameState, action: QueuedAction): GameState =>

@@ -184,6 +184,15 @@ export const defaultSaveOptions: SaveOptions = {
         return base;
       }
     },
+    // Version 11 : la jauge retient ce qui la remplit (`gaugeSegments`). Le
+    // passé est inconnu : la jauge déjà remplie est comptée comme du travail.
+    10: (raw) => ({
+      ...raw,
+      gaugeSegments:
+        isFiniteNumber(raw.gauge) && raw.gauge > 0
+          ? [{ kind: 'work', amount: raw.gauge }]
+          : [],
+    }),
   },
 };
 

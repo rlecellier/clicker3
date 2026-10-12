@@ -10,7 +10,7 @@ import { createMemoryStorage, loadGame, saveGame } from './storage';
 const played = [
   { type: 'work', target: 'job' },
   { type: 'work', target: 'job' },
-  { type: 'addGauge', amount: 250 },
+  { type: 'addGauge', amount: 250, kind: 'work' },
 ] as const;
 
 let midGame: GameState = startState;

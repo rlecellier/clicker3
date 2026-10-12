@@ -29,7 +29,7 @@ export const newGame = (jobId?: string): GameState =>
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'addGauge': {
-      return addGauge(state, action.amount);
+      return addGauge(state, action.amount, action.kind);
     }
     case 'unlockDistrict': {
       return unlockDistrict(state, action.id);
