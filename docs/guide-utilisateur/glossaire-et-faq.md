@@ -45,8 +45,9 @@ seuls.
 
 ### D'où vient l'argent qui disparaît chaque mois ?
 
-Du loyer (300 € au départ), augmenté par les logements que vous achetez, et des
-salaires de vos employés. Ils sont prélevés à la fin de chaque mois, que vous
+Du loyer (300 € au départ), augmenté par les logements que vous achetez, du
+train de vie (470 € au départ : courses, transport, téléphone, plus cher avec
+chaque logement) et des salaires de vos employés. Ils sont prélevés à la fin de chaque mois, que vous
 ayez l'argent ou non.
 
 ### Pourquoi mon argent est-il négatif ?

@@ -30,10 +30,10 @@ Les repères de lecture :
 | Étagères en kit                   | 2 900 €    |                    | Gestion 3                                   | Capacité du stock ×13                                |
 | Entrepôt logistique               | 31 000 €   |                    | Gestion 6                                   | Capacité du stock ×48                                |
 | Agenda électronique               | 380 €      |                    | Intelligence 1                              | Chance de marqueur +30 %                             |
-| Assistante de direction           | 1 500 €    | salaires +800 €    | Intelligence 4                              | Production et ventes +30 %                           |
-| Premier collaborateur             | 1 600 €    | salaires +230 €    | Gestion 3 et une entreprise                 | Production +110 %                                    |
-| Équipe de collaborateurs          | 37 000 €   | salaires +3 600 €  | Gestion 5 et réputation 1                   | Production et ventes +60 %                           |
-| Directeur de la transformation    | 310 000 €  | salaires +45 000 € | Gestion 8 et réputation 2                   | Production et ventes +300 %                          |
+| Assistante de direction           | 7 500 €    | salaires +1 600 €  | Intelligence 4                              | Production et ventes +35 %                           |
+| Premier collaborateur             | 800 €      | salaires +1 450 €  | Gestion 3 et une entreprise                 | Production +170 %                                    |
+| Équipe de collaborateurs          | 22 000 €   | salaires +7 000 €  | Gestion 5 et réputation 1                   | Production et ventes +90 %                           |
+| Directeur de la transformation    | 80 000 €   | salaires +15 000 € | Gestion 8 et réputation 2                   | Production et ventes +500 %                          |
 | Procédure de travail              | 160 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
 | Tableau de bord                   | 5 200 €    |                    | Gestion 4                                   | Comptes détaillés                                    |
 | Cartes de visite                  | 58 €       |                    | Aucun                                       | Réputation du travail +25 %                          |
@@ -43,15 +43,15 @@ Les repères de lecture :
 ## Comment les bonus se combinent
 
 Les bonus d'un même genre **s'additionnent** entre eux, ils ne se multiplient
-pas. Un bonus de production « +110 % » ajoute 1,1 à un coefficient qui vaut 1 au
+pas. Un bonus de production « +170 % » ajoute 1,7 à un coefficient qui vaut 1 au
 départ.
 
 | Coefficient            | Départ | Premier collaborateur | + Équipe | + Directeur |
 | ---------------------- | ------ | --------------------- | -------- | ----------- |
-| Production (toutes)    | ×1     | ×2,1                  | ×2,7     | ×5,7        |
-| Prix de vente          | ×1     | ×1                    | ×1,6     | ×4,6        |
+| Production (toutes)    | ×1     | ×2,7                  | ×3,6     | ×8,6        |
+| Prix de vente          | ×1     | ×1                    | ×1,9     | ×6,9        |
 
-Le Plan de communication ajoute encore 0,3 au prix de vente (×4,9 avec les
+Le Plan de communication ajoute encore 0,3 au prix de vente (×7,2 avec les
 trois). La bulle internet de 2000-2001 ajoute 0,2 pendant sa durée.
 La Camionnette d'occasion est à part : elle multiplie la production des
 seuls ateliers d'assemblage par 1,15, en plus du coefficient général.
@@ -148,9 +148,9 @@ s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
 
 ### Assistante de direction
 
-- **Prix** : 1 500 €, **salaires** +800 € par mois. **Prérequis** : palier 4
+- **Prix** : 7 500 €, **salaires** +1 600 € par mois. **Prérequis** : palier 4
   d'Intelligence (35 points).
-- **Effet** : « Production et ventes de toutes les entreprises +30 % ».
+- **Effet** : « Production et ventes de toutes les entreprises +35 % ».
 - **Sur quoi** : toutes vos entreprises. Elle remplace l'ancienne application de
   productivité, dont le seul effet (un cerveau plus grand) espaçait les
   sommeils sans rien rapporter.
@@ -163,29 +163,29 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Premier collaborateur
 
-- **Prix** : 1 600 €, **salaires** +230 € par mois. **Prérequis** : palier 3 de
+- **Prix** : 800 €, **salaires** +1 450 € par mois. **Prérequis** : palier 3 de
   Gestion (9 points) et au moins une entreprise, de n'importe quel type.
 - **Effet** : « Un employé de plus » et « Production de toutes les entreprises
-  +110 % ».
+  +170 % ».
 - **Sur quoi** : la production de toutes les entreprises de production
-  (coefficient de ×1 à ×2,1). Ouvre la phase « Dirigeant (sans équipe de
+  (coefficient de ×1 à ×2,7). Ouvre la phase « Dirigeant (sans équipe de
   direction) », donc la Procédure de travail.
 
 ### Équipe de collaborateurs
 
-- **Prix** : 37 000 €, **salaires** +3 600 € par mois. **Prérequis** : palier 3
+- **Prix** : 22 000 €, **salaires** +7 000 € par mois. **Prérequis** : palier 3
   de Gestion (80 points, palier 5) et palier 1 de réputation (6 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
-  entreprises +60 % ».
+  entreprises +90 % ».
 - **Sur quoi** : la production de toutes les entreprises et le prix de vente de
   chaque article.
 
 ### Directeur de la transformation
 
-- **Prix** : 310 000 €, **salaires** +45 000 € par mois. **Prérequis** : palier 4
+- **Prix** : 80 000 €, **salaires** +15 000 € par mois. **Prérequis** : palier 4
   de Gestion (700 points, palier 8) et palier 2 de réputation (100 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
-  entreprises +300 % ».
+  entreprises +500 % ».
 - **Sur quoi** : la production et le prix de vente. Il est aussi exigé pour le
   4ᵉ poste, Directeur adjoint de la transformation.
 

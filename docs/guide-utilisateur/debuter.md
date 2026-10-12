@@ -19,7 +19,7 @@ Sans partie sauvegardée, tout lien vers le jeu vous ramène à l'écran titre.
 
 « Démarrer ma vie » ouvre l'écran « Première embauche » : « Il faut bien commencer
 quelque part. » Un seul poste est à pourvoir : **Manutentionnaire intérimaire**,
-« Salaire : 60 € par action ». Cliquez sur « Prendre ce poste ». Le bouton
+« Salaire : 960 € par mois (320 € par action) ». Cliquez sur « Prendre ce poste ». Le bouton
 « Retour » ramène à l'écran titre.
 
 Si une vie est déjà en cours, le jeu demande d'abord confirmation (« Une vie est
@@ -29,17 +29,19 @@ perdue si vous confirmez.
 ## Votre premier tour de jeu
 
 Vous arrivez sur l'onglet **Vie**, le 1er janvier 1999, avec 0 € et un studio à
-300 € de loyer par mois. En haut de l'écran se trouve l'en-tête fixe : votre
+300 € de loyer par mois, plus 470 € de train de vie (courses, transport,
+téléphone). En haut de l'écran se trouve l'en-tête fixe : votre
 argent et la date, dont la barre se remplit à mesure que vous agissez. Dans la
 Vie, trois boutons vous attendent. Au début, seuls deux servent :
 
-1. **Travailler** : vous gagnez 60 € (le salaire de votre poste) et un peu de
+1. **Travailler** : vous gagnez 320 € (le salaire de votre poste) et un peu de
    réputation. Une action de travail remplit la jauge de temps de 10 sur 70.
 2. **Vendre le surplus** : grisé, vous n'avez pas de stock.
 3. **Étudier** : absent. Il apparaîtra quand vous aurez acheté une formation.
 
-Sept actions de travail remplissent la jauge : un mois passe, le loyer est
-prélevé (300 €) et la date avance. Chaque mois, vous recevez aussi un message
+Sept actions de travail remplissent la jauge (un peu moins une fois les heures
+supplémentaires atteintes) : un mois passe, le loyer (300 €) et le train de vie
+(470 €) sont prélevés et la date avance. Chaque mois, vous recevez aussi un message
 dans le Courrier (le bail renouvelé « à des conditions plus ambitieuses »).
 
 Au tout début, deux messages vous attendent déjà dans le Courrier : la pastille
@@ -77,7 +79,7 @@ Quand la jauge atteint 70, le mois se termine dans cet ordre :
 
 1. les entreprises de production versent leur production dans le stock ;
 2. les commerces vendent le stock et rapportent de l'argent ;
-3. le loyer et les salaires de vos employés sont prélevés ;
+3. le loyer, le train de vie et les salaires de vos employés sont prélevés ;
 4. si votre argent est négatif, les intérêts de la dette s'ajoutent (5 %) ;
 5. vous vieillissez d'un mois et les messages du nouveau mois arrivent ;
 6. la jauge repart, en gardant l'excédent.
@@ -86,7 +88,7 @@ Quand la jauge atteint 70, le mois se termine dans cet ordre :
 
 L'argent s'affiche en haut de l'écran, sur tous les onglets. Il vient des
 salaires de votre emploi et des ventes de vos commerces. Il part dans les
-études, les achats, le loyer et les salaires de vos employés.
+études, les achats, le loyer, le train de vie et les salaires de vos employés.
 
 - On n'achète rien si l'on n'a pas la somme : un achat trop cher reste grisé,
   avec la raison (« Argent insuffisant »).

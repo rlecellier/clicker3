@@ -26,12 +26,17 @@ jauge : le temps ne passe que par le travail, l'étude, le surplus et le sommeil
 Votre action principale. Vous travaillez à votre poste (le seul lieu de
 travail que propose cette version) :
 
-- **Salaire** du poste, versé tout de suite (60 € pour l'intérim, voir
+- **Salaire** du poste, versé à la fin de la période (320 € pour l'intérim, voir
   [Emploi](onglet-emploi.md#les-quatre-postes)).
 - **Réputation** du poste (0,2 pour l'intérim), multipliée par ×1,25 avec les
   Cartes de visite.
 - **Marqueur** : 30 % de chance d'un marqueur de Métier.
-- **Temps** : 10 sur la jauge de 70, donc sept actions par mois.
+- **Temps** : 10 sur la jauge de 70.
+- **Heures supplémentaires** : les trois premières actions de la période
+  (30 de jauge) paient les 8 h de la journée. Ensuite, sans rien débloquer,
+  chaque action est payée +25 % (jusqu'à 50 de jauge de travail) puis +35 %, et
+  remplit la jauge de 35 % de plus (13,5 au lieu de 10) : on est fatigué, le mois
+  passe plus vite. Le bouton annonce « heures sup. +25 % » quand c'est le cas.
 
 À partir de 60 ans (senior), le salaire et la réputation d'une action manuelle
 sont divisés par deux. Pendant le confinement (de mars 2020 à février 2021), chaque
@@ -153,7 +158,7 @@ vie « Dirigeant »), le bouton Travailler peut travailler tout seul.
 - **Rythme** : une action de travail toutes les demi-secondes, soit deux par
   seconde, à votre poste.
 - **Rendement** : chaque action automatique rapporte moitié moins qu'une action
-  manuelle (30 € au lieu de 60 € pour l'intérim), salaire et réputation compris.
+  manuelle (160 € au lieu de 320 € pour l'intérim), salaire et réputation compris.
   Elle remplit la jauge comme une action normale (10) et donne aussi sa chance de
   marqueur.
 - **Pendant le sommeil** : l'automatique attend le réveil.
