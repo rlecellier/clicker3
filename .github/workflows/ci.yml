@@ -24,19 +24,10 @@ jobs:
       - run: npm run format:check
       - run: npm test
       - run: npm run build
-      - name: Read the Playwright version
-        id: playwright
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: Cache Chromium for Playwright
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
-      - name: Install Chromium for Playwright
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-      - name: Install the system dependencies of Chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      # Chrome est préinstallé sur ubuntu-latest : pas de téléchargement de
+      # Chromium ni de dépendances système (~25 s). Le build ci-dessus est
+      # réutilisé par `vite preview`.
       - run: npm run e2e
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+          SKIP_BUILD: '1'
