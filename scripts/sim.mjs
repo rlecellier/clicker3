@@ -11,11 +11,18 @@ const server = await createServer({
 try {
   const simulator = await server.ssrLoadModule('/src/game/simulator/index.ts');
   const result = simulator.simulateLife();
-  console.log(
-    process.argv.includes('--csv')
-      ? simulator.formatCsv(result)
-      : simulator.formatReport(result),
-  );
+  if (process.argv.includes('--csv')) {
+    console.log(simulator.formatCsv(result));
+  } else {
+    console.log(simulator.formatReport(result));
+    console.log('');
+    console.log(
+      simulator.formatGuardrails(
+        simulator.runGuardrails(result),
+        simulator.knownGuardrailFailures,
+      ),
+    );
+  }
 } finally {
   await server.close();
 }
