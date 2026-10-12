@@ -9,7 +9,8 @@ import { describeRequirement, formatCount } from '@game/format';
 import { districtOfCompany } from '@game/impact';
 import type { ImpactValue } from '@game/impact';
 import { useGameImpact } from '@hook/useGameImpact';
-import { useInvestScreen } from '@hook/useInvestScreen';
+import { useGameActions } from '@hook/useGameActions';
+import { districtItem } from '@view/districtItem';
 
 export const slogan = 'Sainte-Croissance, ville en mouvement.';
 
@@ -31,7 +32,7 @@ const toGauges = (indicators: readonly ImpactValue[]): Gauge[] =>
 export const useCityScreen = () => {
   const { state } = useGameContext();
   const impact = useGameImpact();
-  const invest = useInvestScreen();
+  const actions = useGameActions();
   const [selectedId, select] = useState(districts[0]?.id);
 
   const mapDistricts: MapDistrict[] = districts.map((district) => ({
@@ -61,9 +62,12 @@ export const useCityScreen = () => {
 
   const district =
     selectedId === undefined ? undefined : districtById(selectedId);
-  const item = invest.districts.find(
-    (candidate) => candidate.id === selectedId,
-  );
+  const item =
+    district === undefined
+      ? undefined
+      : districtItem(state, district, () => {
+          actions.unlockDistrict(district.id);
+        });
   const districtImpact = impact.districts.find(
     (candidate) => candidate.districtId === selectedId,
   );

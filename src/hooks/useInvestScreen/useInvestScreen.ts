@@ -23,7 +23,6 @@ import {
   formatDecimal,
   formatMoney,
 } from '@game/format';
-import { canUnlockDistrict } from '@game/districts';
 import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
 import {
@@ -34,10 +33,10 @@ import {
   upgradeById,
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
+import { districtItem } from '@view/districtItem';
 import {
   ENDED,
   NO_MONEY,
-  NO_REPUTATION,
   missingConditions,
   ownedBadge,
   unavailableReason,
@@ -181,28 +180,11 @@ export const useInvestScreen = () => {
       },
     }));
 
-  const districtItems: ListItem[] = districts.map((district) => {
-    const isOpen = state.districts.includes(district.id);
-    return {
-      id: district.id,
-      title: district.name,
-      badge: isOpen ? 'Ouvert' : undefined,
-      detail: `${district.description} · ${formatCount(district.cost)} de réputation`,
-      actionLabel: isOpen ? 'Ouvert' : 'Débloquer',
-      isDisabled: !canUnlockDistrict(state, district.id),
-      reason: unavailableReason(state, {
-        isDone: isOpen,
-        requirement: district.requirement,
-        shortage: NO_REPUTATION,
-      }),
-      conditions: isOpen
-        ? undefined
-        : missingConditions(state, district.requirement),
-      onAction: () => {
-        actions.unlockDistrict(district.id);
-      },
-    };
-  });
+  const districtItems: ListItem[] = districts.map((district) =>
+    districtItem(state, district, () => {
+      actions.unlockDistrict(district.id);
+    }),
+  );
 
   return {
     stock: {
