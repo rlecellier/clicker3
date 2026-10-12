@@ -7,6 +7,10 @@ export const LONG_PRESS_MS = 500;
 // Cadence de la répétition doigt posé : 4 clics par seconde.
 export const HOLD_REPEAT_MS = 250;
 
+// Délai pendant lequel le clic natif qui suit un relâchement est ignoré. Sur
+// écran tactile, ce clic arrive juste après `pointerup` (et `pointerleave`).
+const CLICK_GRACE_MS = 400;
+
 // Gestes à poser sur le conteneur du bouton.
 export type PressHandlers = {
   onPointerDown: (event?: { button?: number }) => void;
@@ -45,6 +49,10 @@ export const useHoldRepeat = ({
     undefined,
   );
   const hasActed = useRef(false);
+  const isDown = useRef(false);
+  const graceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
   // Les minuteurs lisent toujours la dernière version des actions.
   const latest = useRef({ onClick, onLongPress });
   useEffect(() => {
@@ -63,7 +71,10 @@ export const useHoldRepeat = ({
     if (isDisabled) {
       stop();
     }
-    return stop;
+    return () => {
+      stop();
+      clearTimeout(graceTimer.current);
+    };
   }, [isDisabled, stop]);
 
   const hasLongPress = onLongPress !== undefined;
@@ -71,11 +82,14 @@ export const useHoldRepeat = ({
   const start = useCallback(
     (event?: { button?: number }) => {
       stop();
+      clearTimeout(graceTimer.current);
       hasActed.current = false;
+      isDown.current = false;
       if (isDisabled || (event?.button !== undefined && event.button !== 0)) {
         return;
       }
       hasActed.current = true;
+      isDown.current = true;
       latest.current.onClick();
       repeatTimer.current = setInterval(() => {
         latest.current.onClick();
@@ -90,11 +104,32 @@ export const useHoldRepeat = ({
     [stop, isDisabled, hasLongPress],
   );
 
-  // Sortie ou annulation : aucun clic natif ne suivra.
+  // Relâchement : le clic natif qui suit est ignoré, mais pas indéfiniment
+  // (le clavier doit rester un clic ordinaire).
+  const release = useCallback(() => {
+    stop();
+    if (!isDown.current) {
+      return;
+    }
+    isDown.current = false;
+    clearTimeout(graceTimer.current);
+    graceTimer.current = setTimeout(() => {
+      hasActed.current = false;
+    }, CLICK_GRACE_MS);
+  }, [stop]);
+
+  // Annulation, ou sortie doigt posé : aucun clic natif ne suivra. Sur écran
+  // tactile, `pointerleave` suit `pointerup` : après un relâchement, il ne
+  // doit pas faire oublier que l'appui a déjà agi.
   const abort = useCallback(() => {
     stop();
+    if (!isDown.current) {
+      return;
+    }
+    isDown.current = false;
     hasActed.current = false;
   }, [stop]);
+  const leave = abort;
 
   const click = useCallback(() => {
     if (hasActed.current) {
@@ -106,8 +141,8 @@ export const useHoldRepeat = ({
 
   const press: PressHandlers = {
     onPointerDown: start,
-    onPointerUp: stop,
-    onPointerLeave: abort,
+    onPointerUp: release,
+    onPointerLeave: leave,
     onPointerCancel: abort,
     // Entrée maintenue relance sinon le clic natif : le clavier ne répète pas.
     onKeyDown: (event) => {

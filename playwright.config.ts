@@ -10,14 +10,14 @@ export default defineConfig({
   projects: [
     {
       name: 'mobile',
-      use: { viewport: { width: 480, height: 560 } },
+      use: { viewport: { width: 480, height: 560 }, hasTouch: true },
     },
     // Petit Android : on ne rejoue que le parcours d'une vie (navigation dans
     // tous les onglets, sans défilement horizontal), sans dupliquer les autres.
     {
       name: 'petit-mobile',
       testMatch: 'life.e2e.ts',
-      use: { viewport: { width: 360, height: 640 } },
+      use: { viewport: { width: 360, height: 640 }, hasTouch: true },
     },
   ],
   webServer: {

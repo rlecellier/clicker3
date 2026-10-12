@@ -37,6 +37,33 @@ describe('useHoldRepeat', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
+  it('sur écran tactile, pointerleave après pointerup ne fait pas doubler le clic', () => {
+    const { result, onClick } = setup({});
+    act(() => {
+      result.current.press.onPointerDown();
+      vi.advanceTimersByTime(80);
+      result.current.press.onPointerUp();
+      result.current.press.onPointerLeave();
+    });
+    act(() => {
+      result.current.onClick();
+    });
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('le clavier reste un clic ordinaire après un appui', () => {
+    const { result, onClick } = setup({});
+    act(() => {
+      result.current.press.onPointerDown();
+      result.current.press.onPointerUp();
+      vi.advanceTimersByTime(1000);
+    });
+    act(() => {
+      result.current.onClick();
+    });
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
   it('un clic sans appui (clavier) reste un clic ordinaire', () => {
     const { result, onClick } = setup({});
     act(() => {
