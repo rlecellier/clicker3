@@ -16,3 +16,10 @@ export {
   remainingUpgrades,
   upgradeById,
 } from './upgrades';
+export {
+  derivedFields,
+  stockCapacityFactor,
+  warehouseCapacity,
+  withModifiers,
+} from './modifiers';
+export type { DerivedFields } from './modifiers';

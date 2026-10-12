@@ -79,10 +79,13 @@ L'entrepôt contient **50 articles** au départ. Trois moyens de l'agrandir :
 | ---------------------- | -------------------------------------- | -------------------------------------------- |
 | Étagères en kit        | Capacité ×13                           | 2 900 € (Gestion 1)                          |
 | Entrepôt logistique    | Capacité ×48                           | 31 000 € (Gestion 3)                         |
-| Petit entrepôt         | +25 de capacité, achetable sans limite | 100 €, puis +15 % chacun (100, 115, 132, 152…) |
+| Petit entrepôt         | +25 de capacité, multipliés par les agrandissements (×13, ×48), achetable sans limite | 100 €, puis +15 % chacun (100, 115, 132, 152…) |
 
 Les petits entrepôts n'ont aucune condition : c'est l'issue de secours quand la
-production dépasse la place disponible.
+production dépasse la place disponible. Les agrandissements multiplient toute la
+capacité, petits entrepôts compris, qu'ils aient été achetés avant ou après :
+l'ordre des achats ne change rien. L'écran Investir affiche ce qu'un petit
+entrepôt apporte vraiment.
 
 Une garde protège le débutant : tant qu'une amélioration d'entrepôt reste à
 acheter, le jeu refuse d'acheter une entreprise de production dont la production

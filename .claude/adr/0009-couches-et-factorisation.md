@@ -61,7 +61,7 @@ les types qu'il reçoit (`ListItem`, `PressHandlers`…) ; le hook s'y conforme.
 | Ce qui suit une action                     | `afterAction` (sommeil, phase, événements)                   |
 | Le temps réel fait avancer la partie       | `isTimeRunning` (`@game/automation`)                         |
 | Effet d'une amélioration possédée          | `ownsEffect(state, type, filtre?)`                           |
-| Appliquer ou annuler un effet              | `shiftEffect` (`+1` à l'achat, `−1` à l'annulation)          |
+| Valeurs dérivées des améliorations         | `withModifiers` (jamais écrites à la main)                   |
 | Date d'une période                         | `dateAt`, `formatPeriodDate`                                 |
 | Pourquoi un achat est impossible           | `missingConditions`, `unavailableReason` (`@view/purchase`)  |
 | Route d'un onglet                          | `tabPath(id)` ; un slug n'est écrit que dans `gameTabs`      |
@@ -76,6 +76,7 @@ dans ce tableau.
   table `id → page` des onglets).
 - Toute refactorisation de `src/game/` se vérifie à la sortie de `npm run sim`,
   qui doit rester identique.
-- Reste ouvert : les multiplicateurs, la capacité de stock, le loyer et les
-  salaires sont encore **stockés** et modifiés par opération inverse ; les
-  dériver des améliorations possédées est l'objet de #176.
+- Les valeurs qui découlent des améliorations (multiplicateurs, capacité de
+  stock, logement, loyer, salaires) sont recalculées par `withModifiers`,
+  jamais défaites à l'envers (#176) : acheter ou annuler dans n'importe quel
+  ordre donne le même état.

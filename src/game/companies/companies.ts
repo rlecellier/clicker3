@@ -4,7 +4,7 @@ import { withRecord } from '@game/ledger';
 import { isRequirementMet } from '@game/requirements';
 import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
-import { remainingUpgrades } from '@game/upgrades';
+import { remainingUpgrades, withModifiers } from '@game/upgrades';
 
 export const companyById = (id: string) => findById(companies, id);
 
@@ -83,13 +83,10 @@ export const buyWarehouse = (state: GameState): GameState => {
     return state;
   }
   const cost = warehouseCost(state.warehouses);
-  return withRecord(
-    {
-      ...state,
-      money: state.money - cost,
-      warehouses: state.warehouses + 1,
-      stockCapacity: state.stockCapacity + economyRules.warehouse.capacity,
-    },
-    { purchases: cost, purchasesBy: { warehouse: cost } },
+  return withModifiers(
+    withRecord(
+      { ...state, money: state.money - cost, warehouses: state.warehouses + 1 },
+      { purchases: cost, purchasesBy: { warehouse: cost } },
+    ),
   );
 };

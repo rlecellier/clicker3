@@ -9,6 +9,7 @@ import {
 } from '@game/data';
 import { emptyFigures } from '@game/ledger';
 import { markAllSeen } from '@game/novelty';
+import { upgradeById, withModifiers } from '@game/upgrades';
 import { lifePhases, statIds } from '@game/state';
 import type { GameState } from '@game/state';
 
@@ -57,6 +58,10 @@ const withFigureDefaults = (
     },
   };
 };
+
+// Facteur qui mène de `base` à la valeur sauvegardée (1 s'il n'y en a pas).
+const factorOf = (current: unknown, base: number) =>
+  isFiniteNumber(current) && base > 0 ? current / base : 1;
 
 export const defaultSaveOptions: SaveOptions = {
   currentVersion: startState.version,
@@ -143,6 +148,42 @@ export const defaultSaveOptions: SaveOptions = {
     // Version 9 : les salaires gagnés sont versés à la clôture de la période
     // (`wagesDue`). Les sauvegardes existantes ont déjà tout encaissé.
     8: (raw) => ({ ...raw, wagesDue: {} }),
+    // Version 10 : les valeurs dérivées des améliorations (multiplicateurs,
+    // capacité de stock, logement, loyer, salaires) sont recalculées au lieu
+    // d'être défaites à l'envers. Les facteurs d'événements déjà subis se
+    // déduisent du loyer et des salaires actuels, qui restent donc identiques ;
+    // la capacité de stock ne peut que grandir (les petits entrepôts achetés
+    // après un agrandissement sont maintenant agrandis eux aussi).
+    9: (raw) => {
+      const owned = Array.isArray(raw.upgrades)
+        ? raw.upgrades
+            .map((id) => (typeof id === 'string' ? upgradeById(id) : undefined))
+            .filter((upgrade) => upgrade !== undefined)
+        : [];
+      const base = {
+        ...raw,
+        rentFactor: factorOf(
+          raw.rent,
+          owned.reduce(
+            (sum, upgrade) => sum + (upgrade.rent ?? 0),
+            startState.rent,
+          ),
+        ),
+        payrollFactor: factorOf(
+          raw.payroll,
+          owned.reduce(
+            (sum, upgrade) => sum + (upgrade.payroll ?? 0),
+            startState.payroll,
+          ),
+        ),
+      };
+      try {
+        return { ...base, ...withModifiers(base as unknown as GameState) };
+      } catch {
+        // Contenu inexploitable : la validation rejettera la sauvegarde.
+        return base;
+      }
+    },
   },
 };
 

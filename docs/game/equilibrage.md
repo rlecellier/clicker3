@@ -185,3 +185,28 @@ fixes en caisse avant d'acheter.
   la description chiffrée des améliorations. #116 (appui maintenu) ne touche
   pas `src/game/`. Une sauvegarde réelle de la v1 (version 5) traverse les
   migrations jusqu'à la version 8 (`save.test.ts`).
+
+## Valeurs dérivées des améliorations (issue #176)
+
+- 2026-10-12 — Les multiplicateurs, la capacité de stock, les marqueurs
+  maximum, le logement, le loyer et les salaires ne sont plus modifiés à
+  l'achat puis « défaits » à l'annulation par l'opération inverse : ils sont
+  recalculés depuis l'état de départ, les améliorations possédées, les petits
+  entrepôts et deux facteurs d'événements (`rentFactor`, `payrollFactor`),
+  par `withModifiers` (`@game/upgrades`). Cela corrige deux bugs : un loyer
+  faux après une hausse puis l'annulation d'un logement (317 € au lieu de
+  315 €), et une capacité de stock non entière après l'annulation des
+  étagères (51,92). Deux règles changent :
+  - la capacité vaut (50 + 25 × petits entrepôts) × agrandissements : un petit
+    entrepôt acheté après les étagères est maintenant agrandi lui aussi ;
+  - une hausse de loyer ou de salaires s'applique aussi aux logements et
+    employés pris ensuite.
+
+  `npm run sim` (graine 1999), avant → après : jeu actif 30 min 49 s →
+  30 min 43 s (1 849 → 1 843 actions), attente 18 min 42 s → 18 min 43 s,
+  plus longue zone morte 1 min 00 s (inchangée, à la minute 15,4), aucune zone
+  morte au-delà d'une minute, travail automatique à 40 ans (minute 27,1) →
+  39 ans (minute 26,9). Phases et quartiers aux mêmes âges. Sauvegarde en
+  version 10 : la migration garde le loyer et les salaires (elle en déduit les
+  facteurs d'événements) et la capacité de stock ne peut que grandir
+  (`save.test.ts`).

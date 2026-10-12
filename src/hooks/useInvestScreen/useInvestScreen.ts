@@ -8,7 +8,7 @@ import {
   ownedCount,
   warehouseCost,
 } from '@game/companies';
-import { companies, districts, economyRules } from '@game/data';
+import { companies, districts } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import {
   finalPrice,
@@ -31,6 +31,7 @@ import {
   canCancelUpgrade,
   previewEffects,
   upgradeById,
+  warehouseCapacity,
 } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
 import { districtItem } from '@view/districtItem';
@@ -129,7 +130,7 @@ export const useInvestScreen = () => {
     id: 'warehouse',
     title: 'Petit entrepôt',
     badge: ownedBadge(state.warehouses),
-    detail: `Stockage · +${formatCount(economyRules.warehouse.capacity)} de capacité de stock · prochain : ${formatMoney(warehouseCost(state.warehouses))}`,
+    detail: `Stockage · +${formatCount(warehouseCapacity(state))} de capacité de stock · prochain : ${formatMoney(warehouseCost(state.warehouses))}`,
     actionLabel: 'Acheter',
     isDisabled: !canBuyWarehouse(state),
     reason: unavailableReason(state, { shortage: NO_MONEY }),

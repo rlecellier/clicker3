@@ -6,6 +6,7 @@ import { isUnlocked } from '@game/requirements';
 import { gainReputation, loseReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import { lifeFigures } from '@game/summary';
+import { withModifiers } from '@game/upgrades';
 
 export const eventById = (id: string) => findById(events, id);
 
@@ -56,10 +57,16 @@ const applyEffect = (
       return setMoney(state, state.money - state.rent * effect.months);
     }
     case 'rentFactor': {
-      return { ...state, rent: Math.round(state.rent * effect.factor) };
+      return withModifiers({
+        ...state,
+        rentFactor: state.rentFactor * effect.factor,
+      });
     }
     case 'payrollFactor': {
-      return { ...state, payroll: Math.round(state.payroll * effect.factor) };
+      return withModifiers({
+        ...state,
+        payrollFactor: state.payrollFactor * effect.factor,
+      });
     }
     case 'jobSalaryFactor': {
       const factors = { ...state.jobSalaryFactors };
