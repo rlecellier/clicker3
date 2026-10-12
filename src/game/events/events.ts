@@ -25,15 +25,18 @@ const renderText = (state: GameState, text: string) => {
 
 // Change l'argent (qui peut devenir négatif) et note la variation réelle au livre.
 const setMoney = (state: GameState, money: number): GameState => {
-  const next = money;
-  const delta = next - state.money;
+  const delta = money - state.money;
   return withRecord(
-    { ...state, money: next },
+    { ...state, money },
     delta >= 0 ? { otherIncome: delta } : { otherExpenses: -delta },
   );
 };
 
-const applyEffect = (state: GameState, effect: EventEffect): GameState => {
+const applyEffect = (
+  state: GameState,
+  effect: EventEffect,
+  event: GameEvent,
+): GameState => {
   switch (effect.type) {
     case 'reputation': {
       return effect.amount >= 0
@@ -73,7 +76,7 @@ const applyEffect = (state: GameState, effect: EventEffect): GameState => {
             activeEffects: [
               ...state.activeEffects,
               {
-                eventId: '',
+                eventId: event.id,
                 kind: effect.kind,
                 value: effect.value,
                 until: effect.untilPeriod,
@@ -90,14 +93,11 @@ export const fireEvent = (state: GameState, event: GameEvent): GameState => {
   let result = state;
   const effects = event.effects ?? [];
   for (const effect of effects) {
-    result = applyEffect(result, effect);
+    result = applyEffect(result, effect, event);
   }
   result = {
     ...result,
     mailReceived: result.mailReceived + 1,
-    activeEffects: result.activeEffects.map((effect) =>
-      effect.eventId === '' ? { ...effect, eventId: event.id } : effect,
-    ),
     events: [
       ...result.events,
       {
