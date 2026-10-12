@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { upgrades } from '@game/data';
 import {
+  expectNoOverflow,
   amountOf,
   counter,
   itemOf,
@@ -85,17 +86,23 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
     .click();
   await openTab(page, 'comptes');
   await expect(
-    page.getByRole('table', { name: 'Tableau de bord' }),
+    page.getByRole('heading', { name: 'D’où vient l’argent ?' }),
   ).toBeVisible();
   await expect(
-    page.getByRole('cell', { name: '· Vente du surplus' }),
+    page.getByRole('cell', { name: 'Vente du surplus' }).first(),
   ).toBeVisible();
 
-  // Le stock a son propre onglet : entrées, sorties, pertes.
-  await page.getByRole('tab', { name: 'Stock' }).click();
-  await expect(page.getByRole('cell', { name: 'Entrées' })).toBeVisible();
-  await expect(page.getByRole('cell', { name: 'Sorties' })).toBeVisible();
-  await page.getByRole('tab', { name: 'Comptabilité' }).click();
+  // Le stock et les entreprises ont leur section ; on lit le cumul puis
+  // on revient à la période en cours.
+  await expect(
+    page.getByRole('heading', { name: 'Comment le stock a-t-il bougé ?' }),
+  ).toBeVisible();
+  await expect(page.getByRole('cell', { name: /^Entrées/ })).toBeVisible();
+  await page.getByRole('tab', { name: 'Cumulé' }).click();
+  await expect(page.getByText('Depuis le début de la partie')).toBeVisible();
+  await page.getByRole('tab', { name: 'Période en cours' }).click();
+  await expect(page.getByText(/^Période de /)).toBeVisible();
+  await expectNoOverflow(page);
 
   // Maintenir Travailler répète l'action à 4 clics par seconde : bien plus
   // qu'un clic seul, et plus rien une fois le doigt levé.
