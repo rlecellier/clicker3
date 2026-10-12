@@ -102,6 +102,17 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
       .getByText('Vos clients découvrent la rareté.'),
   ).toBeVisible();
 
+  // Les comptes se lisent période par période : une période terminée
+  // remplace la période en cours, sans rien faire déborder.
+  await openTab(page, 'comptes');
+  await expect(page.getByText(/^Période de /)).toBeVisible();
+  await page.getByRole('tab', { name: 'Il y a 1 mois' }).click();
+  await expect(
+    page.getByRole('tab', { name: 'Il y a 1 mois' }),
+  ).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
+  await expectNoOverflow(page);
+
   // Des ateliers produisent plus que la boutique ne vend : le stock se remplit.
   await openTab(page, 'investir');
   const workshop = itemOf(page, 'Atelier d’assemblage');
