@@ -154,15 +154,12 @@ describe('événements répétables', () => {
 });
 
 describe('effets', () => {
-  it('dépense unique d’un mois de loyer (bug de l’an 2000)', () => {
-    const next = triggerEvents(stateAt(11, { money: 1000 }));
-    expect(next.money).toBe(1000 - startState.rent);
-  });
-
-  it('laisse l’argent passer sous 0 (dette)', () => {
-    expect(triggerEvents(stateAt(11, { money: 10 })).money).toBe(
-      10 - startState.rent,
-    );
+  it.each([
+    ['dépense un mois de loyer (bug de l’an 2000)', 1000],
+    ['laisse l’argent passer sous 0 (dette)', 10],
+  ])('%s', (_name, money) => {
+    const next = triggerEvents(stateAt(11, { money }));
+    expect(next.money).toBe(money - startState.rent);
   });
 
   it('ne réduit pas une dette avec un facteur sur l’argent (crise)', () => {
