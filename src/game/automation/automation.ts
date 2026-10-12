@@ -22,6 +22,11 @@ const stepIntervalMs = (state: GameState) =>
 export const isAutoActive = (state: GameState, action: AutoAction) =>
   state.autoWork && hasAutomation(state, action);
 
+// Le temps réel fait avancer la partie : travail automatique actif, ou
+// sommeil en cours. Sinon, le temps écoulé n'a aucun effet.
+export const isTimeRunning = (state: GameState) =>
+  isAutoActive(state, 'work') || state.isSleeping;
+
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
   state.status === 'playing' && hasAutomation(state, action);
 
@@ -60,11 +65,7 @@ const runAuto = (
   elapsedMs: number,
   onAction?: (before: GameState, after: GameState) => void,
 ): GameState => {
-  if (
-    elapsedMs <= 0 ||
-    state.status === 'dead' ||
-    (!isAutoActive(state, 'work') && !state.isSleeping)
-  ) {
+  if (elapsedMs <= 0 || state.status === 'dead' || !isTimeRunning(state)) {
     return state;
   }
   let current: GameState = {

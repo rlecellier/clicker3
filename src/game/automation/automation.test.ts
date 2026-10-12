@@ -9,6 +9,7 @@ import {
   canEnableAuto,
   catchUp,
   isAutoActive,
+  isTimeRunning,
   resume,
   setAuto,
 } from './automation';
@@ -87,6 +88,13 @@ describe('interrupteurs', () => {
     expect(autoTick(off, 100 * autoIntervalMs)).toBe(off);
     expect(catchUp(off, 100 * autoIntervalMs).state).toBe(off);
     expect(catchUp(off, 100 * autoIntervalMs).summary.actions).toBe(0);
+  });
+
+  it('le temps réel ne compte qu’avec l’auto active ou pendant le sommeil', () => {
+    expect(isTimeRunning(startState)).toBe(false);
+    expect(isTimeRunning({ ...startState, autoWork: true })).toBe(false);
+    expect(isTimeRunning(automated)).toBe(true);
+    expect(isTimeRunning({ ...startState, isSleeping: true })).toBe(true);
   });
 
   it('ne fait rien d’un temps nul ou négatif', () => {

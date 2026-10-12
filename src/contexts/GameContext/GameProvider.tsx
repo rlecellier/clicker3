@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { isAutoActive, resume } from '@game/automation';
+import { isTimeRunning, resume } from '@game/automation';
 import { reduce } from '@game/reducer';
 import type { GameState } from '@game/state';
 import { saveGame } from '@game/save';
@@ -63,8 +63,7 @@ export const GameProvider = ({
       const current = now();
       const elapsedMs = current - last;
       last = current;
-      const game = latestState.current;
-      if (isAutoActive(game, 'work') || game.isSleeping) {
+      if (isTimeRunning(latestState.current)) {
         dispatch({ type: 'autoTick', elapsedMs });
       }
     };

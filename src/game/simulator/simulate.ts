@@ -1,6 +1,6 @@
 import { ageOf } from '@game/time';
 import { districts } from '@game/data';
-import { isAutoActive } from '@game/automation';
+import { isAutoActive, isTimeRunning } from '@game/automation';
 import { newGame, reduce } from '@game/reducer';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
@@ -186,7 +186,7 @@ export const simulateLife = (
     const after = action === undefined ? state : reduce(state, action);
     // Rien à faire (ou action sans effet) : le joueur attend les automatismes.
     const isWaiting = after === state;
-    const hasAuto = isAutoActive(state, 'work') || state.isSleeping;
+    const hasAuto = isTimeRunning(state);
     if (isWaiting && !hasAuto) {
       endedBy = 'stuck';
       break;
