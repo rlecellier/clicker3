@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Balance } from '@component/Balance';
 import styles from './Stat.module.css';
 
 type StatProperties = {
@@ -10,13 +11,6 @@ type StatProperties = {
   balance?: string;
 };
 
-const toneOf = (balance: string) => {
-  if (balance.startsWith('+')) {
-    return styles.positive;
-  }
-  return balance.startsWith('−') ? styles.negative : '';
-};
-
 export const Stat = ({ label, value, exact, balance }: StatProperties) => (
   <div
     className={`${styles.stat} ${balance === undefined ? '' : styles.withBalance}`}
@@ -26,12 +20,7 @@ export const Stat = ({ label, value, exact, balance }: StatProperties) => (
       {value}
     </dd>
     {balance !== undefined && (
-      <dd
-        className={`${styles.balance} ${toneOf(balance)}`}
-        title="Période en cours"
-      >
-        {balance}
-      </dd>
+      <Balance balance={balance} className={styles.balance} />
     )}
   </div>
 );

@@ -39,11 +39,3 @@
   white-space: nowrap;
   color: var(--color-text-muted);
 }
-
-.positive {
-  color: var(--color-ok);
-}
-
-.negative {
-  color: var(--color-alert);
-}
