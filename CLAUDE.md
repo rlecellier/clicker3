@@ -72,4 +72,5 @@ est terminé. » ; sinon on ne l'écrit pas et on dit ce qui reste à faire.
 ## Documentation
 
 Les décisions d'architecture vont dans `.claude/adr/` (un ADR numéroté par
-décision). Les notes de conception du jeu vont dans `docs/`.
+décision). Les notes de conception du jeu vont dans `docs/`. Le guide du joueur
+est dans `docs/guide-utilisateur/`.
