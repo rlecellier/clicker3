@@ -7,6 +7,7 @@ export const emptyFigures = (): LedgerFigures => ({
   surplus: 0,
   otherIncome: 0,
   rent: 0,
+  living: 0,
   payroll: 0,
   purchases: 0,
   studies: 0,
@@ -58,6 +59,7 @@ const add = (figures: LedgerFigures, entry: LedgerEntry): LedgerFigures => ({
   surplus: figures.surplus + (entry.surplus ?? 0),
   otherIncome: figures.otherIncome + (entry.otherIncome ?? 0),
   rent: figures.rent + (entry.rent ?? 0),
+  living: figures.living + (entry.living ?? 0),
   payroll: figures.payroll + (entry.payroll ?? 0),
   purchases: figures.purchases + (entry.purchases ?? 0),
   studies: figures.studies + (entry.studies ?? 0),
@@ -120,7 +122,7 @@ export const closePeriod = (state: GameState): GameState => ({
 export type LedgerReport = LedgerFigures & {
   // Recettes : salaires, ventes, vente du surplus, autres.
   revenue: number;
-  // Dépenses : loyer, salaires versés, achats, études, intérêts, autres.
+  // Dépenses : loyer, train de vie, salaires versés, achats, études, intérêts, autres.
   expenses: number;
   // Recettes moins dépenses.
   net: number;
@@ -131,6 +133,7 @@ const reportOf = (figures: LedgerFigures): LedgerReport => {
     figures.wages + figures.sales + figures.surplus + figures.otherIncome;
   const expenses =
     figures.rent +
+    figures.living +
     figures.payroll +
     figures.purchases +
     figures.studies +

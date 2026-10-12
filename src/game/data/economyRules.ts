@@ -5,6 +5,19 @@ export const economyRules = {
   // Réputation perdue par commerce en rupture de stock, et par impayé.
   stockoutPenalty: 0.5,
   unpaidPenalty: 2,
+  // Train de vie (courses, transport, téléphone), prélevé chaque période avec
+  // le loyer. Une période est un mois : repères mensuels de 1999 (issue #166).
+  // Il monte avec le logement ; un logement absent de la table paie le tarif
+  // de base.
+  baseLivingCost: 450,
+  livingCosts: {
+    'studio-renove': 500,
+    'pavillon-tilleuls': 650,
+    'loft-pole': 900,
+  } as Readonly<Record<string, number>>,
+  // Coût employeur minimal d'un salarié (SMIC 1999 chargé, par mois) : aucun
+  // employé ne coûte moins (contrôlé par data.test.ts).
+  minimumEmployeeCost: 1300,
   // Intérêt prélevé à chaque période sur un solde négatif (0,05 = 5 %).
   debtInterestRate: 0.05,
   // Bonus de production ou de vente d'une entreprise par action de travail

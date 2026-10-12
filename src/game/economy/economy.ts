@@ -207,15 +207,25 @@ export const payWages = (state: GameState): GameState => {
   };
 };
 
-// Étape 3 : loyer et salaires, toujours prélevés en entier : l'argent peut
+// Train de vie de la période : courses, transport, téléphone. Il monte avec le
+// logement (`economyRules.livingCosts`).
+export const livingCostOf = (state: GameState) =>
+  economyRules.livingCosts[state.housingId] ?? economyRules.baseLivingCost;
+
+// Dépenses fixes prélevées à chaque clôture : loyer, train de vie et salaires.
+export const fixedExpensesOf = (state: GameState) =>
+  state.rent + livingCostOf(state) + state.payroll;
+
+// Étape 3 : loyer, train de vie et salaires, toujours prélevés en entier : l'argent peut
 // devenir négatif (dette). Un solde négatif après les dépenses est un impayé :
 // la réputation baisse et l'événement `unpaid` est noté.
 export const chargeExpenses = (state: GameState): GameState => {
-  const due = state.rent + state.payroll;
+  const living = livingCostOf(state);
+  const due = fixedExpensesOf(state);
   const statement = statementOf(state);
   const paidState = withRecord(
     { ...state, money: state.money - due },
-    { rent: state.rent, payroll: state.payroll },
+    { rent: state.rent, living, payroll: state.payroll },
   );
   if (paidState.money >= 0) {
     return {

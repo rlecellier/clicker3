@@ -54,6 +54,8 @@ export type LedgerFigures = {
   otherIncome: number;
   // Dépenses (euros).
   rent: number;
+  // Train de vie : courses, transport, téléphone (monte avec le logement).
+  living: number;
   payroll: number;
   purchases: number;
   studies: number;
