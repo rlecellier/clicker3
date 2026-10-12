@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { autoIntervalMs } from '@game/automation';
 import { startState } from '@game/data';
+import { wagesDueOf } from '@game/economy';
 import { newGame } from '@game/reducer';
 import { createMemoryStorage, loadGame, serialize } from '@game/save';
 import type { GameState } from '@game/state';
@@ -71,7 +72,7 @@ describe('démarrage', () => {
     act(() => {
       result.current.dispatch({ type: 'work', target: 'job' });
     });
-    expect(result.current.state.money).toBeGreaterThan(startState.money);
+    expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
   });
 });
 
@@ -102,7 +103,7 @@ describe('boucle automatique', () => {
     const storage = createMemoryStorage(serialize(automated, START));
     const { result } = setup(storage);
     advance(autoIntervalMs);
-    expect(result.current.state.money).toBeGreaterThan(automated.money);
+    expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
   });
 
   it('ne joue rien onglet caché, puis rattrape au retour', () => {
@@ -110,9 +111,9 @@ describe('boucle automatique', () => {
     const { result } = setup(storage);
     setHidden(true);
     advance(5 * autoIntervalMs);
-    expect(result.current.state.money).toBe(automated.money);
+    expect(wagesDueOf(result.current.state)).toBe(0);
     setHidden(false);
-    expect(result.current.state.money).toBeGreaterThan(automated.money);
+    expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
     expect(result.current.absence?.actions).toBe(5);
   });
 });

@@ -1,6 +1,7 @@
 export {
   chargeExpenses,
   chargeInterest,
+  payWages,
   finalPrice,
   outputPerCopy,
   periodProduction,
@@ -8,4 +9,5 @@ export {
   produceGoods,
   salesCapacity,
   sellGoods,
+  wagesDueOf,
 } from './economy';

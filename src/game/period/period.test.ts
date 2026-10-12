@@ -93,18 +93,17 @@ describe('periodOutlook', () => {
     const outlook = periodOutlook(state);
     const end = endPeriod(state);
     expect(outlook.money).toBe(end.money - state.money);
-    expect(outlook.stock).toBe(end.stock - state.ledger.current.stockStart);
+    expect(outlook.stock).toBe(end.stock - state.stock);
   });
 
   it('reste négative à stock vide quand les ventes dépassent la production', () => {
     const state = {
       ...startState,
       stock: 0,
-      companies: { ...startState.companies, boutique: 1 },
+      companies: { ...startState.companies, atelier: 1, boutique: 1 },
     };
-    const end = endPeriod(state);
-    expect(end.stock).toBe(0);
-    expect(periodOutlook(state).stock).toBeLessThan(0);
+    expect(endPeriod(state).stock).toBe(0);
+    expect(periodOutlook(state).stock).toBe(-1);
   });
 
   it('reste positive à stock plein quand la production dépasse les ventes', () => {
@@ -113,12 +112,11 @@ describe('periodOutlook', () => {
       stock: startState.stockCapacity,
       companies: { ...startState.companies, atelier: 5 },
     };
-    const end = endPeriod(state);
-    expect(end.stock).toBe(state.stockCapacity);
-    expect(periodOutlook(state).stock).toBeGreaterThan(0);
+    expect(endPeriod(state).stock).toBe(state.stockCapacity);
+    expect(periodOutlook(state).stock).toBe(10);
   });
 
-  it('ajoute ce qui est déjà dépensé dans la période', () => {
+  it('ne recompte pas ce qui est déjà payé dans la période', () => {
     const state = {
       ...startState,
       money: 1000,
@@ -127,7 +125,7 @@ describe('periodOutlook', () => {
         current: { ...startState.ledger.current, purchases: 40 },
       },
     };
-    expect(periodOutlook(state).money).toBe(-40 - startState.rent);
+    expect(periodOutlook(state).money).toBe(-startState.rent);
   });
 });
 

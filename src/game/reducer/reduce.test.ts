@@ -1,3 +1,4 @@
+import { wagesDueOf } from '@game/economy';
 import { autoIntervalMs } from '@game/automation';
 import { actionRules, automationRules, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
@@ -45,13 +46,13 @@ describe('reduce', () => {
 
   it('applique work, study et changeJob', () => {
     const worked = reduce(startState, { type: 'work', target: 'job' });
-    expect(worked.money).toBeGreaterThan(0);
+    expect(wagesDueOf(worked)).toBeGreaterThan(0);
 
     const studied = reduce(
-      { ...worked, upgrades: ['stage-posture'] },
+      { ...worked, money: 100, upgrades: ['stage-posture'] },
       { type: 'study', courseId: 'metier' },
     );
-    expect(studied.money).toBeLessThan(worked.money);
+    expect(studied.money).toBeLessThan(100);
 
     const promoted = reduce(
       { ...startState, stats: { ...startState.stats, metier: 10 } },
@@ -219,7 +220,7 @@ describe('reduce', () => {
         type: 'autoTick',
         elapsedMs: autoIntervalMs,
       });
-      expect(ticked.money).toBeGreaterThan(0);
+      expect(wagesDueOf(ticked)).toBeGreaterThan(0);
     });
 
     it('n’avance pas sans interrupteur', () => {

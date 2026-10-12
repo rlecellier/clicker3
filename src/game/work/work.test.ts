@@ -1,6 +1,8 @@
+import { wagesDueOf } from '@game/economy';
 import {
   actionRules,
   automationRules,
+  courses,
   jobs,
   startState,
   upgrades,
@@ -9,6 +11,7 @@ import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { buyCompany } from '@game/companies';
 import { endPeriod, periodOutlook } from '@game/period';
+import { study } from '@game/study';
 import { buyUpgrade } from '@game/upgrades';
 import { jobWage, work } from './work';
 
@@ -28,7 +31,7 @@ describe('jobWage et balance de la période', () => {
 
   // Ce que `work` verse vraiment sur un clic.
   const paid = (state: GameState, isAuto = false) =>
-    work(state, 'job', isAuto).money - state.money;
+    wagesDueOf(work(state, 'job', isAuto)) - wagesDueOf(state);
 
   it('annonce ce que rapporte un clic', () => {
     expect(jobWage(startState)).toBe(paid(startState));
@@ -57,6 +60,38 @@ describe('jobWage et balance de la période', () => {
     }
   });
 
+  it('ne change pas l’argent avant la clôture', () => {
+    expect(work(trading).money).toBe(trading.money);
+  });
+
+  it('étudier fait baisser l’argent tout de suite, pas la balance', () => {
+    const state: GameState = {
+      ...trading,
+      upgrades: ['stage-posture'],
+    };
+    const studied = study(state, 'metier');
+    expect(studied.period).toBe(0);
+    expect(studied.money).toBeLessThan(state.money);
+    expect(periodOutlook(studied).money).toBe(periodOutlook(state).money);
+  });
+
+  it('annonce la variation d’argent de la clôture, après avoir travaillé puis étudié', () => {
+    let state: GameState = {
+      ...startState,
+      money: 100,
+      upgrades: ['stage-posture'],
+    };
+    for (let click = 0; click < 6; click += 1) {
+      state = work(state);
+    }
+    const announced = periodOutlook(state).money;
+    expect(announced).toBeGreaterThan(0);
+    const studied = study(state, 'metier');
+    expect(studied.period).toBe(1);
+    const course = courses.find((item) => item.id === 'metier');
+    expect(studied.money).toBe(state.money - (course?.cost ?? 0) + announced);
+  });
+
   const ready: GameState = {
     ...trading,
     money: 1_000_000,
@@ -65,22 +100,27 @@ describe('jobWage et balance de la période', () => {
     stats: { ...startState.stats, gestion: 10 },
   };
 
-  // Argent de la période = argent actuel moins ce qui a déjà bougé dedans.
-  const closingGap = (state: GameState) => {
-    const { current } = state.ledger;
-    const moved =
-      current.wages +
-      current.sales +
-      current.surplus +
-      current.otherIncome -
-      (current.rent +
-        current.payroll +
-        current.purchases +
-        current.studies +
-        current.otherExpenses +
-        current.interest);
-    return endPeriod(state).money - (state.money - moved);
-  };
+  // Variation d'argent de la clôture, calculée par la clôture elle-même.
+  const closingGap = (state: GameState) => endPeriod(state).money - state.money;
+
+  it('annonce exactement la variation de la clôture avec production, vente, améliorations et travail', () => {
+    // Ateliers, boutique, amélioration de ventes : après du travail à l'emploi,
+    // la balance est ce que fait la clôture (stock ni vide ni plein).
+    expect(salesUpgrade).toBeDefined();
+    let state: GameState = buyUpgrade(
+      { ...ready, stock: 20 },
+      salesUpgrade?.id ?? '',
+    );
+    state = buyCompany(state, 'atelier');
+    for (let click = 0; click < 4; click += 1) {
+      state = work(state);
+      const closed = endPeriod(state);
+      const outlook = periodOutlook(state);
+      expect(outlook.money).toBe(closed.money - state.money);
+      expect(outlook.stock).toBe(closed.stock - state.stock);
+    }
+    expect(wagesDueOf(state)).toBeGreaterThan(0);
+  });
 
   it('suit un achat qui change la production', () => {
     const bought = buyCompany(ready, 'atelier');
@@ -106,7 +146,7 @@ describe('jobWage et balance de la période', () => {
 describe('work', () => {
   it('verse le salaire et un peu de réputation', () => {
     const next = work(startState);
-    expect(next.money).toBe(firstJob?.salary);
+    expect(wagesDueOf(next)).toBe(firstJob?.salary);
     expect(next.reputation).toBeCloseTo(firstJob?.reputation ?? 0);
     expect(next.reputationEarned).toBeCloseTo(firstJob?.reputation ?? 0);
   });
@@ -182,8 +222,8 @@ describe('work', () => {
     it('rapporte moitié moins qu’une action manuelle', () => {
       const manual = work(startState);
       const auto = work(startState, 'job', true);
-      expect(auto.money).toBe(
-        Math.round(manual.money * automationRules.yieldFactor),
+      expect(wagesDueOf(auto)).toBe(
+        Math.round(wagesDueOf(manual) * automationRules.yieldFactor),
       );
       expect(auto.reputation).toBeCloseTo(
         manual.reputation * automationRules.yieldFactor,
@@ -191,11 +231,11 @@ describe('work', () => {
     });
 
     it('subit le malus de vieillesse en manuel, pas en automatique', () => {
-      expect(work(senior).money).toBe(
+      expect(wagesDueOf(work(senior))).toBe(
         Math.round((firstJob?.salary ?? 0) * actionRules.senior.manualFactor),
       );
-      expect(work(senior, 'job', true).money).toBe(
-        work(startState, 'job', true).money,
+      expect(wagesDueOf(work(senior, 'job', true))).toBe(
+        wagesDueOf(work(startState, 'job', true)),
       );
     });
 

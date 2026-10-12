@@ -166,7 +166,7 @@ describe('ventilation par source', () => {
       { type: 'buyUpgrade', id: 'stage-posture' },
       { type: 'study', courseId: 'metier' },
     ]);
-    expect(Object.keys(current.wagesBy)).toEqual([startState.jobId]);
+    expect(Object.keys(current.wagesBy)).toEqual([]);
     expect(
       Object.keys(current.purchasesBy).toSorted((a, b) => a.localeCompare(b)),
     ).toEqual(['atelier', 'stage-posture', 'warehouse']);

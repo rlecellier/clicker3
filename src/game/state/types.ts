@@ -167,6 +167,9 @@ export type GameState = {
   salesMultiplier: number;
   // Actions de travail faites cette période dans chaque entreprise.
   workBoosts: Record<string, number>;
+  // Salaires gagnés cette période par emploi (id), versés à la clôture avec le
+  // loyer : ils font monter la balance, pas l'argent.
+  wagesDue: Record<string, number>;
   // Multiplicateur propre à un type d'entreprise (1 si absent).
   companyMultipliers: Record<string, number>;
   // Multiplicateurs de réputation : travail de l'emploi, et par vente.

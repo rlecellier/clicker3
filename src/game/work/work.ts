@@ -7,7 +7,6 @@ import {
 } from '@game/data';
 import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
-import { withRecord } from '@game/ledger';
 import { grantMarker } from '@game/markers';
 import { addGauge } from '@game/period';
 import { manualFactor } from '@game/phases';
@@ -44,7 +43,8 @@ export const jobWage = (state: GameState, isAuto = false) => {
       );
 };
 
-// Travailler à son emploi : salaire et réputation de l'emploi.
+// Travailler à son emploi : salaire (versé à la clôture) et réputation de
+// l'emploi.
 const workAtJob = (state: GameState, isAuto: boolean): GameState => {
   const job = jobById(state.jobId);
   if (job === undefined) {
@@ -53,10 +53,13 @@ const workAtJob = (state: GameState, isAuto: boolean): GameState => {
   const factor = gainFactor(state, isAuto);
   const wage = jobWage(state, isAuto);
   return gainReputation(
-    withRecord(
-      { ...state, money: state.money + wage },
-      { wages: wage, wagesBy: { [job.id]: wage } },
-    ),
+    {
+      ...state,
+      wagesDue: {
+        ...state.wagesDue,
+        [job.id]: (state.wagesDue[job.id] ?? 0) + wage,
+      },
+    },
     job.reputation * state.workReputationMultiplier * factor,
   );
 };
