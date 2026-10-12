@@ -1,11 +1,14 @@
+import { boostById, canBuyBoost } from '@game/boosts';
 import { canEnableAuto, isAutoActive } from '@game/automation';
 import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
 import {
+  boosts,
   companies,
   courses,
   districts,
   economyRules,
   jobs,
+  statTierThresholds,
   upgrades,
 } from '@game/data';
 import type { Company } from '@game/data';
@@ -15,6 +18,7 @@ import { lastPeriodReport } from '@game/ledger';
 import type { GameAction } from '@game/reducer';
 import { isRequirementMet } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
+import { statIds } from '@game/state';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { canStudy } from '@game/study';
@@ -156,6 +160,23 @@ const nextPurchase = (
       cost: upgrade.price,
       action: { type: 'buyUpgrade', id: upgrade.id },
     }));
+  // Un coup de pouce n'est acheté que s'il sert : on étudie encore, ou une
+  // stat n'est pas finie (le sommeil de l'automatisme compte aussi).
+  for (const boost of boosts) {
+    const isUseful =
+      boost.kind === 'sleepBoost'
+        ? statIds.some(
+            (stat) => tierOf(state, stat) < statTierThresholds[stat].length,
+          )
+        : !isAutoActive(state, 'work') &&
+          neededStat(state, excluded) !== undefined;
+    if (isUseful && canBuyBoost(state, boost.id)) {
+      purchases.push({
+        cost: boostById(boost.id)?.price ?? Infinity,
+        action: { type: 'buyBoost', id: boost.id },
+      });
+    }
+  }
   const company = wantedCompany(state);
   if (company !== undefined) {
     purchases.push({

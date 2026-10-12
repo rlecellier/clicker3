@@ -252,6 +252,37 @@ describe('migration de la version 6', () => {
   });
 });
 
+describe('coups de pouce actifs', () => {
+  it('survivent à une sauvegarde', () => {
+    const boosted: GameState = {
+      ...startState,
+      activeEffects: [
+        { eventId: 'cure-ginkgo', kind: 'markerChance', value: 0.1, until: 3 },
+        {
+          eventId: 'clinique-sommeil',
+          kind: 'sleepBoost',
+          value: 1,
+          until: 12,
+        },
+      ],
+    };
+    expect(deserialize(serialize(boosted, 0))).toEqual({
+      ok: true,
+      state: { ...boosted, lastSeenAt: 0 },
+    });
+  });
+
+  it('rejette un effet de genre inconnu', () => {
+    const broken = {
+      ...startState,
+      activeEffects: [{ eventId: 'x', kind: 'inconnu', value: 1, until: 3 }],
+    };
+    expect(deserialize(JSON.stringify({ version: 12, state: broken })).ok).toBe(
+      false,
+    );
+  });
+});
+
 describe('migration de la version 11', () => {
   const v11 = {
     ...startState,

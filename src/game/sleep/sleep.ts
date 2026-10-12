@@ -1,4 +1,5 @@
 import { actionRules, automationRules } from '@game/data';
+import { activeBonus } from '@game/effects';
 import { addGauge } from '@game/period';
 import { isPlaying } from '@game/state';
 import type { GameState, QueuedAction } from '@game/state';
@@ -49,7 +50,11 @@ export const sleepStep = (state: GameState): GameState => {
     ...state,
     stats: {
       ...state.stats,
-      [marker]: state.stats[marker] + pointsPerMarker * state.sleepMultiplier,
+      [marker]:
+        state.stats[marker] +
+        pointsPerMarker *
+          state.sleepMultiplier *
+          (1 + activeBonus(state, 'sleepBoost')),
     },
     markers: rest,
     isSleeping: rest.length > 0,

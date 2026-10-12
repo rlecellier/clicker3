@@ -212,6 +212,19 @@ export const simulateLife = (
     }
   };
   const notePurchases = (before: GameState) => {
+    // Un coup de pouce acheté (première fois seulement).
+    for (const effect of state.activeEffects) {
+      if (
+        !before.activeEffects.includes(effect) &&
+        upgradePurchases.every((entry) => entry.id !== effect.eventId)
+      ) {
+        upgradePurchases.push({
+          id: effect.eventId,
+          minutes: minutes(),
+          statPoints: statPointsOf(state),
+        });
+      }
+    }
     for (const id of state.upgrades) {
       if (!before.upgrades.includes(id)) {
         upgradePurchases.push({

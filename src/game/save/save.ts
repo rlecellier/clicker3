@@ -306,10 +306,18 @@ const isLedgerPeriod = (value: unknown) =>
   isFiniteNumber(value.period) &&
   hasShapeOf(emptyFigures(), value.figures);
 
+const activeEffectKinds = new Set([
+  'sales',
+  'workSlow',
+  'markerChance',
+  'studyMarkers',
+  'sleepBoost',
+]);
+
 const isActiveEffect = (value: unknown) =>
   isRecord(value) &&
   typeof value.eventId === 'string' &&
-  (value.kind === 'sales' || value.kind === 'workSlow') &&
+  activeEffectKinds.has(value.kind as string) &&
   isFiniteNumber(value.value) &&
   isFiniteNumber(value.until);
 

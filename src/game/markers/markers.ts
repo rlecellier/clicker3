@@ -1,5 +1,6 @@
 import { next, smoothedRoll } from '@game/random';
 import type { GameState, StatId } from '@game/state';
+import { activeBonus } from '@game/effects';
 import { markerChanceBonus } from '@game/upgrades';
 
 /**
@@ -15,7 +16,8 @@ export const grantMarker = (
 ): GameState => {
   const [probability, afterChance] = smoothedRoll(
     state,
-    chance * (1 + markerChanceBonus(state)),
+    chance *
+      (1 + markerChanceBonus(state) + activeBonus(state, 'markerChance')),
     variance,
   );
   const [draw, afterDraw] = next(afterChance);

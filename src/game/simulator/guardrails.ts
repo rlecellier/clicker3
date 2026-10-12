@@ -1,4 +1,4 @@
-import { upgrades } from '@game/data';
+import { boosts, upgrades } from '@game/data';
 import type { Upgrade } from '@game/data';
 import { statIds } from '@game/state';
 import { guardrailConfig } from './config';
@@ -81,7 +81,7 @@ const isBoost = (upgrade: Upgrade) =>
 
 /** Part des points de stat de la vie gagnés après l'achat du boost. */
 export const boostCheck = (
-  upgrade: Upgrade,
+  upgrade: { id: string },
   result: SimulationResult,
 ): GuardrailCheck => {
   const purchase = result.upgradePurchases.find(
@@ -145,9 +145,9 @@ export const runGuardrails = (
           ),
         ),
       ),
-    ...upgrades
-      .filter((upgrade) => isBoost(upgrade))
-      .map((upgrade) => boostCheck(upgrade, reference)),
+    ...[...upgrades.filter((upgrade) => isBoost(upgrade)), ...boosts].map(
+      (boost) => boostCheck(boost, reference),
+    ),
     statsCheck(reference),
   ];
 };
