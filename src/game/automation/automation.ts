@@ -1,7 +1,7 @@
+import { afterAction } from '@game/afterAction';
 import { automationRules } from '@game/data';
-import { eventById, fireEvent, triggerEvents } from '@game/events';
-import { updatePhase } from '@game/phases';
-import { settleSleep, sleepStep, sleepStepMs } from '@game/sleep';
+import { eventById, fireEvent } from '@game/events';
+import { sleepStep, sleepStepMs } from '@game/sleep';
 import type { GameState, JournalEntry } from '@game/state';
 import { ageOf } from '@game/time';
 import { hasAutomation } from '@game/upgrades';
@@ -80,7 +80,7 @@ const runAuto = (
     if (acted === current) {
       return { ...current, autoElapsed: 0 };
     }
-    const settled = triggerEvents(updatePhase(settleSleep(acted)));
+    const settled = afterAction(acted);
     onAction?.(current, settled);
     current = {
       ...settled,
