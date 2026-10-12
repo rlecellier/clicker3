@@ -283,10 +283,10 @@ describe('coups de pouce actifs', () => {
   });
 });
 
-describe('migration de la version 12', () => {
+describe('migration de la version 11', () => {
   const v11 = {
     ...startState,
-    version: 12,
+    version: 11,
     stats: { metier: 120, gestion: 40, intelligence: 90, endurance: 12 },
     upgrades: ['stage-posture', 'carnet-notes', 'application-productivite'],
     seenItems: {
@@ -296,7 +296,7 @@ describe('migration de la version 12', () => {
   };
 
   it('renomme le carnet et l’application, sans perdre les points de stat', () => {
-    const result = deserialize(JSON.stringify({ version: 12, state: v11 }));
+    const result = deserialize(JSON.stringify({ version: 11, state: v11 }));
     expect(result.ok).toBe(true);
     if (!result.ok) {
       return;
@@ -313,8 +313,8 @@ describe('migration de la version 12', () => {
     ]);
     expect(state.stats).toEqual(v11.stats);
     expect(state.maxMarkers).toBe(startState.maxMarkers);
-    expect(state.productionMultiplier).toBeCloseTo(1.3);
-    expect(state.payroll).toBe(800);
+    expect(state.productionMultiplier).toBeCloseTo(1.35);
+    expect(state.payroll).toBe(1600);
   });
 });
 

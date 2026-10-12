@@ -81,7 +81,8 @@ describe('jobWage et balance de la période', () => {
       money: 100,
       upgrades: ['stage-posture'],
     };
-    for (let click = 0; click < 6; click += 1) {
+    // Trois heures normales et deux heures sup. : la période n'est pas finie.
+    for (let click = 0; click < 5; click += 1) {
       state = work(state);
     }
     const announced = periodOutlook(state).money;

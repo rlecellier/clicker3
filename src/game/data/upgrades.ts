@@ -152,10 +152,10 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Assistante de direction',
     description:
       'Elle classe, relance et protège votre agenda. Vous ne savez plus ce que vous faisiez sans elle.',
-    price: 1500,
-    payroll: 800,
+    price: 7500,
+    payroll: 1600,
     requirement: stat('intelligence', 4),
-    effects: [{ type: 'allBonus', bonus: 0.3 }],
+    effects: [{ type: 'allBonus', bonus: 0.35 }],
   },
   // Employés
   {
@@ -163,34 +163,34 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Premier collaborateur',
     description:
       'Pas un salarié : un collaborateur. Il le saura à la fiche de paie.',
-    price: 1600,
-    payroll: 230,
+    price: 800,
+    payroll: 1450,
     requirement: { type: 'all', of: [stat('gestion', 3), anyCompany] },
-    effects: [{ type: 'employee' }, { type: 'productionBonus', bonus: 1.1 }],
+    effects: [{ type: 'employee' }, { type: 'productionBonus', bonus: 1.7 }],
   },
   {
     id: 'equipe-collaborateurs',
     name: 'Équipe de collaborateurs',
     description: "Ils se sentent écoutés. Ils n'ont pas d'augmentation.",
-    price: 37_000,
-    payroll: 3600,
+    price: 22_000,
+    payroll: 7000,
     requirement: {
       type: 'all',
       of: [stat('gestion', 5), { type: 'reputationTier', tier: 1 }],
     },
-    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 0.6 }],
+    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 0.9 }],
   },
   {
     id: 'directeur-transformation',
     name: 'Directeur de la transformation',
     description: 'Il transforme. Quoi ? Il reviendra vers vous.',
-    price: 310_000,
-    payroll: 45_000,
+    price: 80_000,
+    payroll: 15_000,
     requirement: {
       type: 'all',
       of: [stat('gestion', 8), { type: 'reputationTier', tier: 2 }],
     },
-    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 3 }],
+    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 5 }],
   },
   // Automatisations
   {

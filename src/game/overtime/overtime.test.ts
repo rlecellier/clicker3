@@ -51,10 +51,12 @@ describe('heures supplémentaires', () => {
     expect(jobWage(state)).toBe(Math.round(salary * 1.25));
   });
 
-  it('montent à + 50 % à la tranche suivante', () => {
+  it('montent à la tranche suivante', () => {
     const state = withWork(50);
-    expect(overtimeWageFactor(state)).toBe(1.5);
-    expect(jobWage(state)).toBe(Math.round(salary * 1.5));
+    const rate = overtime.tiers[1]?.wage ?? 1;
+    expect(rate).toBeGreaterThan(overtime.tiers[0]?.wage ?? 1);
+    expect(overtimeWageFactor(state)).toBe(rate);
+    expect(jobWage(state)).toBe(Math.round(salary * rate));
   });
 
   it('fatiguent : l’action coûte plus de jauge', () => {

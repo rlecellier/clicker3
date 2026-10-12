@@ -1,1 +1,7 @@
-export { canChangeJob, changeJob, jobById, startingJobs } from './jobs';
+export {
+  canChangeJob,
+  changeJob,
+  jobById,
+  monthlyWage,
+  startingJobs,
+} from './jobs';

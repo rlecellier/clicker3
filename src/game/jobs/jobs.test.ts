@@ -3,7 +3,7 @@ import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import { reduce } from '@game/reducer';
 import { settleSleep, sleepStep } from '@game/sleep';
-import { changeJob, startingJobs } from './jobs';
+import { changeJob, monthlyWage, startingJobs } from './jobs';
 
 describe('données des emplois', () => {
   it('liste les quatre emplois dans l’ordre', () => {
@@ -17,6 +17,27 @@ describe('données des emplois', () => {
 
   it('commence au premier emploi', () => {
     expect(startState.jobId).toBe('interim');
+  });
+});
+
+describe('monthlyWage', () => {
+  it('paie les 8 h de la journée : trois actions de travail', () => {
+    const first = jobs[0];
+    expect(first).toBeDefined();
+    if (first === undefined) {
+      return;
+    }
+    expect(monthlyWage(first)).toBe(first.salary * 3);
+  });
+
+  it('est ce que verse une journée sans heures supplémentaires', () => {
+    const first = jobs[0];
+    let state: GameState = { ...startState, jobId: 'interim' };
+    for (let click = 0; click < 3; click += 1) {
+      state = reduce(state, { type: 'work', target: 'job' });
+    }
+    const due = Object.values(state.wagesDue).reduce((a, b) => a + b, 0);
+    expect(due).toBe(first === undefined ? 0 : monthlyWage(first));
   });
 });
 

@@ -122,9 +122,25 @@ describe('buyUpgrade', () => {
     const housed = buy(rich, 'studio-renove');
     expect(housed.rent).toBe(rich.rent + 34);
     const hired = buy(rich, 'premier-collaborateur');
-    expect(hired.payroll).toBe(230);
+    expect(hired.payroll).toBe(payrollOf('premier-collaborateur'));
   });
 });
+
+// Salaire mensuel et bonus de production d'une amélioration, lus dans les
+// données : les valeurs des employés se recalent au simulateur.
+const payrollOf = (id: string) =>
+  upgrades.find((upgrade) => upgrade.id === id)?.payroll ?? 0;
+
+const productionBonusOf = (id: string) => {
+  const effects = upgrades.find((upgrade) => upgrade.id === id)?.effects ?? [];
+  let bonus = 0;
+  for (const effect of effects) {
+    if (effect.type === 'productionBonus' || effect.type === 'allBonus') {
+      bonus += effect.bonus;
+    }
+  }
+  return bonus;
+};
 
 describe('effets', () => {
   it('cursus, logement, entrepôt et marqueurs : capacités et accès', () => {
@@ -140,9 +156,9 @@ describe('effets', () => {
     expect(stocked.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
 
     const noted = buy(rich, 'assistante-direction');
-    expect(noted.productionMultiplier).toBeCloseTo(1.3);
-    expect(noted.salesMultiplier).toBeCloseTo(1.3);
-    expect(noted.payroll).toBe(rich.payroll + 800);
+    expect(noted.productionMultiplier).toBeCloseTo(1.35);
+    expect(noted.salesMultiplier).toBeCloseTo(1.35);
+    expect(noted.payroll).toBe(rich.payroll + 1600);
     expect(markerChanceBonus(rich)).toBe(0);
     expect(markerChanceBonus(buy(rich, 'agenda-electronique'))).toBeCloseTo(
       0.3,
@@ -150,7 +166,9 @@ describe('effets', () => {
   });
 
   it('multiplicateurs de production, de ventes et de réputation', () => {
-    expect(buy(rich, 'premier-collaborateur').productionMultiplier).toBe(2.1);
+    expect(buy(rich, 'premier-collaborateur').productionMultiplier).toBeCloseTo(
+      1 + productionBonusOf('premier-collaborateur'),
+    );
     expect(buy(rich, 'camionnette').companyMultipliers).toEqual({
       atelier: 1.15,
     });
@@ -160,8 +178,12 @@ describe('effets', () => {
     expect(advertised.reputationPerSaleMultiplier).toBe(1.5);
 
     const team = buy(rich, 'equipe-collaborateurs');
-    expect(team.productionMultiplier).toBe(1.6);
-    expect(team.salesMultiplier).toBe(1.6);
+    expect(team.productionMultiplier).toBeCloseTo(
+      1 + productionBonusOf('equipe-collaborateurs'),
+    );
+    expect(team.salesMultiplier).toBeCloseTo(
+      1 + productionBonusOf('equipe-collaborateurs'),
+    );
 
     expect(buy(rich, 'cartes-visite').workReputationMultiplier).toBe(1.25);
   });
@@ -178,8 +200,19 @@ describe('effets', () => {
       buy(buy(rich, 'premier-collaborateur'), 'equipe-collaborateurs'),
       'directeur-transformation',
     );
-    expect(next.productionMultiplier).toBeCloseTo(1 + 1.1 + 0.6 + 3);
-    expect(next.payroll).toBe(230 + 3600 + 45_000);
+    const hires = [
+      'premier-collaborateur',
+      'equipe-collaborateurs',
+      'directeur-transformation',
+    ];
+    let bonus = 1;
+    let payroll = 0;
+    for (const id of hires) {
+      bonus += productionBonusOf(id);
+      payroll += payrollOf(id);
+    }
+    expect(next.productionMultiplier).toBeCloseTo(bonus);
+    expect(next.payroll).toBe(payroll);
   });
 });
 
