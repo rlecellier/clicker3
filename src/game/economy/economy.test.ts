@@ -37,28 +37,23 @@ describe('produceGoods', () => {
     expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
   });
 
-  it('applique le multiplicateur de production', () => {
+  it.each([
+    ['le multiplicateur de production', { productionMultiplier: 1.5 }, 6],
+    [
+      'le multiplicateur propre à un type d’entreprise',
+      { companyMultipliers: { atelier: 1.25 } },
+      5,
+    ],
+    [
+      'le bonus du travail fait dans l’entreprise',
+      { workBoosts: { atelier: 2 } },
+      8,
+    ],
+  ])('applique %s', (_name, changes, stock) => {
     const next = produceGoods(
-      stateWith({ companies: { atelier: 2 }, productionMultiplier: 1.5 }),
+      stateWith({ companies: { atelier: 2 }, ...changes }),
     );
-    expect(next.stock).toBe(6);
-  });
-
-  it('applique le multiplicateur propre à un type d’entreprise', () => {
-    const next = produceGoods(
-      stateWith({
-        companies: { atelier: 2 },
-        companyMultipliers: { atelier: 1.25 },
-      }),
-    );
-    expect(next.stock).toBe(5);
-  });
-
-  it('applique le bonus du travail fait dans l’entreprise', () => {
-    const next = produceGoods(
-      stateWith({ companies: { atelier: 2 }, workBoosts: { atelier: 2 } }),
-    );
-    expect(next.stock).toBe(8);
+    expect(next.stock).toBe(stock);
   });
 });
 
@@ -268,31 +263,22 @@ describe('valeurs finales', () => {
     expect(periodProduction(state)).toBe(20);
   });
 
-  it('applique le bonus global de production', () => {
-    const state = stateWith({
-      companies: { atelier: 10 },
-      productionMultiplier: 1.5,
-    });
-    expect(outputPerCopy(state, atelier)).toBe(3);
-    expect(productionShares(state).atelier).toBe(30);
-  });
-
-  it('applique le bonus propre à une entreprise', () => {
-    const state = stateWith({
-      companies: { atelier: 10 },
-      companyMultipliers: { atelier: 1.25 },
-    });
-    expect(outputPerCopy(state, atelier)).toBe(2.5);
-    expect(productionShares(state).atelier).toBe(25);
-  });
-
-  it('inclut le bonus du travail fait dans l’entreprise', () => {
-    const state = stateWith({
-      companies: { atelier: 10 },
-      workBoosts: { atelier: 2 },
-    });
-    expect(outputPerCopy(state, atelier)).toBe(4);
-    expect(productionShares(state).atelier).toBe(40);
+  it.each([
+    ['le bonus global de production', { productionMultiplier: 1.5 }, 3],
+    [
+      'le bonus propre à une entreprise',
+      { companyMultipliers: { atelier: 1.25 } },
+      2.5,
+    ],
+    [
+      'le bonus du travail fait dans l’entreprise',
+      { workBoosts: { atelier: 2 } },
+      4,
+    ],
+  ])('applique %s', (_name, changes, perCopy) => {
+    const state = stateWith({ companies: { atelier: 10 }, ...changes });
+    expect(outputPerCopy(state, atelier)).toBe(perCopy);
+    expect(productionShares(state).atelier).toBe(perCopy * 10);
   });
 
   it('arrondit au cumul : la somme des parts est la production totale', () => {
