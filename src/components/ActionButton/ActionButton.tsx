@@ -1,3 +1,4 @@
+import { ActionInfo } from '@component/ActionInfo';
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
 import styles from './ActionButton.module.css';
@@ -57,19 +58,7 @@ export const ActionButton = ({
     >
       {label}
     </Button>
-    <div className={styles.info}>
-      {isDisabled && reason !== undefined ? (
-        <p className={styles.reason} title={reason}>
-          {reason}
-        </p>
-      ) : (
-        detail !== undefined && (
-          <p className={styles.detail} title={detail}>
-            {detail}
-          </p>
-        )
-      )}
-    </div>
+    <ActionInfo detail={detail} reason={reason} isDisabled={isDisabled} />
     {autoHint === undefined ? null : (
       <p className={styles.detail}>
         {isAuto ? <Badge tone="info">Auto</Badge> : null} {autoHint}

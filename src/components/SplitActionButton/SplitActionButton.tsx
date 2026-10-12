@@ -1,4 +1,5 @@
 import { Menu } from '@base-ui/react/menu';
+import { ActionInfo } from '@component/ActionInfo';
 import type { PressHandlers } from '@component/ActionButton';
 import { Button } from '@component/Button';
 import styles from './SplitActionButton.module.css';
@@ -84,18 +85,6 @@ export const SplitActionButton = ({
         </Menu.Portal>
       </Menu.Root>
     </div>
-    <div className={styles.info}>
-      {isDisabled && reason !== undefined ? (
-        <p className={styles.reason} title={reason}>
-          {reason}
-        </p>
-      ) : (
-        detail !== undefined && (
-          <p className={styles.detail} title={detail}>
-            {detail}
-          </p>
-        )
-      )}
-    </div>
+    <ActionInfo detail={detail} reason={reason} isDisabled={isDisabled} />
   </div>
 );
