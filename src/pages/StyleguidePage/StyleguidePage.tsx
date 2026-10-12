@@ -1,19 +1,29 @@
+import { ActionButton } from '@component/ActionButton';
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
+import { CharacterHeader } from '@component/CharacterHeader';
 import { CityMap } from '@component/CityMap';
+import { ConfirmPrompt } from '@component/ConfirmPrompt';
 import { DataTable } from '@component/DataTable';
+import { DistrictSheet } from '@component/DistrictSheet';
+import { EventLog } from '@component/EventLog';
+import { FigureList } from '@component/FigureList';
 import { ImpactGauges } from '@component/ImpactGauges';
 import { InfoPanel } from '@component/InfoPanel';
 import { ItemList } from '@component/ItemList';
 import { LedgerSection } from '@component/LedgerSection';
 import { LedgerTable } from '@component/LedgerTable';
 import { MailPopup } from '@component/MailPopup';
+import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
+import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
+import { SplitActionButton } from '@component/SplitActionButton';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
+import { Title } from '@component/Title';
 import { Window } from '@component/Window';
 import styles from './StyleguidePage.module.css';
 
@@ -41,6 +51,85 @@ export const StyleguidePage = () => (
         money="-1 234 567,89 €"
         date="décembre 2026"
         gauge={{ value: 10, max: 10 }}
+      />
+      <Title>Titre de page</Title>
+      <CharacterHeader
+        name="Camille Martin"
+        age="23 ans"
+        date="janvier 1999"
+        phase="Jeune actif"
+      />
+      <MarkerTrack count={3} max={5} isSleeping={false} />
+      <MarkerTrack count={5} max={5} isSleeping />
+      <ActionButton
+        label="Travailler"
+        detail="+12 € par clic"
+        isAuto
+        autoHint="Appui long : couper l’automatique"
+        shortcut="T"
+        onClick={() => {}}
+      />
+      <ActionButton
+        label="Acheter"
+        detail="1 200 €"
+        reason="Argent insuffisant"
+        isDisabled
+        onClick={() => {}}
+      />
+      <SplitActionButton
+        label="Étudier"
+        detail="Gestion"
+        menuLabel="Choisir le cursus"
+        choices={[
+          { id: 'gestion', label: 'Gestion', detail: 'Palier 1' },
+          { id: 'commerce', label: 'Commerce', detail: 'Palier 2' },
+        ]}
+        selectedId="gestion"
+        onSelect={() => {}}
+        shortcut="E"
+        onClick={() => {}}
+      />
+      <EventLog
+        entries={[
+          {
+            id: 'loyer',
+            date: 'mars 2026',
+            text: 'Votre loyer augmente de 20 € par mois.',
+            isNew: true,
+          },
+          {
+            id: 'accueil',
+            date: 'janvier 2026',
+            text: 'Bienvenue dans l’euro.',
+            isNew: false,
+          },
+        ]}
+        emptyText="Aucun courrier."
+      />
+      <DistrictSheet
+        name="Les Tilleuls"
+        description="Un quartier calme, bien desservi."
+        detail="Ouvert"
+        badge="Ouvert"
+        actionLabel="Ouvrir"
+        isDisabled
+        reason="Déjà ouvert"
+        onAction={() => {}}
+        gauges={[{ id: 'pollution', label: 'Pollution', value: 35 }]}
+      />
+      <FigureList
+        figures={[
+          { label: 'Argent final', value: '1 250 €' },
+          { label: 'Âge', value: '64 ans' },
+        ]}
+      />
+      <PageLink to="#">Retour au titre</PageLink>
+      <ConfirmPrompt
+        message="Recommencer efface la partie en cours."
+        confirmLabel="Recommencer"
+        cancelLabel="Annuler"
+        onConfirm={() => {}}
+        onCancel={() => {}}
       />
       <ProgressBar label="Progression" value={6} max={10} />
       <ProgressBar label="Métier · palier 1" value={6} max={10} size="small" />
