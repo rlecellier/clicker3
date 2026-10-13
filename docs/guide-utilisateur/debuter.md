@@ -80,7 +80,7 @@ Quand la jauge atteint 70, le mois se termine dans cet ordre :
 1. les entreprises de production versent leur production dans le stock ;
 2. les commerces vendent le stock et rapportent de l'argent ;
 3. le loyer, le train de vie et les salaires de vos employés sont prélevés ;
-4. si votre argent est négatif, les intérêts de la dette s'ajoutent (5 %) ;
+4. si votre argent est négatif, les intérêts de la dette s'ajoutent (1,5 %) ;
 5. vous vieillissez d'un mois et les messages du nouveau mois arrivent ;
 6. la jauge repart, en gardant l'excédent.
 
@@ -94,7 +94,7 @@ salaires de votre emploi et des ventes de vos commerces. Il part dans les
   avec la raison (« Argent insuffisant »).
 - Le loyer et les salaires, eux, sont toujours prélevés en entier, même quand
   l'argent manque. Le solde peut devenir **négatif** : c'est une dette, et un
-  mois de dette fait perdre 2 points de réputation et coûte 5 % d'intérêts
+  mois de dette fait perdre 2 points de réputation et coûte 1,5 % d'intérêts
   (arrondis à l'euro supérieur).
 - Les montants du jeu sont des euros entiers.
 

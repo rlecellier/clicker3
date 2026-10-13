@@ -383,3 +383,111 @@ trois actions payées normalement) ; le directeur arrive plus tôt (80 000 € a
 lieu de 310 000 €) mais coûte 15 000 € par mois. Un salaire réaliste accélère le
 début de partie, alors que les prix des entreprises (axe C) sont encore ceux de
 la v1 : ils seront recalés avec l'axe C.
+
+## Axe C + D : entreprises à l'échelle réelle, charges, plafond, montée en gamme (issue #167)
+
+- 2026-10-13 — Axes C et D (variante légère) de
+  [propositions-equilibrage.md](propositions-equilibrage.md).
+
+**Règles ajoutées** (`src/game/companies`, `src/game/economy`, `src/game/ledger`) :
+
+- **Plafond d'exemplaires** (`maxCopies`) : au-delà, l'achat est refusé
+  (« Quartier complet : montez en gamme »). Le quartier d'un type est celui de
+  `impactRules.companyDistricts`. Les exemplaires d'une ancienne sauvegarde au-delà
+  du plafond sont gardés.
+- **Charges** (`charges`) : mensualité du crédit de chaque exemplaire, prélevée à
+  chaque clôture avec le loyer et le train de vie. Le prix affiché est l'**apport** ;
+  le crédit emprunte le même montant, à 6 % sur 7 ans, soit 1,46 % de l'apport par
+  mois (contrôlé par `data.test.ts`). Rien n'est stocké : `companyChargesOf` les
+  déduit des exemplaires. Le ledger gagne `charges` (sauvegarde en **version 14**,
+  migration `charges: 0`). Les micro-activités se paient comptant (100 € de droit
+  de place pour le stand).
+- **Découvert** à **1,5 % par mois** (avant 5 %). Pas de crédit débloqué par la
+  réputation (reporté, § 6 des propositions).
+- **Montée en gamme** : effet `companyBonus`, trois niveaux par entreprise financée
+  à crédit (18 améliorations). Un niveau multiplie le débit de tous les exemplaires
+  du type ; il demande le niveau précédent et des exemplaires du type (la moitié du
+  plafond, les trois quarts, puis le plafond).
+- **Quartiers et impact** : les indicateurs de pollution et d'inégalités sont
+  rééchelonnés (`impactRules`) pour rester lisibles avec les nouveaux débits.
+
+**Valeurs retenues** (recalées au simulateur par recherche locale, voir plus bas) :
+
+| Entreprise | Type | Apport du 1ᵉʳ | Hausse / exemplaire | Plafond | Débit / mois | Prix | Charges / mois | Avant (coût, débit) |
+| ---------- | ---- | ------------: | ------------------: | ------: | -----------: | ---: | -------------: | ------------------- |
+| Établi au garage | production | 800 | +64 % | 3 | 10 | | 0 | nouveau |
+| Stand au marché | commerce | 1 400 | +57 % | 4 | 29 | 12 | 100 | nouveau |
+| Atelier d'assemblage | production | 16 000 | +61 % | 4 | 170 | | 234 | 150, 2 |
+| Boutique | commerce | 28 000 | +99 % | 4 | 110 | 13 | 409 | 250, 3 |
+| Manufacture | production | 890 000 | +33 % | 6 | 930 | | 12 994 | 13 000, 99 |
+| Corner en hypermarché | commerce | 380 000 | +32 % | 8 | 470 | 12 | 5 548 | 13 000, 87 (hypermarché) |
+| Site de production délocalisé | production | 6 200 000 | +130 % | 2 | 4 000 | | 90 520 | 53 000, 210 |
+| Plateforme en ligne | commerce | 8 400 000 | +23 % | 4 | 9 600 | 15 | 122 640 | 66 000, 250 |
+
+Le dernier exemplaire de chaque type coûte au plus 10 fois le premier (contrôle de
+`data.test.ts`, § 4 des propositions). Les stocks suivent les débits : étagères en
+kit 13 000 € et capacité ×120 (avant 2 900 €, ×13), entrepôt logistique 34 000 € et
+×18 (avant 31 000 €, ×48), petit entrepôt 160 € + 3 % par exemplaire pour +35
+articles (avant 100 € + 15 %, +25). Employés et procédure recalés avec les débits :
+premier collaborateur production +190 % (avant +170 %), équipe 78 000 € et +48 %
+(avant 22 000 € et +90 %), directeur 320 000 € et +140 % (avant 80 000 € et
++500 %), assistante +62 % (avant +35 %), procédure de travail 510 000 € (avant
+160 000 €).
+
+Les montées en gamme (prix, bonus) sont listées dans le
+[guide du joueur](../guide-utilisateur/ameliorations.md#la-montée-en-gamme) ; les
+premiers niveaux coûtent de 19 000 € à 3 000 000 €, les derniers de 46 000 000 € à
+2 000 000 000 €.
+
+**Écarts à la proposition** (dictés par les critères de la v1, pas par le goût) :
+
+1. **Les débits sont environ quatre fois plus bas** que dans la proposition
+   (atelier 170 articles au lieu de 600, boutique 110 au lieu de 700) et les
+   prix sont ceux d'un apport. Un retour de 10 à 18 mois pour une paire
+   atelier + boutique accélère tellement la partie que la vie ne dure que 15 minutes
+   de jeu actif. Avec ces valeurs, la paire se rembourse en **31 mois de débit de
+   base** (`data.test.ts` accepte 10 à 36) ; les employés raccourcissent ce retour (non mesuré
+   séparément).
+2. **Croissance par exemplaire de 1,23 à 2,3** (proposition : 1,20 à 1,25). Avec 35
+   exemplaires au plus, seul un prix qui monte vite freine l'enrichissement ; la
+   règle des 10 fois le prix de base borne la hausse.
+3. **Montée en gamme en trois niveaux** (proposition : un). Sans eux, tout est
+   acheté à la minute 29 et la fin de vie reste des dizaines de minutes sans achat.
+4. **Un simulateur qui range le stock** : quand de la production est perdue ou
+   qu'une production ouverte et payable est refusée faute de place, le joueur
+   virtuel achète un petit entrepôt. Avec 35 exemplaires au lieu de 432, ce sont ces
+   petits entrepôts (310 par vie) et les montées en gamme qui font le prix
+   exponentiel de fin de partie que faisaient les 432 entreprises. Il compte aussi
+   dans le temps de jeu actif (un achat est une action d'une seconde).
+5. **Les montées en gamme sont exemptées du test d'utilité** : production et vente
+   se limitent l'une l'autre, et les derniers niveaux s'achètent après l'âge où les
+   recettes sont relevées.
+
+**Mesures** (`npm run sim`, graine 1999), avant → après :
+
+| Mesure | Avant (#166) | Après |
+| ------ | ------------ | ----- |
+| Jeu actif | 31 min 22 s | 31 min 22 s (1 882 actions) |
+| Plus longue zone morte | 0 min 49 s | 1 min 00 s (aucune au-delà) |
+| Travail automatique | 43 ans, minute 29,6 | 45 ans, minute 28,3 |
+| Dernier niveau d'une stat | minute 29,6 | minute 26,4 |
+| Établissements en fin de vie | 432 | 35 |
+| Phases | toutes | toutes (patron à 19 ans) |
+
+Les marges sont faibles : zone morte à la limite de 60 s, travail automatique au
+bord des 45 ans, jeu actif à 1 min 22 s de la cible. Toute retouche de données
+demande de relancer `npm run sim`, et la mesure est chaotique (un prix qui change
+déplace des achats). La recherche locale (recuit simulé sur 40 paramètres : prix,
+débits, plafonds, hausses, montées en gamme, employés, entrepôts, objectif = les
+critères de la v1) est dans la méthode de V1-24.
+
+**Garde-fous** : stats vivantes et part utile des boosts réussissent. Utilité :
+tout réussit sauf le **studio rénové** (travail automatique −4,4 %, sous les 5 %),
+resté dans `knownGuardrailFailures` ; l'agenda électronique, le pavillon, les
+cartes de visite et la camionnette réussissent maintenant (la mesure, discrète,
+bouge d'un cas limite à l'autre). Les 18 montées en gamme sont exemptées.
+
+**Limites** : les débits ne sont pas ceux de la proposition (voir ci-dessus), la
+vie en jeu actif dépend du simulateur (petits entrepôts achetés tant que la place
+manque), et les saves anciennes (v13) gardent leurs exemplaires au-delà du
+plafond, mais paient maintenant leurs charges avec les nouveaux débits.

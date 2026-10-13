@@ -15,7 +15,7 @@ débloque (les paliers sont à 2, 9, 41 et 81 points).
 | Compétence   | Déblocages par palier                                                                                                      |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
 | Métier       | 1 : emploi « Employé polyvalent », BTS ; 3 : emploi « Chargé de mission » (avec la réputation 1) ; 6 : emploi « Directeur adjoint de la transformation » (avec la réputation 2 et le Directeur de la transformation) ; 8 : procédure de travail, fin du cursus |
-| Gestion      | 1 : Licence ; 2 : Atelier d'assemblage, Boutique ; 3 : Étagères en kit, Premier collaborateur ; 4 : Manufacture, Tableau de bord ; 5 : Hypermarché (avec le Parc Horizon), Équipe de collaborateurs ; 6 : Site de production délocalisé, Entrepôt logistique ; 7 : Plateforme en ligne (à partir de janvier 2000, avec le Pôle d'Excellence) ; 8 : Directeur de la transformation (avec la réputation 2), procédure de travail |
+| Gestion      | 1 : Licence, Établi au garage, Stand au marché ; 2 : Atelier d'assemblage, Boutique ; 3 : Étagères en kit, Premier collaborateur ; 4 : Manufacture, Tableau de bord ; 5 : Corner en hypermarché (avec le Parc Horizon), Équipe de collaborateurs ; 6 : Site de production délocalisé, Entrepôt logistique ; 7 : Plateforme en ligne (à partir de janvier 2000, avec le Pôle d'Excellence) ; 8 : Directeur de la transformation (avec la réputation 2), procédure de travail |
 | Intelligence | 1 : Coaching, Agenda électronique ; 3 : cure de ginkgo ; 4 : Assistante de direction ; 5 : séminaire intensif ; 8 : procédure de travail, fin du cursus |
 | Endurance    | 1 : Studio rénové ; 3 : Pavillon aux Tilleuls ; 5 : Loft au Pôle d'Excellence, clinique du sommeil ; 7 : procédure de travail ; 8 : fin du cursus |
 
@@ -57,10 +57,10 @@ par action de travail) et le Plan de communication (+50 % par article vendu).
 Un quartier ouvert **fait plus que figurer sur la carte**.
 
 - Les Hauts-Fourneaux accueillent la Manufacture ; le Parc d'activités Horizon
-  accueille l'Hypermarché et le Site de production délocalisé ; le Pôle
+  accueille le Corner en hypermarché et le Site de production délocalisé ; le Pôle
   d'Excellence accueille la Plateforme en ligne. Sans quartier, ces
   bâtiments se posent aux Tilleuls.
-- Deux entreprises **exigent** leur quartier pour être achetées : l'Hypermarché
+- Deux entreprises **exigent** leur quartier pour être achetées : le Corner en hypermarché
   (Parc d'activités Horizon) et la Plateforme en ligne (Pôle d'Excellence).
 - Chaque quartier ouvert apporte ses jauges d'impact ([Ville](onglet-ville.md)).
 

@@ -74,7 +74,7 @@ moins chère de celles qui sont encore verrouillées**, pour vous montrer la sui
 Chaque amélioration affiche :
 
 - son **effet chiffré**, en une ou plusieurs lignes : par exemple « Production de
-  toutes les entreprises +110 % » ou « Capacité du stock ×13 » ;
+  toutes les entreprises +110 % » ou « Capacité du stock ×120 » ;
 - si elle change la production, un avant-après calculé sur votre situation
   actuelle : « Production : 4 → 8 articles par période » ;
 - sa phrase d'humour, son prix, et le loyer ou les salaires qu'elle ajoute ;

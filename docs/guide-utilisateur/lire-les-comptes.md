@@ -37,8 +37,9 @@ du mois comprise, dans la limite de leur capacité (voir
 | -------------------- | -------------------------------------------------------------------------------------------------- |
 | Loyer                | Le loyer prélevé à la fin du mois, logements achetés compris                                       |
 | Train de vie         | Courses, transport, téléphone : 470 € au studio de départ, plus cher avec chaque logement           |
+| Charges des entreprises | Les mensualités du crédit de chaque entreprise possédée, prélevées à la fin du mois |
 | Salaires versés      | Les salaires de vos employés, prélevés à la fin du mois (à ne pas confondre avec vos propres « Salaires » en recettes) |
-| Intérêts             | Les 5 % prélevés sur une dette (argent négatif)                                                    |
+| Intérêts             | Les 1,5 % prélevés sur une dette (argent négatif)                                                    |
 | Achats               | Ce que vous avez payé pour des entreprises, des petits entrepôts et des améliorations, avec une ligne par achat (« · Entrepôt » pour les petits entrepôts) |
 | Études               | L'argent des séances d'étude, avec une ligne par cursus                                            |
 | Autres dépenses      | Dépenses d'événements (un mois de loyer en décembre 1999, 10 % de l'argent en 2008). Ne s'affiche que si le montant n'est pas nul |

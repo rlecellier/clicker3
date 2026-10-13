@@ -20,7 +20,9 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
    des achats utiles (améliorations, et l'entreprise qui équilibre production
    et vente). Les achats qui alourdissent loyer ou salaires doivent rester
    couverts par les recettes de la dernière période. On ne produit pas au-delà
-   de la capacité de l'entrepôt.
+   de la capacité de l'entrepôt ; quand de la production est perdue ou qu'une
+   production ouverte et payable est refusée faute de place, un petit entrepôt
+   fait partie des achats (l'issue de secours).
 3. Attendre pendant le sommeil (il vient seul quand les marqueurs sont pleins).
 4. Étudier la stat qui manque au prochain achat, si la formation est achetée et
    que l'argent suffit largement.
@@ -67,11 +69,12 @@ zone morte ne dépasse une minute, que le travail automatique arrive entre 35 et
 absence ne le tue pas. `npm run sim` affiche aussi la liste des zones mortes de
 plus d'une minute.
 
-## Dernier relevé (stats sur 8 niveaux, issue #165)
+## Dernier relevé (entreprises à l'échelle réelle, issue #167)
 
-- Jeu actif : **31 min 13 s** (cible 30 à 60), plus 16 min 24 s d'attente.
-- Phases : toutes atteintes (patron à 22 ans).
-- Plus longue zone morte : 52 s ; aucune au-delà d'une minute.
-- Premier employé à 22 ans, travail automatique à 41 ans.
+- Jeu actif : **31 min 22 s** (cible 30 à 60), plus 12 min 15 s d'attente.
+- Phases : toutes atteintes (patron à 19 ans).
+- Plus longue zone morte : 1 min 00 s ; aucune au-delà.
+- Premier employé à 19 ans, travail automatique à 45 ans.
+- 35 établissements en fin de vie, 310 petits entrepôts achetés.
 
 Détail des valeurs et limites : [equilibrage.md](equilibrage.md).

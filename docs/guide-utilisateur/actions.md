@@ -13,7 +13,7 @@ coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 | Dormir                         | Automatique                     | 40 en tout          | Aucun                    |
 | Prendre un poste               | [Emploi](onglet-emploi.md)      | 0                   | 0 à 10 de réputation     |
 | Acheter une entreprise         | [Investir](onglet-investir.md)  | 0                   | Prix de l'entreprise     |
-| Acheter un petit entrepôt      | [Investir](onglet-investir.md)  | 0                   | 100 € puis +15 % chaque  |
+| Acheter un petit entrepôt      | [Investir](onglet-investir.md)  | 0                   | 160 € puis +3 % chaque   |
 | Acheter une amélioration       | [Investir](onglet-investir.md)  | 0                   | Prix de l'amélioration   |
 | Annuler une amélioration       | [Investir](onglet-investir.md#obtenues) | 0           | Aucun, sans remboursement |
 | Débloquer un quartier          | Investir ou [Ville](onglet-ville.md) | 0              | 1, 22 ou 33 de réputation |
@@ -120,10 +120,11 @@ immédiat : le salaire change à la prochaine action.
 ## Acheter une entreprise ou un petit entrepôt
 
 Dans [Investir](onglet-investir.md), sous-onglet Entreprises. Le prix de
-l'exemplaire suivant augmente de 10 % à chaque exemplaire possédé (15 % pour le
-petit entrepôt), arrondi à l'euro. L'achat est refusé si l'argent manque, si
-les conditions ne sont pas remplies, ou si votre production dépasserait la
-capacité d'un entrepôt que vous pouvez encore agrandir. Détails dans
+l'exemplaire suivant (l'**apport**) augmente de 32 % à 130 % selon le type à
+chaque exemplaire possédé (3 % pour le petit entrepôt), arrondi à l'euro.
+L'achat est refusé si l'argent manque, si les conditions ne sont pas remplies,
+si le plafond d'exemplaires du type est atteint, ou si votre production
+dépasserait la capacité d'un entrepôt que vous pouvez encore agrandir. Détails dans
 [Les entreprises](entreprises.md).
 
 ## Acheter ou annuler une amélioration
