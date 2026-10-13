@@ -141,6 +141,13 @@ describe('describeEffect', () => {
     expect(describeEffect({ type: 'salesBonus', bonus: 0.3 })).toBe(
       'Ventes +30 %',
     );
+    expect(
+      describeEffect({
+        type: 'companyBonus',
+        companyId: 'boutique',
+        bonus: 0.5,
+      }),
+    ).toBe('Débit de Boutique +50 %');
     expect(describeEffect({ type: 'stockCapacity', factor: 2 })).toBe(
       'Capacité du stock ×2',
     );

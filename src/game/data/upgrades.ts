@@ -14,6 +14,9 @@ export type UpgradeEffect =
   // Production +x, de tout le monde ou d'un seul type d'entreprise.
   | { type: 'productionBonus'; bonus: number; companyId?: string }
   | { type: 'salesBonus'; bonus: number }
+  // Montée en gamme : le débit (articles produits ou vendables) de tous les
+  // exemplaires d'un type d'entreprise.
+  | { type: 'companyBonus'; companyId: string; bonus: number }
   // Production et ventes de toutes les entreprises.
   | { type: 'allBonus'; bonus: number }
   // Réputation gagnée par le travail de l'emploi.
@@ -125,18 +128,18 @@ export const upgrades: readonly Upgrade[] = [
     id: 'etageres-kit',
     name: 'Étagères en kit',
     description: 'Montage en une heure. Le fabricant dit trois.',
-    price: 2900,
+    price: 13_000,
     requirement: stat('gestion', 3),
-    effects: [{ type: 'stockCapacity', factor: 13 }],
+    effects: [{ type: 'stockCapacity', factor: 120 }],
   },
   {
     id: 'entrepot-logistique',
     name: 'Entrepôt logistique',
     description:
       'Un hangar à la sortie du rond-point. Il y en avait déjà vingt.',
-    price: 31_000,
+    price: 34_000,
     requirement: stat('gestion', 6),
-    effects: [{ type: 'stockCapacity', factor: 48 }],
+    effects: [{ type: 'stockCapacity', factor: 18 }],
   },
   {
     id: 'agenda-electronique',
@@ -155,7 +158,7 @@ export const upgrades: readonly Upgrade[] = [
     price: 7500,
     payroll: 1600,
     requirement: stat('intelligence', 4),
-    effects: [{ type: 'allBonus', bonus: 0.35 }],
+    effects: [{ type: 'allBonus', bonus: 0.62 }],
   },
   // Employés
   {
@@ -166,38 +169,38 @@ export const upgrades: readonly Upgrade[] = [
     price: 800,
     payroll: 1450,
     requirement: { type: 'all', of: [stat('gestion', 3), anyCompany] },
-    effects: [{ type: 'employee' }, { type: 'productionBonus', bonus: 1.7 }],
+    effects: [{ type: 'employee' }, { type: 'productionBonus', bonus: 1.9 }],
   },
   {
     id: 'equipe-collaborateurs',
     name: 'Équipe de collaborateurs',
     description: "Ils se sentent écoutés. Ils n'ont pas d'augmentation.",
-    price: 22_000,
+    price: 78_000,
     payroll: 7000,
     requirement: {
       type: 'all',
       of: [stat('gestion', 5), { type: 'reputationTier', tier: 1 }],
     },
-    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 0.9 }],
+    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 0.48 }],
   },
   {
     id: 'directeur-transformation',
     name: 'Directeur de la transformation',
     description: 'Il transforme. Quoi ? Il reviendra vers vous.',
-    price: 80_000,
+    price: 320_000,
     payroll: 15_000,
     requirement: {
       type: 'all',
       of: [stat('gestion', 8), { type: 'reputationTier', tier: 2 }],
     },
-    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 5 }],
+    effects: [{ type: 'employee' }, { type: 'allBonus', bonus: 1.4 }],
   },
   // Automatisations
   {
     id: 'procedure-travail',
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
-    price: 160_000,
+    price: 510_000,
     requirement: {
       type: 'all',
       of: [
@@ -218,6 +221,238 @@ export const upgrades: readonly Upgrade[] = [
     price: 5200,
     requirement: stat('gestion', 4),
     effects: [{ type: 'dashboard' }],
+  },
+  // Montée en gamme : trois niveaux par type d’entreprise, qui multiplient le
+  // débit de tous les exemplaires (docs/game/equilibrage.md, issue #167).
+  {
+    id: 'ligne-semi-automatisee',
+    name: 'Ligne semi-automatisée',
+    description:
+      'Les ouvriers surveillent les machines. Les machines ne surveillent personne.',
+    price: 110_000,
+    requirement: { type: 'company', id: 'atelier', count: 2 },
+    effects: [{ type: 'companyBonus', companyId: 'atelier', bonus: 0.28 }],
+  },
+  {
+    id: 'ligne-automatisee',
+    name: 'Ligne automatisée',
+    description:
+      'Plus personne ne touche la pièce. On a gardé quelqu’un pour la photo.',
+    price: 19_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'ligne-semi-automatisee' },
+        { type: 'company', id: 'atelier', count: 3 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'atelier', bonus: 3 }],
+  },
+  {
+    id: 'atelier-sans-lumiere',
+    name: 'Atelier sans lumière',
+    description:
+      'Éteint, il produit pareil. On a compris à la facture d’électricité.',
+    price: 970_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'ligne-automatisee' },
+        { type: 'company', id: 'atelier', count: 4 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'atelier', bonus: 0.26 }],
+  },
+  {
+    id: 'enseigne-regionale',
+    name: 'Enseigne régionale',
+    description: 'Un néon plus grand et un slogan que personne ne retient.',
+    price: 3_000_000,
+    requirement: { type: 'company', id: 'boutique', count: 2 },
+    effects: [{ type: 'companyBonus', companyId: 'boutique', bonus: 0.55 }],
+  },
+  {
+    id: 'enseigne-nationale',
+    name: 'Enseigne nationale',
+    description:
+      'Le même magasin partout, et enfin un logo que l’on reconnaît.',
+    price: 76_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'enseigne-regionale' },
+        { type: 'company', id: 'boutique', count: 3 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'boutique', bonus: 3 }],
+  },
+  {
+    id: 'franchise-internationale',
+    name: 'Franchise internationale',
+    description: 'Le concept voyage mieux que les clients.',
+    price: 46_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'enseigne-nationale' },
+        { type: 'company', id: 'boutique', count: 4 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'boutique', bonus: 0.19 }],
+  },
+  {
+    id: 'machines-outils-neuves',
+    name: 'Machines-outils neuves',
+    description:
+      'Les anciennes sont parties à la casse, avec leurs défauts de fabrication.',
+    price: 7_100_000,
+    requirement: { type: 'company', id: 'manufacture', count: 3 },
+    effects: [{ type: 'companyBonus', companyId: 'manufacture', bonus: 0.67 }],
+  },
+  {
+    id: 'chaine-robotisee',
+    name: 'Chaîne robotisée',
+    description:
+      'Elle ne se met jamais en grève. Elle tombe en panne, mais poliment.',
+    price: 8_600_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'machines-outils-neuves' },
+        { type: 'company', id: 'manufacture', count: 4 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'manufacture', bonus: 1.4 }],
+  },
+  {
+    id: 'usine-du-futur',
+    name: 'Usine du futur',
+    description:
+      'Une visite guidée par semaine. La production se fait le reste du temps.',
+    price: 47_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'chaine-robotisee' },
+        { type: 'company', id: 'manufacture', count: 6 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'manufacture', bonus: 2.8 }],
+  },
+  {
+    id: 'tete-de-gondole',
+    name: 'Tête de gondole',
+    description: 'Le rayon que tout le monde croise en allant aux toilettes.',
+    price: 1_200_000,
+    requirement: { type: 'company', id: 'hypermarche', count: 4 },
+    effects: [{ type: 'companyBonus', companyId: 'hypermarche', bonus: 2.1 }],
+  },
+  {
+    id: 'rayon-complet',
+    name: 'Rayon complet',
+    description: 'On y trouve tout, sauf ce que l’on était venu chercher.',
+    price: 22_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'tete-de-gondole' },
+        { type: 'company', id: 'hypermarche', count: 6 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'hypermarche', bonus: 2.7 }],
+  },
+  {
+    id: 'galerie-marchande',
+    name: 'Galerie marchande',
+    description: 'Le corner a fini par avoir ses propres corners.',
+    price: 73_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'rayon-complet' },
+        { type: 'company', id: 'hypermarche', count: 8 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'hypermarche', bonus: 0.1 }],
+  },
+  {
+    id: 'equipes-3x8',
+    name: 'Équipes en 3 × 8',
+    description: 'Le soleil ne se couche jamais sur le site. Les équipes, si.',
+    price: 530_000,
+    requirement: { type: 'company', id: 'site-delocalise', count: 1 },
+    effects: [
+      { type: 'companyBonus', companyId: 'site-delocalise', bonus: 2.2 },
+    ],
+  },
+  {
+    id: 'second-site',
+    name: 'Second site',
+    description: 'Même usine, même cahier des charges, autre fuseau horaire.',
+    price: 84_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'equipes-3x8' },
+        { type: 'company', id: 'site-delocalise', count: 2 },
+      ],
+    },
+    effects: [
+      { type: 'companyBonus', companyId: 'site-delocalise', bonus: 2.3 },
+    ],
+  },
+  {
+    id: 'zone-franche',
+    name: 'Zone franche',
+    description: 'Ici, pas d’impôts, pas de syndicat, pas de questions.',
+    price: 62_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'second-site' },
+        { type: 'company', id: 'site-delocalise', count: 2 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'site-delocalise', bonus: 1 }],
+  },
+  {
+    id: 'moteur-recommandation',
+    name: 'Moteur de recommandation',
+    description:
+      'Les clients qui ont acheté cet article ont aussi acheté cet article.',
+    price: 24_000_000,
+    requirement: { type: 'company', id: 'plateforme', count: 2 },
+    effects: [{ type: 'companyBonus', companyId: 'plateforme', bonus: 2.1 }],
+  },
+  {
+    id: 'livraison-24h',
+    name: 'Livraison en 24 h',
+    description:
+      'Le colis arrive avant la commande. Le livreur, un peu plus tard.',
+    price: 530_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'moteur-recommandation' },
+        { type: 'company', id: 'plateforme', count: 3 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'plateforme', bonus: 0.22 }],
+  },
+  {
+    id: 'marketplace',
+    name: 'Marketplace',
+    description:
+      'Les autres vendent, vous encaissez la commission. C’est ça, le commerce.',
+    price: 2_000_000_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'livraison-24h' },
+        { type: 'company', id: 'plateforme', count: 4 },
+      ],
+    },
+    effects: [{ type: 'companyBonus', companyId: 'plateforme', bonus: 0.11 }],
   },
   // Matériel et réputation
   {

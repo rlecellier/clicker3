@@ -64,6 +64,11 @@ const addEffect = (derived: DerivedFields, effect: UpgradeEffect) => {
       }
       return;
     }
+    case 'companyBonus': {
+      derived.companyMultipliers[effect.companyId] =
+        (derived.companyMultipliers[effect.companyId] ?? 1) + effect.bonus;
+      return;
+    }
     case 'salesBonus': {
       derived.salesMultiplier += effect.bonus;
       return;

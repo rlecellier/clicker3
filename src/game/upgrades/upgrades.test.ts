@@ -2,6 +2,7 @@ import {
   companies,
   courses,
   districts,
+  economyRules,
   startState,
   upgrades,
 } from '@game/data';
@@ -23,14 +24,25 @@ import {
 } from './upgrades';
 import { withModifiers } from './modifiers';
 
+// Facteur de capacité d'un agrandissement, lu dans les données.
+const stockFactorOf = (id: string) => {
+  const effect = upgrades
+    .find((upgrade) => upgrade.id === id)
+    ?.effects.find((candidate) => candidate.type === 'stockCapacity');
+  return effect?.type === 'stockCapacity' ? effect.factor : 1;
+};
+
 const rich: GameState = {
   ...startState,
-  money: 10_000_000,
+  money: 10_000_000_000,
   stats: { metier: 1000, gestion: 1000, intelligence: 1000, endurance: 1000 },
   reputation: 1000,
   reputationEarned: 1000,
   phase: 'boss',
-  companies: { atelier: 1 },
+  // Tous les plafonds atteints : les montées en gamme sont à portée.
+  companies: Object.fromEntries(
+    companies.map((company) => [company.id, company.maxCopies]),
+  ),
 };
 
 const buy = (state: GameState, id: string) => buyUpgrade(state, id);
@@ -57,9 +69,9 @@ const idsOf = (requirement: Requirement): string[] => {
 };
 
 describe('intégrité des données', () => {
-  it('compte 19 améliorations aux ids uniques', () => {
-    expect(upgrades).toHaveLength(19);
-    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(19);
+  it('compte 37 améliorations aux ids uniques', () => {
+    expect(upgrades).toHaveLength(37);
+    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(37);
   });
 
   it('ne référence que des ids existants', () => {
@@ -153,11 +165,19 @@ describe('effets', () => {
     expect(buy(housed, 'pavillon-tilleuls').sleepMultiplier).toBe(2.5);
 
     const stocked = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
-    expect(stocked.stockCapacity).toBe(rich.stockCapacity * 13 * 48);
+    expect(stocked.stockCapacity).toBe(
+      rich.stockCapacity *
+        stockFactorOf('etageres-kit') *
+        stockFactorOf('entrepot-logistique'),
+    );
 
     const noted = buy(rich, 'assistante-direction');
-    expect(noted.productionMultiplier).toBeCloseTo(1.35);
-    expect(noted.salesMultiplier).toBeCloseTo(1.35);
+    expect(noted.productionMultiplier).toBeCloseTo(
+      1 + productionBonusOf('assistante-direction'),
+    );
+    expect(noted.salesMultiplier).toBeCloseTo(
+      1 + productionBonusOf('assistante-direction'),
+    );
     expect(noted.payroll).toBe(rich.payroll + 1600);
     expect(markerChanceBonus(rich)).toBe(0);
     expect(markerChanceBonus(buy(rich, 'agenda-electronique'))).toBeCloseTo(
@@ -213,6 +233,41 @@ describe('effets', () => {
     }
     expect(next.productionMultiplier).toBeCloseTo(bonus);
     expect(next.payroll).toBe(payroll);
+  });
+});
+
+describe('montée en gamme', () => {
+  const chain = upgrades.filter((upgrade) =>
+    upgrade.effects.some(
+      (effect) =>
+        effect.type === 'companyBonus' && effect.companyId === 'boutique',
+    ),
+  );
+  const bonuses = chain.map(
+    (upgrade) =>
+      upgrade.effects.find((effect) => effect.type === 'companyBonus')?.bonus ??
+      0,
+  );
+
+  it('multiplie le débit de tous les exemplaires du type, niveau après niveau', () => {
+    expect(chain).toHaveLength(3);
+    let state: GameState = rich;
+    let bonus = 1;
+    for (const [index, upgrade] of chain.entries()) {
+      state = buyUpgrade(state, upgrade.id);
+      bonus += bonuses[index] ?? 0;
+      expect(state.upgrades).toContain(upgrade.id);
+      expect(state.companyMultipliers['boutique']).toBeCloseTo(bonus);
+    }
+    expect(state.companyMultipliers['atelier']).toBeUndefined();
+  });
+
+  it('demande le niveau précédent et des exemplaires possédés', () => {
+    const [first, second] = chain;
+    expect(canBuyUpgrade(rich, second?.id ?? '')).toBe(false);
+    const empty = { ...rich, companies: {} };
+    expect(canBuyUpgrade(empty, first?.id ?? '')).toBe(false);
+    expect(canBuyUpgrade(rich, first?.id ?? '')).toBe(true);
   });
 });
 
@@ -311,9 +366,13 @@ describe('valeurs dérivées', () => {
   it('la capacité de stock reste entière, quel que soit l’ordre des achats', () => {
     const shelved = buyUpgrade(rich, 'etageres-kit');
     const withWarehouse = withModifiers({ ...shelved, warehouses: 1 });
-    expect(withWarehouse.stockCapacity).toBe((50 + 25) * 13);
+    const shelves = stockFactorOf('etageres-kit');
+    const roomy = 50 + economyRules.warehouse.capacity;
+    expect(withWarehouse.stockCapacity).toBe(roomy * shelves);
     // Avant : (650 + 25) / 13 = 51,92…
-    expect(cancelUpgrade(withWarehouse, 'etageres-kit').stockCapacity).toBe(75);
+    expect(cancelUpgrade(withWarehouse, 'etageres-kit').stockCapacity).toBe(
+      roomy,
+    );
   });
 
   it('un état déjà à jour ne change pas', () => {
@@ -325,21 +384,39 @@ describe('valeurs dérivées', () => {
   });
 });
 
+// Les améliorations à acheter avant une autre, dans l'ordre.
+const prerequisitesOf = (id: string): string[] => {
+  const requirement = upgrades.find(
+    (upgrade) => upgrade.id === id,
+  )?.requirement;
+  return (requirement ? idsOf(requirement) : [])
+    .filter((entry) => entry.startsWith('upgrade:'))
+    .flatMap((entry) => {
+      const parent = entry.slice('upgrade:'.length);
+      return [...prerequisitesOf(parent), parent];
+    });
+};
+
 describe('acheter puis annuler', () => {
   it.each(upgrades.map((upgrade) => [upgrade.id]))(
     '%s : l’annulation défait exactement l’achat',
     (id) => {
-      const bought = buyUpgrade(rich, id);
+      // Une montée en gamme demande d'abord le niveau précédent.
+      let base = rich;
+      for (const prerequisite of prerequisitesOf(id)) {
+        base = buyUpgrade(base, prerequisite);
+      }
+      const bought = buyUpgrade(base, id);
       expect(bought.upgrades).toContain(id);
       const cancelled = cancelUpgrade(bought, id);
       expect(derived(cancelled)).toEqual({
-        ...derived(rich),
+        ...derived(base),
         companyMultipliers: expect.any(Object),
       });
       for (const [company, multiplier] of Object.entries(
         cancelled.companyMultipliers,
       )) {
-        expect(multiplier).toBeCloseTo(rich.companyMultipliers[company] ?? 1);
+        expect(multiplier).toBeCloseTo(base.companyMultipliers[company] ?? 1);
       }
     },
   );
