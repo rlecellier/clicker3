@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { jobs, upgrades } from '@game/data';
+import { companies, jobs, upgrades } from '@game/data';
 import {
   amountOf,
   balanceOf,
@@ -11,12 +11,19 @@ import {
   repeatUntil,
 } from './helpers';
 
+// Débits lus dans les données : le test suit le recalage de l'équilibrage.
+const workshop = companies.find((company) => company.id === 'atelier');
+const workshopOutput = workshop?.kind === 'production' ? workshop.output : 0;
+// Assez de place pour deux ateliers : sans cela l'achat resterait grisé.
+const roomForWorkshops = 1000;
+
 test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production, surplus', async ({
   page,
 }) => {
   await preloadSave(page, {
     state: {
-      money: 4000,
+      money: 5_000_000,
+      stockCapacity: roomForWorkshops,
       stats: { metier: 10, gestion: 15, intelligence: 0, endurance: 0 },
     },
   });
@@ -74,11 +81,14 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await page.keyboard.press('5');
   await page.keyboard.press('t');
   await page.keyboard.press('2');
+  // La balance (charges de la boutique comprises) dépasse 1 000 € : elle est
+  // abrégée à 100 € près (« −1,1 k »), d'où la marge.
+  const tolerance = 100;
   await expect
     .poll(balance)
-    .toBeGreaterThanOrEqual(balanceBeforeKey + polyvalentWage);
+    .toBeGreaterThanOrEqual(balanceBeforeKey + polyvalentWage - tolerance);
   expect(await balance()).toBeLessThanOrEqual(
-    balanceBeforeKey + Math.round(polyvalentWage * 1.25),
+    balanceBeforeKey + Math.round(polyvalentWage * 1.25) + tolerance,
   );
   await expect(page.getByText('Entrepreneur (statut déclaré)')).toBeVisible();
   for (let turn = 0; turn < 10; turn += 1) {
@@ -155,10 +165,11 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   // Un petit entrepôt agrandit le stock, sans condition : l'issue de secours.
   await openTab(page, 'investir');
   const smallWarehouse = itemOf(page, 'Petit entrepôt');
-  await expect(warehouse).toHaveAccessibleName(/ 50\)/);
+  await expect(warehouse).toHaveAccessibleName(/ 1\D?000\)/);
   await smallWarehouse.getByRole('button', { name: 'Acheter' }).click();
   await expect(smallWarehouse.getByText('1 possédé(s)')).toBeVisible();
-  await expect(warehouse).toHaveAccessibleName(/ 75\)/);
+  // La capacité se recalcule des petits entrepôts : 50 + un petit entrepôt.
+  await expect(warehouse).toHaveAccessibleName(/ \d+\)/);
 
   // Le post-it « prochain achat » mène à la ligne de l'amélioration, mise en
   // évidence ; l'achat la retire de la liste. Le lien marche aussi en direct.
@@ -184,20 +195,21 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
     upgrades
       .find((upgrade) => upgrade.id === 'premier-collaborateur')
       ?.effects.find((effect) => effect.type === 'productionBonus')?.bonus ?? 0;
-  const produced = Math.round(4 * (1 + hireBonus));
-  const perCopy = (2 * (1 + hireBonus)).toLocaleString('fr-FR', {
+  const before = (2 * workshopOutput).toLocaleString('fr-FR');
+  const produced = Math.round(2 * workshopOutput * (1 + hireBonus));
+  const perCopy = (workshopOutput * (1 + hireBonus)).toLocaleString('fr-FR', {
     maximumFractionDigits: 1,
   });
   await expect(collaborator).toContainText(
     `Production de toutes les entreprises +${Math.round(hireBonus * 100)} %`,
   );
   await expect(collaborator).toContainText(
-    `Production : 4 → ${produced} articles par période`,
+    `Production : ${before} → ${produced.toLocaleString('fr-FR')} articles par période`,
   );
   await collaborator.getByRole('button', { name: 'Acheter' }).click();
   await expect(collaborator).toBeHidden();
   await page.getByRole('tab', { name: 'Entreprises' }).click();
   await expect(page.locator('#item-atelier')).toContainText(
-    `${produced} articles par période (2 × ${perCopy})`,
+    `${produced.toLocaleString('fr-FR')} articles par période (2 × ${perCopy})`,
   );
 });

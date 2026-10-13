@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { economyRules, startState, upgrades } from '@game/data';
+import { companies, economyRules, startState, upgrades } from '@game/data';
 import {
   expectNoOverflow,
   amountOf,
@@ -19,8 +19,13 @@ import {
 // acheté pendant le parcours, ajoute pourtant son salaire aux dépenses fixes :
 // des salaires déjà gagnés ramènent la balance de départ à -950 €.
 const hire = upgrades.find((upgrade) => upgrade.id === 'premier-collaborateur');
+// L'atelier possédé paie aussi la mensualité de son crédit (charges).
+const workshop = companies.find((company) => company.id === 'atelier');
 const fixedExpenses =
-  startState.rent + economyRules.baseLivingCost + (hire?.payroll ?? 0);
+  startState.rent +
+  economyRules.baseLivingCost +
+  (workshop?.charges ?? 0) +
+  (hire?.payroll ?? 0);
 const startBalance = -950;
 const journey = new Set([
   'premier-collaborateur',
@@ -34,7 +39,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await page.clock.install();
   await preloadSave(page, {
     state: {
-      money: 200_000,
+      money: 2_000_000,
       companies: { atelier: 1 },
       phase: 'entrepreneur',
       wagesDue: { interim: fixedExpenses + startBalance },
