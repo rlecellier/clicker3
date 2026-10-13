@@ -15,9 +15,10 @@ décimale au plus).
 
 ## Le sommeil
 
-Six cases : 4, 5, 6, 7, 8 ou 9 h par nuit (8 h au départ). Sous les cases, une
-phrase donne l'horaire (« Coucher 23 h · réveil 7 h »), la jauge de temps que
-coûte le sommeil et le nombre maximal de marqueurs vidés. Moins vous dormez,
+Trois cases : **Court** (4 h), **Moyen** (6 h) ou **Long** (8 h, au départ).
+Sous les cases, une phrase donne l'horaire (« Long : coucher 23 h · réveil
+7 h »), la jauge de temps que coûte le sommeil et le nombre de marqueurs vidés
+(ceux qui restent attendent la nuit suivante). Moins vous dormez,
 plus il reste de temps éveillé, mais moins de marqueurs sont convertis en
 points. Le choix s'applique à partir de la période suivante (la phrase le
 rappelle quand il diffère de la durée en cours). Voir
