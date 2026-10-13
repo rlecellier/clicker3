@@ -53,6 +53,12 @@ une branche = une MR.
   (`.claude/adr/0009-couches-et-factorisation.md`). Les frontières des couches
   sont imposées par ESLint.
 
+## Sauvegardes
+
+Pas de rétrocompatibilité des sauvegardes entre versions du jeu : pas de
+migration, de fixture ni de test de chargement d'une ancienne version tant
+qu'aucune version n'est jugée populaire (ADR 0010).
+
 ## Politique de test
 
 - **Composant uniquement visuel : pas de test.**
