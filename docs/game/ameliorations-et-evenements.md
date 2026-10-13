@@ -86,6 +86,24 @@ moins qu'une manuelle ([v1.md](v1.md#6-automatisation-et-absence)).
 - Quelques événements sont **uniques** (jalons) ; d'autres peuvent se répéter
   (loyer, rupture).
 
+### Présentation : pop-up ou courrier
+
+- Un événement qui **change un élément du jeu** (loyer, salaires, revenus des
+  commerces, rendement d'un placement, réputation, argent) s'affiche dans une
+  **pop-up**, comme l'augmentation : le jeu s'arrête, le joueur lit le texte et
+  l'effet chiffré, puis valide. Composant existant : `PromotionPrompt`
+  ([guide de style](../ui/guide-de-style.md)).
+- Un événement **sans effet** (« texte seul ») reste une ligne du courrier
+  (`EventLog`), sans interrompre.
+- Une pop-up qui offre un choix (accepter / refuser) vaut pour les événements
+  interactifs ; un simple effet subi n'a qu'un bouton de validation.
+- Pour ne pas saturer : les effets qui arrivent à la même période se
+  regroupent dans **une seule** pop-up, et l'automatisation et le
+  hors-ligne les empilent pour le retour du joueur au lieu de les perdre.
+  Fréquence à surveiller au playtest.
+- S'applique aux événements des placements
+  ([placements.md](placements.md)) : krach, bulle, loyers qui changent.
+
 ### Histoire du monde (périodes fixes)
 
 La date vient de la période ; 1 période = 1 mois, janvier 1999 = période 0.

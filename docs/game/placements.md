@@ -33,7 +33,9 @@ un rendement. Plus on avance, plus on en débloque.
   autres achats : on ne propose pas un compte titres à 18 ans.
 - **Les événements existants servent** : bulle internet, crise financière
   ([ameliorations-et-evenements.md](ameliorations-et-evenements.md)) touchent
-  les placements actions et immobilier.
+  les placements actions et immobilier. Un événement qui modifie un
+  rendement s'annonce par une **pop-up**, comme les autres événements à effet
+  ([présentation](ameliorations-et-evenements.md#présentation--pop-up-ou-courrier)).
 - **Le ton reste satirique** : produits aux noms managériaux, « épargne
   optimisée » ([ton-et-univers.md](ton-et-univers.md)).
 
