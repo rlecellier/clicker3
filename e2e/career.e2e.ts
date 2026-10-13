@@ -127,6 +127,10 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .getByRole('menuitemradio', { name: /Posture professionnelle/ })
     .click();
   const studyCost = 20;
+  // Étudier est gardé pour le réveil si le personnage dort : on attend l'éveil.
+  await expect(
+    page.getByRole('progressbar', { name: /^Éveillé/ }),
+  ).toBeVisible();
   const before = await money();
   const balanceBefore = await balanceOf(page, 'Argent');
   await page.getByRole('button', { name: 'Étudier' }).click();
@@ -143,6 +147,9 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     () => clickThroughPromotion(page, work),
     async () => (await money()) >= 20,
   );
+  await expect(
+    page.getByRole('progressbar', { name: /^Éveillé/ }),
+  ).toBeVisible();
   const beforeShortcut = await money();
   const balanceBeforeShortcut = await balanceOf(page, 'Argent');
   await page.keyboard.press('3');
@@ -155,30 +162,41 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     beforeShortcut - studyCost + balanceBeforeShortcut,
   ]).toContain(await money());
 
-  // Cerveau plein, le personnage s'endort tout seul : les marqueurs se vident
-  // un à un et se convertissent en points de stat. Travailler est impossible
+  // À l'heure du coucher (la jauge de temps arrive aux 16/24 de la période, 8 h
+  // de sommeil), le personnage s'endort tout seul : les marqueurs se vident
+  // pas à pas et se convertissent en points de stat. Travailler est impossible
   // pendant ce temps (Playwright attend que le bouton se réactive).
-  const metier = page.getByRole('progressbar', { name: /^Métier/ });
-  await openTab(page, 'profil');
-  await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
-  await openTab(page, 'vie');
+  // Il faut d'abord un marqueur dans le cerveau : il n'a plus besoin d'être
+  // plein pour dormir. L'étude en donne 7 fois sur 10.
+  await repeatUntil(
+    async () => {
+      await ((await money()) >= studyCost
+        ? page.getByRole('button', { name: 'Étudier' }).click()
+        : clickThroughPromotion(page, work));
+    },
+    async () => !(await page.getByText(/Cerveau 0\/\d+/).isVisible()),
+  );
   await repeatUntil(
     () => clickThroughPromotion(page, work),
     () => page.getByRole('progressbar', { name: /^Sommeil/ }).isVisible(),
     150,
   );
   await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
-  await openTab(page, 'profil');
-  await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
-  await openTab(page, 'vie');
+  // Le sommeil finit la période (loyer, salaires) : on attend le réveil.
+  await expect(
+    page.getByRole('progressbar', { name: /^Éveillé/ }),
+  ).toBeVisible();
 
-  // La mini-jauge sous « Étudier » suit le cursus choisi : les points gagnés
-  // en dormant la font avancer.
+  // Les points gagnés en dormant s'affichent dans le profil (« Métier · palier
+  // 1 · 3 pts »), et la mini-jauge sous « Étudier » suit la même compétence.
+  await openTab(page, 'profil');
+  const metier = page.getByRole('progressbar', { name: /^Métier/ });
+  await expect(metier).toHaveAccessibleName(/palier \d+ · [1-9]\d* pts/);
+  const progress = await metier.getAttribute('aria-valuenow');
+  await openTab(page, 'vie');
   const miniGauge = page.getByRole('progressbar', { name: /^Métier · palier/ });
   await expect(miniGauge).toBeVisible();
-  expect(Number(await miniGauge.getAttribute('aria-valuenow'))).toBeGreaterThan(
-    0,
-  );
+  expect(await miniGauge.getAttribute('aria-valuenow')).toBe(progress);
 
   // Annuler une amélioration obtenue : elle disparaît, sans remboursement.
   const beforeCancel = await money();

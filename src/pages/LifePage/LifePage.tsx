@@ -101,7 +101,7 @@ export const LifePage = () => {
         <ProgressBar
           label={screen.brain.isSleeping ? 'Sommeil' : 'Éveillé'}
           value={screen.brain.sleepProgress}
-          max={screen.brain.max}
+          max={Math.max(1, screen.brain.sleepSteps)}
         />
       </Window>
     </>

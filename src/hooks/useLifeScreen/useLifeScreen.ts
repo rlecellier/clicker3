@@ -217,10 +217,9 @@ export const useLifeScreen = () => {
       count: state.markers.length,
       max: state.maxMarkers,
       isSleeping: state.isSleeping,
-      // Marqueurs déjà vidés pendant ce sommeil.
-      sleepProgress: state.isSleeping
-        ? state.maxMarkers - state.markers.length
-        : 0,
+      // Pas déjà faits pendant ce sommeil, sur le total des pas.
+      sleepProgress: state.isSleeping ? state.sleepTotal - state.sleepLeft : 0,
+      sleepSteps: state.sleepTotal,
     },
     actions: { work, sellSurplus },
     study: {
