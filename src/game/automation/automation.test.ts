@@ -229,7 +229,6 @@ describe('catchUp', () => {
     }
     expect(viaCatchUp.money).toBe(viaTicks.money);
     expect(viaCatchUp.period).toBe(viaTicks.period);
-    expect(viaCatchUp.seed).toBe(viaTicks.seed);
   });
 
   it('rapporte les événements survenus, puis le retour après absence', () => {

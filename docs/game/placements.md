@@ -28,7 +28,7 @@ un rendement. Plus on avance, plus on en débloque.
   placements risqués ou immobiliers (à trancher, pas en première version).
 - **Le rendement s'ajoute à la période** : à chaque période (un mois), chaque
   placement verse son rendement dans l'étape de calcul existante (v1.md § 1),
-  avec la graine de l'état pour tout hasard (règles pures, testables).
+  sans hasard tant que la mécanique n'en demande pas (règles pures, testables ; s'il en faut un, on réintroduit une graine dans l'état).
 - **Déblocage progressif** par paliers (stats, réputation, capital), comme les
   autres achats : on ne propose pas un compte titres à 18 ans.
 - **Les événements existants servent** : bulle internet, crise financière

@@ -47,8 +47,6 @@ export const startState: GameState = {
   queuedActions: [],
   sleepMultiplier: 1,
 
-  seed: 1999,
-
   jobId: 'interim',
   housingId: 'studio',
   rent: 300,

@@ -47,7 +47,7 @@ export const itemOf = (page: Page, title: string | RegExp): Locator =>
   page.getByRole('listitem').filter({ hasText: title });
 
 // Joue `action` jusqu'à ce que `isDone` soit vrai (au plus `max` fois) : le
-// hasard des marqueurs (graine fixe) ne permet pas de compter les clics.
+// nombre de clics nécessaires dépend de l'état (marqueurs, jauge).
 export const repeatUntil = async (
   action: () => Promise<void>,
   isDone: () => Promise<boolean>,

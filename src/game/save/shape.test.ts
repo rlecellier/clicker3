@@ -120,7 +120,6 @@ describe('forme de l’état', () => {
       'reputationEarned',
       'reputationPerSaleMultiplier',
       'salesMultiplier',
-      'seed',
       'seenItems.city',
       'seenItems.companies',
       'seenItems.jobs',
