@@ -4,7 +4,7 @@
 
 Les entreprises sont le moteur du jeu : l'argent ne vient plus seulement de vos
 mains, mais de ce qui tourne sans vous. Elles s'achètent dans
-[Investir](onglet-investir.md), sous-onglet Entreprises.
+[Entreprises](onglet-entreprises.md), sous-onglet À acheter.
 
 ## Deux familles, une seule marchandise
 
@@ -28,7 +28,7 @@ marché), puis les vraies entreprises, à l'échelle de 1999.
 
 Les paliers de Gestion sont à 2, 6, 15, 35, 80, 170, 350 et 700 points. Les bonus
 des [améliorations](ameliorations.md#comment-les-bonus-se-combinent) multiplient les
-articles produits et les prix de vente ; Investir montre toujours les valeurs
+articles produits et les prix de vente ; Entreprises montre toujours les valeurs
 finales.
 
 ## Apport, charges et plafond
@@ -109,7 +109,7 @@ L'entrepôt contient **50 articles** au départ. Trois moyens de l'agrandir :
 Les petits entrepôts n'ont aucune condition : c'est l'issue de secours quand la
 production dépasse la place disponible. Les agrandissements multiplient toute la
 capacité, petits entrepôts compris, qu'ils aient été achetés avant ou après :
-l'ordre des achats ne change rien. L'écran Investir affiche ce qu'un petit
+l'ordre des achats ne change rien. L'écran Entreprises affiche ce qu'un petit
 entrepôt apporte vraiment.
 
 Une garde protège le débutant : tant qu'une amélioration d'entrepôt reste à

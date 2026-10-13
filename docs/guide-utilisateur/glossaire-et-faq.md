@@ -100,7 +100,7 @@ points de compétence. Regardez les barres de [Compétences](onglet-competences.
 
 ### Je peux annuler un achat ?
 
-Les améliorations, oui, depuis Investir, sous-onglet « Obtenues », mais sans
+Les améliorations, oui, depuis Améliorations, sous-onglet « Obtenues », mais sans
 remboursement. Les entreprises et les petits entrepôts, non.
 
 ### Que se passe-t-il si je ferme la page ?

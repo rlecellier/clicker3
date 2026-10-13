@@ -15,8 +15,8 @@ test('ville : débloquer des quartiers avec la réputation, lire la carte', asyn
   await page.goto('/jeu');
   await expect(page).toHaveURL('/jeu/vie');
 
-  // Un quartier se débloque avec de la réputation, depuis l'onglet Investir.
-  await openTab(page, 'investir');
+  // Un quartier se débloque avec de la réputation, depuis l'onglet Entreprises.
+  await openTab(page, 'entreprises');
   await page.getByRole('tab', { name: /^Quartiers/ }).click();
   const hauts = itemOf(page, 'Les Hauts-Fourneaux');
   await expect(

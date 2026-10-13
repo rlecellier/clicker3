@@ -5,10 +5,10 @@ import { DEFAULT_TAB, gameTabs, tabPath } from '@hook/useGameTabs';
 import type { GameTabId } from '@hook/useGameTabs';
 import { AbsencePage } from '@page/AbsencePage';
 import { AccountsPage } from '@page/AccountsPage';
+import { CompaniesPage } from '@page/CompaniesPage';
 import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
 import { GamePage } from '@page/GamePage';
-import { InvestPage } from '@page/InvestPage';
 import { JobsPage } from '@page/JobsPage';
 import { LifePage } from '@page/LifePage';
 import { MailPage } from '@page/MailPage';
@@ -17,6 +17,7 @@ import { ScreenGuard } from '@page/ScreenGuard';
 import { SkillsPage } from '@page/SkillsPage';
 import { StyleguidePage } from '@page/StyleguidePage';
 import { TitlePage } from '@page/TitlePage';
+import { UpgradesPage } from '@page/UpgradesPage';
 
 const toDefaultTab = <Navigate to={tabPath(DEFAULT_TAB)} replace />;
 
@@ -26,7 +27,8 @@ const tabPages: Record<GameTabId, ReactNode> = {
   life: <LifePage />,
   skills: <SkillsPage />,
   jobs: <JobsPage />,
-  invest: <InvestPage />,
+  companies: <CompaniesPage />,
+  upgrades: <UpgradesPage />,
   accounts: <AccountsPage />,
   city: <CityPage />,
 };

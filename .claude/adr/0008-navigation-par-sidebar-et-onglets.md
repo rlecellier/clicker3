@@ -25,9 +25,10 @@ sur une route enfant de `/jeu`.
 | 2     | Vie         | `/jeu/vie`         | `LifePage`     |
 | 3     | Compétences | `/jeu/competences` | `SkillsPage`   |
 | 4     | Emploi      | `/jeu/emploi`      | `JobsPage`     |
-| 5     | Investir    | `/jeu/investir`    | `InvestPage`   |
-| 6     | Comptes     | `/jeu/comptes`     | `AccountsPage` |
-| 7     | Ville       | `/jeu/ville`       | `CityPage`     |
+| 5     | Entreprises | `/jeu/entreprises` | `CompaniesPage` |
+| 6     | Améliorations | `/jeu/ameliorations` | `UpgradesPage` |
+| 7     | Comptes     | `/jeu/comptes`     | `AccountsPage` |
+| 8     | Ville       | `/jeu/ville`       | `CityPage`     |
 
 « Recommencer » (lien vers `screenPaths.newLife`) est en bas de la sidebar, à
 l'écart des onglets. La liste des onglets (ordre, libellés, slugs) vit dans
@@ -48,7 +49,7 @@ L'onglet actif vient de l'URL : recharger la page ou revenir en arrière doit
 garder l'onglet. `Sidebar` est donc faite de vrais liens `NavLink`
 (`aria-current="page"` sur l'onglet actif, clic droit et nouvel onglet qui
 fonctionnent), dans un `<nav aria-label="Navigation du jeu">`. Le composant
-`Tabs` (Base UI) reste réservé aux sous-onglets d'une page (Investir, Comptes),
+`Tabs` (Base UI) reste réservé aux sous-onglets d'une page (Entreprises, Améliorations, Comptes),
 dont l'état n'a pas à vivre dans l'URL.
 
 ### 4. Seuil mobile
@@ -76,7 +77,7 @@ interrompent le joueur.
 `Badge`, avec `badgeTone?`) et `accessibleLabel?` (nom accessible plus complet).
 Le courrier les remplit (#99, `useGameTabs`, ton `alert`).
 
-Les nouveautés (#103) les remplissent pour Compétences, Emploi, Investir et
+Les nouveautés (#103) les remplissent pour Compétences, Emploi, Entreprises, Améliorations et
 Ville (ton `info`, nom accessible « Emploi, 2 nouveautés »). Un élément est
 nouveau quand sa condition est remplie et que l'onglet n'a pas été ouvert
 depuis : les ids vus sont dans `GameState.seenItems` (règles dans
@@ -112,5 +113,5 @@ maintenue (`event.repeat`).
 Le cursus sélectionné par la flèche d'Étudier vit dans `GamePage`
 (`useCourseChoiceState`) et se transmet aux pages par le contexte de l'`Outlet`
 (`useCourseChoice`), pour que `E` et le bouton visent le même cursus. Les
-raccourcis sont affichés dans l'infobulle des onglets (« Investir (5) ») et par
+raccourcis sont affichés dans l'infobulle des onglets (« Entreprises (5) ») et par
 `aria-keyshortcuts`.

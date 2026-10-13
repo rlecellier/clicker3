@@ -13,7 +13,13 @@ import type { GameState } from '@game/state';
 import { tierOf } from '@game/stats';
 
 // Onglets qui signalent des nouveautés (Courrier a son propre compteur).
-export const noveltyTabs = ['skills', 'jobs', 'invest', 'city'] as const;
+export const noveltyTabs = [
+  'skills',
+  'jobs',
+  'companies',
+  'upgrades',
+  'city',
+] as const;
 
 export type NoveltyTab = (typeof noveltyTabs)[number];
 
@@ -40,12 +46,14 @@ const districtIds = (state: GameState) =>
 // dire « achetable » : l'argent ou la réputation à payer n'entrent pas en jeu.
 const unlockedFor = (state: GameState, tab: NoveltyTab): string[] => {
   switch (tab) {
-    case 'invest': {
+    case 'companies': {
       return [
         ...unlockedIds(state, 'company', companies),
-        ...unlockedIds(state, 'upgrade', upgrades),
         ...districtIds(state),
       ];
+    }
+    case 'upgrades': {
+      return unlockedIds(state, 'upgrade', upgrades);
     }
     case 'jobs': {
       return unlockedIds(state, 'job', jobs);

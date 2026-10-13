@@ -55,15 +55,16 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
 
   // Chaque onglet a son URL ; recharger ou revenir en arrière le conserve.
   await openTab(page, 'ville');
-  await openTab(page, 'investir');
+  await openTab(page, 'entreprises');
   await page.reload();
-  await expect(page).toHaveURL('/jeu/investir');
-  await expect(page.getByRole('tab', { name: 'Entreprises' })).toBeVisible();
+  await expect(page).toHaveURL('/jeu/entreprises');
+  await expect(page.getByRole('tab', { name: 'À acheter' })).toBeVisible();
   await page.goBack();
   await expect(page).toHaveURL('/jeu/ville');
   await expect(
     page.getByRole('group', { name: 'Plan de la ville' }),
   ).toBeVisible();
+  await openTab(page, 'ameliorations');
   await openTab(page, 'competences');
   await openTab(page, 'emploi');
   await openTab(page, 'comptes');

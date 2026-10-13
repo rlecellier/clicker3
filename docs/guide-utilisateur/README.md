@@ -26,7 +26,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 | [La version 1.5](la-version-1-5.md)   | Ce qu'est le jeu, ce que la version 1.5 change et ce qu'elle laisse tel quel                   |
 | [Débuter](debuter.md)                 | Écran titre, premier tour de jeu, jauge de temps, argent, une vie de 18 ans à la fin, « Recommencer » |
 
-### Les sept onglets
+### Les huit onglets
 
 | Onglet                                      | Raccourci | Contenu                                              |
 | ------------------------------------------- | --------- | ---------------------------------------------------- |
@@ -34,9 +34,10 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 | [Vie](onglet-vie.md)                        | 2         | Travailler, étudier, vendre le surplus, le cerveau   |
 | [Compétences](onglet-competences.md)        | 3         | Quatre compétences, la réputation et leurs paliers   |
 | [Emploi](onglet-emploi.md)                  | 4         | Les quatre postes successifs                         |
-| [Investir](onglet-investir.md)              | 5         | Entreprises, améliorations, quartiers, « Obtenues »  |
-| [Comptes](onglet-comptes.md)                | 6         | Recettes, dépenses, stock, période par période       |
-| [Ville](onglet-ville.md)                    | 7         | Le plan, les quartiers et leur impact                |
+| [Entreprises](onglet-entreprises.md)        | 5         | Acheter des entreprises, quartiers, barre d'entrepôt |
+| [Améliorations](onglet-ameliorations.md)    | 6         | Toutes les améliorations, coups de pouce, « Obtenues » |
+| [Comptes](onglet-comptes.md)                | 7         | Recettes, dépenses, stock, période par période       |
+| [Ville](onglet-ville.md)                    | 8         | Le plan, les quartiers et leur impact                |
 
 ### Les mécanismes
 

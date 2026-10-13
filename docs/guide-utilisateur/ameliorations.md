@@ -3,7 +3,7 @@
 [Sommaire](README.md) · Précédent : [Les actions](actions.md) · Suite : [Les autres sources de bonus](autres-bonus.md)
 
 Le jeu compte **37 améliorations**, toutes à achat unique, dans
-[Investir](onglet-investir.md), sous-onglet Améliorations. Cette page en
+[Améliorations](onglet-ameliorations.md), sous-onglet À acheter. Cette page en
 donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
 
 Les repères de lecture :
@@ -123,7 +123,7 @@ points au lieu d'un. Chacun ajoute son loyer à celui que vous payez déjà.
 
 Les conversions ne se cumulent pas : c'est celle du dernier logement acheté qui
 s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
-[Obtenues](onglet-investir.md#obtenues) pour ne plus payer son loyer.
+[Obtenues](onglet-ameliorations.md#obtenues) pour ne plus payer son loyer.
 
 ## L'entrepôt et les marqueurs
 

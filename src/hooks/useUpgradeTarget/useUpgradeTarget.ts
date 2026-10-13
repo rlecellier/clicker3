@@ -4,18 +4,15 @@ import { itemElementId } from '@component/ItemList';
 import { UPGRADE_PARAM } from '@hook/useGameTabs';
 
 const HIGHLIGHT_MS = 4000;
-const COMPANIES_TAB = 'companies';
-const UPGRADES_TAB = 'upgrades';
+const AVAILABLE_TAB = 'available';
 
-// Sous-onglet d'Investir et amélioration visée par l'URL
-// (`?amelioration=<id>`) : ouvre « Améliorations », fait défiler jusqu'à la
-// ligne et la met en évidence quelques secondes.
-export const useInvestTarget = () => {
+// Sous-onglet d'Améliorations et amélioration visée par l'URL
+// (`?amelioration=<id>`) : ouvre « À acheter », fait défiler jusqu'à la ligne
+// et la met en évidence quelques secondes.
+export const useUpgradeTarget = () => {
   const [searchParameters] = useSearchParams();
   const target = searchParameters.get(UPGRADE_PARAM);
-  const [tab, setTab] = useState(
-    target === null ? COMPANIES_TAB : UPGRADES_TAB,
-  );
+  const [tab, setTab] = useState(AVAILABLE_TAB);
   const [highlightedId, setHighlightedId] = useState<string | undefined>(
     target ?? undefined,
   );
@@ -34,7 +31,7 @@ export const useInvestTarget = () => {
 
   // Le défilement attend que le panneau soit affiché.
   useEffect(() => {
-    if (highlightedId === undefined || tab !== UPGRADES_TAB) {
+    if (highlightedId === undefined || tab !== AVAILABLE_TAB) {
       return;
     }
     const isReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

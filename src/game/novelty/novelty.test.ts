@@ -1,7 +1,7 @@
 import { startState } from '@game/data';
 import { newGame } from '@game/reducer';
 import type { GameState } from '@game/state';
-import { markAllSeen, markSeen, newItems } from './novelty';
+import { markAllSeen, markSeen, newItems, noveltyTabs } from './novelty';
 
 const withStats = (metier: number, gestion = 0): GameState => ({
   ...startState,
@@ -10,7 +10,7 @@ const withStats = (metier: number, gestion = 0): GameState => ({
 
 describe('newItems', () => {
   it('ne signale rien au départ', () => {
-    for (const tab of ['skills', 'jobs', 'invest', 'city'] as const) {
+    for (const tab of noveltyTabs) {
       expect(newItems(startState, tab)).toEqual([]);
     }
   });
@@ -19,10 +19,14 @@ describe('newItems', () => {
     expect(newItems(withStats(2), 'jobs')).toEqual(['job:polyvalent']);
   });
 
-  it('signale entreprises et améliorations dans Investir', () => {
-    const ids = newItems(withStats(2, 6), 'invest');
-    expect(ids.some((id) => id.startsWith('company:'))).toBe(true);
-    expect(ids.some((id) => id.startsWith('upgrade:'))).toBe(true);
+  it('signale les entreprises dans Entreprises et les améliorations dans Améliorations', () => {
+    const state = withStats(2, 6);
+    const companyIds = newItems(state, 'companies');
+    const upgradeIds = newItems(state, 'upgrades');
+    expect(companyIds.some((id) => id.startsWith('company:'))).toBe(true);
+    expect(companyIds.some((id) => id.startsWith('upgrade:'))).toBe(false);
+    expect(upgradeIds.length).toBeGreaterThan(0);
+    expect(upgradeIds.every((id) => id.startsWith('upgrade:'))).toBe(true);
   });
 
   it('signale un palier de compétence', () => {
@@ -33,10 +37,10 @@ describe('newItems', () => {
     ]);
   });
 
-  it('signale un quartier à la fois dans Investir et Ville', () => {
+  it('signale un quartier à la fois dans Entreprises et Ville', () => {
     const state: GameState = { ...startState, reputationEarned: 6 };
     expect(newItems(state, 'city')).toEqual(['district:hauts-fourneaux']);
-    expect(newItems(state, 'invest')).toContain('district:hauts-fourneaux');
+    expect(newItems(state, 'companies')).toContain('district:hauts-fourneaux');
     expect(newItems(state, 'skills')).toEqual(['reputation:1']);
   });
 
@@ -51,7 +55,7 @@ describe('markSeen', () => {
   it('éteint l’onglet visité et laisse les autres', () => {
     const state = markSeen(withStats(2, 2), 'jobs');
     expect(newItems(state, 'jobs')).toEqual([]);
-    expect(newItems(state, 'invest')).not.toEqual([]);
+    expect(newItems(state, 'companies')).not.toEqual([]);
   });
 
   it('rend le même état quand rien n’est nouveau', () => {
@@ -76,12 +80,12 @@ describe('markSeen', () => {
 describe('markAllSeen', () => {
   it('voit tous les onglets', () => {
     const state = markAllSeen(withStats(41, 41));
-    for (const tab of ['skills', 'jobs', 'invest', 'city'] as const) {
+    for (const tab of noveltyTabs) {
       expect(newItems(state, tab)).toEqual([]);
     }
   });
 
   it('une nouvelle vie démarre sans nouveauté', () => {
-    expect(newItems(newGame(), 'invest')).toEqual([]);
+    expect(newItems(newGame(), 'companies')).toEqual([]);
   });
 });

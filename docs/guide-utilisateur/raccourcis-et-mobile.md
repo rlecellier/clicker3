@@ -12,9 +12,10 @@ Pendant la partie, ces touches fonctionnent sur tous les onglets :
 | 2      | Ouvrir Vie                                          |
 | 3      | Ouvrir Compétences                                  |
 | 4      | Ouvrir Emploi                                       |
-| 5      | Ouvrir Investir                                     |
-| 6      | Ouvrir Comptes                                      |
-| 7      | Ouvrir Ville                                        |
+| 5      | Ouvrir Entreprises                                  |
+| 6      | Ouvrir Améliorations                                |
+| 7      | Ouvrir Comptes                                      |
+| 8      | Ouvrir Ville                                        |
 | T      | Travailler (un clic simple)                         |
 | E      | Étudier le cursus actuellement choisi               |
 
@@ -41,7 +42,7 @@ minuscules sont équivalentes.
   aussi leur touche aux lecteurs d'écran.
 
 Autour de la partie, le jeu est aussi navigable au clavier : liens, boutons, onglets
-de la page Investir et des Comptes, flèches du menu de cursus, plan de la ville
+des pages Entreprises, Améliorations et Comptes, flèches du menu de cursus, plan de la ville
 (Entrée ou Espace sur un quartier).
 
 ## Le jeu sur téléphone
