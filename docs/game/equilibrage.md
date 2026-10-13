@@ -579,3 +579,16 @@ coaching (3 800 €), du loft (92 000 €) et de la procédure (640 000 €) son
 de la proposition ; les multiplicateurs de sommeil sont plus bas. Aucune
 sauvegarde ne change de forme (version 14 inchangée) ; un joueur qui possède déjà
 la camionnette garde son achat et gagne le nouvel effet.
+
+## Validation de la v1.6 par le playtest
+
+- 2026-10-13 — Playtest humain de la v1.6 : le jeu est stable, agréable à jouer
+  et correctement équilibré.
+- **Les écarts aux décisions de [propositions-equilibrage.md](propositions-equilibrage.md)
+  § 6 sont acceptés** (débits plus bas, hausse de prix par exemplaire, trois
+  niveaux de montée en gamme, prix et multiplicateurs des améliorations). On
+  n'équilibre pas davantage : la suite passe à la v2.
+- **La dernière montée en gamme (2 000 000 000 €) n'est pas atteignable dans une
+  vie.** C'est voulu : ce but hors de portée donne envie d'optimiser et de
+  recommencer. À ne pas « corriger ».
+- Restent de petits défauts relevés au playtest, à traiter en issues à part.
