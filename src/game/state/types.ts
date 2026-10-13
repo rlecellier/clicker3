@@ -165,6 +165,9 @@ export type GameState = {
 
   stats: Record<StatId, number>;
   markers: StatId[];
+  // Avancement vers le prochain marqueur de chaque stat : chaque action y ajoute
+  // sa part, et à 1 un marqueur est donné (fixe, sans hasard).
+  markerProgress: Record<StatId, number>;
   // Nombre maximum de marqueurs détenus (la capacité du cerveau).
   maxMarkers: number;
   // Le personnage dort et vide ses marqueurs un par un (un sommeil par période).

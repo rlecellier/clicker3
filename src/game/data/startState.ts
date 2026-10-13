@@ -34,6 +34,7 @@ export const startState: GameState = {
 
   stats: { metier: 0, gestion: 0, intelligence: 0, endurance: 0 },
   markers: [],
+  markerProgress: { metier: 0, gestion: 0, intelligence: 0, endurance: 0 },
   maxMarkers: 5,
   isSleeping: false,
   sleepHours: actionRules.sleep.hours.default,
