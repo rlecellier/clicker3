@@ -52,9 +52,8 @@ soi : à n'ouvrir que si la boucle de base est solide.
 | Immobilier locatif                                                    | L    | ★★      | plus tard |
 | Basculement : le capital rapporte plus que les entreprises            | M    | ★★★     | à trancher |
 
-Suivi dans l'issue #211 (v1.6) ; le périmètre exact de la 1.6 (quels comptes
-et placements en premier) reste à trancher. Détail et questions ouvertes dans
-[placements.md](placements.md).
+Suivi dans l'issue #211 (v1.6) : compte courant, épargne et titres en 1.6,
+immobilier en v3. Décisions et reste à faire dans [placements.md](placements.md).
 
 Les événements qui changent un élément du jeu s'annoncent par une pop-up
 (issue #209, v1.6) : règle dans

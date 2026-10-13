@@ -1,6 +1,6 @@
 # Onglet Comptes
 
-[Sommaire](README.md) · Raccourci : touche 7 · Précédent : [Améliorations](onglet-ameliorations.md) · Suite : [Ville](onglet-ville.md)
+[Sommaire](README.md) · Raccourci : touche 7 · Précédent : [Améliorations](onglet-ameliorations.md) · Suite : [Finance](onglet-finance.md)
 
 Les Comptes répondent à trois questions : d'où vient l'argent, où part-il, et
 comment le stock a-t-il bougé. On lit **une période à la fois**.

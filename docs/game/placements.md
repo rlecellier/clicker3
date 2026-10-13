@@ -1,7 +1,8 @@
 # Placements et comptes
 
-> Statut : **piste suivie par l'issue #211 (v1.6)**. Rien n'est décidé ni
-> chiffré ; les questions ouvertes ci-dessous sont à trancher avant de coder. Périmètre v1 : [v1.md](v1.md).
+> Statut : **décidé, en cours de réalisation (issue #211, v1.6)**. Les
+> questions ouvertes sont tranchées ci-dessous ; les rendements restent à caler
+> au simulateur. Périmètre v1 : [v1.md](v1.md).
 
 ## Constat
 
@@ -52,13 +53,32 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
 - en plusieurs vies (v2), les placements sont l'un des candidats à
   **l'héritage** (voir [backlog.md](backlog.md#origines-pauvre--riche)).
 
-## Questions ouvertes
+## Décisions (v1.6)
 
-1. Quels comptes et placements entrent dans la 1.6, lesquels attendent la v2 (héritage) ou la v3 (immobilier) ?
-2. Rendement garanti ou aléatoire ? Un seul niveau de risque pour commencer ?
-3. Faut-il des frais, un plafond ou une fiscalité pour éviter qu'un placement
-   domine tout dès qu'il est débloqué ?
-4. Où vit l'UI : l'onglet Finance existant, avec une répartition en
-   curseurs ou en achats ?
-5. Hors-ligne : le rendement s'applique-t-il aux périodes simulées en
-   l'absence du joueur (probablement oui, c'est le principe d'un placement) ?
+1. **Périmètre** : compte courant, compte épargne, compte titres. L'immobilier
+   locatif attend la v3, l'héritage la v2.
+2. **Rendement fixe, sans hasard** : épargne 0,3 % par mois, titres 0,8 % ;
+   les événements (bulle +1,2 point, krach et crise financière −3 points
+   pendant un an) ne touchent que les titres. Un rendement négatif retire du
+   capital placé. S'il faut du hasard, on réintroduit une graine dans l'état.
+3. **Plafond de capital par placement**, qui monte avec les paliers de
+   réputation (épargne 5 000 / 20 000 / 80 000 €, titres 20 000 / 150 000 €).
+   Ni frais ni fiscalité.
+4. **UI** : onglet Finance (touche 8), avec des gestes explicites (placer tout,
+   la moitié, retirer tout), pas de curseurs.
+5. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
+
+Mécanique : le rendement d'un gain est **versé sur le compte courant** à la
+clôture (il ne se capitalise pas) ; si l'argent ne couvre pas les dépenses
+fixes, les placements sont repris avant l'impayé (épargne d'abord). Le capital
+n'entre pas dans `money`, ni dans le bilan de fin de vie.
+
+## Reste à faire
+
+- Caler plafonds et rendements au simulateur (`docs/game/equilibrage.md`) : en
+  fin de partie l'argent se compte en millions, les plafonds actuels
+  (réalisme 1999) pèsent très peu face aux entreprises ; le basculement
+  « rentier » n'est donc pas encore atteint.
+- Annoncer les variations de rendement par pop-up (#209) ; elles passent pour
+  l'instant par le courrier et le journal comme les autres événements.
+- Compter le capital placé dans le bilan de fin de vie.

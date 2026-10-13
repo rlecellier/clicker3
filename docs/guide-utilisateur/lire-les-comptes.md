@@ -23,6 +23,7 @@ Recettes, Dépenses et Solde.
 | Salaires                      | L'argent gagné en travaillant à un poste, avec une ligne par poste occupé (« · Manutentionnaire intérimaire ») |
 | Ventes des commerces          | L'argent des ventes de fin de mois, avec une ligne par commerce (« · Boutique »)                |
 | Vente du surplus              | L'argent du bouton « Vendre le surplus »                                                        |
+| Rendement des placements      | Ce que les [placements](onglet-finance.md) ont versé sur le compte courant. Ne s'affiche que si le montant n'est pas nul |
 | Autres recettes               | Gains d'événements. Ne s'affiche que si le montant n'est pas nul                                |
 | Total des recettes            | La somme des lignes ci-dessus                                                                   |
 | Solde (recettes moins dépenses) | Total des recettes moins total des dépenses. Négatif, il signale un mois déficitaire          |
