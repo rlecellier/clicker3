@@ -81,6 +81,19 @@ qu'aucune version n'est jugée populaire (ADR 0010).
 - **Un chiffre annoncé à l'écran** (gain d'un clic, balance) se compare à ce que
   l'action produit vraiment, dans un parcours ou un test des règles.
 
+- **Un test neutralisé est une dette suivie.** On ne passe pas un test en
+  `it.fails`, ne l'exclut pas et n'allonge pas une liste d'échecs connus sans
+  suivi écrit, dans la même MR :
+  - l'issue de suivi de la version (`#152` pour la v1.6) tient une table
+    « Tests neutralisés » : le test, ce qui l'a neutralisé, l'issue qui doit le
+    rétablir ;
+  - cette issue le répète dans ses critères de fin : retirer la neutralisation,
+    ou revoir le test et justifier le changement dans `docs/game/` (jamais le
+    relâcher en silence) ;
+  - la MR le dit dans ses notes pour les relecteurs.
+
+  Une version n'est finie que quand cette table est vide.
+
 Rien d'autre n'est imposé : pas de test « par principe ».
 
 ## Fin de travail
