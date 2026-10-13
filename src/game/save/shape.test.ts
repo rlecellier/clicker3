@@ -118,7 +118,7 @@ describe('forme de l’état', () => {
       'seenItems.city',
       'seenItems.companies',
       'seenItems.jobs',
-      'seenItems.skills',
+      'seenItems.profile',
       'seenItems.upgrades',
       'sleepMultiplier',
       'stats.endurance',

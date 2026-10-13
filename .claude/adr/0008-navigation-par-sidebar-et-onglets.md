@@ -23,7 +23,7 @@ sur une route enfant de `/jeu`.
 | ----- | ----------- | ------------------ | -------------- |
 | 1     | Courrier    | `/jeu/courrier`    | `MailPage`     |
 | 2     | Vie         | `/jeu/vie`         | `LifePage`     |
-| 3     | Compétences | `/jeu/competences` | `SkillsPage`   |
+| 3     | Profil      | `/jeu/profil`      | `ProfilePage`  |
 | 4     | Emploi      | `/jeu/emploi`      | `JobsPage`     |
 | 5     | Entreprises | `/jeu/entreprises` | `CompaniesPage` |
 | 6     | Améliorations | `/jeu/ameliorations` | `UpgradesPage` |
@@ -77,7 +77,7 @@ interrompent le joueur.
 `Badge`, avec `badgeTone?`) et `accessibleLabel?` (nom accessible plus complet).
 Le courrier les remplit (#99, `useGameTabs`, ton `alert`).
 
-Les nouveautés (#103) les remplissent pour Compétences, Emploi, Entreprises, Améliorations et
+Les nouveautés (#103) les remplissent pour Profil, Emploi, Entreprises, Améliorations et
 Ville (ton `info`, nom accessible « Emploi, 2 nouveautés »). Un élément est
 nouveau quand sa condition est remplie et que l'onglet n'a pas été ouvert
 depuis : les ids vus sont dans `GameState.seenItems` (règles dans

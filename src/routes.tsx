@@ -13,8 +13,8 @@ import { JobsPage } from '@page/JobsPage';
 import { LifePage } from '@page/LifePage';
 import { MailPage } from '@page/MailPage';
 import { NewLifePage } from '@page/NewLifePage';
+import { ProfilePage } from '@page/ProfilePage';
 import { ScreenGuard } from '@page/ScreenGuard';
-import { SkillsPage } from '@page/SkillsPage';
 import { StyleguidePage } from '@page/StyleguidePage';
 import { TitlePage } from '@page/TitlePage';
 import { UpgradesPage } from '@page/UpgradesPage';
@@ -25,7 +25,7 @@ const toDefaultTab = <Navigate to={tabPath(DEFAULT_TAB)} replace />;
 const tabPages: Record<GameTabId, ReactNode> = {
   mail: <MailPage />,
   life: <LifePage />,
-  skills: <SkillsPage />,
+  profile: <ProfilePage />,
   jobs: <JobsPage />,
   companies: <CompaniesPage />,
   upgrades: <UpgradesPage />,

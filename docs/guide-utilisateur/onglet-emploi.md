@@ -1,6 +1,6 @@
 # Onglet Emploi
 
-[Sommaire](README.md) · Raccourci : touche 4 · Précédent : [Compétences](onglet-competences.md) · Suite : [Entreprises](onglet-entreprises.md)
+[Sommaire](README.md) · Raccourci : touche 4 · Précédent : [Profil](onglet-profil.md) · Suite : [Entreprises](onglet-entreprises.md)
 
 Quatre postes se succèdent. Cet onglet les liste tous, avec leur salaire, leur
 prix en réputation et ce qu'il manque pour y accéder. Une pastille de nouveautés

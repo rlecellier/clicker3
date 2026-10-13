@@ -221,7 +221,7 @@ export type GameState = {
   // Nouveautés déjà vues par onglet (voir `@game/novelty`) : les ids débloqués
   // quand le joueur a ouvert l'onglet.
   seenItems: Record<
-    'skills' | 'jobs' | 'companies' | 'upgrades' | 'city',
+    'profile' | 'jobs' | 'companies' | 'upgrades' | 'city',
     string[]
   >;
   // Événements uniques déjà survenus.

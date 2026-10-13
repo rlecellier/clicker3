@@ -8,7 +8,7 @@ import { screenPaths } from '@hook/useGameFlow';
 export type GameTabId =
   | 'mail'
   | 'life'
-  | 'skills'
+  | 'profile'
   | 'jobs'
   | 'companies'
   | 'upgrades'
@@ -22,7 +22,7 @@ export type GameTab = { id: GameTabId; label: string; slug: string };
 export const gameTabs: readonly GameTab[] = [
   { id: 'mail', label: 'Courrier', slug: 'courrier' },
   { id: 'life', label: 'Vie', slug: 'vie' },
-  { id: 'skills', label: 'Compétences', slug: 'competences' },
+  { id: 'profile', label: 'Profil', slug: 'profil' },
   { id: 'jobs', label: 'Emploi', slug: 'emploi' },
   { id: 'companies', label: 'Entreprises', slug: 'entreprises' },
   { id: 'upgrades', label: 'Améliorations', slug: 'ameliorations' },

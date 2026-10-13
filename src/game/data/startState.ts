@@ -63,7 +63,7 @@ export const startState: GameState = {
   events: [],
   mailReceived: 0,
   mailRead: 0,
-  seenItems: { skills: [], jobs: [], companies: [], upgrades: [], city: [] },
+  seenItems: { profile: [], jobs: [], companies: [], upgrades: [], city: [] },
   firedEvents: [],
   activeEffects: [],
   jobSalaryFactors: {},

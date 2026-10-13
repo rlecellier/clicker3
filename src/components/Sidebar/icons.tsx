@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 export type SidebarIconId =
   | 'mail'
   | 'life'
-  | 'skills'
+  | 'profile'
   | 'jobs'
   | 'companies'
   | 'upgrades'
@@ -35,8 +35,19 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       <path d="M2 15c0-4 2.5-6 6-6s6 2 6 6z" />
     </>
   ),
-  // Histogramme.
-  skills: <path d="M1 9h3v6H1zM6 5h3v10H6zM11 1h3v14h-3z" />,
+  // Fiche d'identité : carte, portrait et lignes de texte.
+  profile: (
+    <>
+      <path d="M1 3h14v10H1z" />
+      <circle cx="5" cy="7" r="1.6" fill="var(--color-surface)" />
+      <path
+        d="M3 11.5c0-1.5 1-2.3 2-2.3s2 .8 2 2.3zM9 6h4M9 8.5h4M9 11h3"
+        stroke="var(--color-surface)"
+        strokeWidth="1.2"
+        fill="var(--color-surface)"
+      />
+    </>
+  ),
   // Mallette.
   jobs: (
     <>

@@ -96,7 +96,7 @@ d'abord embaucher votre premier collaborateur. Ensuite, un appui long de
 ### Pourquoi mes marqueurs ont-ils disparu ?
 
 Ils ne disparaissent pas : cerveau plein, le personnage dort et les convertit en
-points de compétence. Regardez les barres de [Compétences](onglet-competences.md).
+points de compétence. Regardez les barres de [Profil](onglet-profil.md).
 
 ### Je peux annuler un achat ?
 

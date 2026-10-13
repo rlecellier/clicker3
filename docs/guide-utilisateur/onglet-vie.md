@@ -1,6 +1,6 @@
 # Onglet Vie
 
-[Sommaire](README.md) · Raccourci : touche 2 · Précédent : [Courrier](onglet-courrier.md) · Suite : [Compétences](onglet-competences.md)
+[Sommaire](README.md) · Raccourci : touche 2 · Précédent : [Courrier](onglet-courrier.md) · Suite : [Profil](onglet-profil.md)
 
 C'est l'onglet par défaut et celui où l'on passe le plus de temps. Il rassemble
 les trois gestes de tous les jours et l'état de votre cerveau.

@@ -144,7 +144,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const beforeShortcut = await money();
   const balanceBeforeShortcut = await balanceOf(page, 'Argent');
   await page.keyboard.press('3');
-  await expect(page).toHaveURL('/jeu/competences');
+  await expect(page).toHaveURL('/jeu/profil');
   await page.keyboard.press('e');
   await page.keyboard.press('2');
   await expect(page).toHaveURL('/jeu/vie');
@@ -157,7 +157,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   // un à un et se convertissent en points de stat. Travailler est impossible
   // pendant ce temps (Playwright attend que le bouton se réactive).
   const metier = page.getByRole('progressbar', { name: /^Métier/ });
-  await openTab(page, 'competences');
+  await openTab(page, 'profil');
   await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
   await openTab(page, 'vie');
   await repeatUntil(
@@ -166,7 +166,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     150,
   );
   await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
-  await openTab(page, 'competences');
+  await openTab(page, 'profil');
   await expect(metier).not.toHaveAccessibleName(/palier 0 · 0 pts/);
   await openTab(page, 'vie');
 
