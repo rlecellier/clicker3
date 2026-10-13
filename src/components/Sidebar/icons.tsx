@@ -28,24 +28,18 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       />
     </>
   ),
-  // Personnage : tête et buste.
+  // Maison : l'écran principal, là où l'on vit.
   life: (
+    <>
+      <path d="M8 1l7 7h-2v7H3V8H1z" />
+      <path d="M6.5 15v-4h3v4z" fill="var(--color-surface)" />
+    </>
+  ),
+  // Personnage : tête et buste.
+  profile: (
     <>
       <circle cx="8" cy="4.5" r="3" />
       <path d="M2 15c0-4 2.5-6 6-6s6 2 6 6z" />
-    </>
-  ),
-  // Fiche d'identité : carte, portrait et lignes de texte.
-  profile: (
-    <>
-      <path d="M1 3h14v10H1z" />
-      <circle cx="5" cy="7" r="1.6" fill="var(--color-surface)" />
-      <path
-        d="M3 11.5c0-1.5 1-2.3 2-2.3s2 .8 2 2.3zM9 6h4M9 8.5h4M9 11h3"
-        stroke="var(--color-surface)"
-        strokeWidth="1.2"
-        fill="var(--color-surface)"
-      />
     </>
   ),
   // Mallette.
@@ -55,20 +49,18 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       <path d="M1 5h14v9H1z" />
     </>
   ),
-  // Immeuble : façade et fenêtres.
+  // Usine : toit en dents de scie, cheminée et fenêtres.
   companies: (
     <>
-      <path d="M2 15V3h8v12z" />
-      <path d="M10 15V7h4v8z" />
+      <path d="M1 15V7l4 3V7l4 3V7l4 3V2h2v13z" />
       <path
-        d="M4 5.5h4M4 8.5h4M4 11.5h4"
-        stroke="var(--color-surface)"
-        strokeWidth="1.2"
+        d="M3 12h2v2H3zM7 12h2v2H7zM11 12h2v2h-2z"
+        fill="var(--color-surface)"
       />
     </>
   ),
-  // Flèche vers le haut.
-  upgrades: <path d="M8 1l6 7H10v7H6V8H2z" />,
+  // Flèche vers le haut, posée sur une base.
+  upgrades: <path d="M8 1l6 6h-4v5H6V7H2zM3 13.5h10V15H3z" />,
   // Registre : page à lignes.
   accounts: (
     <>
@@ -80,8 +72,13 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       />
     </>
   ),
-  // Immeubles.
-  city: <path d="M1 7h5v8H1zM7 2h5v13H7zM13 9h2v6h-2z" />,
+  // Repère de carte : le plan de la ville.
+  city: (
+    <>
+      <path d="M8 1a5 5 0 0 0-5 5c0 4 5 9 5 9s5-5 5-9a5 5 0 0 0-5-5z" />
+      <circle cx="8" cy="6" r="2" fill="var(--color-surface)" />
+    </>
+  ),
   // Flèche de retour.
   'new-life': (
     <path d="M8 2a6 6 0 1 1-6 6h2.5A3.5 3.5 0 1 0 8 4.5V7L3.5 3.5 8 0z" />
