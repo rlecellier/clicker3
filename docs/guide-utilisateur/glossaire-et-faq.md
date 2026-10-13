@@ -30,7 +30,7 @@
 | Rupture              | Un commerce n'a pas pu vendre toute sa capacité faute de stock                                                    |
 | Senior               | À partir de 60 ans : les gains des actions manuelles sont divisés par deux                                        |
 | Sidebar              | La barre de navigation à gauche : les huit onglets et « Recommencer ». En icônes seules sur petit écran          |
-| Sommeil              | Se déclenche tout seul quand le cerveau est plein ; convertit les marqueurs en points                             |
+| Sommeil              | Une fois par période, à l'heure du coucher ; convertit les marqueurs en points                             |
 | Stock                | Les articles en entrepôt                                                                                          |
 | Surplus              | Le stock qu'on vend d'un coup à 4 € l'article                                                                     |
 | Tableau de bord      | L'amélioration qui détaille les Comptes                                                                           |
