@@ -100,9 +100,9 @@ cerveau est plein.
 | Logement                  | Conversion du sommeil | Loyer ajouté       |
 | ------------------------- | --------------------- | ------------------ |
 | Studio (départ)           | ×1                    | Loyer de départ : 300 € |
-| Studio rénové             | ×1,5                  | +34 €              |
-| Pavillon aux Tilleuls     | ×2,5                  | +380 €             |
-| Loft au Pôle d'Excellence | ×4                    | +500 €             |
+| Studio rénové             | ×1,3                  | +95 €              |
+| Pavillon aux Tilleuls     | ×2,6                  | +700 €             |
+| Loft au Pôle d'Excellence | ×3,25                 | +1 950 €           |
 
 Pendant le sommeil, vos clics sont mis de côté (cinquante au plus) et le
 travail automatique attend.

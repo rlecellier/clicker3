@@ -20,13 +20,13 @@ Les repères de lecture :
 
 | Amélioration                      | Prix       | Ajoute chaque mois | Prérequis                                   | Ce qu'elle fait                                      |
 | --------------------------------- | ---------- | ------------------ | ------------------------------------------- | ---------------------------------------------------- |
-| Stage « Posture professionnelle » | 150 €      |                    | Aucun                                       | Ouvre l'étude du Métier                              |
-| BTS « Gestion des opportunités »  | 1 500 €    |                    | Métier 1                                    | Ouvre l'étude de la Gestion                          |
-| Licence d'économie appliquée      | 10 000 €   |                    | Gestion 1                                   | Ouvre l'étude de l'Intelligence                      |
-| Coaching « Dépassement de soi »   | 1 700 €    |                    | Intelligence 1                              | Ouvre l'étude de l'Endurance                         |
-| Studio rénové                     | 7 500 €    | loyer +34 €        | Endurance 1                                 | Sommeil ×1,5                                         |
-| Pavillon aux Tilleuls             | 30 000 €   | loyer +380 €       | Endurance 3                                 | Sommeil ×2,5                                         |
-| Loft au Pôle d'Excellence         | 80 000 €   | loyer +500 €       | Endurance 5                                 | Sommeil ×4                                           |
+| Stage « Posture professionnelle » | 420 €      |                    | Aucun                                       | Ouvre l'étude du Métier                              |
+| BTS « Gestion des opportunités »  | 4 200 €    |                    | Métier 1                                    | Ouvre l'étude de la Gestion                          |
+| Licence d'économie appliquée      | 6 000 €    |                    | Gestion 1                                   | Ouvre l'étude de l'Intelligence                      |
+| Coaching « Dépassement de soi »   | 3 800 €    |                    | Intelligence 1                              | Ouvre l'étude de l'Endurance                         |
+| Studio rénové                     | 800 €      | loyer +95 €        | Endurance 1                                 | Sommeil ×1,3                                         |
+| Pavillon aux Tilleuls             | 27 000 €   | loyer +700 €       | Endurance 3                                 | Sommeil ×2,6                                         |
+| Loft au Pôle d'Excellence         | 92 000 €   | loyer +1 950 €     | Endurance 5                                 | Sommeil ×3,25                                        |
 | Étagères en kit                   | 13 000 €   |                    | Gestion 3                                   | Capacité du stock ×120                               |
 | Entrepôt logistique               | 34 000 €   |                    | Gestion 6                                   | Capacité du stock ×18                                |
 | Agenda électronique               | 380 €      |                    | Intelligence 1                              | Chance de marqueur +30 %                             |
@@ -34,10 +34,10 @@ Les repères de lecture :
 | Premier collaborateur             | 800 €      | salaires +1 450 €  | Gestion 3 et une entreprise                 | Production +190 %                                    |
 | Équipe de collaborateurs          | 78 000 €   | salaires +7 000 €  | Gestion 5 et réputation 1                   | Production et ventes +48 %                           |
 | Directeur de la transformation    | 320 000 €  | salaires +15 000 € | Gestion 8 et réputation 2                   | Production et ventes +140 %                          |
-| Procédure de travail              | 510 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
+| Procédure de travail              | 640 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
 | Tableau de bord                   | 5 200 €    |                    | Gestion 4                                   | Comptes détaillés                                    |
 | Cartes de visite                  | 58 €       |                    | Aucun                                       | Réputation du travail +25 %                          |
-| Camionnette d'occasion            | 16 000 €   |                    | Une entreprise                              | Production des ateliers +15 %                        |
+| Camionnette d'occasion            | 5 750 €    |                    | Une entreprise                              | Débit des stands et des boutiques +15 %              |
 | Plan de communication             | 19 000 €   |                    | Réputation 2                                | Ventes +30 %, réputation par vente +50 %             |
 | 18 montées en gamme (3 par entreprise, voir plus bas) | de 19 000 € à 2 milliards | | Des exemplaires du type concerné | Débit de tous les exemplaires du type +10 % à +300 % |
 
@@ -54,8 +54,9 @@ départ.
 
 Le Plan de communication ajoute encore 0,3 au prix de vente (×3,2 avec les
 trois). La bulle internet de 2000-2001 ajoute 0,2 pendant sa durée.
-La Camionnette d'occasion est à part : elle multiplie la production des
-seuls ateliers d'assemblage par 1,15, en plus du coefficient général.
+La Camionnette d'occasion est à part : elle ajoute 0,15 au coefficient de débit
+des stands au marché et des boutiques (comme une montée en gamme), en plus du
+coefficient général.
 
 Un bonus de « ventes » agit sur le **prix** de chaque article vendu, pas sur le
 nombre d'articles qu'un commerce peut vendre.
@@ -96,28 +97,28 @@ précédente.
 
 ## Le logement
 
-Chaque logement améliore le **sommeil** : un marqueur vidé donne ×1,5, ×2,5 ou ×4
+Chaque logement améliore le **sommeil** : un marqueur vidé donne ×1,3, ×2,6 ou ×3,25
 points au lieu d'un. Chacun ajoute son loyer à celui que vous payez déjà.
 
 ### Studio rénové
 
-- **Prix** : 7 500 €, **loyer** +34 € par mois. **Prérequis** : palier 1
+- **Prix** : 800 € (caution et frais d'agence), **loyer** +95 € par mois. **Prérequis** : palier 1
   d'Endurance (2 points).
-- **Effet** : « Conversion du sommeil ×1,5 ».
+- **Effet** : « Conversion du sommeil ×1,3 ».
 - **Sur quoi** : les points gagnés à chaque marqueur dormi.
 
 ### Pavillon aux Tilleuls
 
-- **Prix** : 30 000 €, **loyer** +380 € par mois. **Prérequis** : palier 3
+- **Prix** : 27 000 € (apport), **loyer** +700 € par mois (la mensualité du crédit). **Prérequis** : palier 3
   d'Endurance (15 points).
-- **Effet** : « Conversion du sommeil ×2,5 ».
+- **Effet** : « Conversion du sommeil ×2,6 ».
 - **Sur quoi** : idem.
 
 ### Loft au Pôle d'Excellence
 
-- **Prix** : 80 000 €, **loyer** +500 € par mois. **Prérequis** : palier 5
+- **Prix** : 92 000 € (apport), **loyer** +1 950 € par mois (la mensualité du crédit). **Prérequis** : palier 5
   d'Endurance (80 points).
-- **Effet** : « Conversion du sommeil ×4 ».
+- **Effet** : « Conversion du sommeil ×3,25 ».
 - **Sur quoi** : idem.
 
 Les conversions ne se cumulent pas : c'est celle du dernier logement acheté qui
@@ -218,7 +219,7 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Procédure de travail
 
-- **Prix** : 510 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé)
+- **Prix** : 640 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé)
   et le dernier niveau de Métier, de Gestion et d'Intelligence (700 points
   chacun) avec le palier 7 d'Endurance (350 points).
 - **Effet** : « Le travail se fait tout seul (mode automatique) ».
@@ -243,11 +244,12 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Camionnette d'occasion
 
-- **Prix** : 16 000 €. **Prérequis** : au moins une entreprise, de n'importe quel
+- **Prix** : 5 750 €. **Prérequis** : au moins une entreprise, de n'importe quel
   type.
-- **Effet** : « Production de Atelier d'assemblage +15 % ».
-- **Sur quoi** : seulement l'Atelier d'assemblage, qui passe de 2 à 2,3 articles
-  par exemplaire, avant les autres bonus de production.
+- **Effet** : « Débit de Stand au marché +15 % » et « Débit de Boutique +15 % ».
+- **Sur quoi** : seulement les stands et les boutiques, dont le nombre d'articles
+  vendables par exemplaire augmente de 15 % (environ 33 au lieu de 29 pour le stand, 126 au lieu de 110 pour la boutique), avant les autres
+  bonus. La camionnette livre les clients, pas l'atelier.
 
 ### Plan de communication
 
