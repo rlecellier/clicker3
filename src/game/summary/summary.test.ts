@@ -37,7 +37,7 @@ describe('lifeSummary', () => {
     const state = {
       ...startState,
       money: 1010,
-      placements: { savings: 300, pel: 0, stocks: 700 },
+      placements: { savings: 300, ldds: 0, pel: 0, stocks: 700 },
     };
     expect(lifeSummary(state)).toMatchObject({ money: 1010, capital: 1000 });
   });

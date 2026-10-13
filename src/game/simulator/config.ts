@@ -69,16 +69,9 @@ export const guardrailConfig = {
 // Échecs connus des garde-fous sur les valeurs actuelles (« genre:sujet »). Ils
 // prouvent le diagnostic (docs/game/propositions-equilibrage.md § 1) ; chaque
 // chantier d'équilibrage retire ceux qu'il corrige. Depuis le sommeil quotidien
-// (issue #202), ces améliorations échouent : à recaler dans #205. Avec les trois
-// durées de sommeil, le long sommeil vide tout le cerveau : l'assistante de
-// direction passe, la camionnette et le pavillon des tilleuls échouent. Les placements
-// automatiques (issue #230) font rapporter l'argent du joueur virtuel : la
-// camionnette repasse, l'agenda électronique et le loft du pôle échouent à leur
-// tour (seuils de 5 % franchis de peu), à recaler aussi dans #205.
+// (issue #202), ces améliorations échouent : à recaler dans #205. Les placements
+// automatiques (#230) puis le compte-titres sans plafond (#232) font rapporter
+// l'argent du joueur virtuel : seul le studio rénové échoue encore.
 export const knownGuardrailFailures: readonly string[] = [
-  'utility:agenda-electronique',
-  'utility:cartes-visite',
-  'utility:loft-pole',
-  'utility:pavillon-tilleuls',
   'utility:studio-renove',
 ];

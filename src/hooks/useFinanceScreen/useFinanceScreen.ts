@@ -5,7 +5,6 @@ import { formatDecimal, formatMoney } from '@game/format';
 import {
   bufferOf,
   capitalOf,
-  ceilingOf,
   checkingOf,
   expectedYield,
   isPlacementUnlocked,
@@ -14,6 +13,9 @@ import {
 import { missingConditions } from '@view/purchase';
 
 const percent = (rate: number) => `${formatDecimal(rate * 100)} %`;
+
+const ceilingLabel = (ceiling: number) =>
+  Number.isFinite(ceiling) ? `plafond ${formatMoney(ceiling)}` : 'sans plafond';
 
 // « Rend 0,3 % par mois », avec le signe quand un événement le fait baisser.
 const rateLabel = (rate: number) =>
@@ -34,7 +36,7 @@ export const useFinanceScreen = () => {
       title: placement.name,
       badge: placed > 0 ? formatMoney(placed) : undefined,
       detail: isUnlocked
-        ? `${placement.description} Ce compte ${rateLabel(rateOf(state, placement))} · plafond ${formatMoney(ceilingOf(state, placement.id))}`
+        ? `${placement.description} Ce compte ${rateLabel(rateOf(state, placement))} · ${ceilingLabel(placement.ceiling)}`
         : placement.description,
       conditions: missingConditions(state, placement.requirement),
     };

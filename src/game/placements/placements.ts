@@ -16,13 +16,13 @@ export const isPlacementUnlocked = (state: GameState, id: PlacementId) => {
   );
 };
 
-// Plafond de capital placé : proportionnel à la réputation gagnée (donc il
-// monte avec la richesse), 0 tant que le placement n'est pas débloqué.
+// Plafond de capital placé : fixe (`Infinity` pour le compte-titres), 0 tant
+// que le placement n'est pas débloqué par la réputation.
 export const ceilingOf = (state: GameState, id: PlacementId) => {
   const placement = placementById(id);
   return placement === undefined || !isPlacementUnlocked(state, id)
     ? 0
-    : Math.floor(state.reputationEarned * placement.ceilingPerReputation);
+    : placement.ceiling;
 };
 
 // Rendement de la période : le taux du placement, plus l'écart des événements
