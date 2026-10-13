@@ -1,4 +1,4 @@
-import type { InfoListItem } from '@component/ItemList';
+import type { InfoListItem, ListItem } from '@component/ItemList';
 import { useGameContext } from '@context/GameContext';
 import { placements } from '@game/data';
 import { formatDecimal, formatMoney } from '@game/format';
@@ -7,9 +7,11 @@ import {
   capitalOf,
   checkingOf,
   expectedYield,
-  isPlacementUnlocked,
+  isPlacementEligible,
+  isPlacementOpen,
   rateOf,
 } from '@game/placements';
+import { useBankerAppointment } from '@hook/useBankerAppointment';
 import { missingConditions } from '@view/purchase';
 
 const percent = (rate: number) => `${formatDecimal(rate * 100)} %`;
@@ -27,19 +29,32 @@ const rateLabel = (rate: number) =>
 // matelas, le surplus remplit les comptes dans l'ordre), l'écran la montre.
 export const useFinanceScreen = () => {
   const { state } = useGameContext();
+  const { dialog, start } = useBankerAppointment();
 
-  const items: InfoListItem[] = placements.map((placement) => {
+  const items: (InfoListItem | ListItem)[] = placements.map((placement) => {
     const placed = state.placements[placement.id];
-    const isUnlocked = isPlacementUnlocked(state, placement.id);
-    return {
+    const isOpen = isPlacementOpen(state, placement.id);
+    const base = {
       id: placement.id,
       title: placement.name,
       badge: placed > 0 ? formatMoney(placed) : undefined,
-      detail: isUnlocked
+      detail: isOpen
         ? `${placement.description} Ce compte ${rateLabel(rateOf(state, placement))} · ${ceilingLabel(placement.ceiling)}`
         : placement.description,
       conditions: missingConditions(state, placement.requirement),
     };
+    // La réputation suffit, mais le compte reste à ouvrir chez le banquier.
+    return !isOpen && isPlacementEligible(state, placement.id)
+      ? {
+          ...base,
+          detail: `${placement.description} Votre conseiller peut vous recevoir.`,
+          actionLabel: 'Prendre rendez-vous',
+          isDisabled: false,
+          onAction: () => {
+            start(placement.id);
+          },
+        }
+      : base;
   });
 
   return {
@@ -49,5 +64,6 @@ export const useFinanceScreen = () => {
     capital: formatMoney(capitalOf(state)),
     yield: formatMoney(expectedYield(state)),
     items,
+    dialog,
   };
 };

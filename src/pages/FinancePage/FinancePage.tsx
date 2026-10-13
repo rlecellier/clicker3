@@ -1,3 +1,4 @@
+import { BankerDialog } from '@component/BankerDialog';
 import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
 import { Window } from '@component/Window';
@@ -23,6 +24,7 @@ export const FinancePage = () => {
         rémunérateur.
       </Note>
       <ItemList caption="Placements" items={finance.items} />
+      {finance.dialog && <BankerDialog {...finance.dialog} />}
     </Window>
   );
 };

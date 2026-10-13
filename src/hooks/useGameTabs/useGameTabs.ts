@@ -2,6 +2,7 @@ import { useGameContext } from '@context/GameContext';
 import { findById } from '@game/data';
 import { unreadMail } from '@game/mail';
 import { newItems, noveltyTabs } from '@game/novelty';
+import { openablePlacements } from '@game/placements';
 import type { NoveltyTab } from '@game/novelty';
 import { screenPaths } from '@hook/useGameFlow';
 
@@ -100,6 +101,16 @@ export const useGameTabs = () => {
           badge: countBadge(unread),
           badgeTone: 'alert' as const,
           accessibleLabel: mailLabel(unread),
+        };
+      }
+      if (tab.id === 'finance') {
+        // Comptes à ouvrir : rendez-vous chez le banquier.
+        const count = openablePlacements(state).length;
+        return {
+          ...item,
+          badge: countBadge(count),
+          badgeTone: 'info' as const,
+          accessibleLabel: noveltyLabel(tab.label, count),
         };
       }
       if (isNoveltyTab(tab.id)) {
