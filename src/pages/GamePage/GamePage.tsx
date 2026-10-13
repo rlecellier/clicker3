@@ -1,18 +1,21 @@
 import { Outlet } from 'react-router';
 import { GameHeader } from '@component/GameHeader';
+import { PromotionPrompt } from '@component/PromotionPrompt';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { useCourseChoiceState } from '@hook/useCourseChoice';
 import { useGameHeader } from '@hook/useGameHeader';
 import { useGameTabs } from '@hook/useGameTabs';
+import { usePromotionPrompt } from '@hook/usePromotionPrompt';
 import { useGameShortcuts } from '@hook/useKeyboardShortcuts';
 import styles from './GamePage.module.css';
 
 // Layout de l'écran de jeu : la sidebar et, à droite, la page de l'onglet
 // ouvert (routes imbriquées, ADR 0008), sous l'en-tête (argent et jauge de
-// temps) visible quel que soit l'onglet.
+// temps) visible quel que soit l'onglet. Une promotion proposée s'affiche par-dessus et arrête le jeu.
 export const GamePage = () => {
   const { tabs, footer } = useGameTabs();
   const header = useGameHeader();
+  const promotion = usePromotionPrompt();
   const courseChoice = useCourseChoiceState();
   useGameShortcuts(courseChoice.chosenCourse);
 
@@ -34,6 +37,7 @@ export const GamePage = () => {
           </div>
         </main>
       </div>
+      {promotion && <PromotionPrompt {...promotion} />}
     </div>
   );
 };
