@@ -96,10 +96,14 @@ export const StyleguidePage = () => (
       <MarkerTrack count={3} max={5} isSleeping={false} />
       <MarkerTrack count={5} max={5} isSleeping />
       <SleepPicker
-        options={[6, 7, 8].map((hours) => ({ hours, label: `${hours} h` }))}
+        options={[
+          { hours: 4, label: 'Court · 4 h' },
+          { hours: 6, label: 'Moyen · 6 h' },
+          { hours: 8, label: 'Long · 8 h' },
+        ]}
         value={8}
         onChange={() => {}}
-        summary="Coucher 23 h · réveil 7 h."
+        summary="Long : coucher 23 h · réveil 7 h."
       />
       <ActionButton
         label="Travailler"
