@@ -168,6 +168,7 @@ const shapeTemplate = {
   lastStatement: null,
   lastSeenAt: null,
   pendingPromotion: null,
+  pendingBirthday: null,
 };
 
 const isPendingPromotion = (value: unknown) =>
@@ -175,6 +176,16 @@ const isPendingPromotion = (value: unknown) =>
   (isRecord(value) &&
     isStringIn(value.jobId, jobIds) &&
     isFiniteNumber(value.rank));
+
+const isPendingBirthday = (value: unknown) =>
+  value === null ||
+  (isRecord(value) &&
+    isFiniteNumber(value.age) &&
+    (value.recap === null ||
+      hasShapeOf(
+        { months: 0, money: 0, companies: 0, upgrades: 0, reputation: 0 },
+        value.recap,
+      )));
 
 const isValidState = (raw: RawState): raw is GameState => {
   if (!hasShapeOf(shapeTemplate, raw)) {
@@ -188,12 +199,14 @@ const isValidState = (raw: RawState): raw is GameState => {
     lastStatement,
     lastSeenAt,
     pendingPromotion,
+    pendingBirthday,
   } = raw;
   return (
     (jobId === null || isStringIn(jobId, jobIds)) &&
     (lastStatement === null || isRecord(lastStatement)) &&
     (lastSeenAt === null || isFiniteNumber(lastSeenAt)) &&
     isPendingPromotion(pendingPromotion) &&
+    isPendingBirthday(pendingBirthday) &&
     (status === 'playing' || status === 'dead') &&
     lifePhases.includes(phase as GameState['phase']) &&
     Array.isArray(markers) &&

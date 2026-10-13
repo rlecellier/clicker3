@@ -79,6 +79,16 @@ export const startState: GameState = {
   overtimeActions: {},
   promotionsOffered: {},
   pendingPromotion: null,
+  birthdayBase: {
+    age: 18,
+    period: 0,
+    money: 0,
+    companies: 0,
+    upgrades: 0,
+    reputationEarned: 0,
+  },
+  // Les 18 ans du départ sont fêtés par `newGame`, pas ici.
+  pendingBirthday: null,
 
   autoWork: false,
   autoElapsed: 0,

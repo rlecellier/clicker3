@@ -29,6 +29,8 @@ export type GameAction =
   | { type: 'readMail' }
   // Réponse à la promotion proposée : accepter (augmentation) ou refuser.
   | { type: 'answerPromotion'; isAccepted: boolean }
+  // Le joueur a fermé la fenêtre d'un anniversaire symbolique.
+  | { type: 'answerBirthday' }
   // Le joueur a ouvert un onglet : ses nouveautés sont vues.
   | { type: 'markSeen'; tab: NoveltyTab }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi

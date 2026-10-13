@@ -1,4 +1,4 @@
-import { upgrades } from '@game/data';
+import { startState, upgrades } from '@game/data';
 import type { Upgrade } from '@game/data';
 import { newGame } from '@game/reducer';
 import { knownGuardrailFailures } from './config';
@@ -84,7 +84,7 @@ describe('test d’utilité', () => {
   });
 
   it('n’achète pas l’amélioration exclue', () => {
-    const rich = { ...newGame(), money: 1_000_000 };
+    const rich = { ...startState, money: 1_000_000 };
     expect(chooseAction(rich)).toEqual(
       expect.objectContaining({ type: 'buyUpgrade' }),
     );

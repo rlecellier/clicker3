@@ -70,6 +70,7 @@ describe('démarrage', () => {
   it('expose les actions des règles', () => {
     const { result } = setup();
     act(() => {
+      result.current.dispatch({ type: 'answerBirthday' });
       result.current.dispatch({ type: 'work', target: 'job' });
     });
     expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
