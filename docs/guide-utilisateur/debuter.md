@@ -64,7 +64,9 @@ Ce n'est qu'un chemin parmi d'autres : [Les actions](actions.md) et
 
 ## La jauge de temps
 
-La barre de l'en-tête porte la date du mois en cours (« janvier 1999 »). Elle se
+La barre de l'en-tête porte la date du mois en cours (« janvier 1999 ») et, à
+sa droite, ce que fait votre personnage : au travail, en formation, endormi.
+Elle se
 remplit par les actions, jamais toute seule, sauf en mode automatique ou
 pendant le sommeil. Capacité d'une période : **70**.
 
