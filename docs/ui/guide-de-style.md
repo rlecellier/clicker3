@@ -95,7 +95,7 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `ActionInfo`      | `detail?`, `reason?`, `isDisabled` ; deux lignes réservées, texte complet en infobulle | Sous un bouton d'action : la raison du blocage, sinon le détail (dans `ActionButton` et `SplitActionButton`) |
 | `ItemList`        | `caption`, `items` de type `ListItem` : `id`, `title`, `effects?` (lignes d'effet chiffré, en gras, avant le `detail`), `detail?`, `badge?`, `actionLabel`, `isDisabled`, `reason?`, `conditions?` (`label`, `isMet`), `onAction` ; prop `highlightedId?`, id HTML `item-<id>` | Liste d'éléments achetables ou activables                  |
 | `EventLog`        | `entries` (`id`, `date`, `text`, `isNew`), `emptyText` ; liste nommée « Courrier »                                             | Historique des événements                                  |
-| `MailPopup`       | `date`, `text`, `otherCount`, `mailPath`, `onDismiss`, `onPause`, `onResume` ; `role="status"`, non modale ; placement hors flux par l'appelant (`GamePage`) | Nouveau message signalé sans changer d'onglet               |
+| `PromotionPrompt` | `title`, `message`, `detail`, `acceptLabel`, `refuseLabel`, `onAccept`, `onRefuse` ; Base UI AlertDialog, modale, `role="alertdialog"`, ni Échap ni clic à côté ne la ferme | Événement interactif qui arrête le jeu (promotion) |
 | `LedgerTable`     | `caption`, `rows` (`id`, `label`, `amount`, `share?`)                                                                          | Relevé de comptes d'une période (montant et part)          |
 | `LedgerSection`   | `title`, `help` (phrase visible qui explique la mécanique), `children`                                                         | Section titrée d'un relevé (« D'où vient l'argent ? »)     |
 
@@ -136,9 +136,9 @@ distinct ; sinon, composer les existants.
   du moteur (`@game/economy`), jamais en valeur de base.
 - **Clavier** : tout est atteignable et activable au clavier ; ne jamais
   retirer l'outline de focus.
-- **Retour d'action** : le message de retour de `LifePage` et `MailPopup`
-  portent `role="status"` (région vive polie). Tout nouveau retour dynamique
-  fait de même.
+- **Retour d'action** : le message de retour de `LifePage` porte
+  `role="status"` (région vive polie). Tout nouveau retour dynamique fait de
+  même.
 - **Décoratif** : un élément purement visuel (blocs de `MarkerTrack`, points de
   suspension de `Button` en attente) est `aria-hidden`. Un bouton en attente
   porte `aria-busy`.
@@ -169,8 +169,8 @@ distinct ; sinon, composer les existants.
   en infobulle `title`), deux lignes tronquées pour un détail ou une raison
   d'action. Un élément qui apparaît en cours de partie (bouton « Étudier »,
   message d'accueil) occupe déjà son emplacement : case vide dans la grille,
-  ou texte placé dans une zone réservée. Une popup se superpose au lieu de
-  pousser le contenu (`MailPopup`).
+  ou texte placé dans une zone réservée. Une fenêtre se superpose au lieu de
+  pousser le contenu (`PromotionPrompt`).
 - Espacements en multiples de `--space`.
 - **Zones tactiles** : toute cible interactive (lien de la sidebar, `Button`,
   `PageLink`, onglet, ligne d'`ItemList`, choix d'un menu, bouton de fermeture
