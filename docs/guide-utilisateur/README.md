@@ -37,7 +37,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 | [Entreprises](onglet-entreprises.md)        | 5         | Acheter des entreprises, quartiers, barre d'entrepôt |
 | [Améliorations](onglet-ameliorations.md)    | 6         | Toutes les améliorations, coups de pouce, « Obtenues » |
 | [Comptes](onglet-comptes.md)                | 7         | Recettes, dépenses, stock, période par période       |
-| [Finance](onglet-finance.md)                | 8         | Placer son argent : épargne, titres, rendement       |
+| [Finance](onglet-finance.md)                | 8         | Comptes et placements : Livret A, PEL, titres       |
 | [Ville](onglet-ville.md)                    | 9         | Le plan, les quartiers et leur impact                |
 
 ### Les mécanismes
