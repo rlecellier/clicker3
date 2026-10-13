@@ -15,7 +15,7 @@ export type EventEffect =
   // Effet qui s'arrête à une période donnée.
   | {
       type: 'temporary';
-      kind: 'sales' | 'workSlow';
+      kind: 'sales' | 'workSlow' | 'stocksRate';
       value: number;
       untilPeriod: number;
     };
@@ -63,6 +63,7 @@ export const events: readonly GameEvent[] = [
     text: "Tout le monde lance une start-up. Aucune n'a encore de produit. Les investisseurs adorent.",
     effects: [
       { type: 'temporary', kind: 'sales', value: 0.2, untilPeriod: 33 },
+      { type: 'temporary', kind: 'stocksRate', value: 0.012, untilPeriod: 33 },
     ],
   },
   {
@@ -70,7 +71,10 @@ export const events: readonly GameEvent[] = [
     unique: true,
     trigger: period(33),
     text: "La nouvelle économie devient l'ancienne. Les actionnaires espèrent une reprise.",
-    effects: [{ type: 'reputation', amount: -1 }],
+    effects: [
+      { type: 'reputation', amount: -1 },
+      { type: 'temporary', kind: 'stocksRate', value: -0.03, untilPeriod: 45 },
+    ],
   },
   {
     id: 'euro-fiduciaire',
@@ -88,6 +92,12 @@ export const events: readonly GameEvent[] = [
       { type: 'rentFactor', factor: 1.1 },
       { type: 'payrollFactor', factor: 1.1 },
       { type: 'moneyFactor', factor: 0.9 },
+      {
+        type: 'temporary',
+        kind: 'stocksRate',
+        value: -0.03,
+        untilPeriod: 128,
+      },
     ],
   },
   {

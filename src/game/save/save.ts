@@ -113,6 +113,7 @@ const activeEffectKinds = new Set([
   'markerChance',
   'studyMarkers',
   'sleepBoost',
+  'stocksRate',
 ]);
 
 const isActiveEffect = (value: unknown) =>

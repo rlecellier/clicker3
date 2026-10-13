@@ -9,6 +9,7 @@ import {
 } from '@game/economy';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
+import { coverExpenses, payYields } from '@game/placements';
 import { isPlaying } from '@game/state';
 import type { GameState, GaugeKind, GaugeSegment } from '@game/state';
 import { ageOf } from '@game/time';
@@ -40,8 +41,10 @@ const closingSteps = [
   produceGoods,
   sellGoods,
   payWages,
+  coverExpenses,
   chargeExpenses,
   chargeInterest,
+  payYields,
 ] as const;
 
 export const settleAccounts = (state: GameState): GameState => {
