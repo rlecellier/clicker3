@@ -800,7 +800,7 @@ describe('migration de la version 9', () => {
   it('garde le loyer et en déduit le facteur des événements', () => {
     const result = deserialize(saveV9());
     expect(result.ok && result.state.rent).toBe(Math.round(334 * 1.05));
-    expect(result.ok && result.state.rentFactor).toBeCloseTo(351 / 334);
+    expect(result.ok && result.state.rentFactor).toBeCloseTo(351 / 395);
     expect(result.ok && result.state.payrollFactor).toBe(1);
   });
 

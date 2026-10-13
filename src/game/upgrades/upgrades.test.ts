@@ -132,7 +132,7 @@ describe('buyUpgrade', () => {
 
   it('ajoute loyer et salaire récurrents', () => {
     const housed = buy(rich, 'studio-renove');
-    expect(housed.rent).toBe(rich.rent + 34);
+    expect(housed.rent).toBe(rich.rent + 95);
     const hired = buy(rich, 'premier-collaborateur');
     expect(hired.payroll).toBe(payrollOf('premier-collaborateur'));
   });
@@ -160,9 +160,9 @@ describe('effets', () => {
     expect(hasCourse(buy(rich, 'stage-posture'), 'metier')).toBe(true);
 
     const housed = buy(rich, 'studio-renove');
-    expect(housed.sleepMultiplier).toBe(1.5);
+    expect(housed.sleepMultiplier).toBe(1.3);
     expect(housed.housingId).toBe('studio-renove');
-    expect(buy(housed, 'pavillon-tilleuls').sleepMultiplier).toBe(2.5);
+    expect(buy(housed, 'pavillon-tilleuls').sleepMultiplier).toBe(2.6);
 
     const stocked = buy(buy(rich, 'etageres-kit'), 'entrepot-logistique');
     expect(stocked.stockCapacity).toBe(
@@ -190,7 +190,8 @@ describe('effets', () => {
       1 + productionBonusOf('premier-collaborateur'),
     );
     expect(buy(rich, 'camionnette').companyMultipliers).toEqual({
-      atelier: 1.15,
+      stand: 1.15,
+      boutique: 1.15,
     });
 
     const advertised = buy(rich, 'plan-communication');
@@ -237,11 +238,14 @@ describe('effets', () => {
 });
 
 describe('montée en gamme', () => {
-  const chain = upgrades.filter((upgrade) =>
-    upgrade.effects.some(
-      (effect) =>
-        effect.type === 'companyBonus' && effect.companyId === 'boutique',
-    ),
+  // Les trois niveaux de la boutique (la camionnette en aide aussi, hors chaîne).
+  const chain = upgrades.filter(
+    (upgrade) =>
+      upgrade.id !== 'camionnette' &&
+      upgrade.effects.some(
+        (effect) =>
+          effect.type === 'companyBonus' && effect.companyId === 'boutique',
+      ),
   );
   const bonuses = chain.map(
     (upgrade) =>
@@ -287,7 +291,7 @@ describe('cancelUpgrade', () => {
     const next = cancelUpgrade(equipped, 'assistante-direction');
     expect(next.maxMarkers).toBe(rich.maxMarkers);
     expect(next.payroll).toBe(rich.payroll);
-    expect(next.rent).toBe(rich.rent + 34);
+    expect(next.rent).toBe(rich.rent + 95);
     expect(cancelUpgrade(next, 'etageres-kit').stockCapacity).toBe(
       rich.stockCapacity,
     );
@@ -305,7 +309,7 @@ describe('cancelUpgrade', () => {
     const both = buy(buy(rich, 'studio-renove'), 'pavillon-tilleuls');
     const back = cancelUpgrade(both, 'pavillon-tilleuls');
     expect(back.housingId).toBe('studio-renove');
-    expect(back.sleepMultiplier).toBe(1.5);
+    expect(back.sleepMultiplier).toBe(1.3);
     const start = cancelUpgrade(back, 'studio-renove');
     expect(start.housingId).toBe(rich.housingId);
     expect(start.sleepMultiplier).toBe(rich.sleepMultiplier);
@@ -356,8 +360,8 @@ describe('valeurs dérivées', () => {
   it('un loyer augmenté par un événement reste juste après une annulation', () => {
     const housed = buyUpgrade(rich, 'studio-renove');
     const raised = withModifiers({ ...housed, rentFactor: 1.05 });
-    expect(raised.rent).toBe(Math.round(334 * 1.05));
-    // Avant : 351 − 34 = 317 au lieu de 300 × 1,05.
+    expect(raised.rent).toBe(Math.round(395 * 1.05));
+    // Avant : 415 − 95 = 320 au lieu de 300 × 1,05.
     expect(cancelUpgrade(raised, 'studio-renove').rent).toBe(
       Math.round(300 * 1.05),
     );

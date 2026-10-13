@@ -167,9 +167,9 @@ describe('garde-fous sur les valeurs actuelles', () => {
     expect(failures.toSorted(byName)).toEqual(
       [...knownGuardrailFailures].toSorted(byName),
     );
-    expect(formatGuardrails(checks, knownGuardrailFailures)).toContain('CONNU');
-    expect(formatGuardrails(checks, knownGuardrailFailures)).not.toContain(
-      'ÉCHEC',
-    );
+    // Plus aucun échec connu : aucun contrôle n'est marqué « CONNU » ni « ÉCHEC ».
+    const report = formatGuardrails(checks, knownGuardrailFailures);
+    expect(report).not.toContain('CONNU');
+    expect(report).not.toContain('ÉCHEC');
   }, 120_000);
 });
