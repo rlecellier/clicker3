@@ -32,6 +32,18 @@ const slugOf = (id: GameTabId) => findById(gameTabs, id)?.slug ?? '';
 // Route d'un onglet de l'écran de jeu (`/jeu/<slug>`).
 export const tabPath = (id: GameTabId) => `${screenPaths.game}/${slugOf(id)}`;
 
+// Ancres des sections de Comptes visées depuis la balance de la période.
+export type AccountsSection = 'money' | 'stock';
+
+export const accountsSectionIds: Record<AccountsSection, string> = {
+  money: 'argent',
+  stock: 'stock',
+};
+
+// Comptes, ouvert sur le récap de l'argent ou du stock.
+export const accountsPath = (section: AccountsSection) =>
+  `${tabPath('accounts')}#${accountsSectionIds[section]}`;
+
 const maxBadge = 99;
 
 // Pastille du courrier : cachée à zéro, « 99+ » au-delà de 99.

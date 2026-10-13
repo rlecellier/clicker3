@@ -5,6 +5,7 @@ import type { LedgerRow } from '@component/LedgerTable';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useAccountsScreen } from '@hook/useAccountsScreen';
+import { accountsSectionIds } from '@hook/useGameTabs';
 
 type LedgerSectionData = {
   title: string;
@@ -13,8 +14,12 @@ type LedgerSectionData = {
 };
 
 // Une section des comptes : titre, aide, puis son tableau.
-const ledgerSection = (section: LedgerSectionData, caption: string) => (
-  <LedgerSection title={section.title} help={section.help}>
+const ledgerSection = (
+  section: LedgerSectionData,
+  caption: string,
+  id?: string,
+) => (
+  <LedgerSection id={id} title={section.title} help={section.help}>
     <LedgerTable caption={caption} rows={section.rows} />
   </LedgerSection>
 );
@@ -34,9 +39,13 @@ export const AccountsPage = () => {
         />
       ) : (
         <>
-          {ledgerSection(dashboard.income, 'Recettes')}
+          {ledgerSection(
+            dashboard.income,
+            'Recettes',
+            accountsSectionIds.money,
+          )}
           {ledgerSection(dashboard.expenses, 'Dépenses')}
-          {ledgerSection(dashboard.stock, 'Stock')}
+          {ledgerSection(dashboard.stock, 'Stock', accountsSectionIds.stock)}
           <LedgerSection
             title={dashboard.buildings.title}
             help={dashboard.buildings.help}

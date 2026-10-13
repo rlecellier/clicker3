@@ -70,8 +70,8 @@ export const StyleguidePage = () => (
         gauge={{ value: 10, max: 10, segments: [{ tone: 'work', value: 10 }] }}
       />
       <dl className={styles.stats}>
-        <ResourceTile icon="money" label="Argent" balance="+120 €" />
-        <ResourceTile icon="stock" label="Stock" balance="−45" />
+        <ResourceTile icon="money" label="Argent" balance="+120 €" to="#" />
+        <ResourceTile icon="stock" label="Stock" balance="−45" to="#" />
       </dl>
       <Title>Titre de page</Title>
       <CharacterHeader
