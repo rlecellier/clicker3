@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { SAVE_KEY, expectNoOverflow, openTab } from './helpers';
+import { SAVE_KEY, closeBirthday, expectNoOverflow, openTab } from './helpers';
 
 // Fait mourir le personnage sauvegardé au prochain chargement (après la
 // sauvegarde de sortie de la page courante, qui l'écraserait sinon).
@@ -33,6 +33,8 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await page.getByRole('link', { name: 'Démarrer ma vie' }).click();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(page).toHaveURL('/jeu/vie');
+  // Le départ fête les 18 ans, et le jeu attend que la fenêtre soit fermée.
+  await closeBirthday(page, 'Joyeux 18e anniversaire !');
   await page.getByRole('button', { name: /Travailler/ }).click();
 
   // L'en-tête dit ce que fait le personnage ; les étoiles de réputation sont
@@ -119,6 +121,7 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await expect(page).toHaveURL('/nouvelle-vie');
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(page).toHaveURL('/jeu/vie');
+  await closeBirthday(page, 'Joyeux 18e anniversaire !');
   await page.reload();
   await expect(page).toHaveURL('/jeu/vie');
 

@@ -77,6 +77,14 @@ export const longPress = async (page: Page, target: Locator) => {
   await page.mouse.up();
 };
 
+// Ferme la fenêtre d'anniversaire (celle des 18 ans, au début d'une vie).
+export const closeBirthday = async (page: Page, title: string | RegExp) => {
+  const dialog = page.getByRole('alertdialog');
+  await expect(dialog.getByText(title)).toBeVisible();
+  await dialog.getByRole('button', { name: 'Merci !' }).tap();
+  await expect(dialog).toBeHidden();
+};
+
 // Clique sur un bouton de travail ; si le clic fait proposer une promotion (les
 // heures sup. s'accumulent au fil d'un long parcours), la refuse pour continuer.
 export const clickThroughPromotion = async (page: Page, button: Locator) => {
