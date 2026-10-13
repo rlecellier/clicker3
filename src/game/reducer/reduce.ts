@@ -10,6 +10,7 @@ import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { openPlacement } from '@game/placements';
 import { addGauge } from '@game/period';
+import { acknowledgeFinalUpgrade } from '@game/finale';
 import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
 import { queueAction, setSleepHours } from '@game/sleep';
@@ -92,6 +93,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     case 'answerBirthday': {
       return answerBirthday(state);
     }
+    case 'acknowledgeFinalUpgrade': {
+      return acknowledgeFinalUpgrade(state);
+    }
     case 'markSeen': {
       return markSeen(state, action.tab);
     }
@@ -107,6 +111,7 @@ const passesDuringPromotion = new Set<GameAction['type']>([
   'answerPromotion',
   'answerBirthday',
   'readMail',
+  'acknowledgeFinalUpgrade',
   'markSeen',
   'restart',
 ]);

@@ -58,6 +58,19 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   });
   await page.goto('/jeu');
   await expect(page).toHaveURL('/jeu/vie');
+
+  // La sauvegarde possède déjà la dernière amélioration : la pop-up « jusqu'au
+  // bout » s'ouvre une fois, et se ferme d'un appui.
+  const finale = page.getByRole('alertdialog', { name: 'Jusqu’au bout' });
+  await expect(finale).toContainText('2 000 000 000');
+  const closeFinale = () =>
+    finale.getByRole('button', { name: 'Merci, la direction' }).tap();
+  await closeFinale();
+  await expect(finale).toBeHidden();
+  await page.reload();
+  await expect(page).toHaveURL('/jeu/vie');
+  await expect(finale).toBeHidden();
+
   const work = page.getByRole('button', { name: /Travailler/ });
   const workOn = page.getByText('Appui long : couper l’automatique');
   const openUpgrades = async () => {
@@ -203,6 +216,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   });
   await page.goto('/jeu');
   await expect(page).toHaveURL('/jeu/vie');
+  await closeFinale();
   await expect(page.getByRole('button', { name: 'Étudier' })).toBeHidden();
   await expect(
     page.getByRole('button', { name: 'Choisir le cursus' }),

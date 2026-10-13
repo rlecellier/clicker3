@@ -5,6 +5,7 @@ import { PromotionPrompt } from '@component/PromotionPrompt';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { useBirthdayPrompt } from '@hook/useBirthdayPrompt';
 import { useCourseChoiceState } from '@hook/useCourseChoice';
+import { useFinalUpgradePrompt } from '@hook/useFinalUpgradePrompt';
 import { useGameHeader } from '@hook/useGameHeader';
 import { useGameTabs } from '@hook/useGameTabs';
 import { usePromotionPrompt } from '@hook/usePromotionPrompt';
@@ -19,6 +20,9 @@ export const GamePage = () => {
   const header = useGameHeader();
   const promotion = usePromotionPrompt();
   const birthday = useBirthdayPrompt();
+  const finale = useFinalUpgradePrompt();
+  // Fenêtres à un bouton : un anniversaire passe avant la dernière amélioration.
+  const notice = birthday ?? finale;
   const courseChoice = useCourseChoiceState();
   useGameShortcuts(courseChoice.chosenCourse);
 
@@ -40,8 +44,8 @@ export const GamePage = () => {
           </div>
         </main>
       </div>
-      {birthday ? (
-        <BirthdayPrompt {...birthday} />
+      {notice ? (
+        <BirthdayPrompt {...notice} />
       ) : (
         promotion && <PromotionPrompt {...promotion} />
       )}
