@@ -116,7 +116,7 @@ accompagnés d'un effet. La liste est dans [Les événements](evenements.md).
 ## La fin et « Recommencer »
 
 À la mort du personnage, le jeu ouvre l'écran « Fin d'exercice » (« You died ») avec
-le bilan : entreprises possédées, argent, âge, réputation. Le bouton **Rejouer**
+le bilan : entreprises possédées, argent, capital placé, âge, réputation. Le bouton **Rejouer**
 ramène au choix du premier emploi et recommence la même vie depuis le début.
 Rien n'est transmis : ni argent, ni compétences.
 

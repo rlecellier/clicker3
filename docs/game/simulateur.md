@@ -52,7 +52,7 @@ Une stratégie gloutonne : à chaque action, dans cet ordre.
 | Jalons            | Âge et minute de la première entreprise, du premier employé, des automatismes, de chaque quartier |
 | Phases atteintes  | Jeune adulte, Entrepreneur, Patron, Senior, dans l'ordre de la vie     |
 | Zone morte        | Plus long intervalle sans achat, déblocage ni palier de stat, jusqu'à la mort comprise |
-| Courbe            | Argent, stock, réputation, entreprises, améliorations, recettes par période |
+| Courbe            | Argent, stock, réputation, entreprises, améliorations, recettes par période, rendement maximal des placements |
 
 ## Garde-fous d'équilibrage
 

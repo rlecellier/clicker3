@@ -11,12 +11,13 @@ L'en-tête de la page donne le compte courant, le **capital placé** et le
 
 ## Les placements
 
-| Placement                              | Débloqué par                          | Rendement par mois | Plafond (par palier de réputation)      |
-| -------------------------------------- | ------------------------------------- | ------------------ | --------------------------------------- |
-| Compte épargne optimisée               | Palier 1 (« Partenaire de confiance ») | 0,3 %              | 5 000 €, puis 20 000 €, puis 80 000 €   |
-| Portefeuille de valeur actionnariale   | Palier 2 (« Acteur majeur »)          | 0,8 %, variable    | 20 000 €, puis 150 000 €                |
+| Placement                              | Débloqué par                          | Rendement par mois | Plafond du capital placé        |
+| -------------------------------------- | ------------------------------------- | ------------------ | ------------------------------- |
+| Compte épargne optimisée               | Palier 1 (« Partenaire de confiance ») | 0,3 %              | 100 € par point de réputation gagné |
+| Portefeuille de valeur actionnariale   | Palier 2 (« Acteur majeur »)          | 0,8 %, variable    | 300 € par point de réputation gagné |
 
-Le plafond limite le capital placé : il monte à chaque palier de réputation.
+Le plafond limite le capital placé : il monte avec votre réputation gagnée, donc
+avec votre richesse.
 
 ## Les gestes
 
