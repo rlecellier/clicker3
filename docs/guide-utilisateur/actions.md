@@ -88,19 +88,26 @@ progressent que par l'étude.
 
 Dormir n'est pas une action : le personnage dort **une fois par période**, à
 heure fixe. Une période est une journée qui commence au réveil de 7 h ; vous
-choisissez la durée de sommeil (4 à 9 h, 8 h au départ) dans l'onglet
+choisissez la durée de sommeil (court 4 h, moyen 6 h ou long 8 h ; long au
+départ) dans l'onglet
 [Profil](onglet-profil.md#le-sommeil).
 
-| Durée | 9 h  | 8 h  | 7 h | 6 h | 5 h | 4 h |
-| ----- | ---- | ---- | --- | --- | --- | --- |
-| Coucher | 22 h | 23 h | 0 h | 1 h | 1 h | 2 h |
-| Réveil  | 7 h  | 7 h  | 7 h | 7 h | 6 h | 6 h |
+| Durée   | Long (8 h) | Moyen (6 h) | Court (4 h) |
+| ------- | ---------- | ----------- | ----------- |
+| Coucher | 23 h       | 1 h         | 2 h         |
+| Réveil  | 7 h        | 7 h         | 6 h         |
+| Marqueurs laissés | 0 (tout le cerveau est vidé) | 1 | 2 |
+
+Long vide tous les marqueurs : c'est la durée de l'apprentissage. Moyen en
+laisse un et Court deux, qui attendent le sommeil suivant (ou sont perdus si le
+cerveau est plein) : plus de temps éveillé pour gagner de l'argent, mais moins
+d'apprentissage. Quand on est riche, on dort court.
 
 1. La jauge atteint l'heure du coucher : pastille « Zzz », barre « Sommeil ». Un
    cerveau plein ne fait plus dormir ; ses marqueurs en trop sont perdus.
 2. Le sommeil se joue en pas, un par marqueur que la durée permet de vider
-   (5 pour 9 h, 4 pour 8 h, et un de moins par heure en moins : 0 pour 4 h, qui
-   ne prennent qu'un pas de temps).
+   (tout le cerveau pour long, un de moins pour moyen, deux de moins pour court ;
+   un pas au moins, même sans rien à vider).
    Chaque pas vide le plus ancien marqueur, s'il y en a un.
 3. Chaque marqueur vidé donne des **points** à sa compétence : 1 point multiplié
    par la conversion du logement (voir ci-dessous).

@@ -12,13 +12,15 @@ de marqueurs en compétences ; dormir plus l'inverse (issue #202).
 
 ## Décision
 
-- Le joueur choisit une durée `sleepHours` de 4 à 9 h (8 h au départ), dans le
-  profil (action `setSleepHours`). Le choix ne sert qu'à partir de la période
+- Le joueur choisit une durée `sleepHours` parmi trois : court (4 h), moyen
+  (6 h) et long (8 h, au départ), dans le profil, avec un indicatif de ce que
+  chacune vide comme marqueurs (révision de l'issue #202 : six durées, c'était
+  trop) (action `setSleepHours`). Le choix ne sert qu'à partir de la période
   suivante : `periodSleepHours`, copiée de `sleepHours` à chaque passage de
   période, fixe le coucher et le coût de la période en cours.
 - Une période est une journée de 24 h qui commence au réveil de 7 h. Chaque durée
-  a un horaire de coucher et de réveil (`actionRules.sleep.schedule` : 8 h =
-  23 h → 7 h, 6 h = 1 h → 7 h, 4 h = 2 h → 6 h…).
+  a un horaire de coucher et de réveil (`actionRules.sleep.schedule` : court =
+  2 h → 6 h, moyen = 1 h → 7 h, long = 23 h → 7 h).
 - **Le personnage s'endort une fois par période**, quand la jauge atteint
   l'heure du coucher (`bedtimeGauge`). Le cerveau plein ne déclenche plus rien ;
   ses marqueurs en trop restent perdus. `lastSleepPeriod` interdit un second
@@ -26,9 +28,9 @@ de marqueurs en compétences ; dormir plus l'inverse (issue #202).
   période d'un coup, le sommeil manqué se rattrape dès le début de la période
   suivante.
 - Le sommeil coûte `durée × gaugeCapacity / 24` de jauge et se joue en autant de
-  pas que de marqueurs que la durée permet de vider (table `schedule` : 9 h = 5,
-  tout le cerveau de départ, puis un de moins par heure, 4 h = 0 ; un pas au
-  moins, car dormir prend du temps). Le cerveau retient plus que ce qu'une
+  pas que de marqueurs que la durée permet de vider (table `schedule`, champ `left` : long
+  vide tout le cerveau (`maxMarkers`, donc 5 au départ) ; moyen en laisse un et
+  court deux ; un pas au moins, car dormir prend du temps). Le cerveau retient plus que ce qu'une
   journée produit : ce qui n'est pas vidé reste pour le sommeil suivant, et
   dormir moins fait gagner de l'argent mais apprendre moins. Chaque pas vide le plus ancien marqueur s'il y en a un, coûte
   `sleepStepGauge` de jauge (figé à l'endormissement) et le sommeil dure
