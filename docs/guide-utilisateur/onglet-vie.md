@@ -18,11 +18,15 @@ les trois gestes de tous les jours et l'état de votre cerveau.
    onglet Améliorations, et met l'amélioration en évidence quelques secondes. Quand
    tout est acheté : « Plus rien à acheter pour le moment. »
    La note désigne l'amélioration non achetée la moins chère déjà débloquée, sans
-   tenir compte de votre argent.
-4. **Les trois boutons d'action** : Travailler, Étudier, Vendre le surplus.
-5. **Une ligne de retour** sur la dernière action (« Vous avez travaillé. Cela a
+   tenir compte de votre argent. Elle n'est affichée que sur grand écran : sur
+   téléphone, la pastille de la sidebar sur Améliorations tient ce rôle.
+4. **Les trois boutons d'action** : Travailler, Étudier, Vendre le surplus. La
+   barre de la compétence étudiée est au-dessus du bouton Étudier.
+5. **Le sommeil** : trois cases Court (4 h), Moyen (6 h) et Long (8 h), et une
+   phrase qui dit l'horaire, la jauge de temps et les marqueurs vidés.
+6. **Une ligne de retour** sur la dernière action (« Vous avez travaillé. Cela a
    été noté. ») qui s'efface au bout de quelques secondes.
-6. **Le cerveau** : le compteur « Cerveau 2/5 », les cases remplies et, en
+7. **Le cerveau** : le compteur « Cerveau 2/5 », les cases remplies et, en
    dessous, la barre « Éveillé » ou « Sommeil ».
 
 ## Les trois boutons
@@ -76,8 +80,11 @@ Les marqueurs obtenus s'accumulent dans le cerveau, 5 au maximum au départ.
 Une fois par période, à l'heure du coucher, le personnage s'endort : une
 pastille « Zzz » apparaît, la barre passe sur « Sommeil » et les marqueurs se
 vident un à un, en transformant chacun en point de compétence. Le sommeil
-complet dure environ une demi-seconde. Sa durée se règle dans le
-[Profil](onglet-profil.md#le-sommeil). Voir [Les actions](actions.md#dormir).
+complet dure environ une demi-seconde. Sa durée se règle sous le bouton
+Étudier, avec les trois cases Court, Moyen et Long (le choix s'applique à
+partir de la période suivante ; la phrase le rappelle). Moins vous dormez,
+plus il reste de temps éveillé, mais moins de marqueurs sont convertis en
+points. Voir [Les actions](actions.md#dormir).
 
 Pendant le sommeil, vos clics sur Travailler et Étudier ne sont pas perdus : le
 message « Vous dormez. Cela sera fait au réveil. » apparaît et les gestes sont

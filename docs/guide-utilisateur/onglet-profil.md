@@ -2,9 +2,8 @@
 
 [Sommaire](README.md) · Raccourci : touche 3 · Précédent : [Vie](onglet-vie.md) · Suite : [Emploi](onglet-emploi.md)
 
-Cet onglet rappelle qui vous jouez et où vous en êtes, et il règle la
-[durée du sommeil](#le-sommeil). Une pastille de nouveautés
-l'accompagne dans la sidebar quand un palier vient d'être franchi.
+Cet onglet rappelle qui vous jouez et où vous en êtes. Une pastille de
+nouveautés l'accompagne dans la sidebar quand un palier vient d'être franchi.
 
 ## La fiche du personnage
 
@@ -12,17 +11,6 @@ En haut : le nom, l'âge, la date, la phase de vie, puis le **poste** actuel
 (« Sans emploi » tant que vous n'en avez pas) et la **réputation disponible**,
 c'est-à-dire celle que vous pouvez encore dépenser (un chiffre avec une
 décimale au plus).
-
-## Le sommeil
-
-Trois cases : **Court** (4 h), **Moyen** (6 h) ou **Long** (8 h, au départ).
-Sous les cases, une phrase donne l'horaire (« Long : coucher 23 h · réveil
-7 h »), la jauge de temps que coûte le sommeil et le nombre de marqueurs vidés
-(ceux qui restent attendent la nuit suivante). Moins vous dormez,
-plus il reste de temps éveillé, mais moins de marqueurs sont convertis en
-points. Le choix s'applique à partir de la période suivante (la phrase le
-rappelle quand il diffère de la durée en cours). Voir
-[Les actions](actions.md#dormir).
 
 ## Compétences et réputation
 

@@ -48,7 +48,8 @@ Au tout début, deux messages vous attendent déjà dans le Courrier : la pastil
 affiche 2. Vous y lirez que vous êtes majeur et que vous passez à l'euro.
 
 Le jeu indique toujours quoi viser : sur l'onglet Vie, la note placée sous
-l'état civil annonce la prochaine amélioration, par exemple « Prochain achat : Cartes de visite (58 €) ».
+l'état civil annonce (sur grand écran ; sur téléphone, suivez la pastille
+d'Améliorations) la prochaine amélioration, par exemple « Prochain achat : Cartes de visite (58 €) ».
 Cliquez dessus pour être mené à cette amélioration dans [Améliorations](onglet-ameliorations.md).
 
 Un bon début de partie :
