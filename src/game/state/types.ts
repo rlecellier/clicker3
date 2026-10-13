@@ -164,6 +164,9 @@ export type GameState = {
   // Capital placé par compte (euros) : il rapporte à chaque période mais ne
   // compte pas dans `money`. Se retire à tout moment.
   placements: Record<PlacementId, number>;
+  // Comptes d'épargne ouverts chez le banquier : débloqué par la réputation
+  // ne suffit pas, il faut un rendez-vous (`openPlacement`).
+  openedPlacements: PlacementId[];
   stock: number;
   // Capacité de l'entrepôt : la production au-delà est perdue.
   stockCapacity: number;

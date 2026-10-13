@@ -7,6 +7,7 @@ import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
+import { openPlacement } from '@game/placements';
 import { addGauge } from '@game/period';
 import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
@@ -75,6 +76,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'autoTick': {
       return autoTick(state, action.elapsedMs);
+    }
+    case 'openPlacement': {
+      return openPlacement(state, action.id);
     }
     case 'readMail': {
       return readMail(state);

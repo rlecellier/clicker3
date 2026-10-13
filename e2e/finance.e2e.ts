@@ -16,6 +16,30 @@ test('finance : le surplus se place tout seul, du Livret A au compte-titres', as
   });
   await page.goto('/jeu');
 
+  // Les comptes sont possibles mais fermés : un rendez-vous chez le banquier
+  // (au tap) les ouvre. La sidebar annonce les comptes à ouvrir.
+  await openTab(page, 'finance');
+  await expect(
+    page.getByRole('link', { name: /^Finance, 4 nouveautés/ }),
+  ).toBeVisible();
+  for (let account = 0; account < 4; account++) {
+    await page
+      .getByRole('button', { name: 'Prendre rendez-vous' })
+      .first()
+      .tap();
+    const dialog = page.getByRole('alertdialog');
+    await expect(dialog).toBeVisible();
+    // Les quatre premières réponses font avancer, la dernière ouvre le compte.
+    for (let step = 0; step < 4; step++) {
+      await dialog.getByRole('button').first().tap();
+    }
+    await dialog.getByRole('button', { name: 'Merci.' }).tap();
+    await expect(dialog).toBeHidden();
+  }
+  await expect(
+    page.getByRole('button', { name: 'Prendre rendez-vous' }),
+  ).toHaveCount(0);
+
   // Un tap travaille : la clôture verse le rendement et répartit l'argent.
   await openTab(page, 'vie');
   await page
