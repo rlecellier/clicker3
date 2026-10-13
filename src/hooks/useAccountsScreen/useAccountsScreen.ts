@@ -141,6 +141,9 @@ const incomeRows = (
       hasDetail,
     ),
     moneyRow('surplus', 'Vente du surplus', report.surplus, whole),
+    ...(report.yields === 0
+      ? []
+      : [moneyRow('yields', 'Rendement des placements', report.yields, whole)]),
     ...(report.otherIncome === 0
       ? []
       : [
