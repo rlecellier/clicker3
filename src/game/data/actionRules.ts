@@ -3,9 +3,8 @@ export const actionRules = {
   work: {
     // Coût en jauge de temps.
     gauge: 10,
-    // Chance d'obtenir un marqueur, et variance du hasard lissé.
+    // Part de marqueur par action : 0,3 donne un marqueur toutes les 3 à 4 actions.
     markerChance: 0.3,
-    markerVariance: 0.5,
     // Heures supplémentaires automatiques (issue #166). Une période est une
     // journée type de 24 h : 8 h de travail, 8 h de sommeil, 8 h libres. La
     // jauge fait 70 et un sommeil de 8 h en coûte 23 : il en reste 47, dont 30
@@ -36,7 +35,6 @@ export const actionRules = {
   study: {
     gauge: 15,
     markerChance: 0.7,
-    markerVariance: 0.3,
   },
   sleep: {
     // Durée du sommeil quotidien, au choix du joueur (heures entières). Jamais

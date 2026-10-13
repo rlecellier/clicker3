@@ -98,7 +98,7 @@ export const work = (
   if (!canWork(state, target)) {
     return state;
   }
-  const { gauge, markerChance, markerVariance } = actionRules.work;
+  const { gauge, markerChance } = actionRules.work;
   const isAtJob = target === JOB_TARGET;
   const done = isAtJob
     ? workAtJob(state, isAuto)
@@ -107,7 +107,6 @@ export const work = (
     done,
     isAtJob ? jobMarkerStat : economyRules.companyMarkerStat,
     markerChance,
-    markerVariance,
   );
   return addGauge(
     withMarker,

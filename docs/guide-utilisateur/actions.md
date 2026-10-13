@@ -30,7 +30,7 @@ travail que propose cette version) :
   [Emploi](onglet-emploi.md#les-quatre-postes)).
 - **Réputation** du poste (0,2 pour l'intérim), multipliée par ×1,25 avec les
   Cartes de visite.
-- **Marqueur** : 30 % de chance d'un marqueur de Métier.
+- **Marqueur** : 0,3 marqueur de Métier par action (un toutes les 3 à 4 actions).
 - **Temps** : 10 sur la jauge de 70.
 - **Heures supplémentaires** : les trois premières actions de la période
   (30 de jauge) paient les 8 h de la journée. Ensuite, sans rien débloquer,
@@ -49,7 +49,7 @@ Le bouton est grisé après la mort du personnage (« Partie terminée »).
 Disponible quand une formation est achetée, et tant qu'un cursus est utile.
 
 - **Coût** : le prix du cursus, payé à chaque séance.
-- **Marqueur** : 70 % de chance d'un marqueur de la compétence du cursus.
+- **Marqueur** : 0,7 marqueur de la compétence du cursus par action (environ 7 marqueurs en 10 études).
 - **Temps** : 15 sur la jauge.
 - Pas de gain immédiat : le gain vient du sommeil.
 
@@ -66,20 +66,20 @@ vous n'avez pas assez d'argent, le bouton est grisé (« Argent insuffisant »).
 ## Les marqueurs
 
 Un marqueur est un petit jeton de progression dans le cerveau. Chaque action de
-travail ou d'étude en donne un de temps en temps :
+travail ou d'étude en donne régulièrement :
 
-| Action                  | Chance moyenne | Compétence concernée            |
-| ----------------------- | -------------- | ------------------------------- |
-| Travailler              | 30 %           | Métier                          |
-| Étudier                 | 70 %           | Celle du cursus                 |
+| Action                  | Part de marqueur par action | Compétence concernée            |
+| ----------------------- | --------------------------- | ------------------------------- |
+| Travailler              | 0,3                         | Métier                          |
+| Étudier                 | 0,7                         | Celle du cursus                 |
 
-Le hasard est **lissé** : à chaque action, la chance réelle s'écarte de la
-moyenne, mais reste le plus souvent proche d'elle. Elle va de 15 % à 45 % pour le
-travail et d'environ 49 % à 91 % pour l'étude, ce qui évite les longues séries
-noires.
+Il n'y a **aucun hasard** : chaque compétence cumule la part de ses actions et
+donne un marqueur dès que le total atteint 1 (le reste est gardé). Travailler
+donne ainsi un marqueur de Métier toutes les 3 à 4 actions, toujours dans le même
+rythme.
 
 Le cerveau contient 5 marqueurs au maximum. L'**Agenda électronique** (+30 %)
-et l'**Assistante de direction** relèvent la chance d'en gagner, comme les
+et l'**Assistante de direction** relèvent la part gagnée à chaque action, comme les
 coups de pouce temporaires de [Améliorations](onglet-ameliorations.md). Il n'y a pas
 d'autre source de marqueurs dans cette version : Gestion, Intelligence et Endurance ne
 progressent que par l'étude.
