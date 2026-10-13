@@ -1,16 +1,12 @@
 .tile {
   position: relative;
-  aspect-ratio: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
-  padding: 4px;
+  padding: 4px 6px;
   background: var(--color-paper);
   box-shadow: var(--bevel-in);
-  text-align: center;
 }
 
 .tile > svg {
@@ -24,8 +20,8 @@
 }
 
 .balance {
-  margin: 0;
-  max-width: 100%;
+  margin: 0 0 0 auto;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
