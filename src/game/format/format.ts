@@ -240,6 +240,9 @@ export const describeEffect = (effect: UpgradeEffect): string => {
           : `de ${companyById(effect.companyId)?.name ?? effect.companyId}`;
       return `Production ${target} ${formatBonus(effect.bonus)}`;
     }
+    case 'companyBonus': {
+      return `Débit de ${companyById(effect.companyId)?.name ?? effect.companyId} ${formatBonus(effect.bonus)}`;
+    }
     case 'salesBonus': {
       return `Ventes ${formatBonus(effect.bonus)}`;
     }
