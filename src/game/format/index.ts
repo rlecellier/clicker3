@@ -1,4 +1,5 @@
 export {
+  activityLabels,
   checkRequirement,
   describeBoost,
   describeEffect,
