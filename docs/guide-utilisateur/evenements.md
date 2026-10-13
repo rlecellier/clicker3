@@ -3,7 +3,7 @@
 [Sommaire](README.md) · Précédent : [Les systèmes](systemes.md) · Suite : [Lire les comptes](lire-les-comptes.md)
 
 Tous les messages que le Courrier peut vous apporter, et ce qu'ils font. Aucun ne
-demande de réponse. Ceux qui ont un effet l'appliquent à l'instant où le message
+demande de réponse, à une exception près : la [promotion](#la-promotion). Ceux qui ont un effet l'appliquent à l'instant où le message
 arrive. Les montants de loyer et de salaires sont arrondis à l'euro.
 
 Les dates sont celles du jeu. Un mois de jeu est un mois de calendrier, en
@@ -62,6 +62,23 @@ l'autre. Ce sont eux qui remplissent le Courrier : un message par mois au
 moins, soit plusieurs centaines sur une vie. Le jeu ne garde que les 200
 derniers.
 
+## La promotion
+
+C'est le seul événement qui **arrête le jeu** et vous demande une réponse. Il
+s'affiche dans une fenêtre au milieu de l'écran, pas dans le Courrier. Chaque
+poste peut vous en offrir **trois**, quand vous avez cumulé 10, puis 30, puis 60
+actions de travail payées en heures supplémentaires à ce poste.
+
+- **Accepter** : vous gardez le même poste, payé 10 % de plus par action (les
+  trois promotions se cumulent). La fenêtre annonce le nouveau gain par clic.
+- **Refuser** : rien ne change, et l'offre est perdue.
+
+Tant que vous n'avez pas répondu, le temps ne passe pas : ni le travail, ni
+l'étude, ni le travail automatique. Si vous êtes absent, le rattrapage ne
+s'arrête pas : l'offre vous attend à votre retour. Votre réponse est écrite au
+Courrier.
+
 ## Ce qui ne figure pas
 
-Aucun événement n'est aléatoire dans cette version, et aucun ne propose de choix.
+Aucun événement n'est aléatoire dans cette version. Seule la promotion
+propose un choix.

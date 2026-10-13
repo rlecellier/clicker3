@@ -57,6 +57,12 @@ condition remplie le reste. La seule exception est l'amélioration « Directeur
 de la transformation » exigée pour le poste 4 : si vous l'annulez dans
 [Obtenues](onglet-investir.md#obtenues), le poste 4 redevient inaccessible.
 
+## Les promotions
+
+Chaque poste offre jusqu'à trois promotions, déclenchées par les heures
+supplémentaires faites à ce poste. Accepter augmente le salaire de 10 % sans
+changer de poste ; voir [la promotion](evenements.md#la-promotion).
+
 ## Au début : un seul poste
 
 Au premier écran, « Première embauche », seul le poste 1 est proposé : c'est le
