@@ -18,6 +18,7 @@ import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
 import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
+import { ReputationStars } from '@component/ReputationStars';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { SplitActionButton } from '@component/SplitActionButton';
 import { ResourceTile } from '@component/ResourceTile';
@@ -41,14 +42,26 @@ const rows = [
 // Page de revue visuelle, réservée au développement (voir routes.tsx).
 export const StyleguidePage = () => (
   <main className={styles.page}>
-    <Window title="Guide de style" actions={<Badge tone="info">v1</Badge>}>
+    <Window
+      title="Guide de style"
+      actions={
+        <>
+          <ReputationStars
+            tier={2}
+            max={3}
+            label="Réputation : palier 2 sur 3"
+          />
+          <Badge tone="info">v1</Badge>
+        </>
+      }
+    >
       <GameHeader
         resources={{
           money: { value: '1,2k €', exact: '1 250 €' },
           stock: { value: '12 / 50', exact: '12 / 50' },
         }}
-        reputation={{ tier: 1, max: 3, label: 'Réputation : palier 1 sur 3' }}
         date="janvier 1999"
+        activity="Au travail"
         gauge={{
           value: 6,
           max: 10,
@@ -64,8 +77,8 @@ export const StyleguidePage = () => (
           money: { value: '-1,2M €', exact: '-1 234 567 €' },
           stock: { value: '50k / 50k', exact: '50 000 / 50 000' },
         }}
-        reputation={{ tier: 3, max: 3, label: 'Réputation : palier 3 sur 3' }}
         date="décembre 2026"
+        activity="Dort"
         gauge={{ value: 10, max: 10, segments: [{ tone: 'work', value: 10 }] }}
       />
       <dl className={styles.stats}>

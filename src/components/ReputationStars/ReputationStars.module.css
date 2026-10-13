@@ -2,5 +2,6 @@
   display: flex;
   flex: none;
   font-size: 1rem;
-  color: var(--color-primary);
+  /* La couleur du contexte : blanc dans une barre de titre. */
+  color: inherit;
 }

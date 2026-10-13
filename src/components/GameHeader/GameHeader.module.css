@@ -10,3 +10,10 @@
   box-shadow: var(--bevel-out);
   background: var(--color-surface);
 }
+
+.activity {
+  flex: none;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
