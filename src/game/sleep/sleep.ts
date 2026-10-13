@@ -64,7 +64,7 @@ export const bedtimeGauge = (state: GameState) => {
 export const sleepMarkers = (
   state: GameState,
   hours: number = periodHours(state),
-) => scheduleOf(hours).markers;
+) => Math.max(0, state.maxMarkers - scheduleOf(hours).left);
 
 // Choisit la durée du sommeil quotidien (heures entières de la table). Elle
 // sert à partir de la période suivante : le sommeil de celle-ci ne change pas.

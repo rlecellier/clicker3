@@ -45,51 +45,56 @@ describe('horaire', () => {
     const at = (hours: number) => bedtimeGauge(sleepingFor(startState, hours));
     const { gaugeCapacity } = startState;
     expect(at(8)).toBeCloseTo((16 * gaugeCapacity) / 24);
-    expect(at(9)).toBeCloseTo((15 * gaugeCapacity) / 24);
-    expect(at(7)).toBeCloseTo((17 * gaugeCapacity) / 24);
+    expect(at(6)).toBeCloseTo((18 * gaugeCapacity) / 24);
     expect(at(4)).toBeCloseTo((19 * gaugeCapacity) / 24);
   });
 
   it('couche plus tard et réveille plus tôt quand on dort moins', () => {
-    const { schedule, hours } = actionRules.sleep;
+    const { schedule } = actionRules.sleep;
     for (const [h, { bed, wake }] of Object.entries(schedule)) {
       expect((wake - bed + 24) % 24).toBe(Number(h));
     }
-    expect(Object.keys(schedule).map(Number)).toEqual(
-      Array.from(
-        { length: hours.max - hours.min + 1 },
-        (_, index) => hours.min + index,
-      ),
-    );
+  });
+
+  it('propose trois durées : court, normal et long', () => {
+    const { schedule, hours } = actionRules.sleep;
+    expect(Object.keys(schedule).map(Number)).toEqual([4, 6, 8]);
+    expect(Object.values(schedule).map(({ name }) => name)).toEqual([
+      'Court',
+      'Moyen',
+      'Long',
+    ]);
+    expect(hours).toEqual({ min: 4, max: 8, default: 8 });
   });
 
   it('coûte les heures dormies sur les 24 de la jauge', () => {
     expect(sleepGauge(startState)).toBeCloseTo(
       (8 * startState.gaugeCapacity) / 24,
     );
-    expect(sleepGauge(sleepingFor(startState, 4))).toBeCloseTo(
-      (4 * startState.gaugeCapacity) / 24,
+    expect(sleepGauge(sleepingFor(startState, 6))).toBeCloseTo(
+      (6 * startState.gaugeCapacity) / 24,
     );
   });
 
   it('vide plus de marqueurs quand on dort plus', () => {
-    // 9 h vident tout le cerveau de départ ; chaque heure de moins, un marqueur
-    // de moins, et 4 h aucun.
-    expect(count(9)).toBe(startState.maxMarkers);
-    expect([4, 5, 6, 7, 8, 9].map((hours) => count(hours))).toEqual([
-      0, 1, 2, 3, 4, 5,
-    ]);
+    // Long vide tout le cerveau, moyen en laisse un, court deux.
+    expect(count(8)).toBe(startState.maxMarkers);
+    expect([4, 6, 8].map((hours) => count(hours))).toEqual([3, 4, 5]);
+
+    // Et suit le maximum du cerveau quand une amélioration le relève.
+    const bigger = sleepingFor({ ...startState, maxMarkers: 8 }, 8);
+    expect(sleepMarkers(bigger)).toBe(8);
   });
 });
 
 describe('setSleepHours', () => {
-  it('choisit une durée entière entre 4 et 9 h', () => {
+  it('choisit court, normal ou long', () => {
     expect(setSleepHours(startState, 6).sleepHours).toBe(6);
-    expect(setSleepHours(startState, 9).sleepHours).toBe(9);
+    expect(setSleepHours(startState, 4).sleepHours).toBe(4);
   });
 
   it('ne sert qu’à la période suivante : rien ne change dans celle-ci', () => {
-    const chosen = setSleepHours(startState, 9);
+    const chosen = setSleepHours(startState, 4);
     expect(chosen.periodSleepHours).toBe(8);
     expect(bedtimeGauge(chosen)).toBe(bedtimeGauge(startState));
     // Même passé le nouveau coucher, on ne s'endort pas avant l'ancien.
@@ -98,7 +103,7 @@ describe('setSleepHours', () => {
   });
 
   it('refuse une durée hors bornes ou fractionnaire', () => {
-    for (const hours of [3, 10, 7.5, NaN]) {
+    for (const hours of [3, 5, 7, 9, 7.5, NaN]) {
       expect(setSleepHours(startState, hours)).toBe(startState);
     }
   });
@@ -115,10 +120,10 @@ describe('fallAsleep', () => {
   it('endort à l’heure du coucher, même cerveau vide', () => {
     const next = fallAsleep(bedtime);
     expect(next.isSleeping).toBe(true);
-    expect(next.sleepLeft).toBe(4);
-    expect(next.sleepTotal).toBe(4);
-    expect(next.sleepConvertible).toBe(4);
-    expect(next.sleepStepGauge).toBeCloseTo(sleepGauge(startState) / 4);
+    expect(next.sleepLeft).toBe(5);
+    expect(next.sleepTotal).toBe(5);
+    expect(next.sleepConvertible).toBe(5);
+    expect(next.sleepStepGauge).toBeCloseTo(sleepGauge(startState) / 5);
     expect(next.lastSleepPeriod).toBe(0);
   });
 
@@ -135,7 +140,7 @@ describe('fallAsleep', () => {
 
   it('couche plus tard quand on dort moins', () => {
     const short = {
-      ...sleepingFor(startState, 4),
+      ...sleepingFor(startState, 6),
       gauge: bedtimeGauge(bedtime),
     };
     expect(fallAsleep(short)).toBe(short);
@@ -196,25 +201,20 @@ describe('sleepStep', () => {
   });
 
   it('dort moins : moins de marqueurs vidés, moins de jauge', () => {
-    const short = sleepingFor(full, 4);
-    let state = fallAsleep({ ...short, gauge: bedtimeGauge(short) });
-    const before = state.gauge;
+    const short = sleepingFor(full, 6);
+    // Jauge ramenée à 0 : un sommeil qui finit la période la remettrait à 0.
+    let state = {
+      ...fallAsleep({ ...short, gauge: bedtimeGauge(short) }),
+      gauge: 0,
+    };
     while (state.isSleeping) {
       state = sleepStep(state);
     }
-    expect(state.markers.length).toBeGreaterThan(0);
-    expect(state.gauge - before).toBeCloseTo(sleepGauge(short));
+    expect(state.markers).toHaveLength(
+      full.markers.length - sleepMarkers(short),
+    );
+    expect(state.gauge).toBeCloseTo(sleepGauge(short));
     expect(sleepGauge(short)).toBeLessThan(sleepGauge(full));
-  });
-
-  it('4 h ne vident aucun marqueur mais prennent un pas de temps', () => {
-    const short = sleepingFor(full, 4);
-    let state = fallAsleep({ ...short, gauge: bedtimeGauge(short) });
-    expect(state.sleepTotal).toBe(1);
-    state = sleepStep(state);
-    expect(state.isSleeping).toBe(false);
-    expect(state.markers).toEqual(full.markers);
-    expect(state.stats).toEqual(full.stats);
   });
 
   it('prend du temps même sans marqueur à vider', () => {

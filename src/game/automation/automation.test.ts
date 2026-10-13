@@ -202,9 +202,9 @@ describe('catchUp', () => {
   it('rejoue l’absence et résume ce qui s’est passé', () => {
     const { state, summary } = catchUp(workOnly, 25 * autoIntervalMs);
     // 25 délais d'une demi-seconde : par période, cinq actions de travail
-    // (trois heures normales, deux heures sup.) puis quatre pas de sommeil de
-    // 125 ms (8 h), soit quatre périodes entières et une action.
-    expect(summary.actions).toBe(37);
+    // (trois heures normales, deux heures sup.) puis cinq pas de sommeil de
+    // 100 ms (8 h, tout le cerveau), soit quatre périodes entières et une action.
+    expect(summary.actions).toBe(41);
     expect(summary.periods).toBe(4);
     expect(state.period).toBe(4);
     expect(summary.money).toBe(state.money - workOnly.money);
@@ -282,7 +282,7 @@ describe('resume', () => {
 
   it('rattrape le temps écoulé depuis lastSeenAt puis note le retour', () => {
     const { state, summary } = resume(saved, 1000 + 25 * autoIntervalMs);
-    expect(summary.actions).toBe(37);
+    expect(summary.actions).toBe(41);
     expect(state.period).toBe(4);
     expect(state.lastSeenAt).toBe(1000 + 25 * autoIntervalMs);
   });
