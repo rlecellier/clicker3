@@ -19,6 +19,13 @@ export const companyCost = (id: string, owned: number) => {
 export const ownedCount = (state: GameState, id: string) =>
   state.companies[id] ?? 0;
 
+// Le quartier n'a plus de place : on ne peut plus acheter d'exemplaire (ceux
+// déjà possédés, par exemple d'une ancienne sauvegarde, restent).
+export const isCompanyMaxed = (state: GameState, id: string) => {
+  const company = companyById(id);
+  return company === undefined || ownedCount(state, id) >= company.maxCopies;
+};
+
 // Une entreprise de production de plus ne doit pas produire plus que
 // l'entrepôt ne peut contenir : le surplus serait jeté et les commerces
 // ne pourraient pas l'écouler. Un commerce n'est jamais concerné, et la garde
@@ -44,6 +51,7 @@ export const canBuyCompany = (state: GameState, id: string) => {
   return (
     isPlaying(state) &&
     company !== undefined &&
+    !isCompanyMaxed(state, id) &&
     fitsWarehouse(state, id) &&
     state.money >= companyCost(id, ownedCount(state, id)) &&
     isRequirementMet(state, company.requirement)

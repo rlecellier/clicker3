@@ -263,6 +263,32 @@ export const defaultSaveOptions: SaveOptions = {
         },
       };
     },
+    // Version 14 : le ledger compte les charges des entreprises (`charges`,
+    // mensualités des crédits). Le passé est inconnu : les périodes déjà
+    // jouées n'en ont pas payé (0).
+    13: (raw) => {
+      const { ledger } = raw;
+      if (!isRecord(ledger)) {
+        return raw;
+      }
+      const fill = (figures: unknown) =>
+        isRecord(figures) ? { charges: 0, ...figures } : figures;
+      return {
+        ...raw,
+        ledger: {
+          ...ledger,
+          current: fill(ledger.current),
+          total: fill(ledger.total),
+          history: Array.isArray(ledger.history)
+            ? ledger.history.map((entry: unknown) =>
+                isRecord(entry)
+                  ? { ...entry, figures: fill(entry.figures) }
+                  : entry,
+              )
+            : ledger.history,
+        },
+      };
+    },
   },
 };
 

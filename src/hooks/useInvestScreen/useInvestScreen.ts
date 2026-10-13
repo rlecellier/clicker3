@@ -5,11 +5,12 @@ import {
   canBuyWarehouse,
   companyCost,
   fitsWarehouse,
+  isCompanyMaxed,
   ownedCount,
   warehouseCost,
 } from '@game/companies';
 import { boostById, canBuyBoost, isBoostActive } from '@game/boosts';
-import { boosts, companies, districts } from '@game/data';
+import { boosts, companies, districts, impactRules } from '@game/data';
 import type { Company, Upgrade } from '@game/data';
 import {
   finalPrice,
@@ -53,6 +54,21 @@ const stockLabel = (state: GameState) => {
     return 'plein';
   }
   return state.stock === 0 ? 'vide' : 'en cours';
+};
+
+const districtNameOf = (company: Company) =>
+  districts.find(
+    (district) => district.id === impactRules.companyDistricts[company.id],
+  )?.name ?? 'Les Tilleuls';
+
+// Ce qui manque quand tout est débloqué : la place, l'entrepôt ou l'argent.
+const shortageOf = (state: GameState, company: Company) => {
+  if (isCompanyMaxed(state, company.id)) {
+    return 'Quartier complet : montez en gamme';
+  }
+  return fitsWarehouse(state, company.id)
+    ? NO_MONEY
+    : 'Entrepôt trop petit : agrandissez-le d’abord';
 };
 
 // Valeur finale (tous modificateurs appliqués), par exemplaire puis au total ;
@@ -108,18 +124,27 @@ export const useInvestScreen = () => {
     const owned = ownedCount(state, company.id);
     const cost = companyCost(company.id, owned);
     const canBuy = canBuyCompany(state, company.id);
+    const isMaxed = isCompanyMaxed(state, company.id);
     return {
       id: company.id,
       title: company.name,
       badge: ownedBadge(owned),
-      detail: `${company.kind === 'production' ? 'Production' : 'Commerce'} · ${companyEffect(state, company)} · prochain : ${formatMoney(cost)}`,
+      detail: [
+        company.kind === 'production' ? 'Production' : 'Commerce',
+        companyEffect(state, company),
+        isMaxed ? 'plus de place' : `prochain apport : ${formatMoney(cost)}`,
+        company.charges === 0
+          ? undefined
+          : `charges +${formatMoney(company.charges)} par mois et par exemplaire`,
+        `${districtNameOf(company)} : ${formatCount(owned)} / ${formatCount(company.maxCopies)}`,
+      ]
+        .filter((part) => part !== undefined)
+        .join(' · '),
       actionLabel: 'Acheter',
       isDisabled: !canBuy,
       reason: unavailableReason(state, {
         requirement: company.requirement,
-        shortage: fitsWarehouse(state, company.id)
-          ? NO_MONEY
-          : 'Entrepôt trop petit : agrandissez-le d’abord',
+        shortage: shortageOf(state, company),
       }),
       conditions: missingConditions(state, company.requirement),
       onAction: () => {

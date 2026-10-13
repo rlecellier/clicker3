@@ -1,5 +1,6 @@
 export {
   chargeExpenses,
+  companyChargesOf,
   chargeInterest,
   fixedExpensesOf,
   livingCostOf,

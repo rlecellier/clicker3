@@ -56,6 +56,8 @@ export type LedgerFigures = {
   rent: number;
   // Train de vie : courses, transport, téléphone (monte avec le logement).
   living: number;
+  // Mensualités des crédits des entreprises (prix affiché = apport).
+  charges: number;
   payroll: number;
   purchases: number;
   studies: number;

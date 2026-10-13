@@ -141,7 +141,8 @@ describe('sélecteurs', () => {
 describe('ventilation par source', () => {
   const rich: GameState = {
     ...startState,
-    money: 30_000,
+    money: 30_000_000,
+    stockCapacity: 1_000_000,
     stats: { metier: 0, gestion: 200, intelligence: 200, endurance: 200 },
   };
   const play = (actions: GameAction[]) => {
@@ -182,7 +183,10 @@ const sum = (values: Record<string, number>) =>
 describe('invariants sur une partie jouée', () => {
   const rich: GameState = {
     ...startState,
-    money: 30_000,
+    money: 30_000_000,
+    // Place pour toute la production (la capacité se recalcule des entrepôts).
+    warehouses: 40_000,
+    stockCapacity: 1_000_050,
     // Métier juste sous le dernier palier : l'étude reste permise au début.
     stats: { metier: 80, gestion: 200, intelligence: 200, endurance: 200 },
     reputation: 50,

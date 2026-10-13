@@ -212,11 +212,21 @@ export const payWages = (state: GameState): GameState => {
 export const livingCostOf = (state: GameState) =>
   economyRules.livingCosts[state.housingId] ?? economyRules.baseLivingCost;
 
-// Dépenses fixes prélevées à chaque clôture : loyer, train de vie et salaires.
-export const fixedExpensesOf = (state: GameState) =>
-  state.rent + livingCostOf(state) + state.payroll;
+// Mensualités des crédits des entreprises possédées (le prix affiché étant
+// l'apport). Dérivées des exemplaires possédés : rien à stocker.
+export const companyChargesOf = (state: GameState) =>
+  companies.reduce(
+    (total, company) =>
+      total + company.charges * (state.companies[company.id] ?? 0),
+    0,
+  );
 
-// Étape 3 : loyer, train de vie et salaires, toujours prélevés en entier : l'argent peut
+// Dépenses fixes prélevées à chaque clôture : loyer, train de vie, charges des
+// entreprises et salaires.
+export const fixedExpensesOf = (state: GameState) =>
+  state.rent + livingCostOf(state) + companyChargesOf(state) + state.payroll;
+
+// Étape 3 : loyer, train de vie, charges et salaires, toujours prélevés en entier : l'argent peut
 // devenir négatif (dette). Un solde négatif après les dépenses est un impayé :
 // la réputation baisse et l'événement `unpaid` est noté.
 export const chargeExpenses = (state: GameState): GameState => {
@@ -225,7 +235,12 @@ export const chargeExpenses = (state: GameState): GameState => {
   const statement = statementOf(state);
   const paidState = withRecord(
     { ...state, money: state.money - due },
-    { rent: state.rent, living, payroll: state.payroll },
+    {
+      rent: state.rent,
+      living,
+      charges: companyChargesOf(state),
+      payroll: state.payroll,
+    },
   );
   if (paidState.money >= 0) {
     return {
