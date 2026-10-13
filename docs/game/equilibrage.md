@@ -592,3 +592,22 @@ la camionnette garde son achat et gagne le nouvel effet.
   vie.** C'est voulu : ce but hors de portée donne envie d'optimiser et de
   recommencer. À ne pas « corriger ».
 - Restent de petits défauts relevés au playtest, à traiter en issues à part.
+
+## Placements (issue #211)
+
+Le joueur virtuel ne place rien (il dépense tout en entreprises et améliorations) ;
+la colonne « rend. max » de `npm run sim` donne ce que rapporterait par mois le
+placement maximal de l'argent qu'il détient (titres d'abord), à comparer aux
+recettes.
+
+- **Plafond** : réputation gagnée × 100 € (épargne) ou × 300 € (titres). La
+  réputation suit l'économie (recettes ≈ 10 à 20 fois la réputation gagnée), donc
+  le plafond suit la richesse ; des plafonds fixes en euros devenaient
+  négligeables dès 40 ans.
+- **Rendements** : épargne 0,3 % par mois (~3,6 % par an, livret 1999), titres
+  0,8 % (~10 % par an) avant événements.
+- **Mesure** : le plafond est rarement le facteur limitant, c'est l'argent
+  détenu : le rendement maximal pèse 1 à 10 % des recettes (pics à 15 % les mois
+  où beaucoup d'argent dort), ni négligeable ni dominant. Le placement est un
+  revenu d'appoint, pas encore un basculement « rentier » (backlog : à trancher).
+  Aucun garde-fou du simulateur ne change.

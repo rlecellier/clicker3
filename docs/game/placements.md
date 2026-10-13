@@ -1,7 +1,7 @@
 # Placements et comptes
 
 > Statut : **décidé, en cours de réalisation (issue #211, v1.6)**. Les
-> questions ouvertes sont tranchées ci-dessous ; les rendements restent à caler
+> questions ouvertes sont tranchées ci-dessous ; rendements et plafonds sont calés
 > au simulateur. Périmètre v1 : [v1.md](v1.md).
 
 ## Constat
@@ -61,9 +61,9 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
    les événements (bulle +1,2 point, krach et crise financière −3 points
    pendant un an) ne touchent que les titres. Un rendement négatif retire du
    capital placé. S'il faut du hasard, on réintroduit une graine dans l'état.
-3. **Plafond de capital par placement**, qui monte avec les paliers de
-   réputation (épargne 5 000 / 20 000 / 80 000 €, titres 20 000 / 150 000 €).
-   Ni frais ni fiscalité.
+3. **Plafond de capital par placement**, proportionnel à la réputation gagnée
+   (épargne 100 € par point, titres 300 €), donc il suit la richesse. Ni frais
+   ni fiscalité.
 4. **UI** : onglet Finance (touche 8), avec des gestes explicites (placer tout,
    la moitié, retirer tout), pas de curseurs.
 5. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
@@ -71,14 +71,16 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
 Mécanique : le rendement d'un gain est **versé sur le compte courant** à la
 clôture (il ne se capitalise pas) ; si l'argent ne couvre pas les dépenses
 fixes, les placements sont repris avant l'impayé (épargne d'abord). Le capital
-n'entre pas dans `money`, ni dans le bilan de fin de vie.
+n'entre pas dans `money` ; le bilan de fin de vie le montre à part (« Capital placé »).
+
+## Calibrage
+
+Mesuré au simulateur (voir [equilibrage.md](equilibrage.md#placements-issue-211)) :
+le rendement maximal pèse 1 à 10 % des recettes, un revenu d'appoint. Le
+basculement « rentier » (le capital rapporte plus que les entreprises) n'est pas
+visé en v1.6 : à trancher avec le backlog.
 
 ## Reste à faire
 
-- Caler plafonds et rendements au simulateur (`docs/game/equilibrage.md`) : en
-  fin de partie l'argent se compte en millions, les plafonds actuels
-  (réalisme 1999) pèsent très peu face aux entreprises ; le basculement
-  « rentier » n'est donc pas encore atteint.
-- Annoncer les variations de rendement par pop-up (#209) ; elles passent pour
-  l'instant par le courrier et le journal comme les autres événements.
-- Compter le capital placé dans le bilan de fin de vie.
+- Annoncer les variations de rendement par pop-up : suivi par l'issue #209
+  (pour l'instant, courrier et journal comme les autres événements).
