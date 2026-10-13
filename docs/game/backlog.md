@@ -43,6 +43,17 @@ La v1 a deux ressources : l'argent et **une seule marchandise** (stock). Les
 chaînes de production à plusieurs marchandises interdépendantes sont un jeu en
 soi : à n'ouvrir que si la boucle de base est solide.
 
+## Finance et placements
+
+| Idée                                                                  | Coût | Intérêt | Verdict   |
+| --------------------------------------------------------------------- | ---- | ------- | --------- |
+| Comptes (courant, épargne) avec rendement, sans blocage d'argent      | M    | ★★      | v2        |
+| Placements risqués (actions) sensibles aux événements                 | M    | ★★★     | v2 / v3   |
+| Immobilier locatif                                                    | L    | ★★      | plus tard |
+| Basculement : le capital rapporte plus que les entreprises            | M    | ★★★     | à trancher |
+
+Détail et questions ouvertes dans [placements.md](placements.md).
+
 ## La ville
 
 | Idée                                                        | Coût | Intérêt | Verdict |
@@ -92,9 +103,11 @@ demande un système d'événements aléatoires : prévoir un tirage reproductibl
 2. **v2 : plusieurs vies.** Changement de vie (transmission d'argent, de statut,
    de compétences ou d'idéologie, à trancher), deuxième départ et
    personnalisation, famille, quartiers aux propriétés différentes, chaînes
-   d'entreprises, activités illégales et police. (Le bilan de fin de vie est
+   d'entreprises, activités illégales et police, premiers comptes et
+   placements ([placements.md](placements.md)). (Le bilan de fin de vie est
   déjà dans la v1.)
 3. **v3 : la ville vivante.** Politique, PNJ, amis et contacts, chaînes de
-   production, indicateurs d'impact qui agissent sur le jeu.
+   production, indicateurs d'impact qui agissent sur le jeu, placements
+   risqués et immobilier.
 
 On ne passe à la tranche suivante que quand la précédente est amusante.

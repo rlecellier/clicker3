@@ -15,6 +15,7 @@ la stack dans [`../stack.md`](../stack.md).
 | [propositions-equilibrage.md](propositions-equilibrage.md) | Propositions à trancher : chiffres crédibles, stats longues, boosts utiles |
 | [backlog.md](backlog.md)                       | Idées triées et tranches pour les itérations suivantes   |
 | [ameliorations-et-evenements.md](ameliorations-et-evenements.md) | Les ~20 améliorations et les événements de la v1 (décidé) |
+| [placements.md](placements.md)                 | Piste v2 / v3 : comptes et placements qui rapportent plus que les entreprises |
 | [ton-et-univers.md](ton-et-univers.md)         | Ton, époque, ville, quartiers, personnage, visuel : décidés |
 | [indicateurs-impact.md](indicateurs-impact.md) | Indicateurs d'impact sur la ville : pollution et inégalités (décidé) |
 
