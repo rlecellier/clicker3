@@ -81,10 +81,13 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
    compte *éligible*. Il reste fermé (plafond 0, aucun capital) jusqu'à un
    rendez-vous : l'onglet Finance propose « Prendre rendez-vous » et la sidebar
    affiche une pastille avec le nombre de comptes à ouvrir. Le rendez-vous est
-   un court dialogue en cinq répliques (banquier cynique, réponses au choix qui
-   ne changent rien) ; la dernière, « Merci. », ouvre le compte et écrit une
-   ligne au courrier. « Reporter le rendez-vous » ferme sans rien ouvrir. Le
-   joueur virtuel du simulateur ouvre les comptes dès qu'ils sont possibles.
+   un court dialogue
+   propre à chaque compte (banquier cynique) : 2 questions pour le Livret A,
+   3 pour le LDDS, 4 pour le PEL, 5 pour le compte-titres, plus un écran de fin.
+   Chaque réponse est au choix et ne change pas l'issue, mais le banquier y
+   réagit avant la question suivante (et à la dernière, sur l'écran de fin) ;
+   le mot de fin ouvre le compte et écrit une ligne au courrier. « Reporter le
+   rendez-vous » ferme sans rien ouvrir. Le joueur virtuel du simulateur ouvre les comptes dès qu'ils sont possibles.
 6. **UI** : onglet Finance (touche 8), en lecture seule : total, compte
    courant et matelas, capital placé, un compte par ligne.
 7. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
