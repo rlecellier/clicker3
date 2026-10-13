@@ -20,14 +20,12 @@ les trois gestes de tous les jours et l'état de votre cerveau.
    La note désigne l'amélioration non achetée la moins chère déjà débloquée, sans
    tenir compte de votre argent. Elle n'est affichée que sur grand écran : sur
    téléphone, la pastille de la sidebar sur Améliorations tient ce rôle.
-4. **Les trois boutons d'action** : Travailler, Étudier, Vendre le surplus. La
-   barre de la compétence étudiée est au-dessus du bouton Étudier.
+4. **Les boutons d'action** : Travailler, puis le cerveau (le compteur
+   « Cerveau 2/5 » et les cases remplies, compacts entre les deux boutons : agir
+   les remplit, étudier les consomme), puis Étudier. La barre de la compétence
+   étudiée est au-dessus du bouton Étudier.
 5. **Le sommeil** : trois cases Court (4 h), Moyen (6 h) et Long (8 h), et une
    phrase qui dit l'horaire, la jauge de temps et les marqueurs vidés.
-6. **Une ligne de retour** sur la dernière action (« Vous avez travaillé. Cela a
-   été noté. ») qui s'efface au bout de quelques secondes.
-7. **Le cerveau** : le compteur « Cerveau 2/5 », les cases remplies et, en
-   dessous, la barre « Éveillé » ou « Sommeil ».
 
 ## Les trois boutons
 

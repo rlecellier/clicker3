@@ -24,32 +24,28 @@ export const LifePage = () => {
     <>
       <Window title="Balance de la période">
         <div className={styles.balances}>
-          <dl className={styles.tile}>
+          <dl className={styles.tiles}>
             <ResourceTile
               icon="money"
               label="Argent"
               balance={screen.balances.money}
               to={screen.balanceLinks.money}
             />
-          </dl>
-          <div className={styles.stock}>
-            <dl className={styles.tile}>
-              <ResourceTile
-                icon="stock"
-                label="Stock"
-                balance={screen.balances.stock}
-                to={screen.balanceLinks.stock}
-              />
-            </dl>
-            <ActionButton
-              label="Vendre le surplus"
-              detail={sellSurplus.detail}
-              reason={sellSurplus.reason}
-              isDisabled={sellSurplus.isDisabled}
-              press={sellSurplus.press}
-              onClick={sellSurplus.run}
+            <ResourceTile
+              icon="stock"
+              label="Stock"
+              balance={screen.balances.stock}
+              to={screen.balanceLinks.stock}
             />
-          </div>
+          </dl>
+          <ActionButton
+            label="Vendre le surplus"
+            detail={sellSurplus.detail}
+            reason={sellSurplus.reason}
+            isDisabled={sellSurplus.isDisabled}
+            press={sellSurplus.press}
+            onClick={sellSurplus.run}
+          />
         </div>
       </Window>
       <Window
@@ -76,6 +72,9 @@ export const LifePage = () => {
             shortcut={WORK_SHORTCUT}
             onClick={work.run}
           />
+          <div className={styles.markers}>
+            <MarkerTrack {...screen.brain} />
+          </div>
           {/* Emplacement toujours occupé par la même structure : quand rien
             n'est étudiable, une copie invisible garde la hauteur de la zone. */}
           <div
@@ -109,15 +108,6 @@ export const LifePage = () => {
           value={screen.sleep.value}
           onChange={screen.sleep.select}
           summary={screen.sleep.summary}
-        />
-        <p className={styles.feedback} role="status">
-          {screen.feedback}
-        </p>
-        <MarkerTrack {...screen.brain} />
-        <ProgressBar
-          label={screen.brain.isSleeping ? 'Sommeil' : 'Éveillé'}
-          value={screen.brain.sleepProgress}
-          max={Math.max(1, screen.brain.sleepSteps)}
         />
       </Window>
     </>

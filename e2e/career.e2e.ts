@@ -25,7 +25,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(
     page.getByRole('heading', { name: 'Camille Morel' }),
   ).toBeVisible();
-  await expect(page.getByText('Bienvenue dans l’euro.')).toBeVisible();
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
 
   const work = page.getByRole('button', { name: /Travailler/ });
@@ -49,7 +48,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const rentBalance = await balanceOf(page, 'Argent');
   expect(rentBalance).toBeLessThan(0);
   await work.click();
-  await expect(page.getByText('Adéquat Intérim vous remercie')).toBeVisible();
   expect(await workBox()).toEqual(workBoxAtStart);
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
   // Un peu plus que le salaire : la dette à venir porte moins d'intérêts.
@@ -128,13 +126,10 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .click();
   const studyCost = 20;
   // Étudier est gardé pour le réveil si le personnage dort : on attend l'éveil.
-  await expect(
-    page.getByRole('progressbar', { name: /^Éveillé/ }),
-  ).toBeVisible();
+  await expect(page.getByText('Zzz')).toBeHidden();
   const before = await money();
   const balanceBefore = await balanceOf(page, 'Argent');
   await page.getByRole('button', { name: 'Étudier' }).click();
-  await expect(page.getByText('Vous avez étudié.')).toBeVisible();
   // L'étude se paie tout de suite et ne touche pas la balance. Si elle fait
   // passer la période, la balance annoncée s'ajoute à l'argent.
   const afterStudy = await money();
@@ -147,9 +142,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     () => clickThroughPromotion(page, work),
     async () => (await money()) >= 20,
   );
-  await expect(
-    page.getByRole('progressbar', { name: /^Éveillé/ }),
-  ).toBeVisible();
+  await expect(page.getByText('Zzz')).toBeHidden();
   const beforeShortcut = await money();
   const balanceBeforeShortcut = await balanceOf(page, 'Argent');
   await page.keyboard.press('3');
@@ -178,14 +171,12 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   );
   await repeatUntil(
     () => clickThroughPromotion(page, work),
-    () => page.getByRole('progressbar', { name: /^Sommeil/ }).isVisible(),
+    () => page.getByText('Zzz').isVisible(),
     150,
   );
   await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
   // Le sommeil finit la période (loyer, salaires) : on attend le réveil.
-  await expect(
-    page.getByRole('progressbar', { name: /^Éveillé/ }),
-  ).toBeVisible();
+  await expect(page.getByText('Zzz')).toBeHidden();
 
   // Les points gagnés en dormant s'affichent dans le profil (« Métier · palier
   // 1 · 3 pts »), et la mini-jauge sous « Étudier » suit la même compétence.
@@ -251,7 +242,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .getByRole('button', { name: 'Recommencer' })
     .click();
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
-  await expect(page.getByText('Bienvenue dans l’euro.')).toBeVisible();
   await openOwned();
   await expect(owned).toBeHidden();
 

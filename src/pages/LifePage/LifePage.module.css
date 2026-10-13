@@ -1,43 +1,31 @@
 .balances {
-  display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
-  gap: var(--space);
-  align-items: start;
-}
-
-.tile {
-  margin: 0;
-}
-
-.stock {
   display: flex;
   flex-direction: column;
   gap: var(--space);
 }
 
-/* Le stock prend la largeur restante : la tuile n'y reste pas carrée. */
-.stock > .tile > * {
-  aspect-ratio: auto;
-  min-height: 6.5rem;
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space);
+  margin: 0;
 }
 
 .actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: var(--space);
-}
-
-.feedback {
-  /* Deux lignes réservées : le message ne fait pas sauter la page. */
-  min-height: 2lh;
-  color: var(--color-primary);
-  font-style: italic;
 }
 
 .study {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* Les marqueurs collent aux boutons : un peu d'air, pas de marge de bloc. */
+.markers {
+  margin: -4px 0;
 }
 
 /* Sur mobile, la pastille de la sidebar annonce déjà l'amélioration à acheter. */
