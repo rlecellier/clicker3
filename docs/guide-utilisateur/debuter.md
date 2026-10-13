@@ -54,7 +54,7 @@ Cliquez dessus pour être mené à cette amélioration dans [Investir](onglet-in
 Un bon début de partie :
 
 1. travailler jusqu'à réunir 58 € ; acheter les **Cartes de visite** ;
-2. acheter le **Stage « Posture professionnelle »** (150 €) : « Étudier » apparaît ;
+2. acheter le **Stage « Posture professionnelle »** (420 €) : « Étudier » apparaît ;
 3. alterner travail et étude pour atteindre le palier 1 de Métier (2 points) :
    il ouvre l'emploi suivant et le BTS, qui ouvre à son tour la Gestion ;
 4. avec le palier 1 de Gestion (2 points), acheter vos premières entreprises.

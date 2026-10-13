@@ -68,7 +68,7 @@ moins qu'une manuelle ([v1.md](v1.md#6-automatisation-et-absence)).
 | Nom                         | Effet                                                    | Déblocage                | Prix       | Description                                                         |
 | --------------------------- | -------------------------------------------------------- | ------------------------ | ---------- | ------------------------------------------------------------------- |
 | Cartes de visite            | Réputation gagnée par le travail +25 %                   | Départ                   | 100 €      | « Papier épais. Le prénom ne figure pas, par souci de marque. »     |
-| Camionnette d'occasion      | Production des ateliers +25 %                            | Première entreprise      | 7 000 €    | « 240 000 km. Le compteur a été remis à l'honneur. »                |
+| Camionnette d'occasion      | Débit des stands et des boutiques +15 %                  | Première entreprise      | 5 750 €    | « 240 000 km. Le compteur a été remis à l'honneur. »                |
 | Plan de communication       | Ventes des commerces +25 % ; réputation +50 % par vente | Réputation palier 2      | 60 000 €   | « Votre histoire, mais en mieux. Surtout la fin. »                  |
 
 ## Événements

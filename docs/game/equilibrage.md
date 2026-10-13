@@ -491,3 +491,91 @@ bouge d'un cas limite à l'autre). Les 18 montées en gamme sont exemptées.
 vie en jeu actif dépend du simulateur (petits entrepôts achetés tant que la place
 manque), et les saves anciennes (v13) gardent leurs exemplaires au-delà du
 plafond, mais paient maintenant leurs charges avec les nouveaux débits.
+
+## Axe F : améliorations à prix réels et effets qui comptent (issue #168)
+
+- 2026-10-13 — Axe F de [propositions-equilibrage.md](propositions-equilibrage.md)
+  (§ 3 et § 6). Dernier chantier de la v1.6 : il remplace les propositions de
+  l'axe par les valeurs prouvées au simulateur.
+
+**Déjà fait par les chantiers précédents (non retouché ici)** :
+
+| Amélioration | Où | Valeur en vigueur |
+| ------------ | -- | ----------------- |
+| Étagères en kit | #167 | 13 000 €, capacité × 120 (la proposition disait 2 500 €, + 1 500 articles : l'échelle des débits a changé) |
+| Entrepôt logistique | #167 | 34 000 €, capacité × 18 |
+| Petit entrepôt | #167 | 160 € + 3 % par exemplaire, + 35 articles |
+| Employés, assistante, procédure | #166, #167 | voir les sections correspondantes |
+| Heures supplémentaires | #166 | règle automatique (pas une amélioration) |
+| Loft, pavillon, studio : niveaux d'Endurance 5, 3 et 1 | #165 | inchangés |
+
+**Ce que fait ce chantier** : formations, logements, camionnette, et le recalage
+de la procédure de travail qui garde la vie dans les critères.
+
+| Amélioration | Avant | Proposition | Valeur retenue |
+| ------------ | ----- | ----------- | -------------- |
+| Stage « Posture » | 150 € | 450 € | **420 €** |
+| BTS | 1 500 € | 3 500 € | **4 200 €** |
+| Licence | 10 000 € | 6 000 € | **6 000 €** |
+| Coaching | 1 700 € | 2 500 € | **3 800 €** |
+| Studio rénové | 7 500 €, loyer + 34 €, sommeil × 1,5 | 800 €, + 80 € | **800 €, loyer + 95 €, sommeil × 1,3** |
+| Pavillon | 30 000 €, + 380 €, × 2,5 | 24 000 €, + 650 € | **27 000 € (apport), + 700 €, × 2,6** |
+| Loft | 80 000 €, + 500 €, × 4 | 70 000 €, + 1 800 € | **92 000 € (apport), + 1 950 €, × 3,25** |
+| Camionnette | 16 000 €, ateliers + 15 % | 6 000 €, stands et boutiques + 20 % | **5 750 €, stands et boutiques + 15 %** |
+| Procédure de travail | 510 000 € | (hors axe) | **640 000 €** |
+
+Les prix sont ceux d'un 1999 crédible : un studio se loue pour une caution et des
+frais d'agence (800 €), un pavillon et un loft s'achètent à crédit (l'apport est
+le prix affiché, la mensualité est le loyer ajouté, comme les entreprises de
+l'axe D). Le train de vie et le loyer de départ (300 €) sont ceux de l'axe E.
+
+**Écarts à la proposition**, tous dictés par les critères de la v1 :
+
+1. **Les formations et les logements bon marché accélèrent la partie** : avec
+   les valeurs de la proposition, le jeu actif tombait à 28 min 56 s (cible 30),
+   trois zones mortes dépassaient la minute (jusqu'à 1 min 36 s) et les stats
+   finissaient à la minute 23 (le garde-fou « stats
+   vivantes » veut la minute 25). Une recherche locale sur 16 paramètres
+   (prix et loyers des trois logements, des quatre formations, de la
+   camionnette, de la procédure, multiplicateurs de sommeil) a trouvé le point
+   ci-dessus ; le BTS et le coaching sont plus chers que la proposition, le loft
+   aussi, pour retenir le début de partie.
+2. **Les multiplicateurs de sommeil baissent** (1,3 / 2,6 / 3,25 au lieu de 1,5 /
+   2,5 / 4) : avec un studio acheté à la minute 5 et non 9, les stats se
+   terminaient avant la minute 25. Les trois logements restent utiles (test
+   d'utilité) et le gros de leur gain arrive après l'achat (part utile 96 %,
+   89 %, 74 %).
+3. **La procédure de travail passe de 510 000 à 640 000 €** : sans cela le jeu
+   actif tombait à 29 min 58 s (une action de moins que la cible) ; l'automatisme
+   reste à 44 ans, dans la fourchette 35 à 45 ans.
+4. **Camionnette : + 15 %, pas + 20 %**, via l'effet `companyBonus` (stand et
+   boutique, comme les montées en gamme) : l'ancien effet `productionBonus` sur
+   l'atelier ne comptait plus assez depuis que les débits ont changé d'échelle.
+   Elle améliore maintenant le commerce, ce qui livre des clients.
+
+**Mesures** (`npm run sim`, graine 1999), avant → après :
+
+| Mesure | Avant (#167) | Après |
+| ------ | ------------ | ----- |
+| Jeu actif | 31 min 22 s | 30 min 26 s (1 826 actions) |
+| Plus longue zone morte | 1 min 00 s (aucune au-delà) | 1 min 00 s (aucune au-delà) |
+| Travail automatique | 45 ans, minute 28,3 | 44 ans, minute 26,9 |
+| Dernier niveau d'une stat | minute 26,4 | minute 25,1 |
+| Studio, pavillon, loft achetés | minutes 5,5, 13,2, 17,1 | minutes 5,3, 11,0, 16,2 |
+
+**Garde-fous** : tous réussissent, pour la première fois. Le dernier échec connu,
+l'utilité du **studio rénové**, est corrigé (sans lui : recettes à 60 ans −24 %,
+travail automatique +2,3 %) et `knownGuardrailFailures` est vide. Retirer une
+amélioration (hors formations, automatisation, employés obligatoires, tableau de
+bord et montées en gamme) dégrade au moins une mesure de 5 % ou plus : le
+studio (24 % des recettes), le pavillon (9 % sur l'âge de l'auto), le loft (14 %),
+l'agenda (5,2 % sur le jeu actif), les cartes de visite (23 % des recettes) et la
+camionnette (11 % sur l'âge de l'auto).
+
+**Limites** : les marges restent minces (zone morte 60 s sur 60 s, jeu actif 26 s
+au-dessus de la cible, stats vivantes à la minute 25,1) et la mesure est
+chaotique : un prix qui bouge déplace des achats. Les prix du BTS (4 200 €), du
+coaching (3 800 €), du loft (92 000 €) et de la procédure (640 000 €) sont au-dessus
+de la proposition ; les multiplicateurs de sommeil sont plus bas. Aucune
+sauvegarde ne change de forme (version 14 inchangée) ; un joueur qui possède déjà
+la camionnette garde son achat et gagne le nouvel effet.

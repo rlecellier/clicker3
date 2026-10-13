@@ -33,8 +33,8 @@ Toutes les lignes suivent le même modèle :
   « Argent insuffisant », « Réputation insuffisante » ou « Partie terminée ».
 
 **Toutes les valeurs affichées sont les valeurs réelles**, bonus compris, pas des
-valeurs de base. Si vous avez acheté la Camionnette d'occasion, l'Atelier
-d'assemblage annonce 2,3 articles par exemplaire au lieu de 2.
+valeurs de base. Si vous avez acheté la Camionnette d'occasion, le Stand au
+marché annonce environ 33 articles par exemplaire au lieu de 29.
 
 ## Entreprises
 

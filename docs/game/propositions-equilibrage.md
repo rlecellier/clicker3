@@ -242,6 +242,10 @@ recalent pour garder l'arbitrage.
 
 ### Axe F — Améliorations à prix réels et effets qui comptent
 
+> Réalisé en #168 : les valeurs prouvées sont dans
+> [equilibrage.md](equilibrage.md#axe-f--améliorations-à-prix-réels-et-effets-qui-comptent-issue-168).
+> Le tableau ci-dessous reste la proposition d'origine.
+
 | Amélioration        | Aujourd'hui                    | Proposé                                                    |
 | ------------------- | ------------------------------ | ---------------------------------------------------------- |
 | Stage « Posture »   | 150 €                          | 450 € (deux jours en organisme)                            |

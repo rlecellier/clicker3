@@ -69,12 +69,12 @@ zone morte ne dépasse une minute, que le travail automatique arrive entre 35 et
 absence ne le tue pas. `npm run sim` affiche aussi la liste des zones mortes de
 plus d'une minute.
 
-## Dernier relevé (entreprises à l'échelle réelle, issue #167)
+## Dernier relevé (améliorations à prix réels, issue #168)
 
-- Jeu actif : **31 min 22 s** (cible 30 à 60), plus 12 min 15 s d'attente.
+- Jeu actif : **30 min 26 s** (cible 30 à 60), plus 12 min 23 s d'attente.
 - Phases : toutes atteintes (patron à 19 ans).
 - Plus longue zone morte : 1 min 00 s ; aucune au-delà.
-- Premier employé à 19 ans, travail automatique à 45 ans.
-- 35 établissements en fin de vie, 310 petits entrepôts achetés.
+- Premier employé à 19 ans, travail automatique à 44 ans.
+- Garde-fous : tous réussis, plus aucun échec connu.
 
 Détail des valeurs et limites : [equilibrage.md](equilibrage.md).
