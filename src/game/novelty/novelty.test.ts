@@ -2,7 +2,13 @@ import { startState, upgrades } from '@game/data';
 import { isUnlocked } from '@game/requirements';
 import { newGame } from '@game/reducer';
 import type { GameState } from '@game/state';
-import { markAllSeen, markSeen, newItems, noveltyTabs } from './novelty';
+import {
+  markAllSeen,
+  markSeen,
+  newItems,
+  noveltyTabs,
+  pruneSeen,
+} from './novelty';
 
 const withStats = (metier: number, gestion = 0): GameState => ({
   ...startState,
@@ -23,6 +29,14 @@ describe('newItems', () => {
 
   it('signale les emplois dont la condition est remplie', () => {
     expect(newItems(withStats(2), 'jobs')).toEqual(['job:polyvalent']);
+  });
+
+  it('compte une fois ce qui se débloque et devient achetable d’un coup', () => {
+    const state = withStats(2, 6);
+    const ids = newItems(state, 'upgrades');
+    expect(new Set(ids.map((id) => id.replace('buy:', ''))).size).toBe(
+      ids.length,
+    );
   });
 
   it('signale les entreprises dans Entreprises et les améliorations dans Améliorations', () => {
@@ -70,10 +84,22 @@ describe('newItems', () => {
     expect(skillItems(state)).toEqual(['reputation:1']);
   });
 
-  it('ne dépend pas de l’argent', () => {
-    expect(newItems({ ...withStats(2), money: 0 }, 'jobs')).toEqual(
-      newItems({ ...withStats(2), money: 1e6 }, 'jobs'),
-    );
+  it('le déblocage ne dépend pas de l’argent, l’achat possible si', () => {
+    const poor = newItems({ ...withStats(2, 6), money: 0 }, 'upgrades');
+    const rich = newItems({ ...withStats(2, 6), money: 1e6 }, 'upgrades');
+    expect(unlockedOnly(rich)).toEqual(unlockedOnly(poor));
+    expect(poor.some((id) => id.startsWith('buy:'))).toBe(false);
+    expect(rich.some((id) => id.startsWith('buy:upgrade:'))).toBe(true);
+  });
+
+  it('signale une entreprise déjà vue quand on peut enfin l’acheter', () => {
+    const seen = markSeen({ ...withStats(2, 6), money: 0 }, 'companies');
+    expect(newItems(seen, 'companies')).toEqual([]);
+    expect(
+      newItems({ ...seen, money: 1e6 }, 'companies').some((id) =>
+        id.startsWith('buy:company:'),
+      ),
+    ).toBe(true);
   });
 });
 
@@ -113,5 +139,43 @@ describe('markAllSeen', () => {
 
   it('une nouvelle vie démarre sans nouveauté', () => {
     expect(newItems(newGame(), 'companies')).toEqual([]);
+  });
+});
+
+const unlockedOnly = (ids: string[]) =>
+  ids.filter((id) => !id.startsWith('buy:'));
+
+const buyIds = (state: GameState) =>
+  newItems(state, 'upgrades').filter((id) => id.startsWith('buy:'));
+
+describe('achat possible', () => {
+  const unlocked = withStats(2, 6);
+
+  it('se resignale quand l’achat redevient possible après avoir été vu', () => {
+    const seen = markSeen({ ...unlocked, money: 1e6 }, 'upgrades');
+    expect(buyIds(seen)).toEqual([]);
+
+    const broke = pruneSeen({ ...seen, money: 0 });
+    expect(buyIds(broke)).toEqual([]);
+
+    expect(buyIds({ ...broke, money: 1e6 })).not.toEqual([]);
+  });
+
+  it('ne resignale pas un achat resté possible', () => {
+    const seen = markSeen({ ...unlocked, money: 1e6 }, 'upgrades');
+    expect(pruneSeen({ ...seen, money: 5e5 })).toEqual({
+      ...seen,
+      money: 5e5,
+    });
+    expect(buyIds(pruneSeen({ ...seen, money: 5e5 }))).toEqual([]);
+  });
+
+  it('garde le déblocage vu même quand l’argent manque', () => {
+    const seen = markSeen({ ...unlocked, money: 1e6 }, 'upgrades');
+    expect(newItems(pruneSeen({ ...seen, money: 0 }), 'upgrades')).toEqual([]);
+  });
+
+  it('rend le même état quand rien n’est à retirer', () => {
+    expect(pruneSeen(startState)).toBe(startState);
   });
 });
