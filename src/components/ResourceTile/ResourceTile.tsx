@@ -13,8 +13,8 @@ type ResourceTileProperties = {
   to: string;
 };
 
-// Tuile carrée : icône, nom de la ressource et balance de la période. À placer
-// dans une grille, deux tuiles côte à côte de même taille.
+// Tuile sur une ligne : icône, nom de la ressource et balance de la période. À
+// placer dans une grille, deux tuiles côte à côte de même taille.
 export const ResourceTile = ({
   icon,
   label,
