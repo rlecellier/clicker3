@@ -190,9 +190,10 @@ describe('crédibilité des salaires, du train de vie et des employés', () => {
 
   it('compte un nombre entier d’actions pour les 8 h de travail', () => {
     expect(Number.isSafeInteger(regularActions)).toBe(true);
-    // Une journée = ce qu'il reste de la jauge après un sommeil complet.
+    // Une journée = ce qu'il reste de la jauge après le plus long sommeil.
     expect(overtime.regularGauge).toBeLessThanOrEqual(
-      startState.gaugeCapacity - actionRules.sleep.gauge,
+      startState.gaugeCapacity *
+        (1 - actionRules.sleep.hours.max / actionRules.sleep.hoursPerPeriod),
     );
   });
 

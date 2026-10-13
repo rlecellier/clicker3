@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 16,
+    version: 17,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -35,6 +35,7 @@ describe('forme de l’état', () => {
       'jobId',
       'jobSalaryFactors',
       'lastSeenAt',
+      'lastSleepPeriod',
       'lastStatement',
       'ledger.current.charges',
       'ledger.current.interest',
@@ -103,6 +104,7 @@ describe('forme de l’état', () => {
       'payroll',
       'pendingPromotion',
       'period',
+      'periodSleepHours',
       'phase',
       'payrollFactor',
       'productionMultiplier',
@@ -120,7 +122,12 @@ describe('forme de l’état', () => {
       'seenItems.jobs',
       'seenItems.profile',
       'seenItems.upgrades',
+      'sleepConvertible',
+      'sleepHours',
+      'sleepLeft',
       'sleepMultiplier',
+      'sleepStepGauge',
+      'sleepTotal',
       'stats.endurance',
       'stats.gestion',
       'stats.intelligence',

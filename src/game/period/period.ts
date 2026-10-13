@@ -15,7 +15,12 @@ import { ageOf } from '@game/time';
 
 /** Étape 4 : le personnage vieillit d'une période, et meurt à l'âge fixé. */
 export const ageCharacter = (state: GameState): GameState => {
-  const aged = { ...state, period: state.period + 1 };
+  // Le choix de durée du sommeil prend effet avec la période.
+  const aged = {
+    ...state,
+    period: state.period + 1,
+    periodSleepHours: state.sleepHours,
+  };
   return ageOf(aged) >= aged.life.deathAge ? { ...aged, status: 'dead' } : aged;
 };
 

@@ -8,8 +8,9 @@ export const actionRules = {
     markerVariance: 0.5,
     // Heures supplémentaires automatiques (issue #166). Une période est une
     // journée type de 24 h : 8 h de travail, 8 h de sommeil, 8 h libres. La
-    // jauge fait 70 et un sommeil en coûte 40 : il en reste 30, que l'on compte
-    // pour les 8 h de travail, celles que rémunère le salaire. Au-delà, le
+    // jauge fait 70 et un sommeil de 8 h en coûte 23 : il en reste 47, dont 30
+    // que l'on compte pour les 8 h de travail, celles que rémunère le salaire.
+    // Au-delà, le
     // travail de la période est payé en heures supplémentaires, sans déblocage :
     // +25 % à partir de 30 de jauge de travail, +35 % à partir de 50 (le code du
     // travail dit +25 % puis +50 % ; recalé au simulateur). Chaque action en
@@ -38,9 +39,27 @@ export const actionRules = {
     markerVariance: 0.3,
   },
   sleep: {
-    // Coût en jauge de temps d'un sommeil complet (cerveau plein), réparti
-    // sur les marqueurs.
-    gauge: 40,
+    // Durée du sommeil quotidien, au choix du joueur (heures entières). Jamais
+    // plus de 9 h : une période est une journée type de 24 h.
+    hours: { min: 4, max: 9, default: 8 },
+    hoursPerPeriod: 24,
+    // Une période commence au réveil de 7 h. On se couche plus tard et on se lève
+    // un peu plus tôt quand on dort moins (heures de l'horloge, issue #202).
+    dayStartHour: 7,
+    // `markers` : marqueurs que le sommeil peut vider. 9 h vident tout le cerveau
+    // de départ (5) ; chaque heure en moins en vide un de moins, et 4 h aucun :
+    // dormir peu laisse du temps éveillé pour gagner de l'argent, mais on
+    // apprend moins. Le cerveau retient plus que ce qu'une journée produit, donc
+    // les marqueurs non vidés restent pour le sommeil suivant. Point d'extension
+    // des futures améliorations (issue sur l'apprentissage selon l'âge).
+    schedule: {
+      9: { bed: 22, wake: 7, markers: 5 },
+      8: { bed: 23, wake: 7, markers: 4 },
+      7: { bed: 0, wake: 7, markers: 3 },
+      6: { bed: 1, wake: 7, markers: 2 },
+      5: { bed: 1, wake: 6, markers: 1 },
+      4: { bed: 2, wake: 6, markers: 0 },
+    },
     // Points de stat par marqueur consommé, avant le multiplicateur du logement.
     pointsPerMarker: 1,
   },

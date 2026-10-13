@@ -12,6 +12,14 @@ const shop = companies.find((company) => company.id === 'boutique');
 const workshopOutput = workshop?.kind === 'production' ? workshop.output : 0;
 const shopCapacity = shop?.kind === 'commerce' ? shop.capacity : 0;
 
+describe('durée du sommeil', () => {
+  it('prend effet avec la période suivante', () => {
+    const chosen = { ...startState, sleepHours: 6 };
+    expect(chosen.periodSleepHours).toBe(8);
+    expect(endPeriod(chosen).periodSleepHours).toBe(6);
+  });
+});
+
 describe('addGauge', () => {
   it('remplit la jauge sans faire passer de période', () => {
     const next = addGauge(startState, 30, 'work');

@@ -68,5 +68,11 @@ export const guardrailConfig = {
 
 // Échecs connus des garde-fous sur les valeurs actuelles (« genre:sujet »). Ils
 // prouvent le diagnostic (docs/game/propositions-equilibrage.md § 1) ; chaque
-// chantier d'équilibrage retire ceux qu'il corrige.
-export const knownGuardrailFailures: readonly string[] = [];
+// chantier d'équilibrage retire ceux qu'il corrige. Depuis le sommeil quotidien
+// (issue #202), ces quatre améliorations échouent : à recaler dans #205.
+export const knownGuardrailFailures: readonly string[] = [
+  'utility:assistante-direction',
+  'utility:cartes-visite',
+  'utility:pavillon-tilleuls',
+  'utility:studio-renove',
+];

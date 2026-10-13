@@ -1,5 +1,6 @@
 import { wagesDueOf } from '@game/economy';
 import { actionRules, automationRules, jobs, startState } from '@game/data';
+import { sleepGauge } from '@game/sleep';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from '@game/work';
@@ -107,17 +108,21 @@ describe('sommeil', () => {
   const asleep: GameState = {
     ...startState,
     isSleeping: true,
+    sleepLeft: 5,
+    sleepTotal: 5,
+    sleepStepGauge: sleepGauge(startState) / 5,
+    sleepConvertible: 5,
     markers: ['metier', 'metier', 'gestion', 'gestion', 'gestion'],
   };
-  const sleepIntervalMs =
-    automationRules.sleepDurationMs / startState.maxMarkers;
-  const perMarker = actionRules.sleep.gauge / startState.maxMarkers;
+  const sleepIntervalMs = automationRules.sleepDurationMs / asleep.sleepTotal;
+  const sleepCost = sleepGauge(asleep);
+  const perMarker = sleepCost / asleep.sleepTotal;
 
   it('vide un marqueur à chaque délai, même sans travail automatique', () => {
     const next = autoTick(asleep, 2 * sleepIntervalMs);
     expect(next.markers).toEqual(['gestion', 'gestion', 'gestion']);
     expect(next.stats.metier).toBe(2);
-    expect(next.gauge).toBe(2 * perMarker);
+    expect(next.gauge).toBeCloseTo(2 * perMarker);
     expect(next.isSleeping).toBe(true);
   });
 
@@ -168,7 +173,7 @@ describe('sommeil', () => {
     const next = autoTick(asleep, 5 * sleepIntervalMs);
     expect(next.markers).toEqual([]);
     expect(next.isSleeping).toBe(false);
-    expect(next.gauge).toBe(actionRules.sleep.gauge);
+    expect(next.gauge).toBeCloseTo(sleepCost);
     expect(next.stats.gestion).toBe(3);
   });
 
@@ -196,8 +201,10 @@ describe('catchUp', () => {
 
   it('rejoue l’absence et résume ce qui s’est passé', () => {
     const { state, summary } = catchUp(workOnly, 25 * autoIntervalMs);
-    expect(summary.actions).toBe(25);
-    // Six actions par période : trois heures normales, trois heures sup.
+    // 25 délais d'une demi-seconde : par période, cinq actions de travail
+    // (trois heures normales, deux heures sup.) puis quatre pas de sommeil de
+    // 125 ms (8 h), soit quatre périodes entières et une action.
+    expect(summary.actions).toBe(37);
     expect(summary.periods).toBe(4);
     expect(state.period).toBe(4);
     expect(summary.money).toBe(state.money - workOnly.money);
@@ -276,7 +283,7 @@ describe('resume', () => {
 
   it('rattrape le temps écoulé depuis lastSeenAt puis note le retour', () => {
     const { state, summary } = resume(saved, 1000 + 25 * autoIntervalMs);
-    expect(summary.actions).toBe(25);
+    expect(summary.actions).toBe(37);
     expect(state.period).toBe(4);
     expect(state.lastSeenAt).toBe(1000 + 25 * autoIntervalMs);
   });

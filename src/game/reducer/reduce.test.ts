@@ -1,6 +1,7 @@
 import { wagesDueOf } from '@game/economy';
 import { autoIntervalMs } from '@game/automation';
-import { actionRules, automationRules, startState } from '@game/data';
+import { automationRules, startState } from '@game/data';
+import { bedtimeGauge, sleepGauge } from '@game/sleep';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -156,14 +157,21 @@ describe('reduce', () => {
     expect(cancelled.money).toBe(bought.money);
   });
 
-  it('s’endort quand un travail manuel remplit le cerveau', () => {
+  it('s’endort quand un travail manuel amène la jauge à l’heure du coucher', () => {
     const state: GameState = {
       ...startState,
-      markers: Array.from({ length: startState.maxMarkers }, () => 'metier'),
+      gauge: bedtimeGauge(startState) - 1,
+      markers: ['metier'],
     };
     const next = reduce(state, { type: 'work', target: 'job' });
     expect(next.isSleeping).toBe(true);
     expect(next.stats.metier).toBe(0);
+  });
+
+  it('règle la durée du sommeil', () => {
+    expect(
+      reduce(startState, { type: 'setSleepHours', hours: 6 }).sleepHours,
+    ).toBe(6);
   });
 
   it('garde les gestes manuels pendant le sommeil et les rejoue au réveil', () => {
@@ -195,17 +203,19 @@ describe('reduce', () => {
     const state: GameState = {
       ...startState,
       isSleeping: true,
+      sleepLeft: 2,
+      sleepTotal: 2,
+      sleepStepGauge: sleepGauge(startState) / 2,
+      sleepConvertible: 2,
       markers: ['metier', 'metier'],
     };
     const done = reduce(state, {
       type: 'autoTick',
-      elapsedMs: (2 * automationRules.sleepDurationMs) / startState.maxMarkers,
+      elapsedMs: automationRules.sleepDurationMs,
     });
     expect(done.isSleeping).toBe(false);
     expect(done.stats.metier).toBe(2);
-    expect(done.gauge).toBe(
-      (2 * actionRules.sleep.gauge) / startState.maxMarkers,
-    );
+    expect(done.gauge).toBeCloseTo(sleepGauge(state));
   });
 
   describe('automatisation', () => {

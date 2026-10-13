@@ -167,8 +167,22 @@ export type GameState = {
   markers: StatId[];
   // Nombre maximum de marqueurs détenus (la capacité du cerveau).
   maxMarkers: number;
-  // Cerveau plein : le personnage dort et vide ses marqueurs un par un.
+  // Le personnage dort et vide ses marqueurs un par un (un sommeil par période).
   isSleeping: boolean;
+  // Durée du sommeil quotidien choisie par le joueur, en heures ; elle ne
+  // sert qu'à partir de la période suivante (`periodSleepHours`).
+  sleepHours: number;
+  // Durée en vigueur pour la période en cours : coucher et coût.
+  periodSleepHours: number;
+  // Pas restants du sommeil en cours, pas du sommeil entier et jauge de temps
+  // que coûte chaque pas.
+  sleepLeft: number;
+  sleepTotal: number;
+  sleepStepGauge: number;
+  // Marqueurs que le sommeil en cours peut encore vider.
+  sleepConvertible: number;
+  // Dernière période où le personnage s'est endormi (-1 : jamais).
+  lastSleepPeriod: number;
   // Gestes manuels faits pendant le sommeil, rejoués au réveil (dans l'ordre).
   queuedActions: QueuedAction[];
   // Conversion du sommeil, selon le logement (studio : 1).

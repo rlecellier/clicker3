@@ -7,8 +7,8 @@ type MarkerTrackProperties = {
   isSleeping: boolean;
 };
 
-// Le cerveau et ses marqueurs (x/max). Plein, il s'endort et se vide marqueur
-// par marqueur.
+// Le cerveau et ses marqueurs (x/max). Au sommeil, il se vide marqueur par
+// marqueur.
 export const MarkerTrack = ({
   count,
   max,

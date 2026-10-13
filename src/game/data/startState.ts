@@ -1,3 +1,4 @@
+import { actionRules } from './actionRules';
 import { emptyLedger } from '@game/ledger';
 import type { GameState } from '@game/state';
 
@@ -7,7 +8,7 @@ import type { GameState } from '@game/state';
  * équilibrer au simulateur.
  */
 export const startState: GameState = {
-  version: 16,
+  version: 17,
   characterName: 'Camille Morel',
   life: {
     startAge: 18,
@@ -35,6 +36,13 @@ export const startState: GameState = {
   markers: [],
   maxMarkers: 5,
   isSleeping: false,
+  sleepHours: actionRules.sleep.hours.default,
+  periodSleepHours: actionRules.sleep.hours.default,
+  sleepLeft: 0,
+  sleepTotal: 0,
+  sleepStepGauge: 0,
+  sleepConvertible: 0,
+  lastSleepPeriod: -1,
   queuedActions: [],
   sleepMultiplier: 1,
 

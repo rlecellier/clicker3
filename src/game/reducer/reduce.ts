@@ -10,7 +10,7 @@ import { markAllSeen, markSeen } from '@game/novelty';
 import { addGauge } from '@game/period';
 import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
-import { queueAction } from '@game/sleep';
+import { queueAction, setSleepHours } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
 import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
@@ -69,6 +69,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'setAuto': {
       return setAuto(state, action.action, action.isEnabled);
+    }
+    case 'setSleepHours': {
+      return setSleepHours(state, action.hours);
     }
     case 'autoTick': {
       return autoTick(state, action.elapsedMs);

@@ -12,6 +12,8 @@ const firstThreshold = overtimeActions[0] ?? 0;
 
 const stateWith = (changes: Partial<GameState>): GameState => ({
   ...startState,
+  // Déjà couché cette période : le sommeil ne garde pas les gestes de travail.
+  lastSleepPeriod: 0,
   ...changes,
 });
 

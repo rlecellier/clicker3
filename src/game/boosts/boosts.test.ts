@@ -44,6 +44,9 @@ describe('effets des coups de pouce', () => {
       ...buyBoost(rich, 'clinique-sommeil'),
       markers: ['metier', 'metier', 'metier', 'metier', 'metier'],
       isSleeping: true,
+      sleepLeft: 5,
+      sleepTotal: 5,
+      sleepConvertible: 5,
     };
     expect(sleepStep(asleep).stats.metier).toBe(
       actionRules.sleep.pointsPerMarker * 2,
