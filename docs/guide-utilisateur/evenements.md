@@ -9,6 +9,13 @@ arrive. Les montants de loyer et de salaires sont arrondis à l'euro.
 Les dates sont celles du jeu. Un mois de jeu est un mois de calendrier, en
 partant de janvier 1999.
 
+## Les anniversaires
+
+À 18, 20, 25, 30, 40, 50, 60, 70 et 75 ans, une fenêtre fête l'occasion et fait le
+point : années passées, argent, entreprises, améliorations et réputation gagnée
+depuis l'anniversaire précédent. Le jeu s'arrête tant qu'elle est ouverte ; un
+bouton la ferme. Les 18 ans ouvrent la partie, les 75 ans précèdent l'écran de fin.
+
 ## Histoire du monde
 
 | Date                | Message                                                                                                          | Effet                                                                                             |
