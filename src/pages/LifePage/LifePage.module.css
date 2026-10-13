@@ -1,8 +1,24 @@
 .balances {
   display: grid;
-  grid-template-columns: repeat(2, 6.5rem);
+  grid-template-columns: 6.5rem minmax(0, 1fr);
   gap: var(--space);
+  align-items: start;
+}
+
+.tile {
   margin: 0;
+}
+
+.stock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+/* Le stock prend la largeur restante : la tuile n'y reste pas carrée. */
+.stock > .tile > * {
+  aspect-ratio: auto;
+  min-height: 6.5rem;
 }
 
 .actions {

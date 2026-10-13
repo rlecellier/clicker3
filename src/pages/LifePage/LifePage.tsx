@@ -22,20 +22,34 @@ export const LifePage = () => {
   return (
     <>
       <Window title="Balance de la période">
-        <dl className={styles.balances}>
-          <ResourceTile
-            icon="money"
-            label="Argent"
-            balance={screen.balances.money}
-            to={screen.balanceLinks.money}
-          />
-          <ResourceTile
-            icon="stock"
-            label="Stock"
-            balance={screen.balances.stock}
-            to={screen.balanceLinks.stock}
-          />
-        </dl>
+        <div className={styles.balances}>
+          <dl className={styles.tile}>
+            <ResourceTile
+              icon="money"
+              label="Argent"
+              balance={screen.balances.money}
+              to={screen.balanceLinks.money}
+            />
+          </dl>
+          <div className={styles.stock}>
+            <dl className={styles.tile}>
+              <ResourceTile
+                icon="stock"
+                label="Stock"
+                balance={screen.balances.stock}
+                to={screen.balanceLinks.stock}
+              />
+            </dl>
+            <ActionButton
+              label="Vendre le surplus"
+              detail={sellSurplus.detail}
+              reason={sellSurplus.reason}
+              isDisabled={sellSurplus.isDisabled}
+              press={sellSurplus.press}
+              onClick={sellSurplus.run}
+            />
+          </div>
+        </div>
       </Window>
       <Window
         title="Ma vie à Sainte-Croissance"
@@ -85,14 +99,6 @@ export const LifePage = () => {
               max={study.gauge?.max ?? 1}
             />
           </div>
-          <ActionButton
-            label="Vendre le surplus"
-            detail={sellSurplus.detail}
-            reason={sellSurplus.reason}
-            isDisabled={sellSurplus.isDisabled}
-            press={sellSurplus.press}
-            onClick={sellSurplus.run}
-          />
         </div>
         <p className={styles.feedback} role="status">
           {screen.feedback}
