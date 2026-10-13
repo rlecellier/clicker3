@@ -12,32 +12,56 @@ Il n'existe qu'un type de marchandise : **l'article**. Des entreprises le
 **produisent**, d'autres le **vendent**. Une production ne rapporte rien par elle-même ;
 un commerce ne vend rien sans stock. Il faut donc les deux, en proportion.
 
-| Entreprise                    | Famille    | Articles par mois et par exemplaire | Prix de vente | Prix du 1ᵉʳ exemplaire | Conditions                                                                 |
-| ----------------------------- | ---------- | ----------------------------------- | ------------- | ---------------------- | -------------------------------------------------------------------------- |
-| Atelier d'assemblage          | Production | produit 2                           |               | 150 €                  | Gestion 1                                                                  |
-| Boutique                      | Commerce   | vend jusqu'à 3                      | 12 €          | 250 €                  | Gestion 1                                                                  |
-| Manufacture                   | Production | produit 99                          |               | 13 000 €               | Gestion 2                                                                  |
-| Hypermarché                   | Commerce   | vend jusqu'à 87                     | 13 €          | 13 000 €               | Gestion 2 et quartier Parc d'activités Horizon ouvert                      |
-| Site de production délocalisé | Production | produit 210                         |               | 53 000 €               | Gestion 3                                                                  |
-| Plateforme en ligne           | Commerce   | vend jusqu'à 250                    | 15 €          | 66 000 €               | Gestion 3, à partir de janvier 2000 et quartier Pôle d'Excellence ouvert   |
+Deux **micro-activités** ouvrent la voie (un établi au garage, un stand au
+marché), puis les vraies entreprises, à l'échelle de 1999.
 
-Les paliers de Gestion sont à 2, 9 et 41 points. Les bonus des
-[améliorations](ameliorations.md#comment-les-bonus-se-combinent) multiplient les
+| Entreprise                    | Famille    | Articles par mois et par exemplaire | Prix de vente | Apport du 1ᵉʳ exemplaire | Charges par mois | Plafond | Conditions                                                                 |
+| ----------------------------- | ---------- | ----------------------------------- | ------------- | ------------------------ | ---------------- | ------- | -------------------------------------------------------------------------- |
+| Établi au garage              | Production | produit 10                          |               | 800 €                    |                  | 3       | Gestion 1                                                                  |
+| Stand au marché               | Commerce   | vend jusqu'à 29                     | 12 €          | 1 400 €                  | 100 €            | 4       | Gestion 1                                                                  |
+| Atelier d'assemblage          | Production | produit 170                         |               | 16 000 €                 | 234 €            | 4       | Gestion 2                                                                  |
+| Boutique                      | Commerce   | vend jusqu'à 110                    | 13 €          | 28 000 €                 | 409 €            | 4       | Gestion 2                                                                  |
+| Manufacture                   | Production | produit 930                         |               | 890 000 €                | 12 994 €         | 6       | Gestion 4                                                                  |
+| Corner en hypermarché         | Commerce   | vend jusqu'à 470                    | 12 €          | 380 000 €                | 5 548 €          | 8       | Gestion 5 et quartier Parc d'activités Horizon ouvert                      |
+| Site de production délocalisé | Production | produit 4 000                       |               | 6 200 000 €              | 90 520 €         | 2       | Gestion 6                                                                  |
+| Plateforme en ligne           | Commerce   | vend jusqu'à 9 600                  | 15 €          | 8 400 000 €              | 122 640 €        | 4       | Gestion 7, à partir de janvier 2000 et quartier Pôle d'Excellence ouvert   |
+
+Les paliers de Gestion sont à 2, 6, 15, 35, 80, 170, 350 et 700 points. Les bonus
+des [améliorations](ameliorations.md#comment-les-bonus-se-combinent) multiplient les
 articles produits et les prix de vente ; Investir montre toujours les valeurs
 finales.
 
-## Le prix augmente avec chaque exemplaire
+## Apport, charges et plafond
 
-Chaque exemplaire coûte 10 % de plus que le précédent, arrondi à l'euro.
+- **Le prix affiché est l'apport.** On n'achète pas une boutique comptant : on
+  verse un apport et on emprunte le reste. Dans le jeu, le prix de l'exemplaire
+  est cet apport.
+- **Les charges sont la mensualité du crédit.** Chaque exemplaire possédé
+  ajoute ses charges (environ 1,46 % de l'apport par mois, un crédit du même
+  montant à 6 % sur sept ans) aux dépenses de chaque mois, qu'il vende ou non.
+  Elles apparaissent dans les [Comptes](lire-les-comptes.md) sous « Charges des
+  entreprises ». Les micro-activités se paient comptant (un petit droit de
+  place pour le stand).
+- **Chaque type a un plafond d'exemplaires** dans son quartier. Une fois
+  atteint, le bouton Acheter reste grisé (« Quartier complet : montez en
+  gamme »). Après le plafond, la croissance passe par la
+  [montée en gamme](ameliorations.md#la-montée-en-gamme).
+- **Le prix augmente avec chaque exemplaire**, jamais au-delà de 10 fois le prix
+  du premier :
 
-| Entreprise                    | 1ᵉʳ        | 2ᵉ         | 3ᵉ         |
-| ----------------------------- | ---------- | ---------- | ---------- |
-| Atelier d'assemblage          | 150 €      | 165 €      | 182 €      |
-| Boutique                      | 250 €      | 275 €      | 303 €      |
-| Manufacture                   | 13 000 €   | 14 300 €   | 15 730 €   |
-| Hypermarché                   | 13 000 €   | 14 300 €   | 15 730 €   |
-| Site de production délocalisé | 53 000 €   | 58 300 €   | 64 130 €   |
-| Plateforme en ligne           | 66 000 €   | 72 600 €   | 79 860 €   |
+| Entreprise                    | Hausse par exemplaire | 1ᵉʳ        | Dernier (plafond) |
+| ----------------------------- | --------------------- | ---------- | ----------------- |
+| Établi au garage              | +64 %                 | 800 €      | 2 152 €           |
+| Stand au marché               | +57 %                 | 1 400 €    | 5 418 €           |
+| Atelier d'assemblage          | +61 %                 | 16 000 €   | 66 772 €          |
+| Boutique                      | +99 %                 | 28 000 €   | 220 657 €         |
+| Manufacture                   | +33 %                 | 890 000 €  | 3 703 806 €       |
+| Corner en hypermarché         | +32 %                 | 380 000 €  | 2 653 390 €       |
+| Site de production délocalisé | +130 %                | 6 200 000 € | 14 260 000 €     |
+| Plateforme en ligne           | +23 %                 | 8 400 000 € | 15 631 283 €     |
+
+Au total, les plafonds laissent 35 places, et une vie les remplit toutes : une
+trentaine d'établissements, et non des centaines.
 
 Vos entreprises ne travaillent que lorsqu'un mois se termine. Dans cette
 version, le personnage ne peut pas « travailler dans » une entreprise : il
@@ -47,14 +71,15 @@ travaille toujours à son poste.
 
 1. **Production.** Chaque production verse ses articles dans le stock, sans
    limite à ce stade : rien n'est perdu.
-2. **Ventes.** Les commerces vendent, dans l'ordre Boutique, Hypermarché, Plateforme.
-   Chacun vend le plus petit de ces deux nombres : sa capacité de vente ou
-   le stock restant, **production du mois comprise**. L'argent arrive à ce moment : articles
-   vendus × prix × coefficient de vente.
+2. **Ventes.** Les commerces vendent, dans l'ordre Stand, Boutique, Corner,
+   Plateforme. Chacun vend le plus petit de ces deux nombres : sa capacité de
+   vente ou le stock restant, **production du mois comprise**. L'argent arrive à
+   ce moment : articles vendus × prix × coefficient de vente.
 3. **Rangement.** Le stock qui reste est rangé dans l'entrepôt. Ce qui dépasse
    sa capacité est **perdu**.
-4. Ensuite viennent le loyer, les salaires, les intérêts de la dette et le
-   vieillissement (voir [Débuter](debuter.md#la-jauge-de-temps)).
+4. Ensuite viennent le loyer, le train de vie, les **charges des entreprises**,
+   les salaires, les intérêts de la dette (1,5 % par mois) et le vieillissement
+   (voir [Débuter](debuter.md#la-jauge-de-temps)).
 
 ### La réputation des ventes
 
@@ -64,8 +89,8 @@ travaille toujours à son poste.
   il fait **perdre 0,5 de réputation**, une fois par commerce en rupture et par
   mois. La réputation ne descend jamais sous 0.
 - Un commerce acheté sans production derrière est donc en rupture chaque mois.
-  Exemple : un atelier produit 2 articles, une boutique peut en vendre 3 : elle est en
-  rupture. Deux ateliers (4 articles) suffisent pour une boutique.
+  Exemple : un atelier produit 170 articles, une boutique peut en vendre 110 :
+  tout part. Deux boutiques (220) dépassent un atelier et sont en rupture.
 
 Le message « Vos clients découvrent la rareté. Ils ne vous en sont pas
 reconnaissants. » signale une rupture ; « Votre entrepôt déborde. La production
@@ -77,9 +102,9 @@ L'entrepôt contient **50 articles** au départ. Trois moyens de l'agrandir :
 
 | Moyen                  | Effet                                  | Prix                                         |
 | ---------------------- | -------------------------------------- | -------------------------------------------- |
-| Étagères en kit        | Capacité ×13                           | 2 900 € (Gestion 1)                          |
-| Entrepôt logistique    | Capacité ×48                           | 31 000 € (Gestion 3)                         |
-| Petit entrepôt         | +25 de capacité, multipliés par les agrandissements (×13, ×48), achetable sans limite | 100 €, puis +15 % chacun (100, 115, 132, 152…) |
+| Étagères en kit        | Capacité ×120                          | 13 000 € (Gestion 3)                         |
+| Entrepôt logistique    | Capacité ×18                           | 34 000 € (Gestion 6)                         |
+| Petit entrepôt         | +35 de capacité, multipliés par les agrandissements (×120, ×18), achetable sans limite | 160 €, puis +3 % chacun (160, 165, 170…) |
 
 Les petits entrepôts n'ont aucune condition : c'est l'issue de secours quand la
 production dépasse la place disponible. Les agrandissements multiplient toute la

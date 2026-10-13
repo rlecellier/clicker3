@@ -25,10 +25,12 @@ Les entreprises prennent leur place sur le plan selon leur type :
 
 | Entreprise                         | Quartier                                    |
 | ---------------------------------- | ------------------------------------------- |
+| Établi au garage                   | Les Tilleuls                                |
+| Stand au marché                    | Les Tilleuls                                |
 | Atelier d'assemblage               | Les Tilleuls                                |
 | Boutique                           | Les Tilleuls                                |
 | Manufacture                        | Les Hauts-Fourneaux (les Tilleuls s'il est fermé) |
-| Hypermarché                        | Parc d'activités Horizon                    |
+| Corner en hypermarché              | Parc d'activités Horizon                    |
 | Site de production délocalisé      | Parc d'activités Horizon (les Tilleuls s'il est fermé) |
 | Plateforme en ligne                | Le Pôle d'Excellence                        |
 

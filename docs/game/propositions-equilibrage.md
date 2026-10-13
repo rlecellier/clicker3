@@ -1,6 +1,6 @@
 # Propositions d'équilibrage (v1.6)
 
-> Statut : **décisions prises le 2026-10-12** (§ 6, issue #153). Axes A et B appliqués (issue #165, voir [equilibrage.md](equilibrage.md#stats-sur-8-niveaux-et-boosts-issue-165)) ; les autres chantiers ont chacun leur issue.
+> Statut : **décisions prises le 2026-10-12** (§ 6, issue #153). Axes A et B appliqués (issue #165, voir [equilibrage.md](equilibrage.md#stats-sur-8-niveaux-et-boosts-issue-165)), E (issue #166) et C + D (issue #167, voir [equilibrage.md](equilibrage.md#axe-c--d--entreprises-à-léchelle-réelle-charges-plafond-montée-en-gamme-issue-167), avec les écarts qui y sont listés) ; les autres chantiers ont chacun leur issue.
 > Les valeurs en vigueur et leur preuve sont dans [equilibrage.md](equilibrage.md) ;
 > ce document part de mesures faites sur `main` (simulateur, graine 1999) et
 > propose des axes, avec des chiffres crédibles à caler ensuite au simulateur.

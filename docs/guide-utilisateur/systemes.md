@@ -78,7 +78,7 @@ dépense de réputation.
 Un quartier ouvert :
 
 - reçoit sur le plan les bâtiments de ses entreprises ;
-- est exigé par l'Hypermarché (Parc Horizon) et la Plateforme en ligne (Pôle
+- est exigé par le Corner en hypermarché (Parc Horizon) et la Plateforme en ligne (Pôle
   d'Excellence) ;
 - affiche ses jauges de pollution et d'inégalités ;
 - déclenche un message quand vous l'ouvrez.

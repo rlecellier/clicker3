@@ -12,11 +12,11 @@
 | Bilan                | Les quatre chiffres de l'écran de fin : entreprises, argent, âge, réputation                                      |
 | Capacité             | Pour un commerce, le nombre d'articles qu'il peut vendre par mois ; pour l'entrepôt, le nombre d'articles qu'il contient |
 | Cerveau              | Le réservoir de marqueurs du personnage (5 au départ)                                                             |
-| Commerce             | Une entreprise qui vend des articles : Boutique, Hypermarché, Plateforme en ligne                                |
+| Commerce             | Une entreprise qui vend des articles : Stand au marché, Boutique, Corner en hypermarché, Plateforme en ligne                                |
 | Compétence           | Métier, Gestion, Intelligence ou Endurance : quatre jauges à quatre paliers                                       |
 | Cumulé               | Dans les Comptes, tous les mois depuis le début de la vie                                                         |
 | Cursus               | Ce que l'on étudie, ouvert par une formation                                                                      |
-| Dette                | Argent négatif. Le loyer et les salaires restent dus, 5 % d'intérêts s'ajoutent chaque mois                       |
+| Dette                | Argent négatif. Le loyer et les salaires restent dus, 1,5 % d'intérêts s'ajoutent chaque mois                       |
 | Dirigeant            | Phase de vie qui commence au premier employé                                                                      |
 | Entrepôt             | Le stock et sa capacité. Il y a aussi les petits entrepôts, achetables à volonté                                 |
 | Entrepreneur         | Phase de vie qui commence à la première entreprise                                                                |
@@ -25,7 +25,7 @@
 | Marqueur             | Un jeton de progression donné de temps en temps par le travail ou l'étude                                         |
 | Palier               | Un seuil franchi par une compétence (2, 9, 41, 81 points) ou par la réputation (6, 100, 170)                      |
 | Période              | Un mois de jeu. Une vie en compte 684                                                                             |
-| Production           | Une entreprise qui fabrique des articles : Atelier, Manufacture, Site délocalisé                                  |
+| Production           | Une entreprise qui fabrique des articles : Établi, Atelier, Manufacture, Site délocalisé                                  |
 | Réputation           | Ce que la ville pense de vous. Gagnée (qui donne le palier) ou disponible (qu'on dépense)                         |
 | Rupture              | Un commerce n'a pas pu vendre toute sa capacité faute de stock                                                    |
 | Senior               | À partir de 60 ans : les gains des actions manuelles sont divisés par deux                                        |
@@ -53,7 +53,7 @@ ayez l'argent ou non.
 ### Pourquoi mon argent est-il négatif ?
 
 Le loyer et les salaires sont prélevés même sans argent. Un solde négatif est une
-dette : -2 de réputation et 5 % d'intérêts chaque mois. Travaillez ou vendez le
+dette : -2 de réputation et 1,5 % d'intérêts chaque mois. Travaillez ou vendez le
 surplus pour revenir au positif. On ne peut rien acheter à découvert.
 
 ### Pourquoi ne puis-je pas acheter cette amélioration ?

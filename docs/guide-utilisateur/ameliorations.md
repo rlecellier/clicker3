@@ -2,7 +2,7 @@
 
 [Sommaire](README.md) · Précédent : [Les actions](actions.md) · Suite : [Les autres sources de bonus](autres-bonus.md)
 
-Le jeu compte **19 améliorations**, toutes à achat unique, dans
+Le jeu compte **37 améliorations**, toutes à achat unique, dans
 [Investir](onglet-investir.md), sous-onglet Améliorations. Cette page en
 donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
 
@@ -27,31 +27,32 @@ Les repères de lecture :
 | Studio rénové                     | 7 500 €    | loyer +34 €        | Endurance 1                                 | Sommeil ×1,5                                         |
 | Pavillon aux Tilleuls             | 30 000 €   | loyer +380 €       | Endurance 3                                 | Sommeil ×2,5                                         |
 | Loft au Pôle d'Excellence         | 80 000 €   | loyer +500 €       | Endurance 5                                 | Sommeil ×4                                           |
-| Étagères en kit                   | 2 900 €    |                    | Gestion 3                                   | Capacité du stock ×13                                |
-| Entrepôt logistique               | 31 000 €   |                    | Gestion 6                                   | Capacité du stock ×48                                |
+| Étagères en kit                   | 13 000 €   |                    | Gestion 3                                   | Capacité du stock ×120                               |
+| Entrepôt logistique               | 34 000 €   |                    | Gestion 6                                   | Capacité du stock ×18                                |
 | Agenda électronique               | 380 €      |                    | Intelligence 1                              | Chance de marqueur +30 %                             |
-| Assistante de direction           | 7 500 €    | salaires +1 600 €  | Intelligence 4                              | Production et ventes +35 %                           |
-| Premier collaborateur             | 800 €      | salaires +1 450 €  | Gestion 3 et une entreprise                 | Production +170 %                                    |
-| Équipe de collaborateurs          | 22 000 €   | salaires +7 000 €  | Gestion 5 et réputation 1                   | Production et ventes +90 %                           |
-| Directeur de la transformation    | 80 000 €   | salaires +15 000 € | Gestion 8 et réputation 2                   | Production et ventes +500 %                          |
-| Procédure de travail              | 160 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
+| Assistante de direction           | 7 500 €    | salaires +1 600 €  | Intelligence 4                              | Production et ventes +62 %                           |
+| Premier collaborateur             | 800 €      | salaires +1 450 €  | Gestion 3 et une entreprise                 | Production +190 %                                    |
+| Équipe de collaborateurs          | 78 000 €   | salaires +7 000 €  | Gestion 5 et réputation 1                   | Production et ventes +48 %                           |
+| Directeur de la transformation    | 320 000 €  | salaires +15 000 € | Gestion 8 et réputation 2                   | Production et ventes +140 %                          |
+| Procédure de travail              | 510 000 €  |                    | Dirigeant, Métier 8, Gestion 8, Intelligence 8, Endurance 7 | Travail automatique                                  |
 | Tableau de bord                   | 5 200 €    |                    | Gestion 4                                   | Comptes détaillés                                    |
 | Cartes de visite                  | 58 €       |                    | Aucun                                       | Réputation du travail +25 %                          |
 | Camionnette d'occasion            | 16 000 €   |                    | Une entreprise                              | Production des ateliers +15 %                        |
 | Plan de communication             | 19 000 €   |                    | Réputation 2                                | Ventes +30 %, réputation par vente +50 %             |
+| 18 montées en gamme (3 par entreprise, voir plus bas) | de 19 000 € à 2 milliards | | Des exemplaires du type concerné | Débit de tous les exemplaires du type +10 % à +300 % |
 
 ## Comment les bonus se combinent
 
 Les bonus d'un même genre **s'additionnent** entre eux, ils ne se multiplient
-pas. Un bonus de production « +170 % » ajoute 1,7 à un coefficient qui vaut 1 au
+pas. Un bonus de production « +190 % » ajoute 1,9 à un coefficient qui vaut 1 au
 départ.
 
 | Coefficient            | Départ | Premier collaborateur | + Équipe | + Directeur |
 | ---------------------- | ------ | --------------------- | -------- | ----------- |
-| Production (toutes)    | ×1     | ×2,7                  | ×3,6     | ×8,6        |
-| Prix de vente          | ×1     | ×1                    | ×1,9     | ×6,9        |
+| Production (toutes)    | ×1     | ×2,9                  | ×3,4     | ×4,8        |
+| Prix de vente          | ×1     | ×1                    | ×1,5     | ×2,9        |
 
-Le Plan de communication ajoute encore 0,3 au prix de vente (×7,2 avec les
+Le Plan de communication ajoute encore 0,3 au prix de vente (×3,2 avec les
 trois). La bulle internet de 2000-2001 ajoute 0,2 pendant sa durée.
 La Camionnette d'occasion est à part : elle multiplie la production des
 seuls ateliers d'assemblage par 1,15, en plus du coefficient général.
@@ -127,17 +128,17 @@ s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
 
 ### Étagères en kit
 
-- **Prix** : 2 900 €. **Prérequis** : palier 3 de Gestion (15 points).
-- **Effet** : « Capacité du stock ×13 ».
-- **Sur quoi** : la capacité de l'entrepôt, qui passe de 50 à 650 articles
+- **Prix** : 13 000 €. **Prérequis** : palier 3 de Gestion (15 points).
+- **Effet** : « Capacité du stock ×120 ».
+- **Sur quoi** : la capacité de l'entrepôt, qui passe de 50 à 6 000 articles
   (les petits entrepôts déjà achetés sont multipliés avec le reste).
 
 ### Entrepôt logistique
 
-- **Prix** : 31 000 €. **Prérequis** : palier 6 de Gestion (170 points).
-- **Effet** : « Capacité du stock ×48 ».
+- **Prix** : 34 000 €. **Prérequis** : palier 6 de Gestion (170 points).
+- **Effet** : « Capacité du stock ×18 ».
 - **Sur quoi** : la capacité de l'entrepôt. Avec les Étagères en kit, 50 devient
-  31 200.
+  108 000.
 
 ### Agenda électronique
 
@@ -150,10 +151,34 @@ s'applique, mais les loyers s'additionnent. Annulez l'ancien logement dans
 
 - **Prix** : 7 500 €, **salaires** +1 600 € par mois. **Prérequis** : palier 4
   d'Intelligence (35 points).
-- **Effet** : « Production et ventes de toutes les entreprises +35 % ».
+- **Effet** : « Production et ventes de toutes les entreprises +62 % ».
 - **Sur quoi** : toutes vos entreprises. Elle remplace l'ancienne application de
   productivité, dont le seul effet (un cerveau plus grand) espaçait les
   sommeils sans rien rapporter.
+
+## La montée en gamme
+
+Chaque entreprise financée à crédit (de l'Atelier à la Plateforme) offre **trois
+niveaux de montée en gamme**. Un niveau multiplie le **débit** de tous les
+exemplaires du type : les articles produits par un atelier, les articles
+vendables par une boutique. Les niveaux d'un même type s'additionnent, et il
+faut acheter le précédent avant le suivant. Le premier demande de posséder la
+moitié du plafond d'exemplaires du type, le dernier le plafond entier : c'est
+la suite de la croissance une fois le quartier plein.
+
+| Type | Niveau 1 | Niveau 2 | Niveau 3 |
+| ---- | -------- | -------- | -------- |
+| Atelier d'assemblage | Ligne semi-automatisée, 110 000 €, +28 % | Ligne automatisée, 19 000 €, +300 % | Atelier sans lumière, 970 000 €, +26 % |
+| Boutique | Enseigne régionale, 3 000 000 €, +55 % | Enseigne nationale, 76 000 €, +300 % | Franchise internationale, 46 000 000 €, +19 % |
+| Manufacture | Machines-outils neuves, 7 100 000 €, +67 % | Chaîne robotisée, 8 600 000 €, +140 % | Usine du futur, 47 000 000 €, +280 % |
+| Corner en hypermarché | Tête de gondole, 1 200 000 €, +210 % | Rayon complet, 22 000 000 €, +270 % | Galerie marchande, 73 000 000 €, +10 % |
+| Site de production délocalisé | Équipes en 3 × 8, 530 000 €, +220 % | Second site, 84 000 000 €, +230 % | Zone franche, 62 000 000 €, +100 % |
+| Plateforme en ligne | Moteur de recommandation, 24 000 000 €, +210 % | Livraison en 24 h, 530 000 000 €, +22 % | Marketplace, 2 000 000 000 €, +11 % |
+
+Les derniers niveaux sont des investissements de fin de partie : leur prix
+dépasse de loin les recettes de la jeunesse. Production et ventes se limitent
+l'une l'autre : monter en gamme une production ne rapporte que si les commerces
+suivent, et inversement.
 
 ## Les employés
 
@@ -166,26 +191,26 @@ mois), augmente la production, et la première fait passer à la phase
 - **Prix** : 800 €, **salaires** +1 450 € par mois. **Prérequis** : palier 3 de
   Gestion (9 points) et au moins une entreprise, de n'importe quel type.
 - **Effet** : « Un employé de plus » et « Production de toutes les entreprises
-  +170 % ».
+  +190 % ».
 - **Sur quoi** : la production de toutes les entreprises de production
-  (coefficient de ×1 à ×2,7). Ouvre la phase « Dirigeant (sans équipe de
+  (coefficient de ×1 à ×2,9). Ouvre la phase « Dirigeant (sans équipe de
   direction) », donc la Procédure de travail.
 
 ### Équipe de collaborateurs
 
-- **Prix** : 22 000 €, **salaires** +7 000 € par mois. **Prérequis** : palier 3
+- **Prix** : 78 000 €, **salaires** +7 000 € par mois. **Prérequis** : palier 3
   de Gestion (80 points, palier 5) et palier 1 de réputation (6 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
-  entreprises +90 % ».
+  entreprises +48 % ».
 - **Sur quoi** : la production de toutes les entreprises et le prix de vente de
   chaque article.
 
 ### Directeur de la transformation
 
-- **Prix** : 80 000 €, **salaires** +15 000 € par mois. **Prérequis** : palier 4
+- **Prix** : 320 000 €, **salaires** +15 000 € par mois. **Prérequis** : palier 4
   de Gestion (700 points, palier 8) et palier 2 de réputation (100 gagnés).
 - **Effet** : « Un employé de plus » et « Production et ventes de toutes les
-  entreprises +500 % ».
+  entreprises +140 % ».
 - **Sur quoi** : la production et le prix de vente. Il est aussi exigé pour le
   4ᵉ poste, Directeur adjoint de la transformation.
 
@@ -193,7 +218,7 @@ mois), augmente la production, et la première fait passer à la phase
 
 ### Procédure de travail
 
-- **Prix** : 160 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé)
+- **Prix** : 510 000 €. **Prérequis** : la phase « Dirigeant » (avoir un employé)
   et le dernier niveau de Métier, de Gestion et d'Intelligence (700 points
   chacun) avec le palier 7 d'Endurance (350 points).
 - **Effet** : « Le travail se fait tout seul (mode automatique) ».
