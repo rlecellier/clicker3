@@ -191,9 +191,6 @@ export type GameState = {
   // Conversion du sommeil, selon le logement (studio : 1).
   sleepMultiplier: number;
 
-  /** Graine du générateur aléatoire. */
-  seed: number;
-
   jobId: string | null;
   // Valeurs dérivées des améliorations, des petits entrepôts et des facteurs
   // d'événements : logement, loyer, salaires des employés, capacité de stock,
