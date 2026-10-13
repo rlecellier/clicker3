@@ -4,7 +4,7 @@
 
 Quatre postes se succèdent. Cet onglet les liste tous, avec leur salaire, leur
 prix en réputation et ce qu'il manque pour y accéder. Une pastille de nouveautés
-signale un poste qui vient de se débloquer.
+signale un poste qui vient de se débloquer, ou qu'on peut enfin prendre (réputation suffisante) ; elle disparaît à l'ouverture de l'onglet et revient seulement si le poste redevient hors de portée puis accessible.
 
 ## Ce qu'on voit pour chaque poste
 
