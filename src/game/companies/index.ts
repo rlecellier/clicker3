@@ -6,6 +6,7 @@ export {
   companyById,
   companyCost,
   fitsWarehouse,
+  isCompanyMaxed,
   ownedCount,
   warehouseCost,
 } from './companies';

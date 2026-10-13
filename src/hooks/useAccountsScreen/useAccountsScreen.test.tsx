@@ -103,6 +103,30 @@ describe('useAccountsScreen', () => {
     );
   });
 
+  it('affiche les charges des entreprises parmi les dépenses', () => {
+    const withCharges: GameState = {
+      ...board,
+      ledger: {
+        ...board.ledger,
+        history: [
+          {
+            period: 4,
+            figures: { ...detailed, charges: 1460, living: 540 },
+          },
+        ],
+      },
+    };
+    const { result } = setup(withCharges);
+    act(() => {
+      result.current.select('past-1');
+    });
+    const row = result.current.dashboard?.expenses.rows.find(
+      (candidate) => candidate.id === 'charges',
+    );
+    expect(row?.label).toBe('Charges des entreprises');
+    expect(row?.amount).toContain('1');
+  });
+
   it('garde un commerce possédé sans vente à zéro et ignore ceux qu’on n’a pas', () => {
     const { result } = setup(board);
     const rows = result.current.dashboard?.income.rows;

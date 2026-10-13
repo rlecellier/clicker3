@@ -5,6 +5,7 @@ import { buyUpgrade } from '@game/upgrades';
 import {
   chargeExpenses,
   chargeInterest,
+  companyChargesOf,
   finalPrice,
   fixedExpensesOf,
   livingCostOf,
@@ -16,6 +17,16 @@ import {
   sellGoods,
 } from './economy';
 
+// Débits lus dans les données : les tests suivent le recalage de l'équilibrage.
+const workshop = companies.find((company) => company.id === 'atelier');
+const shop = companies.find((company) => company.id === 'boutique');
+if (workshop?.kind !== 'production' || shop?.kind !== 'commerce') {
+  throw new Error('entreprises de test introuvables');
+}
+const workshopOutput = workshop.output;
+const shopCapacity = shop.capacity;
+const shopPrice = shop.price;
+
 const stateWith = (changes: Partial<GameState>): GameState => ({
   ...startState,
   ...changes,
@@ -24,32 +35,40 @@ const stateWith = (changes: Partial<GameState>): GameState => ({
 describe('produceGoods', () => {
   it('ajoute au stock la production de chaque exemplaire', () => {
     const next = produceGoods(stateWith({ companies: { atelier: 3 } }));
-    expect(next.stock).toBe(6);
-    expect(next.ledger.current.stockProduced).toBe(6);
-    expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
+    expect(next.stock).toBe(3 * workshopOutput);
+    expect(next.ledger.current.stockProduced).toBe(3 * workshopOutput);
+    expect(next.ledger.current.stockIn).toEqual({
+      atelier: 3 * workshopOutput,
+    });
   });
 
   it('ne perd rien à la production, même au-delà de la capacité', () => {
     const next = produceGoods(
       stateWith({ companies: { atelier: 3 }, stock: 45, stockCapacity: 50 }),
     );
-    expect(next.stock).toBe(51);
-    expect(next.ledger.current.stockProduced).toBe(6);
+    expect(next.stock).toBe(45 + 3 * workshopOutput);
+    expect(next.ledger.current.stockProduced).toBe(3 * workshopOutput);
     expect(next.ledger.current.stockLost).toBe(0);
-    expect(next.ledger.current.stockIn).toEqual({ atelier: 6 });
+    expect(next.ledger.current.stockIn).toEqual({
+      atelier: 3 * workshopOutput,
+    });
   });
 
   it.each([
-    ['le multiplicateur de production', { productionMultiplier: 1.5 }, 6],
+    [
+      'le multiplicateur de production',
+      { productionMultiplier: 1.5 },
+      Math.round(3 * workshopOutput),
+    ],
     [
       'le multiplicateur propre à un type d’entreprise',
       { companyMultipliers: { atelier: 1.25 } },
-      5,
+      Math.round(2.5 * workshopOutput),
     ],
     [
       'le bonus du travail fait dans l’entreprise',
       { workBoosts: { atelier: 2 } },
-      8,
+      4 * workshopOutput,
     ],
   ])('applique %s', (_name, changes, stock) => {
     const next = produceGoods(
@@ -64,23 +83,26 @@ describe('sellGoods', () => {
 
   it('range l’excédent invendu et perd seulement ce qui dépasse la capacité', () => {
     const next = sellGoods(
-      stateWith({ ...shop, stock: 56, stockCapacity: 50 }),
+      stateWith({ ...shop, stock: shopCapacity + 56, stockCapacity: 50 }),
     );
     expect(next.stock).toBe(50);
-    expect(next.ledger.current.stockSold).toBe(3);
-    expect(next.ledger.current.stockLost).toBe(3);
+    expect(next.ledger.current.stockSold).toBe(shopCapacity);
+    expect(next.ledger.current.stockLost).toBe(6);
   });
 
   it('vend la production avant de la ranger : pas de perte si tout part', () => {
+    // Les commerces écoulent toute la production de la période : rien n'est
+    // rangé, donc rien n'est perdu malgré un entrepôt presque vide de place.
     const produced = produceGoods(
       stateWith({
-        companies: { atelier: 3, boutique: 3 },
-        stock: 50,
-        stockCapacity: 50,
+        companies: { atelier: 1, boutique: 3 },
+        stock: 0,
+        stockCapacity: 1,
       }),
     );
+    expect(3 * shopCapacity).toBeGreaterThanOrEqual(workshopOutput);
     const next = sellGoods(produced);
-    expect(next.stock).toBe(50 + 6 - 9);
+    expect(next.stock).toBe(0);
     expect(next.ledger.current.stockLost).toBe(0);
     expect(next.lastStatement?.stockFull).toBe(false);
   });
@@ -88,8 +110,8 @@ describe('sellGoods', () => {
   it('signale le stock plein seulement si de la production est perdue', () => {
     const full = { stockCapacity: 50 };
     expect(
-      sellGoods(stateWith({ ...full, ...shop, stock: 53 })).lastStatement
-        ?.stockFull,
+      sellGoods(stateWith({ ...full, ...shop, stock: shopCapacity + 50 }))
+        .lastStatement?.stockFull,
     ).toBe(false);
     expect(
       sellGoods(stateWith({ ...full, companies: {}, stock: 54 })).lastStatement
@@ -98,20 +120,22 @@ describe('sellGoods', () => {
   });
 
   it('écoule le stock contre de l’argent et de la réputation', () => {
-    const next = sellGoods(stateWith({ ...shop, stock: 10 }));
+    const next = sellGoods(stateWith({ ...shop, stock: shopCapacity + 7 }));
     expect(next.stock).toBe(7);
-    expect(next.money).toBe(3 * 12);
-    expect(next.reputation).toBeCloseTo(3 * economyRules.reputationPerSale);
-    expect(next.ledger.current.sales).toBe(36);
-    expect(next.ledger.current.stockSold).toBe(3);
-    expect(next.ledger.current.stockOut).toEqual({ boutique: 3 });
+    expect(next.money).toBe(shopCapacity * shopPrice);
+    expect(next.reputation).toBeCloseTo(
+      shopCapacity * economyRules.reputationPerSale,
+    );
+    expect(next.ledger.current.sales).toBe(shopCapacity * shopPrice);
+    expect(next.ledger.current.stockSold).toBe(shopCapacity);
+    expect(next.ledger.current.stockOut).toEqual({ boutique: shopCapacity });
     expect(next.lastStatement?.stockout).toBe(false);
   });
 
   it('vend ce qu’il reste quand le stock est insuffisant et perd de la réputation', () => {
     const next = sellGoods(stateWith({ ...shop, stock: 1, reputation: 5 }));
     expect(next.stock).toBe(0);
-    expect(next.money).toBe(12);
+    expect(next.money).toBe(shopPrice);
     expect(next.reputation).toBeCloseTo(
       5 + economyRules.reputationPerSale - economyRules.stockoutPenalty,
     );
@@ -123,9 +147,15 @@ describe('sellGoods', () => {
 
   it('applique le multiplicateur de réputation par vente', () => {
     const next = sellGoods(
-      stateWith({ ...shop, stock: 10, reputationPerSaleMultiplier: 2 }),
+      stateWith({
+        ...shop,
+        stock: shopCapacity + 7,
+        reputationPerSaleMultiplier: 2,
+      }),
     );
-    expect(next.reputation).toBeCloseTo(3 * economyRules.reputationPerSale * 2);
+    expect(next.reputation).toBeCloseTo(
+      shopCapacity * economyRules.reputationPerSale * 2,
+    );
   });
 
   it('ne fait pas perdre de réputation sans commerce', () => {
@@ -137,13 +167,15 @@ describe('sellGoods', () => {
     const next = sellGoods(
       stateWith({
         ...shop,
-        stock: 10,
+        stock: 2 * shopCapacity,
         salesMultiplier: 1.25,
         workBoosts: { boutique: 1 },
       }),
     );
-    // Capacité 3 × 1,5 = 4,5 soit 5 articles, 5 × 12 × 1,25 = 75.
-    expect(next.money).toBe(75);
+    // Capacité × 1,5 (travail fait dans le commerce), prix × 1,25.
+    expect(next.money).toBe(
+      Math.round(Math.round(shopCapacity * 1.5) * shopPrice * 1.25),
+    );
     expect(next.workBoosts).toEqual({});
   });
 });
@@ -196,7 +228,37 @@ describe('livingCostOf', () => {
   });
 });
 
+describe('companyChargesOf', () => {
+  it('est nulle sans entreprise', () => {
+    expect(companyChargesOf(startState)).toBe(0);
+  });
+
+  it('additionne la mensualité de chaque exemplaire possédé', () => {
+    const state = stateWith({ companies: { atelier: 3, boutique: 2 } });
+    const atelier = companies.find((company) => company.id === 'atelier');
+    const boutique = companies.find((company) => company.id === 'boutique');
+    expect(companyChargesOf(state)).toBe(
+      3 * (atelier?.charges ?? 0) + 2 * (boutique?.charges ?? 0),
+    );
+  });
+
+  it('s’ajoute aux dépenses fixes', () => {
+    const state = stateWith({ companies: { boutique: 2 } });
+    expect(fixedExpensesOf(state)).toBe(
+      fixedExpensesOf(startState) + companyChargesOf(state),
+    );
+  });
+});
+
 describe('chargeExpenses', () => {
+  it('prélève les charges des entreprises et les note dans les comptes', () => {
+    const state = stateWith({ money: 1_000_000, companies: { boutique: 2 } });
+    const charges = companyChargesOf(state);
+    const next = chargeExpenses(state);
+    expect(next.money).toBe(1_000_000 - 300 - living - charges);
+    expect(next.ledger.current.charges).toBe(charges);
+  });
+
   it('prélève le loyer, le train de vie et les salaires', () => {
     const next = chargeExpenses(stateWith({ money: 5000, payroll: 100 }));
     expect(next.money).toBe(5000 - 300 - living - 100);
@@ -234,19 +296,23 @@ describe('résolution d’une période', () => {
       companies: { atelier: 1, boutique: 1 },
       money: 1000,
       stock: 0,
+      stockCapacity: 10 * workshopOutput,
     });
     const next = endPeriod({ ...state, gauge: state.gaugeCapacity });
-    // 2 articles produits puis vendus 24 € dans la même période, puis loyer 300
-    // et train de vie.
-    expect(next.money).toBe(1000 + 24 - 300 - living);
-    expect(next.stock).toBe(0);
+    // La production est vendue dans la même période (le plus petit débit),
+    // puis loyer 300, train de vie et charges des entreprises.
+    const sold = Math.min(workshopOutput, shopCapacity);
+    const charges = companyChargesOf(state);
+    expect(next.money).toBe(1000 + sold * shopPrice - 300 - living - charges);
+    expect(next.stock).toBe(workshopOutput - sold);
     expect(next.period).toBe(1);
     expect(next.lastStatement).toMatchObject({ period: 0, unpaid: false });
     expect(next.ledger.history[0]?.figures).toMatchObject({
-      sales: 24,
+      sales: sold * shopPrice,
       rent: 300,
-      stockProduced: 2,
-      stockSold: 2,
+      charges,
+      stockProduced: workshopOutput,
+      stockSold: sold,
     });
     expect(next.ledger.current.rent).toBe(0);
   });
@@ -288,27 +354,29 @@ describe('valeurs finales', () => {
 
   it('sans bonus, rend la valeur de base', () => {
     const state = stateWith({ companies: { atelier: 10 } });
-    expect(outputPerCopy(state, atelier)).toBe(2);
-    expect(productionShares(state).atelier).toBe(20);
-    expect(periodProduction(state)).toBe(20);
+    expect(outputPerCopy(state, atelier)).toBe(workshopOutput);
+    expect(productionShares(state).atelier).toBe(10 * workshopOutput);
+    expect(periodProduction(state)).toBe(10 * workshopOutput);
   });
 
   it.each([
-    ['le bonus global de production', { productionMultiplier: 1.5 }, 3],
+    ['le bonus global de production', { productionMultiplier: 1.5 }, 1.5],
     [
       'le bonus propre à une entreprise',
       { companyMultipliers: { atelier: 1.25 } },
-      2.5,
+      1.25,
     ],
     [
       'le bonus du travail fait dans l’entreprise',
       { workBoosts: { atelier: 2 } },
-      4,
+      2,
     ],
-  ])('applique %s', (_name, changes, perCopy) => {
+  ])('applique %s', (_name, changes, factor) => {
     const state = stateWith({ companies: { atelier: 10 }, ...changes });
-    expect(outputPerCopy(state, atelier)).toBe(perCopy);
-    expect(productionShares(state).atelier).toBe(perCopy * 10);
+    expect(outputPerCopy(state, atelier)).toBe(factor * workshopOutput);
+    expect(productionShares(state).atelier).toBe(
+      Math.round(10 * factor * workshopOutput),
+    );
   });
 
   it('arrondit au cumul : la somme des parts est la production totale', () => {
@@ -328,9 +396,9 @@ describe('valeurs finales', () => {
       salesMultiplier: 1.5,
       companyMultipliers: { boutique: 2 },
     });
-    expect(outputPerCopy(state, boutique)).toBe(6);
-    expect(salesCapacity(state, boutique)).toBe(24);
-    expect(finalPrice(state, boutique)).toBe(18);
+    expect(outputPerCopy(state, boutique)).toBe(2 * shopCapacity);
+    expect(salesCapacity(state, boutique)).toBe(8 * shopCapacity);
+    expect(finalPrice(state, boutique)).toBe(1.5 * shopPrice);
   });
 
   it('correspond exactement à la production ajoutée au stock', () => {

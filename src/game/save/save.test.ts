@@ -1,4 +1,4 @@
-import { startState } from '@game/data';
+import { economyRules, startState, upgrades } from '@game/data';
 import { unreadMail } from '@game/mail';
 import { newItems, noveltyTabs } from '@game/novelty';
 import type { GameState } from '@game/state';
@@ -313,8 +313,16 @@ describe('migration de la version 11', () => {
     ]);
     expect(state.stats).toEqual(v11.stats);
     expect(state.maxMarkers).toBe(startState.maxMarkers);
-    expect(state.productionMultiplier).toBeCloseTo(1.35);
-    expect(state.payroll).toBe(1600);
+    const assistant = upgrades.find(
+      (upgrade) => upgrade.id === 'assistante-direction',
+    );
+    const bonus = assistant?.effects.find(
+      (effect) => effect.type === 'allBonus',
+    );
+    expect(state.productionMultiplier).toBeCloseTo(
+      1 + (bonus?.type === 'allBonus' ? bonus.bonus : 0),
+    );
+    expect(state.payroll).toBe(assistant?.payroll);
   });
 });
 
@@ -783,6 +791,11 @@ const saveV9 = () => {
   return JSON.stringify({ version: 9, state });
 };
 
+const etageres =
+  upgrades
+    .find((upgrade) => upgrade.id === 'etageres-kit')
+    ?.effects.find((effect) => effect.type === 'stockCapacity')?.factor ?? 1;
+
 describe('migration de la version 9', () => {
   it('garde le loyer et en déduit le facteur des événements', () => {
     const result = deserialize(saveV9());
@@ -793,7 +806,9 @@ describe('migration de la version 9', () => {
 
   it('agrandit aussi les petits entrepôts : la capacité ne baisse jamais', () => {
     const result = deserialize(saveV9());
-    expect(result.ok && result.state.stockCapacity).toBe((50 + 25) * 13);
+    expect(result.ok && result.state.stockCapacity).toBe(
+      (50 + economyRules.warehouse.capacity) * etageres,
+    );
   });
 });
 
@@ -898,6 +913,46 @@ describe('migration de la version 12', () => {
     // Le reste du ledger est conservé.
     expect(result.ok && result.state.ledger.total.rent).toBe(900);
     expect(result.ok && result.state.ledger.history[0]?.period).toBe(1);
+    expect(result.ok && result.state.version).toBe(startState.version);
+  });
+});
+
+// Une partie v13 : le ledger n'a pas encore les charges des entreprises.
+const withoutCharges = (figures: typeof startState.ledger.total) => {
+  const { charges, ...rest } = figures;
+  expect(charges).toBe(0);
+  return { ...rest, living: 470 };
+};
+
+describe('migration de la version 13', () => {
+  it('ajoute les charges à la période, à l’historique et au cumul, sans perdre les entreprises', () => {
+    const old = withoutCharges(startState.ledger.total);
+    const text = JSON.stringify({
+      version: 13,
+      state: {
+        ...startState,
+        version: 13,
+        period: 2,
+        companies: { atelier: 109, boutique: 103 },
+        ledger: {
+          current: old,
+          history: [{ period: 1, figures: old }],
+          total: old,
+        },
+      },
+    });
+    const result = deserialize(text);
+    expect(result.ok && result.state.ledger.current.charges).toBe(0);
+    expect(result.ok && result.state.ledger.total.charges).toBe(0);
+    expect(result.ok && result.state.ledger.history[0]?.figures.charges).toBe(
+      0,
+    );
+    // Le reste est conservé, même au-delà du plafond d'exemplaires.
+    expect(result.ok && result.state.ledger.total.living).toBe(470);
+    expect(result.ok && result.state.companies).toEqual({
+      atelier: 109,
+      boutique: 103,
+    });
     expect(result.ok && result.state.version).toBe(startState.version);
   });
 });

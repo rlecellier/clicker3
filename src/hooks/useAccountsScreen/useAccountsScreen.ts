@@ -155,6 +155,7 @@ const expenseRows = (report: LedgerReport, hasDetail: boolean): LedgerRow[] => {
   return [
     moneyRow('rent', 'Loyer', report.rent, whole),
     moneyRow('living', 'Train de vie', report.living, whole),
+    moneyRow('charges', 'Charges des entreprises', report.charges, whole),
     moneyRow('payroll', 'Salaires versés', report.payroll, whole),
     moneyRow('interest', 'Intérêts', report.interest, whole),
     ...breakdown(
