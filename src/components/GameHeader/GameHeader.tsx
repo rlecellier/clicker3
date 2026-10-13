@@ -1,12 +1,12 @@
 import { ProgressBar } from '@component/ProgressBar';
-import { ReputationStars } from '@component/ReputationStars';
 import { ResourceBar } from '@component/ResourceBar';
 import styles from './GameHeader.module.css';
 
 type GameHeaderProperties = {
   resources: Parameters<typeof ResourceBar>[0];
-  reputation: Parameters<typeof ReputationStars>[0];
   date: string;
+  // Ce que fait le personnage, en quelques mots.
+  activity: string;
   gauge: {
     value: number;
     max: number;
@@ -15,19 +15,19 @@ type GameHeaderProperties = {
 };
 
 // En-tête fixe de l'écran de jeu, sur toute la largeur : les ressources sur
-// une ligne, puis la date, avec la réputation à sa droite, dont la barre se
-// remplit au fil de la période.
+// une ligne, puis la date, avec l'activité en cours à sa droite, dont la barre
+// se remplit au fil de la période.
 export const GameHeader = ({
   resources,
-  reputation,
   date,
+  activity,
   gauge,
 }: GameHeaderProperties) => (
   <header className={styles.header}>
     <ResourceBar {...resources} />
     <ProgressBar
       size="small"
-      aside={<ReputationStars {...reputation} />}
+      aside={<span className={styles.activity}>{activity}</span>}
       label={date}
       value={gauge.value}
       max={gauge.max}

@@ -10,6 +10,8 @@ import {
 } from '@game/format';
 import { jobById } from '@game/jobs';
 import { periodOutlook } from '@game/period';
+import { reputationTiers } from '@game/data';
+import { reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
@@ -65,7 +67,7 @@ const nextObjective = (
   };
 };
 
-// Onglet Vie : balance de la période, personnage, prochain objectif, actions
+// Onglet Vie : balance de la période, personnage et réputation, prochain objectif, actions
 // (travailler, étudier, vendre le surplus) et leur retour, cerveau.
 export const useLifeScreen = () => {
   const { state } = useGameContext();
@@ -190,9 +192,17 @@ export const useLifeScreen = () => {
           max: courseProgress.max,
         };
 
+  const { tier, name } = reputationTierProgress(state);
+
   return {
     isOver,
     header: characterHeader(state),
+    reputation: {
+      tier,
+      // « Inconnu » (palier 0) n'a pas d'étoile.
+      max: reputationTiers.length - 1,
+      label: `Réputation : palier ${tier} sur ${reputationTiers.length - 1} · ${name}`,
+    },
     // Balances de la période en cours (prévision à la clôture).
     balances: {
       money: formatBalance(outlook.money, ' €'),

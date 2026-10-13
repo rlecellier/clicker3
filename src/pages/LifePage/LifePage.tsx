@@ -3,6 +3,7 @@ import { CharacterHeader } from '@component/CharacterHeader';
 import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
+import { ReputationStars } from '@component/ReputationStars';
 import { SplitActionButton } from '@component/SplitActionButton';
 import { ResourceTile } from '@component/ResourceTile';
 import { Window } from '@component/Window';
@@ -36,7 +37,10 @@ export const LifePage = () => {
           />
         </dl>
       </Window>
-      <Window title="Ma vie à Sainte-Croissance">
+      <Window
+        title="Ma vie à Sainte-Croissance"
+        actions={<ReputationStars {...screen.reputation} />}
+      >
         <CharacterHeader {...screen.header} />
         <Note minLines={2} to={screen.objective.to}>
           {screen.objective.text}
