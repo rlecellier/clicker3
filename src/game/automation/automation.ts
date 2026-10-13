@@ -1,6 +1,7 @@
 import { afterAction } from '@game/afterAction';
 import { automationRules } from '@game/data';
 import { eventById, fireEvent } from '@game/events';
+import { isPromotionPending, offerPromotion } from '@game/promotion';
 import { sleepStep, sleepStepMs } from '@game/sleep';
 import { isPlaying } from '@game/state';
 import type { GameState, JournalEntry } from '@game/state';
@@ -25,8 +26,10 @@ export const isAutoActive = (state: GameState, action: AutoAction) =>
 
 // Le temps réel fait avancer la partie : travail automatique actif, ou
 // sommeil en cours. Sinon, le temps écoulé n'a aucun effet.
+// Une promotion qui attend une réponse arrête le temps.
 export const isTimeRunning = (state: GameState) =>
-  isAutoActive(state, 'work') || state.isSleeping;
+  !isPromotionPending(state) &&
+  (isAutoActive(state, 'work') || state.isSleeping);
 
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
   isPlaying(state) && hasAutomation(state, action);
@@ -60,11 +63,14 @@ const autoStep = (state: GameState): GameState => {
 
 // Joue les pas dus (travail automatique, sommeil). Sans interrupteur actif ni
 // sommeil, ou sans rien à faire, le temps n'avance pas et le temps écoulé est perdu. `onAction` voit
-// chaque action jouée (avant, après).
+// chaque action jouée (avant, après). `isAway` : le joueur n'est pas là pour
+// répondre, aucune promotion n'interrompt le rattrapage (le compteur d'heures
+// sup. continue, l'offre attend le retour).
 const runAuto = (
   state: GameState,
   elapsedMs: number,
   onAction?: (before: GameState, after: GameState) => void,
+  isAway = false,
 ): GameState => {
   if (elapsedMs <= 0 || !isPlaying(state) || !isTimeRunning(state)) {
     return state;
@@ -73,19 +79,27 @@ const runAuto = (
     ...state,
     autoElapsed: state.autoElapsed + elapsedMs,
   };
-  while (isPlaying(current) && current.autoElapsed >= stepIntervalMs(current)) {
+  while (
+    isPlaying(current) &&
+    isTimeRunning(current) &&
+    current.autoElapsed >= stepIntervalMs(current)
+  ) {
     const acted = autoStep(current);
     if (acted === current) {
       return { ...current, autoElapsed: 0 };
     }
-    const settled = afterAction(acted);
+    const afterwards = afterAction(acted);
+    const settled = isAway
+      ? { ...afterwards, pendingPromotion: null }
+      : afterwards;
     onAction?.(current, settled);
     current = {
       ...settled,
       autoElapsed: current.autoElapsed - stepIntervalMs(current),
     };
   }
-  return current;
+  // Le temps accumulé n'attend pas la réponse : il serait rejoué d'un coup.
+  return isPromotionPending(current) ? { ...current, autoElapsed: 0 } : current;
 };
 
 // Fait avancer les actions automatiques de `elapsedMs` (temps réel écoulé).
@@ -117,11 +131,18 @@ export type CatchUpResult = { state: GameState; summary: AbsenceSummary };
 export const catchUp = (state: GameState, elapsedMs: number): CatchUpResult => {
   let actions = 0;
   const events: JournalEntry[] = [];
-  const replayed = runAuto(state, elapsedMs, (before, after) => {
-    actions += 1;
-    const known = new Set(before.events);
-    events.push(...after.events.filter((entry) => !known.has(entry)));
-  });
+  const away = runAuto(
+    state,
+    elapsedMs,
+    (before, after) => {
+      actions += 1;
+      const known = new Set(before.events);
+      events.push(...after.events.filter((entry) => !known.has(entry)));
+    },
+    true,
+  );
+  // L'offre qui a attendu le retour s'affiche à l'arrivée.
+  const replayed = isPlaying(away) ? offerPromotion(away) : away;
   const comeback = eventById('retour-absence');
   const next =
     comeback !== undefined && actions > 0 && isPlaying(replayed)

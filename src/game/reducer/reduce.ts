@@ -8,6 +8,7 @@ import { changeJob, startingJobs } from '@game/jobs';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { addGauge } from '@game/period';
+import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
 import { queueAction } from '@game/sleep';
 import { study } from '@game/study';
@@ -75,6 +76,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     case 'readMail': {
       return readMail(state);
     }
+    case 'answerPromotion': {
+      return answerPromotion(state, action.isAccepted);
+    }
     case 'markSeen': {
       return markSeen(state, action.tab);
     }
@@ -84,6 +88,17 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
   }
 };
 
+// Tant qu'une promotion attend une réponse, le jeu est arrêté : seules la
+// réponse, la lecture du courrier, les nouveautés vues et la nouvelle vie passent.
+const passesDuringPromotion = new Set<GameAction['type']>([
+  'answerPromotion',
+  'readMail',
+  'markSeen',
+  'restart',
+]);
+
 // Sommeil, phase de vie et événements suivent chaque action (`afterAction`).
 export const reduce = (state: GameState, action: GameAction): GameState =>
-  afterAction(applyAction(state, action));
+  isPromotionPending(state) && !passesDuringPromotion.has(action.type)
+    ? state
+    : afterAction(applyAction(state, action));

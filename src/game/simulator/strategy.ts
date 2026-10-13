@@ -256,7 +256,7 @@ const workTarget = (state: GameState): string => {
 /**
  * Le joueur virtuel : une stratégie gloutonne et déterministe. Il active
  * l'automatisation dès qu'elle est possible, achète le moins cher des achats
- * utiles, étudie la stat qui bloque le prochain achat, sinon travaille. Le
+ * utiles, accepte les promotions, étudie la stat qui bloque le prochain achat, sinon travaille. Le
  * sommeil vient seul quand les marqueurs sont pleins : il attend alors.
  *
  * Une fois le travail automatique actif, il lâche la souris (ADR 0005) : il
@@ -268,6 +268,10 @@ export const chooseAction = (
   state: GameState,
   excluded: ReadonlySet<string> = new Set(),
 ): GameAction | undefined => {
+  // Une promotion arrête le jeu : le joueur virtuel l'accepte toujours.
+  if (state.pendingPromotion !== null) {
+    return { type: 'answerPromotion', isAccepted: false };
+  }
   if (canEnableAuto(state, 'work') && !isAutoActive(state, 'work')) {
     return { type: 'setAuto', action: 'work', isEnabled: true };
   }

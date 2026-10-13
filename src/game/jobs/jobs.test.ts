@@ -53,6 +53,11 @@ describe('premier emploi', () => {
     let state: GameState = { ...startState, jobId: 'interim' };
     let lowest = 0;
     while (state.period < 120) {
+      // Une promotion arrête le jeu : on la refuse, pour ne compter que le salaire de base.
+      if (state.pendingPromotion !== null) {
+        state = reduce(state, { type: 'answerPromotion', isAccepted: false });
+        continue;
+      }
       state = settleSleep(
         state.isSleeping
           ? sleepStep(state)

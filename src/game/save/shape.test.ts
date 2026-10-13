@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 14,
+    version: 15,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -99,11 +99,14 @@ describe('forme de l’état', () => {
       'markers',
       'maxMarkers',
       'money',
+      'overtimeActions',
       'payroll',
+      'pendingPromotion',
       'period',
       'phase',
       'payrollFactor',
       'productionMultiplier',
+      'promotionsOffered',
       'queuedActions',
       'rent',
       'rentFactor',

@@ -8,9 +8,14 @@ import {
 import { activeBonus } from '@game/effects';
 import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
-import { overtimeGaugeFactor, overtimeWageFactor } from '@game/overtime';
+import {
+  isOvertime,
+  overtimeGaugeFactor,
+  overtimeWageFactor,
+} from '@game/overtime';
 import { addGauge } from '@game/period';
 import { manualFactor } from '@game/phases';
+import { countOvertime } from '@game/promotion';
 import { gainReputation } from '@game/reputation';
 import { isPlaying } from '@game/state';
 import type { GameState } from '@game/state';
@@ -56,11 +61,13 @@ const workAtJob = (state: GameState, isAuto: boolean): GameState => {
   }
   const factor = gainFactor(state, isAuto);
   const wage = jobWage(state, isAuto);
+  // Une action payée en heures supplémentaires compte vers la promotion.
+  const counted = isOvertime(state) ? countOvertime(state, job.id) : state;
   return gainReputation(
     {
-      ...state,
+      ...counted,
       wagesDue: {
-        ...state.wagesDue,
+        ...counted.wagesDue,
         [job.id]: (state.wagesDue[job.id] ?? 0) + wage,
       },
     },

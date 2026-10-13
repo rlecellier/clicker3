@@ -25,7 +25,15 @@ describe('simulateLife', () => {
   });
 
   it('produit une courbe par période et des jalons dans l’ordre du temps', () => {
-    expect(result.curve.length).toBe(result.finalState.period + 1);
+    // Un point par période franchie ; un pas peut en franchir plusieurs (temps
+    // accumulé pendant le sommeil), le point est alors unique pour le pas.
+    const periods = result.curve.map((point) => point.period);
+    expect(periods.at(0)).toBe(0);
+    expect(periods.at(-1)).toBe(result.finalState.period);
+    expect(periods).toEqual(
+      periods.toSorted((first, second) => first - second),
+    );
+    expect(new Set(periods).size).toBe(periods.length);
     const times = result.milestones.map((milestone) => milestone.minutes);
     expect(times).toEqual(times.toSorted((first, second) => first - second));
     expect(result.milestones.map((milestone) => milestone.id)).toContain(

@@ -289,6 +289,14 @@ export const defaultSaveOptions: SaveOptions = {
         },
       };
     },
+    // Version 15 : les promotions (compteur d'heures sup. par emploi, offres
+    // déjà faites, offre en attente). Le passé est inconnu : on repart à 0.
+    14: (raw) => ({
+      overtimeActions: {},
+      promotionsOffered: {},
+      pendingPromotion: null,
+      ...raw,
+    }),
   },
 };
 
@@ -389,6 +397,8 @@ const hasValidContent = (raw: RawState) =>
   isNumberRecord(raw.wagesDue, jobIds) &&
   isNumberRecord(raw.companyMultipliers, companyIds) &&
   isNumberRecord(raw.jobSalaryFactors, jobIds) &&
+  isNumberRecord(raw.overtimeActions, jobIds) &&
+  isNumberRecord(raw.promotionsOffered, jobIds) &&
   isQueue(raw.queuedActions) &&
   isRecord(raw.flags) &&
   Object.values(raw.flags).every((flag) => typeof flag === 'boolean') &&
@@ -414,17 +424,33 @@ const shapeTemplate = {
   jobId: null,
   lastStatement: null,
   lastSeenAt: null,
+  pendingPromotion: null,
 };
+
+const isPendingPromotion = (value: unknown) =>
+  value === null ||
+  (isRecord(value) &&
+    isStringIn(value.jobId, jobIds) &&
+    isFiniteNumber(value.rank));
 
 const isValidState = (raw: RawState): raw is GameState => {
   if (!hasShapeOf(shapeTemplate, raw)) {
     return false;
   }
-  const { status, phase, markers, jobId, lastStatement, lastSeenAt } = raw;
+  const {
+    status,
+    phase,
+    markers,
+    jobId,
+    lastStatement,
+    lastSeenAt,
+    pendingPromotion,
+  } = raw;
   return (
     (jobId === null || isStringIn(jobId, jobIds)) &&
     (lastStatement === null || isRecord(lastStatement)) &&
     (lastSeenAt === null || isFiniteNumber(lastSeenAt)) &&
+    isPendingPromotion(pendingPromotion) &&
     (status === 'playing' || status === 'dead') &&
     lifePhases.includes(phase as GameState['phase']) &&
     Array.isArray(markers) &&
