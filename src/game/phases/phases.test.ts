@@ -33,7 +33,8 @@ describe('phaseOf', () => {
 
   it('se met à jour dans le reducer après un achat', () => {
     const rich = stateWith({
-      money: 10_000,
+      money: 10_000_000,
+      stockCapacity: 1_000_000,
       stats: { ...startState.stats, gestion: 100 },
     });
     const bought = reduce(rich, { type: 'buyCompany', id: 'atelier' });

@@ -3,9 +3,17 @@ import type { Requirement } from '@game/requirements';
 type CompanyBase = {
   id: string;
   name: string;
-  // Coût du premier exemplaire, puis × growth à chaque exemplaire possédé.
+  // Apport du premier exemplaire (le prix affiché), puis × growth à chaque
+  // exemplaire possédé.
   baseCost: number;
   growth: number;
+  // Plafond d'exemplaires dans le quartier où l'entreprise s'établit (celui
+  // de `impactRules.companyDistricts`) : au-delà,
+  // la croissance passe par la montée en gamme (une amélioration par type).
+  maxCopies: number;
+  // Mensualité du crédit par exemplaire : le prix affiché est l'apport, le
+  // reste est emprunté (docs/game/equilibrage.md). Prélevée à chaque période.
+  charges: number;
   requirement?: Requirement;
 };
 
@@ -25,44 +33,78 @@ export type CommerceCompany = CompanyBase & {
 
 export type Company = ProductionCompany | CommerceCompany;
 
-// Les six types (docs/game/ton-et-univers.md). Valeurs calées en V1-24 (docs/game/equilibrage.md).
+// Les huit types, à l'échelle réelle de 1999 (docs/game/entreprises.md). Le
+// prix de base est l'**apport** (20 % de la valeur) et `charges` la mensualité
+// d'un crédit à 6 % sur 7 ans pour les 80 % restants. Plafonds, croissance,
+// débits et charges calés au simulateur (docs/game/equilibrage.md).
 export const companies: readonly Company[] = [
+  {
+    id: 'etabli',
+    name: 'Établi au garage',
+    kind: 'production',
+    baseCost: 800,
+    growth: 1.64,
+    maxCopies: 3,
+    charges: 0,
+    output: 10,
+    requirement: { type: 'stat', stat: 'gestion', tier: 1 },
+  },
+  {
+    id: 'stand',
+    name: 'Stand au marché',
+    kind: 'commerce',
+    baseCost: 1400,
+    growth: 1.57,
+    maxCopies: 4,
+    charges: 100,
+    capacity: 29,
+    price: 12,
+    requirement: { type: 'stat', stat: 'gestion', tier: 1 },
+  },
   {
     id: 'atelier',
     name: 'Atelier d’assemblage',
     kind: 'production',
-    baseCost: 150,
-    growth: 1.1,
-    output: 2,
+    baseCost: 16_000,
+    growth: 1.61,
+    maxCopies: 4,
+    charges: 234,
+    output: 170,
     requirement: { type: 'stat', stat: 'gestion', tier: 2 },
   },
   {
     id: 'boutique',
     name: 'Boutique',
     kind: 'commerce',
-    baseCost: 250,
-    growth: 1.1,
-    capacity: 3,
-    price: 12,
+    baseCost: 28_000,
+    growth: 1.99,
+    maxCopies: 4,
+    charges: 409,
+    capacity: 110,
+    price: 13,
     requirement: { type: 'stat', stat: 'gestion', tier: 2 },
   },
   {
     id: 'manufacture',
     name: 'Manufacture',
     kind: 'production',
-    baseCost: 13_000,
-    growth: 1.1,
-    output: 99,
+    baseCost: 890_000,
+    growth: 1.33,
+    maxCopies: 6,
+    charges: 12_994,
+    output: 930,
     requirement: { type: 'stat', stat: 'gestion', tier: 4 },
   },
   {
     id: 'hypermarche',
-    name: 'Hypermarché',
+    name: 'Corner en hypermarché',
     kind: 'commerce',
-    baseCost: 13_000,
-    growth: 1.1,
-    capacity: 87,
-    price: 13,
+    baseCost: 380_000,
+    growth: 1.32,
+    maxCopies: 8,
+    charges: 5548,
+    capacity: 470,
+    price: 12,
     requirement: {
       type: 'all',
       of: [
@@ -75,18 +117,22 @@ export const companies: readonly Company[] = [
     id: 'site-delocalise',
     name: 'Site de production délocalisé',
     kind: 'production',
-    baseCost: 53_000,
-    growth: 1.1,
-    output: 210,
+    baseCost: 6_200_000,
+    growth: 2.3,
+    maxCopies: 2,
+    charges: 90_520,
+    output: 4000,
     requirement: { type: 'stat', stat: 'gestion', tier: 6 },
   },
   {
     id: 'plateforme',
     name: 'Plateforme en ligne',
     kind: 'commerce',
-    baseCost: 66_000,
-    growth: 1.1,
-    capacity: 250,
+    baseCost: 8_400_000,
+    growth: 1.23,
+    maxCopies: 4,
+    charges: 122_640,
+    capacity: 9600,
     price: 15,
     requirement: {
       type: 'all',

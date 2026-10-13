@@ -68,7 +68,8 @@ describe('reduce', () => {
   it('applique buyCompany et sellSurplus', () => {
     const rich = {
       ...startState,
-      money: 1000,
+      money: 1_000_000,
+      stockCapacity: 1_000_000,
       stats: { ...startState.stats, gestion: 10 },
     };
     const bought = reduce(rich, { type: 'buyCompany', id: 'atelier' });

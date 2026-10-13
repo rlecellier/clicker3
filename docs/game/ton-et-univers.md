@@ -109,16 +109,22 @@ fait.
 3. **Chargé de mission** (la mission n'est pas communiquée).
 4. **Directeur adjoint de la transformation** (transformation de quoi : voir 3).
 
-### Les entreprises (6 types, 3 de production, 3 de commerce)
+### Les entreprises (8 types, 4 de production, 4 de commerce)
 
 | Type       | Nom                         | Pointe satirique                                            |
 | ---------- | --------------------------- | ----------------------------------------------------------- |
+| Production | Établi au garage            | Micro-activité d'entrée : « l'entrepreneuriat commence dans le garage ». |
 | Production | Atelier d'assemblage        | Artisanal, « made in Sainte-Croissance ».                   |
 | Production | Manufacture                 | Fait « de l'excellence opérationnelle ».                    |
 | Production | Site de production délocalisé | Production augmentée, personnel absent, communiqué ému.   |
+| Commerce   | Stand au marché             | Micro-activité d'entrée : un barnum, un droit de place, un sourire. |
 | Commerce   | Boutique                    | « L'article, en mieux. »                                    |
-| Commerce   | Hypermarché                 | Ouvert le dimanche, « par choix des salariés ».             |
+| Commerce   | Corner en hypermarché       | Un rayon loué dans un hypermarché ouvert le dimanche, « par choix des salariés ». |
 | Commerce   | Plateforme en ligne         | Arrive vers 2000. Perd de l'argent, vaut un milliard.       |
+
+Le prix affiché d'une entreprise est son **apport** ; le reste est emprunté, et la
+mensualité du crédit est prélevée chaque mois (« charges »). Chaque type a un
+plafond d'exemplaires dans son quartier ; après le plafond, on monte en gamme.
 
 ### Les phases de vie, version satirique
 
