@@ -37,26 +37,24 @@ export const actionRules = {
     markerChance: 0.7,
   },
   sleep: {
-    // Durée du sommeil quotidien, au choix du joueur (heures entières). Jamais
-    // plus de 9 h : une période est une journée type de 24 h.
-    hours: { min: 4, max: 9, default: 8 },
+    // Durée du sommeil quotidien, au choix du joueur : court, moyen ou long
+    // (heures entières, jamais plus de 8 h : une période est une journée type
+    // de 24 h).
+    hours: { min: 4, max: 8, default: 8 },
     hoursPerPeriod: 24,
-    // Une période commence au réveil de 7 h. On se couche plus tard et on se lève
-    // un peu plus tôt quand on dort moins (heures de l'horloge, issue #202).
+    // Une période commence au réveil de 7 h. On se couche plus tard quand on dort
+    // moins (heures de l'horloge, issue #202).
     dayStartHour: 7,
-    // `markers` : marqueurs que le sommeil peut vider. 9 h vident tout le cerveau
-    // de départ (5) ; chaque heure en moins en vide un de moins, et 4 h aucun :
-    // dormir peu laisse du temps éveillé pour gagner de l'argent, mais on
-    // apprend moins. Le cerveau retient plus que ce qu'une journée produit, donc
-    // les marqueurs non vidés restent pour le sommeil suivant. Point d'extension
-    // des futures améliorations (issue sur l'apprentissage selon l'âge).
+    // `left` : marqueurs que le sommeil laisse dans le cerveau, qui est vidé du
+    // reste. Long (8 h) vide tout : c'est la durée de l'apprentissage. Moyen
+    // (6 h) en laisse un, court (4 h) deux : on gagne du temps éveillé pour
+    // l'argent, quand on est riche, mais on apprend moins. Les marqueurs non
+    // vidés restent pour le sommeil suivant. Point d'extension des futures
+    // améliorations (issue sur l'apprentissage selon l'âge).
     schedule: {
-      9: { bed: 22, wake: 7, markers: 5 },
-      8: { bed: 23, wake: 7, markers: 4 },
-      7: { bed: 0, wake: 7, markers: 3 },
-      6: { bed: 1, wake: 7, markers: 2 },
-      5: { bed: 1, wake: 6, markers: 1 },
-      4: { bed: 2, wake: 6, markers: 0 },
+      4: { name: 'Court', bed: 2, wake: 6, left: 2 },
+      6: { name: 'Moyen', bed: 1, wake: 7, left: 1 },
+      8: { name: 'Long', bed: 23, wake: 7, left: 0 },
     },
     // Points de stat par marqueur consommé, avant le multiplicateur du logement.
     pointsPerMarker: 1,

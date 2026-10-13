@@ -82,8 +82,8 @@ describe('chargement et rattrapage', () => {
     clock.time = START + 10 * autoIntervalMs;
     const { result } = setup(storage);
     expect(result.current.state.period).toBeGreaterThan(automated.period);
-    // Cinq actions de travail, quatre pas de sommeil, puis quatre actions.
-    expect(result.current.absence?.actions).toBe(13);
+    // Cinq actions de travail, cinq pas de sommeil, puis quatre actions.
+    expect(result.current.absence?.actions).toBe(14);
     act(() => {
       result.current.dismissAbsence();
     });
