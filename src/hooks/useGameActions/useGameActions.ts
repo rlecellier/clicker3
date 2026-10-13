@@ -36,6 +36,9 @@ export const useGameActions = () => {
       unlockDistrict: (id: string) => {
         dispatch({ type: 'unlockDistrict', id });
       },
+      setSleepHours: (hours: number) => {
+        dispatch({ type: 'setSleepHours', hours });
+      },
       setAuto: (action: 'work', isEnabled: boolean) => {
         dispatch({ type: 'setAuto', action, isEnabled });
       },

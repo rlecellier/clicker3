@@ -75,6 +75,14 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   ).toBeVisible();
   await openTab(page, 'ameliorations');
   await openTab(page, 'profil');
+  // La durée du sommeil se règle au toucher ; l'horaire annoncé suit.
+  await expect(
+    page.getByRole('status').filter({ hasText: 'Coucher 23 h' }),
+  ).toBeVisible();
+  await page.getByLabel('6 h').tap();
+  await expect(
+    page.getByRole('status').filter({ hasText: 'Coucher 1 h · réveil 7 h' }),
+  ).toBeVisible();
   await openTab(page, 'emploi');
   await openTab(page, 'comptes');
   await openTab(page, 'courrier');

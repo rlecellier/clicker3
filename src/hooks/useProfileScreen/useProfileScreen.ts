@@ -1,7 +1,9 @@
 import { useGameContext } from '@context/GameContext';
 import { formatCount, formatDecimal, statLabels } from '@game/format';
+import { actionRules } from '@game/data';
 import { jobById } from '@game/jobs';
 import { reputationTierProgress } from '@game/reputation';
+import { chosenSchedule, sleepGauge, sleepMarkers } from '@game/sleep';
 import { statIds } from '@game/state';
 import { statProgress } from '@game/stats';
 import { availableUpgrades } from '@game/upgrades';
@@ -35,6 +37,14 @@ export const useProfileScreen = () => {
     max: reputation.max,
   };
 
+  const { min, max } = actionRules.sleep.hours;
+  const schedule = chosenSchedule(state);
+  const isPending = state.sleepHours !== state.periodSleepHours;
+  const sleepOptions = Array.from({ length: max - min + 1 }, (_, index) => ({
+    hours: min + index,
+    label: `${min + index} h`,
+  }));
+
   return {
     header: characterHeader(state),
     job:
@@ -47,5 +57,11 @@ export const useProfileScreen = () => {
       upgradeItem(state, upgrade, actions.buyUpgrade),
     ),
     reputation: formatDecimal(state.reputation),
+    sleep: {
+      options: sleepOptions,
+      value: state.sleepHours,
+      select: actions.setSleepHours,
+      summary: `Coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${sleepMarkers(state, state.sleepHours)} marqueurs.${isPending ? ' À partir de la période suivante.' : ''}`,
+    },
   };
 };

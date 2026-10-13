@@ -14,6 +14,7 @@ import { ItemList } from '@component/ItemList';
 import { LedgerSection } from '@component/LedgerSection';
 import { LedgerTable } from '@component/LedgerTable';
 import { MarkerTrack } from '@component/MarkerTrack';
+import { SleepPicker } from '@component/SleepPicker';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
 import { PageLink } from '@component/PageLink';
@@ -94,6 +95,12 @@ export const StyleguidePage = () => (
       />
       <MarkerTrack count={3} max={5} isSleeping={false} />
       <MarkerTrack count={5} max={5} isSleeping />
+      <SleepPicker
+        options={[6, 7, 8].map((hours) => ({ hours, label: `${hours} h` }))}
+        value={8}
+        onChange={() => {}}
+        summary="Coucher 23 h · réveil 7 h."
+      />
       <ActionButton
         label="Travailler"
         detail="+12 € par clic"
