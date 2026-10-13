@@ -21,14 +21,15 @@ export type TabSlug = keyof typeof tabLabels;
 // (« Courrier, 3 messages non lus »).
 const tabName = (slug: TabSlug) => new RegExp(`^${tabLabels[slug]}(,|$)`);
 
-// Ouvre un onglet par la sidebar, comme le ferait le joueur, et vérifie que
+// Ouvre un onglet par la sidebar, au toucher comme le ferait le joueur (le jeu
+// se joue surtout sur mobile : les projets Playwright ont `hasTouch`), et vérifie que
 // l'URL le reflète et que l'onglet ne déborde pas de l'écran (pas de
 // défilement horizontal, à 480 px comme à 360 px).
 export const openTab = async (page: Page, slug: TabSlug) => {
   await page
     .getByRole('navigation', { name: 'Navigation du jeu' })
     .getByRole('link', { name: tabName(slug) })
-    .click();
+    .tap();
   await expect(page).toHaveURL(`/jeu/${slug}`);
   await expectNoOverflow(page);
 };
