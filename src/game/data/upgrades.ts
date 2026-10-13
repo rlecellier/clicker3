@@ -62,14 +62,14 @@ export const upgrades: readonly Upgrade[] = [
     id: 'stage-posture',
     name: 'Stage « Posture professionnelle »',
     description: 'Deux jours pour apprendre à sourire sans y croire.',
-    price: 150,
+    price: 420,
     effects: [{ type: 'course', courseId: 'metier' }],
   },
   {
     id: 'bts-opportunites',
     name: 'BTS « Gestion des opportunités »',
     description: 'Une opportunité se gère comme un risque, en moins amusant.',
-    price: 1500,
+    price: 4200,
     requirement: stat('metier', 1),
     effects: [{ type: 'course', courseId: 'gestion' }],
   },
@@ -78,7 +78,7 @@ export const upgrades: readonly Upgrade[] = [
     name: "Licence d'économie appliquée",
     description:
       "Vous apprenez que tout est une question d'offre et de demande, sauf vous.",
-    price: 10_000,
+    price: 6000,
     requirement: stat('gestion', 1),
     effects: [{ type: 'course', courseId: 'intelligence' }],
   },
@@ -86,7 +86,7 @@ export const upgrades: readonly Upgrade[] = [
     id: 'coaching-depassement',
     name: 'Coaching « Dépassement de soi »',
     description: 'On vous explique que la fatigue est une croyance limitante.',
-    price: 1700,
+    price: 3800,
     requirement: stat('intelligence', 1),
     effects: [{ type: 'course', courseId: 'endurance' }],
   },
@@ -95,11 +95,11 @@ export const upgrades: readonly Upgrade[] = [
     id: 'studio-renove',
     name: 'Studio rénové',
     description: 'Rénové : un coup de peinture et une nouvelle moisissure.',
-    price: 7500,
-    rent: 34,
+    price: 800,
+    rent: 95,
     requirement: stat('endurance', 1),
     effects: [
-      { type: 'housing', housingId: 'studio-renove', sleepMultiplier: 1.5 },
+      { type: 'housing', housingId: 'studio-renove', sleepMultiplier: 1.3 },
     ],
   },
   {
@@ -107,21 +107,23 @@ export const upgrades: readonly Upgrade[] = [
     name: 'Pavillon aux Tilleuls',
     description:
       'Quatre pièces, un crédit sur vingt-cinq ans. Le jardin est inclus.',
-    price: 30_000,
-    rent: 380,
+    price: 27_000,
+    rent: 700,
     requirement: stat('endurance', 3),
     effects: [
-      { type: 'housing', housingId: 'pavillon-tilleuls', sleepMultiplier: 2.5 },
+      { type: 'housing', housingId: 'pavillon-tilleuls', sleepMultiplier: 2.6 },
     ],
   },
   {
     id: 'loft-pole',
     name: "Loft au Pôle d'Excellence",
     description: 'Vue sur d’autres lofts. Prix « dynamique ».',
-    price: 80_000,
-    rent: 500,
+    price: 92_000,
+    rent: 1950,
     requirement: stat('endurance', 5),
-    effects: [{ type: 'housing', housingId: 'loft-pole', sleepMultiplier: 4 }],
+    effects: [
+      { type: 'housing', housingId: 'loft-pole', sleepMultiplier: 3.25 },
+    ],
   },
   // Entrepôt et marqueurs
   {
@@ -200,7 +202,7 @@ export const upgrades: readonly Upgrade[] = [
     id: 'procedure-travail',
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
-    price: 510_000,
+    price: 640_000,
     requirement: {
       type: 'all',
       of: [
@@ -466,9 +468,12 @@ export const upgrades: readonly Upgrade[] = [
     id: 'camionnette',
     name: "Camionnette d'occasion",
     description: '240 000 km. Le compteur a été remis à l’honneur.',
-    price: 16_000,
+    price: 5750,
     requirement: anyCompany,
-    effects: [{ type: 'productionBonus', bonus: 0.15, companyId: 'atelier' }],
+    effects: [
+      { type: 'companyBonus', companyId: 'stand', bonus: 0.15 },
+      { type: 'companyBonus', companyId: 'boutique', bonus: 0.15 },
+    ],
   },
   {
     id: 'plan-communication',

@@ -69,6 +69,4 @@ export const guardrailConfig = {
 // Échecs connus des garde-fous sur les valeurs actuelles (« genre:sujet »). Ils
 // prouvent le diagnostic (docs/game/propositions-equilibrage.md § 1) ; chaque
 // chantier d'équilibrage retire ceux qu'il corrige.
-export const knownGuardrailFailures: readonly string[] = [
-  'utility:studio-renove',
-];
+export const knownGuardrailFailures: readonly string[] = [];

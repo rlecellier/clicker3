@@ -95,7 +95,7 @@ describe('chooseAction', () => {
   it('achète la première formation dès qu’il peut', () => {
     const cheap: GameState = {
       ...startState,
-      money: 450,
+      money: 700,
       upgrades: ['cartes-visite'],
     };
     expect(chooseAction(cheap)).toEqual({
