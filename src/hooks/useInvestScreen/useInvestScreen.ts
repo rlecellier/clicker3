@@ -9,37 +9,21 @@ import {
   ownedCount,
   warehouseCost,
 } from '@game/companies';
-import { boostById, canBuyBoost, isBoostActive } from '@game/boosts';
-import { boosts, companies, districts, impactRules } from '@game/data';
-import type { Company, Upgrade } from '@game/data';
+import { companies, districts, impactRules } from '@game/data';
+import type { Company } from '@game/data';
 import {
   finalPrice,
   outputPerCopy,
-  periodProduction,
   productionShares,
   salesCapacity,
 } from '@game/economy';
-import {
-  describeBoost,
-  describeEffect,
-  formatCount,
-  formatDecimal,
-  formatMoney,
-} from '@game/format';
-import { isPlaying } from '@game/state';
+import { formatCount, formatDecimal, formatMoney } from '@game/format';
 import type { GameState } from '@game/state';
-import {
-  availableUpgrades,
-  canBuyUpgrade,
-  canCancelUpgrade,
-  previewEffects,
-  upgradeById,
-  warehouseCapacity,
-} from '@game/upgrades';
+import { availableUpgrades, warehouseCapacity } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
 import { districtItem } from '@view/districtItem';
+import { boostItems, ownedUpgradeItems, upgradeItem } from '@view/upgradeItems';
 import {
-  ENDED,
   NO_MONEY,
   missingConditions,
   ownedBadge,
@@ -89,31 +73,6 @@ const companyEffect = (state: GameState, company: Company) => {
     ? `${verb} ${perCopy} articles par période et par exemplaire${price}`
     : `${verb} ${formatCount(total)} articles par période (${formatCount(owned)} × ${perCopy})${price}`;
 };
-
-// Effet chiffré d'une amélioration, plus la production avant / après achat
-// quand elle change.
-const effectsOf = (state: GameState, upgrade: Upgrade) => {
-  const before = periodProduction(state);
-  const after = periodProduction(previewEffects(state, upgrade.id));
-  return [
-    ...upgrade.effects.map((effect) => describeEffect(effect)),
-    ...(after === before
-      ? []
-      : [
-          `Production : ${formatCount(before)} → ${formatCount(after)} articles par période`,
-        ]),
-  ];
-};
-
-const extraOf = (upgrade: Upgrade) =>
-  [
-    upgrade.rent === undefined
-      ? undefined
-      : `loyer +${formatMoney(upgrade.rent)}`,
-    upgrade.payroll === undefined
-      ? undefined
-      : `salaires +${formatMoney(upgrade.payroll)}`,
-  ].filter((part) => part !== undefined);
 
 // Achats d'entreprises, d'améliorations et déblocage de quartiers.
 export const useInvestScreen = () => {
@@ -167,75 +126,9 @@ export const useInvestScreen = () => {
   };
 
   // Toutes les améliorations disponibles, plus la prochaine indisponible.
-  const availableUpgradeItems: ListItem[] = availableUpgrades(state).map(
-    (upgrade) => ({
-      id: upgrade.id,
-      title: upgrade.name,
-      effects: effectsOf(state, upgrade),
-      detail: [
-        upgrade.description,
-        formatMoney(upgrade.price),
-        ...extraOf(upgrade),
-      ].join(' · '),
-      actionLabel: 'Acheter',
-      isDisabled: !canBuyUpgrade(state, upgrade.id),
-      reason: unavailableReason(state, {
-        requirement: upgrade.requirement,
-        shortage: NO_MONEY,
-      }),
-      conditions: missingConditions(state, upgrade.requirement),
-      onAction: () => {
-        actions.buyUpgrade(upgrade.id);
-      },
-    }),
+  const availableUpgradeItems = availableUpgrades(state).map((upgrade) =>
+    upgradeItem(state, upgrade, actions.buyUpgrade),
   );
-
-  // Coups de pouce : achetables à nouveau une fois l'effet écoulé.
-  const boostItems: ListItem[] = boosts.map((boost) => {
-    const active = state.activeEffects.find(
-      (effect) => effect.eventId === boost.id && effect.until > state.period,
-    );
-    return {
-      id: boost.id,
-      title: boost.name,
-      badge:
-        active === undefined
-          ? undefined
-          : `Actif, encore ${formatCount(active.until - state.period)} mois`,
-      effects: [describeBoost(boost)],
-      detail: [boost.description, formatMoney(boost.price)].join(' · '),
-      actionLabel: 'Acheter',
-      isDisabled: !canBuyBoost(state, boost.id),
-      reason: isBoostActive(state, boost.id)
-        ? 'Déjà actif'
-        : unavailableReason(state, {
-            requirement: boostById(boost.id)?.requirement,
-            shortage: NO_MONEY,
-          }),
-      conditions: missingConditions(state, boost.requirement),
-      onAction: () => {
-        actions.buyBoost(boost.id);
-      },
-    };
-  });
-
-  // Les améliorations obtenues, dans l'ordre d'achat : on peut les annuler,
-  // sans rien récupérer.
-  const ownedUpgradeItems: ListItem[] = state.upgrades
-    .map((id) => upgradeById(id))
-    .filter((upgrade) => upgrade !== undefined)
-    .map((upgrade) => ({
-      id: upgrade.id,
-      title: upgrade.name,
-      effects: upgrade.effects.map((effect) => describeEffect(effect)),
-      detail: [upgrade.description, ...extraOf(upgrade)].join(' · '),
-      actionLabel: 'Annuler',
-      isDisabled: !canCancelUpgrade(state, upgrade.id),
-      reason: isPlaying(state) ? undefined : ENDED,
-      onAction: () => {
-        actions.cancelUpgrade(upgrade.id);
-      },
-    }));
 
   const districtItems: ListItem[] = districts.map((district) =>
     districtItem(state, district, () => {
@@ -251,8 +144,8 @@ export const useInvestScreen = () => {
     },
     companies: [...companyItems, warehouseItem],
     availableUpgrades: availableUpgradeItems,
-    boosts: boostItems,
-    ownedUpgrades: ownedUpgradeItems,
+    boosts: boostItems(state, actions.buyBoost),
+    ownedUpgrades: ownedUpgradeItems(state, actions.cancelUpgrade),
     districts: districtItems,
   };
 };
