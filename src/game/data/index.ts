@@ -20,4 +20,4 @@ export type { ReputationTier } from './reputationTiers';
 export { startState } from './startState';
 export { statTierThresholds } from './statTiers';
 export { upgrades } from './upgrades';
-export type { Upgrade, UpgradeEffect } from './upgrades';
+export type { Upgrade, UpgradeEffect, UpgradeScope } from './upgrades';

@@ -29,8 +29,14 @@ export type UpgradeEffect =
   | { type: 'automation'; action: 'work' }
   | { type: 'dashboard' };
 
+// Ce que l'amélioration change : la personne qu'on joue (formations,
+// logement, marqueurs, automatisation) ou ses entreprises (stock, employés,
+// montée en gamme). Elle décide des vues contextuelles de Profil et d'Entreprises.
+export type UpgradeScope = 'person' | 'company';
+
 export type Upgrade = {
   id: string;
+  scope: UpgradeScope;
   name: string;
   description: string;
   price: number;
@@ -60,6 +66,7 @@ export const upgrades: readonly Upgrade[] = [
   // Formations
   {
     id: 'stage-posture',
+    scope: 'person',
     name: 'Stage « Posture professionnelle »',
     description: 'Deux jours pour apprendre à sourire sans y croire.',
     price: 420,
@@ -67,6 +74,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'bts-opportunites',
+    scope: 'person',
     name: 'BTS « Gestion des opportunités »',
     description: 'Une opportunité se gère comme un risque, en moins amusant.',
     price: 4200,
@@ -75,6 +83,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'licence-economie',
+    scope: 'person',
     name: "Licence d'économie appliquée",
     description:
       "Vous apprenez que tout est une question d'offre et de demande, sauf vous.",
@@ -84,6 +93,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'coaching-depassement',
+    scope: 'person',
     name: 'Coaching « Dépassement de soi »',
     description: 'On vous explique que la fatigue est une croyance limitante.',
     price: 3800,
@@ -93,6 +103,7 @@ export const upgrades: readonly Upgrade[] = [
   // Logement
   {
     id: 'studio-renove',
+    scope: 'person',
     name: 'Studio rénové',
     description: 'Rénové : un coup de peinture et une nouvelle moisissure.',
     price: 800,
@@ -104,6 +115,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'pavillon-tilleuls',
+    scope: 'person',
     name: 'Pavillon aux Tilleuls',
     description:
       'Quatre pièces, un crédit sur vingt-cinq ans. Le jardin est inclus.',
@@ -116,6 +128,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'loft-pole',
+    scope: 'person',
     name: "Loft au Pôle d'Excellence",
     description: 'Vue sur d’autres lofts. Prix « dynamique ».',
     price: 92_000,
@@ -128,6 +141,7 @@ export const upgrades: readonly Upgrade[] = [
   // Entrepôt et marqueurs
   {
     id: 'etageres-kit',
+    scope: 'company',
     name: 'Étagères en kit',
     description: 'Montage en une heure. Le fabricant dit trois.',
     price: 13_000,
@@ -136,6 +150,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'entrepot-logistique',
+    scope: 'company',
     name: 'Entrepôt logistique',
     description:
       'Un hangar à la sortie du rond-point. Il y en avait déjà vingt.',
@@ -145,6 +160,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'agenda-electronique',
+    scope: 'person',
     name: 'Agenda électronique',
     description:
       'Écrire ses objectifs rend 30 % plus performant. Source : un agenda.',
@@ -154,6 +170,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'assistante-direction',
+    scope: 'company',
     name: 'Assistante de direction',
     description:
       'Elle classe, relance et protège votre agenda. Vous ne savez plus ce que vous faisiez sans elle.',
@@ -165,6 +182,7 @@ export const upgrades: readonly Upgrade[] = [
   // Employés
   {
     id: 'premier-collaborateur',
+    scope: 'company',
     name: 'Premier collaborateur',
     description:
       'Pas un salarié : un collaborateur. Il le saura à la fiche de paie.',
@@ -175,6 +193,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'equipe-collaborateurs',
+    scope: 'company',
     name: 'Équipe de collaborateurs',
     description: "Ils se sentent écoutés. Ils n'ont pas d'augmentation.",
     price: 78_000,
@@ -187,6 +206,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'directeur-transformation',
+    scope: 'company',
     name: 'Directeur de la transformation',
     description: 'Il transforme. Quoi ? Il reviendra vers vous.',
     price: 320_000,
@@ -200,6 +220,7 @@ export const upgrades: readonly Upgrade[] = [
   // Automatisations
   {
     id: 'procedure-travail',
+    scope: 'person',
     name: 'Procédure de travail',
     description: 'Le travail se fait seul. Vous le surveillerez de loin.',
     price: 640_000,
@@ -217,6 +238,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'tableau-de-bord',
+    scope: 'person',
     name: 'Tableau de bord',
     description:
       'Dix indicateurs. Un seul qui compte, que vous ne regardez pas.',
@@ -228,6 +250,7 @@ export const upgrades: readonly Upgrade[] = [
   // débit de tous les exemplaires (docs/game/equilibrage.md, issue #167).
   {
     id: 'ligne-semi-automatisee',
+    scope: 'company',
     name: 'Ligne semi-automatisée',
     description:
       'Les ouvriers surveillent les machines. Les machines ne surveillent personne.',
@@ -237,6 +260,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'ligne-automatisee',
+    scope: 'company',
     name: 'Ligne automatisée',
     description:
       'Plus personne ne touche la pièce. On a gardé quelqu’un pour la photo.',
@@ -252,6 +276,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'atelier-sans-lumiere',
+    scope: 'company',
     name: 'Atelier sans lumière',
     description:
       'Éteint, il produit pareil. On a compris à la facture d’électricité.',
@@ -267,6 +292,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'enseigne-regionale',
+    scope: 'company',
     name: 'Enseigne régionale',
     description: 'Un néon plus grand et un slogan que personne ne retient.',
     price: 3_000_000,
@@ -275,6 +301,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'enseigne-nationale',
+    scope: 'company',
     name: 'Enseigne nationale',
     description:
       'Le même magasin partout, et enfin un logo que l’on reconnaît.',
@@ -290,6 +317,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'franchise-internationale',
+    scope: 'company',
     name: 'Franchise internationale',
     description: 'Le concept voyage mieux que les clients.',
     price: 46_000_000,
@@ -304,6 +332,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'machines-outils-neuves',
+    scope: 'company',
     name: 'Machines-outils neuves',
     description:
       'Les anciennes sont parties à la casse, avec leurs défauts de fabrication.',
@@ -313,6 +342,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'chaine-robotisee',
+    scope: 'company',
     name: 'Chaîne robotisée',
     description:
       'Elle ne se met jamais en grève. Elle tombe en panne, mais poliment.',
@@ -328,6 +358,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'usine-du-futur',
+    scope: 'company',
     name: 'Usine du futur',
     description:
       'Une visite guidée par semaine. La production se fait le reste du temps.',
@@ -343,6 +374,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'tete-de-gondole',
+    scope: 'company',
     name: 'Tête de gondole',
     description: 'Le rayon que tout le monde croise en allant aux toilettes.',
     price: 1_200_000,
@@ -351,6 +383,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'rayon-complet',
+    scope: 'company',
     name: 'Rayon complet',
     description: 'On y trouve tout, sauf ce que l’on était venu chercher.',
     price: 22_000_000,
@@ -365,6 +398,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'galerie-marchande',
+    scope: 'company',
     name: 'Galerie marchande',
     description: 'Le corner a fini par avoir ses propres corners.',
     price: 73_000_000,
@@ -379,6 +413,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'equipes-3x8',
+    scope: 'company',
     name: 'Équipes en 3 × 8',
     description: 'Le soleil ne se couche jamais sur le site. Les équipes, si.',
     price: 530_000,
@@ -389,6 +424,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'second-site',
+    scope: 'company',
     name: 'Second site',
     description: 'Même usine, même cahier des charges, autre fuseau horaire.',
     price: 84_000_000,
@@ -405,6 +441,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'zone-franche',
+    scope: 'company',
     name: 'Zone franche',
     description: 'Ici, pas d’impôts, pas de syndicat, pas de questions.',
     price: 62_000_000,
@@ -419,6 +456,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'moteur-recommandation',
+    scope: 'company',
     name: 'Moteur de recommandation',
     description:
       'Les clients qui ont acheté cet article ont aussi acheté cet article.',
@@ -428,6 +466,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'livraison-24h',
+    scope: 'company',
     name: 'Livraison en 24 h',
     description:
       'Le colis arrive avant la commande. Le livreur, un peu plus tard.',
@@ -443,6 +482,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'marketplace',
+    scope: 'company',
     name: 'Marketplace',
     description:
       'Les autres vendent, vous encaissez la commission. C’est ça, le commerce.',
@@ -459,6 +499,7 @@ export const upgrades: readonly Upgrade[] = [
   // Matériel et réputation
   {
     id: 'cartes-visite',
+    scope: 'person',
     name: 'Cartes de visite',
     description: 'Papier épais. Le prénom ne figure pas, par souci de marque.',
     price: 58,
@@ -466,6 +507,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'camionnette',
+    scope: 'company',
     name: "Camionnette d'occasion",
     description: '240 000 km. Le compteur a été remis à l’honneur.',
     price: 5750,
@@ -477,6 +519,7 @@ export const upgrades: readonly Upgrade[] = [
   },
   {
     id: 'plan-communication',
+    scope: 'company',
     name: 'Plan de communication',
     description: 'Votre histoire, mais en mieux. Surtout la fin.',
     price: 19_000,

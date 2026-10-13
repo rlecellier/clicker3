@@ -366,3 +366,32 @@ describe('crédibilité des entreprises, des charges et de la montée en gamme',
     }
   });
 });
+
+describe('portée des améliorations', () => {
+  // Effets qui changent la personne ; tous les autres changent les entreprises.
+  const personEffects = new Set([
+    'course',
+    'housing',
+    'maxMarkers',
+    'markerChance',
+    'workReputation',
+    'automation',
+    'dashboard',
+  ]);
+
+  it('correspond aux effets : la personne ou les entreprises, jamais un mélange', () => {
+    for (const upgrade of upgrades) {
+      const scopes = new Set(
+        upgrade.effects.map((effect) =>
+          personEffects.has(effect.type) ? 'person' : 'company',
+        ),
+      );
+      expect([...scopes], upgrade.id).toEqual([upgrade.scope]);
+    }
+  });
+
+  it('range des améliorations dans chacune des deux vues', () => {
+    expect(upgrades.some((upgrade) => upgrade.scope === 'person')).toBe(true);
+    expect(upgrades.some((upgrade) => upgrade.scope === 'company')).toBe(true);
+  });
+});
