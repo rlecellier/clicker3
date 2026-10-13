@@ -7,10 +7,12 @@ export type Placement = {
   description: string;
   // Rendement par période (une période : un mois), versé sur le compte courant.
   rate: number;
-  // Débloqué par ce palier de réputation (`requirement`) puis, à chaque palier
-  // de plus, par le plafond suivant : plafond de capital placé en euros.
+  // Débloqué par ce palier de réputation.
   requirement: Requirement & { type: 'reputationTier' };
-  ceilings: readonly number[];
+  // Plafond de capital placé : euros par point de réputation gagné. La
+  // réputation suit l'économie (les recettes valent 10 à 20 fois la réputation
+  // gagnée sur toute la vie, simulateur), donc le plafond suit la richesse.
+  ceilingPerReputation: number;
 };
 
 // Rendements calés au simulateur (docs/game/placements.md). L'épargne rend
@@ -24,7 +26,7 @@ export const placements: readonly Placement[] = [
       'Sûr, liquide, et presque aussi excitant que votre compte courant.',
     rate: 0.003,
     requirement: { type: 'reputationTier', tier: 1 },
-    ceilings: [5000, 20_000, 80_000],
+    ceilingPerReputation: 100,
   },
   {
     id: 'stocks',
@@ -33,6 +35,6 @@ export const placements: readonly Placement[] = [
       'Rend plus, bouge avec l’actualité, et se vend « à moyen terme ».',
     rate: 0.008,
     requirement: { type: 'reputationTier', tier: 2 },
-    ceilings: [20_000, 150_000],
+    ceilingPerReputation: 300,
   },
 ];

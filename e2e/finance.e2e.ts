@@ -9,7 +9,7 @@ test('finance : placer son argent, toucher le rendement, le reprendre', async ({
   await preloadSave(page, {
     state: {
       money: 100_000,
-      reputationEarned: 100,
+      reputationEarned: 200,
       reputation: 100,
       gauge: 69,
     },
@@ -30,10 +30,10 @@ test('finance : placer son argent, toucher le rendement, le reprendre', async ({
 
   // Les titres se placent aussi, jusqu'au plafond ou à la dernière pièce.
   await stocks.getByRole('button', { name: 'Placer la moitié' }).tap();
-  await expect(stocks.getByText('10 000 €').first()).toBeVisible();
+  await expect(stocks.getByText('30 000 €').first()).toBeVisible();
 
   // Le rendement attendu suit le capital : 0,3 % de l'épargne, 0,8 % des titres.
-  await expect(page.getByText('Rendement attendu :')).toContainText('110 €');
+  await expect(page.getByText('Rendement attendu :')).toContainText('270 €');
 
   // La période passe : le rendement tombe sur le compte courant.
   await openTab(page, 'vie');
@@ -48,7 +48,7 @@ test('finance : placer son argent, toucher le rendement, le reprendre', async ({
   // Le capital se reprend à tout moment.
   await openTab(page, 'finance');
   await savings.getByRole('button', { name: 'Retirer tout' }).tap();
-  await expect(page.getByText('Capital placé :')).not.toContainText('30 000');
+  await expect(page.getByText('Capital placé :')).not.toContainText('40 000');
   await expect(
     savings.getByRole('button', { name: 'Retirer tout' }),
   ).toBeDisabled();

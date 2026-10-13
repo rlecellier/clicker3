@@ -6,6 +6,7 @@ export {
   depositable,
   expectedYield,
   isPlacementUnlocked,
+  maxYield,
   payYields,
   placementById,
   rateOf,

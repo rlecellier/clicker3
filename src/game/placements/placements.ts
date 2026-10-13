@@ -4,7 +4,6 @@ import { activeBonus } from '@game/effects';
 import { fixedExpensesOf } from '@game/economy';
 import { withRecord } from '@game/ledger';
 import { isRequirementMet } from '@game/requirements';
-import { reputationTierOf } from '@game/reputation';
 import { isPlaying, placementIds } from '@game/state';
 import type { GameState, PlacementId } from '@game/state';
 
@@ -17,15 +16,13 @@ export const isPlacementUnlocked = (state: GameState, id: PlacementId) => {
   );
 };
 
-// Plafond de capital placé : monte à chaque palier de réputation, 0 tant que le
-// placement n'est pas débloqué.
+// Plafond de capital placé : proportionnel à la réputation gagnée (donc il
+// monte avec la richesse), 0 tant que le placement n'est pas débloqué.
 export const ceilingOf = (state: GameState, id: PlacementId) => {
   const placement = placementById(id);
-  if (placement === undefined || !isPlacementUnlocked(state, id)) {
-    return 0;
-  }
-  const step = reputationTierOf(state) - placement.requirement.tier;
-  return placement.ceilings[Math.min(step, placement.ceilings.length - 1)] ?? 0;
+  return placement === undefined || !isPlacementUnlocked(state, id)
+    ? 0
+    : Math.floor(state.reputationEarned * placement.ceilingPerReputation);
 };
 
 // Rendement de la période : le taux du placement, plus l'écart des événements
@@ -111,6 +108,16 @@ export const expectedYield = (state: GameState) =>
       ),
     0,
   );
+
+// Rendement par période qu'aurait le joueur s'il plaçait tout ce qu'il peut,
+// les titres d'abord (mesure du simulateur, pas un geste du jeu).
+export const maxYield = (state: GameState) => {
+  let placed = state;
+  for (const id of [...placementIds].toReversed()) {
+    placed = deposit(placed, id, depositable(placed, id));
+  }
+  return expectedYield(placed);
+};
 
 // Étape 4 : chaque placement rapporte à la période. Un gain est versé sur le
 // compte courant ; une perte (krach) retire du capital placé.
