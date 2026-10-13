@@ -3,6 +3,7 @@ import { companies, jobs, upgrades } from '@game/data';
 import {
   amountOf,
   balanceOf,
+  clickThroughPromotion,
   counter,
   expectNoOverflow,
   itemOf,
@@ -92,7 +93,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   );
   await expect(page.getByText('Entrepreneur (statut déclaré)')).toBeVisible();
   for (let turn = 0; turn < 10; turn += 1) {
-    await work.click();
+    await clickThroughPromotion(page, work);
   }
   await work.click();
   await expectNoOverflow(page);
@@ -135,7 +136,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await openTab(page, 'vie');
   const stock = () => amountOf(counter(page, 'Stock'));
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await stock()) > 0,
   );
 

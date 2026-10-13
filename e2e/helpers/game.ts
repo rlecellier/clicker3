@@ -76,3 +76,13 @@ export const longPress = async (page: Page, target: Locator) => {
   await page.clock.runFor(LONG_PRESS_MS + 100);
   await page.mouse.up();
 };
+
+// Clique sur un bouton de travail ; si le clic fait proposer une promotion (les
+// heures sup. s'accumulent au fil d'un long parcours), la refuse pour continuer.
+export const clickThroughPromotion = async (page: Page, button: Locator) => {
+  await button.click();
+  const dialog = page.getByRole('alertdialog');
+  if (await dialog.isVisible()) {
+    await dialog.getByRole('button', { name: 'Refuser' }).click();
+  }
+};

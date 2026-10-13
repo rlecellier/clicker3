@@ -4,6 +4,7 @@ import {
   SAVE_KEY,
   amountOf,
   balanceOf,
+  clickThroughPromotion,
   counter,
   itemOf,
   openTab,
@@ -58,12 +59,12 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
 
   // Jusqu'à une balance positive : à la clôture, l'argent monte de la balance.
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await balanceOf(page, 'Argent')) > 0,
   );
   const announcedGain = await balanceOf(page, 'Argent');
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await money()) > 0,
   );
   expect(await money()).toBeGreaterThanOrEqual(announcedGain);
@@ -97,7 +98,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(owned.getByText('Cartes de visite')).toBeVisible();
   await openTab(page, 'vie');
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await money()) >= 150,
   );
   await openUpgrades();
@@ -116,7 +117,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   ).toBeVisible();
   expect(await workBox()).toEqual(workBoxAtStart);
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await money()) >= 20,
   );
   // La flèche ouvre le choix du cursus.
@@ -138,7 +139,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
 
   // Le raccourci E étudie le cursus choisi, depuis un autre onglet.
   await repeatUntil(
-    () => work.click(),
+    () => clickThroughPromotion(page, work),
     async () => (await money()) >= 20,
   );
   const beforeShortcut = await money();
@@ -161,9 +162,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await expect(metier).toHaveAccessibleName(/palier 0 · 0 pts/);
   await openTab(page, 'vie');
   await repeatUntil(
-    async () => {
-      await work.click();
-    },
+    () => clickThroughPromotion(page, work),
     () => page.getByRole('progressbar', { name: /^Sommeil/ }).isVisible(),
     150,
   );
