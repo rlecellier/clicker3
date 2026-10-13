@@ -9,7 +9,8 @@ type BankerDialogProperties = {
   // Les réponses possibles du joueur.
   replies: readonly string[];
   leaveLabel: string;
-  onReply: () => void;
+  // Reçoit la position de la réponse choisie.
+  onReply: (index: number) => void;
   onLeave: () => void;
 };
 
@@ -37,7 +38,9 @@ export const BankerDialog = ({
               <Button
                 key={reply}
                 variant={index === 0 ? 'primary' : undefined}
-                onClick={onReply}
+                onClick={() => {
+                  onReply(index);
+                }}
               >
                 {reply}
               </Button>
