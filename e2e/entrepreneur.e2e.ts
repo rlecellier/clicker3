@@ -135,6 +135,16 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await workshop.getByRole('button', { name: 'Acheter' }).click();
   await workshop.getByRole('button', { name: 'Acheter' }).click();
   await expect(workshop.getByText('2 possédé(s)')).toBeVisible();
+
+  // La comptabilité des entreprises liste ce qu'on possède ; la barre de
+  // stock mène au détail dans Comptes.
+  await page.getByRole('tab', { name: 'Comptabilité' }).click();
+  await expect(
+    page.getByRole('row', { name: /Atelier d’assemblage/ }),
+  ).toBeVisible();
+  await expect(page.getByRole('row', { name: /Boutique/ })).toBeVisible();
+  await page.getByRole('link', { name: 'Détail du stock' }).click();
+  await expect(page).toHaveURL(/\/jeu\/comptes#stock$/);
   await openTab(page, 'vie');
   const stock = () => amountOf(counter(page, 'Stock'));
   await repeatUntil(

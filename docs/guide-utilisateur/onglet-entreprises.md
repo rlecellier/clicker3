@@ -3,8 +3,8 @@
 [Sommaire](README.md) · Raccourci : touche 5 · Précédent : [Emploi](onglet-emploi.md) · Suite : [Améliorations](onglet-ameliorations.md)
 
 C'est là que l'argent (et la réputation) se dépense pour bâtir son affaire. La
-page est découpée en trois sous-onglets, **À acheter**, **Quartiers** et
-**Améliorations**, sous une barre d'entrepôt. Une pastille de nouveautés compte ce qui vient de se
+page est découpée en quatre sous-onglets, **À acheter**, **Quartiers**,
+**Comptabilité** et **Améliorations**, sous une barre d'entrepôt. Une pastille de nouveautés compte ce qui vient de se
 débloquer. Le sous-onglet Améliorations ne montre que celles qui
 touchent vos entreprises (stock, employés, montée en gamme) ; elles s'achètent
 aussi depuis l'onglet [Améliorations](onglet-ameliorations.md), qui les réunit toutes.
@@ -20,7 +20,10 @@ En haut : « Entrepôt : vide (0 / 50) ». Le mot change avec la situation.
 | plein       | Le stock a atteint la capacité de l'entrepôt                               |
 | en rupture  | Le dernier mois, un commerce n'a pas pu vendre toute sa capacité          |
 
-Voir [Les entreprises](entreprises.md) pour la mécanique du stock.
+Voir [Les entreprises](entreprises.md) pour la mécanique du stock. Le lien **Détail
+du stock** sous la barre ouvre le récap complet des entrées et des sorties dans
+[Comptes](onglet-comptes.md#avec-le-tableau-de-bord-cinq-sections) (une fois le
+Tableau de bord acheté).
 
 ## Comment se lisent les lignes
 
@@ -70,6 +73,15 @@ Les quartiers se débloquent aussi depuis l'onglet [Ville](onglet-ville.md).
 | Les Hauts-Fourneaux         | 1    | Palier 1 de réputation (6 gagnés)              |
 | Parc d'activités Horizon    | 22   | Palier 2 de réputation (100 gagnés)            |
 | Le Pôle d'Excellence        | 33   | Palier 3 de réputation (170 gagnés)            |
+
+## Comptabilité
+
+Ce que rapporte chaque entreprise que vous possédez, **sur la période en cours** :
+une ligne par type d'entreprise. Un commerce affiche ce qu'il a rapporté et le
+nombre d'articles vendus ; une production n'affiche pas d'argent (elle ne rapporte
+rien par elle-même) mais le nombre d'articles fournis au stock. C'est le même
+tableau que dans [Comptes](onglet-comptes.md), sans quitter l'onglet. Sans
+entreprise : « Aucune entreprise pour le moment. »
 
 ## Améliorations
 
