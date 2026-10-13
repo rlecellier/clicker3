@@ -483,6 +483,8 @@ describe('nextUpgrade', () => {
   });
 });
 
+const idList = (list: readonly { id: string }[]) => list.map(({ id }) => id);
+
 describe('availableUpgrades', () => {
   it('liste les débloquées puis la prochaine verrouillée', () => {
     const list = availableUpgrades(rich);
@@ -506,5 +508,35 @@ describe('availableUpgrades', () => {
   it('est vide quand tout est acheté', () => {
     const all = { ...startState, upgrades: upgrades.map((entry) => entry.id) };
     expect(availableUpgrades(all)).toEqual([]);
+  });
+
+  it('se limite à la portée demandée, avec sa propre suite verrouillée', () => {
+    for (const scope of ['person', 'company'] as const) {
+      const list = availableUpgrades(startState, scope);
+      expect(list.length, scope).toBeGreaterThan(0);
+      expect(
+        list.every((upgrade) => upgrade.scope === scope),
+        scope,
+      ).toBe(true);
+      expect(
+        list.filter(
+          (upgrade) =>
+            upgrade.requirement !== undefined &&
+            !isUnlocked(startState, upgrade.requirement),
+        ).length,
+        scope,
+      ).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('réunit les deux portées sans en perdre une', () => {
+    const merged = [
+      ...idList(availableUpgrades(rich, 'person')),
+      ...idList(availableUpgrades(rich, 'company')),
+    ];
+    const all = idList(availableUpgrades(rich));
+    for (const id of all) {
+      expect(merged).toContain(id);
+    }
   });
 });
