@@ -36,8 +36,10 @@ export const balanceOf = async (page: Page, label: string) => {
     .getByText(label, { exact: true })
     .locator('xpath=following-sibling::dd[1]')
     .textContent();
-  const amount = numberOf((text ?? '').replace('−', '-'));
-  return amount;
+  const raw = (text ?? '').replace('−', '-');
+  // Les grands montants sont abrégés (« 1,1 k ») : à une unité près de l'abréviation.
+  const scale = raw.includes('k') ? 1000 : 1;
+  return numberOf(raw) * scale;
 };
 
 // Ligne d'une liste (emploi, entreprise, amélioration, quartier) par son titre.
