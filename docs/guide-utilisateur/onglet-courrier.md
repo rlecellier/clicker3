@@ -22,22 +22,11 @@ Dans la sidebar, l'onglet Courrier porte une pastille rouge avec le nombre de
 messages non lus. Elle disparaît quand il n'y en a plus et affiche « 99+ » au-delà
 de 99. En début de partie, elle affiche 2.
 
-## La popup de nouveau message
+## Pas de popup
 
-Quand un message arrive alors que vous êtes sur un autre onglet, une petite
-fenêtre apparaît en bas de la zone de jeu : « Nouveau message », la date et le
-texte.
-
-- Elle **ne bloque jamais** le jeu : vous pouvez continuer à travailler.
-- Elle se ferme toute seule après un délai de lecture : 4 secondes, plus 60
-  millisecondes par caractère du message, sans dépasser 15 secondes.
-- Elle reste affichée tant que votre souris la survole ou que le clavier la
-  cible.
-- Si plusieurs messages arrivent, elle montre le plus récent et ajoute « et N
-  autres messages ».
-- Deux boutons : « Ouvrir le courrier » et « Fermer ».
-- Elle **ne marque pas** les messages comme lus : seul l'onglet Courrier le fait.
-- Elle n'apparaît pas quand vous êtes déjà sur le Courrier.
+Un message qui arrive n'interrompt jamais le jeu : il s'ajoute au courrier et à
+la pastille. Seuls les événements qui demandent une réponse (comme la
+promotion, voir [Emploi](onglet-emploi.md)) s'affichent à l'écran.
 
 ## Ce qui produit un message
 

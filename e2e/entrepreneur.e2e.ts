@@ -94,22 +94,8 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   for (let turn = 0; turn < 10; turn += 1) {
     await work.click();
   }
-  // Le message arrive dans une popup hors flux : elle ne masque pas
-  // « Travailler », le jeu continue (le clic passe), et elle ne marque rien
-  // comme lu.
-  const popup = page.getByRole('status').filter({ hasText: 'Nouveau message' });
-  await expect(popup).toContainText('Vos clients découvrent la rareté.');
-  const workBox = await work.boundingBox();
-  const popupBox = await popup.boundingBox();
-  expect(workBox !== null && popupBox !== null).toBe(true);
-  expect((workBox?.y ?? 0) + (workBox?.height ?? 0)).toBeLessThanOrEqual(
-    popupBox?.y ?? 0,
-  );
   await work.click();
-  expect(await work.boundingBox()).toEqual(workBox);
   await expectNoOverflow(page);
-  await popup.getByRole('button', { name: 'Fermer' }).click();
-  await expect(popup).toBeHidden();
   await openTab(page, 'investir');
   await expect(warehouse).toHaveAccessibleName(/en rupture/);
   // Le message arrivé en jouant s'annonce par un badge, qui se vide à la visite.

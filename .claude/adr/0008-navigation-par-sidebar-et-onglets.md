@@ -66,8 +66,9 @@ La page ne défile plus : la hauteur est celle de l'écran (`100dvh`), seule la
 zone de contenu défile et la sidebar reste fixe. Le contenu est une colonne de
 `Window` de `40rem` au plus, centrée dans la zone de contenu.
 
-Le courrier non lu se signale par un badge sur l'onglet Courrier (#99) ; la
-popup temporaire (`MailPopup`, #100) est posée par `GamePage`, hors flux.
+Le courrier non lu se signale par un badge sur l'onglet Courrier (#99). Il n'y
+a plus de popup de courrier (#195) : seuls les événements interactifs
+interrompent le joueur.
 
 ### 6. Badges
 

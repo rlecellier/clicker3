@@ -26,20 +26,3 @@
   flex-direction: column;
   gap: var(--space);
 }
-
-/* Hors flux, en bas de la zone de contenu : ne déplace rien et laisse la
-   sidebar et l'en-tête libres. Le conteneur laisse passer les clics ; seule la
-   popup les capte. */
-.popup {
-  position: absolute;
-  right: var(--space);
-  bottom: var(--space);
-  left: var(--space);
-  max-width: 40rem;
-  margin: 0 auto;
-  pointer-events: none;
-}
-
-.popup > * {
-  pointer-events: auto;
-}

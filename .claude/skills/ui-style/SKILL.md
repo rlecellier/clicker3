@@ -27,7 +27,7 @@ illustrations. Voix administrative pince-sans-rire.
    `shortcut`), `GameHeader`, `Stat` (dans un `<dl>`), `Note` (`minLines`,
    `to`), `CharacterHeader`, `MarkerTrack`, `ActionButton` et
    `SplitActionButton` (`press` : appui maintenu, `shortcut`), `ItemList`
-   (`effects`, `highlightedId`), `EventLog`, `MailPopup` (popup non modale),
+   (`effects`, `highlightedId`), `EventLog`, `PromotionPrompt` (fenêtre modale),
    `LedgerTable`, `LedgerSection`, `CityMap`, `DistrictSheet`, `ImpactGauges`,
    `PageLink`, `FigureList`, `ConfirmPrompt`, `ScreenPage` (écran hors jeu),
    `WithBadge` (titre + badge), `Balance` (variation signée), `ActionInfo`
@@ -67,8 +67,8 @@ illustrations. Voix administrative pince-sans-rire.
 8. **Hauteurs stables** : tout texte dynamique a une hauteur réservée
    (`min-height` en `lh`, ellipse sur une ligne, deux lignes tronquées pour
    un détail), et ce qui apparaît en cours de partie occupe déjà sa place :
-   les boutons ne bougent jamais sous le doigt. Une popup se superpose
-   (`MailPopup`), elle ne pousse pas le contenu.
+   les boutons ne bougent jamais sous le doigt. Une fenêtre se superpose
+   (`PromotionPrompt`), elle ne pousse pas le contenu.
 9. **Zones tactiles** : toute cible interactive fait au moins
    `var(--touch-target)` (44 px) en `min-height` (et `min-width` pour une
    icône seule).

@@ -30,7 +30,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 
 | Onglet                                      | Raccourci | Contenu                                              |
 | ------------------------------------------- | --------- | ---------------------------------------------------- |
-| [Courrier](onglet-courrier.md)              | 1         | Les messages reçus, la pastille de non-lus, la popup |
+| [Courrier](onglet-courrier.md)              | 1         | Les messages reçus, la pastille de non-lus            |
 | [Vie](onglet-vie.md)                        | 2         | Travailler, étudier, vendre le surplus, le cerveau   |
 | [Compétences](onglet-competences.md)        | 3         | Quatre compétences, la réputation et leurs paliers   |
 | [Emploi](onglet-emploi.md)                  | 4         | Les quatre postes successifs                         |
