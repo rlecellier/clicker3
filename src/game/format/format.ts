@@ -1,3 +1,4 @@
+import type { Activity } from '@game/activity';
 import type { Requirement } from '@game/requirements';
 import { dateAt } from '@game/time';
 import type { GameDate } from '@game/time';
@@ -100,6 +101,15 @@ export const statLabels: Record<StatId, string> = {
   gestion: 'Gestion',
   intelligence: 'Intelligence',
   endurance: 'Endurance',
+};
+
+// Ce que fait le personnage, en quelques mots, pour l'en-tête.
+export const activityLabels: Record<Activity, string> = {
+  work: 'Au travail',
+  study: 'En formation',
+  sleep: 'Dort',
+  idle: 'Entre deux réunions',
+  over: 'Plus joignable',
 };
 
 // Raison lisible d'un déblocage manquant (« Palier Gestion 2 requis »).
