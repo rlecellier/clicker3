@@ -38,62 +38,44 @@ export const rateOf = (state: GameState, placement: Placement) =>
 export const capitalOf = (state: GameState) =>
   placementIds.reduce((total, id) => total + state.placements[id], 0);
 
-// Euros que `deposit` placerait : limités par l'argent disponible et le plafond.
-export const depositable = (state: GameState, id: PlacementId) =>
-  Math.max(
-    0,
-    Math.min(
-      Math.floor(state.money),
-      ceilingOf(state, id) - state.placements[id],
-    ),
-  );
+// Matelas du compte courant : deux périodes de dépenses fixes. Il ne bouge pas,
+// seul le surplus est placé.
+export const bufferOf = (state: GameState) => 2 * fixedExpensesOf(state);
 
-// Place de l'argent du compte courant (au plus `amount`, entier).
-export const deposit = (
-  state: GameState,
-  id: PlacementId,
-  amount: number,
-): GameState => {
-  const moved = Math.min(Math.floor(amount), depositable(state, id));
-  if (!isPlaying(state) || !(moved > 0)) {
+// Compte courant : ce qui reste du solde une fois le capital placé retiré.
+export const checkingOf = (state: GameState) => state.money - capitalOf(state);
+
+// Répartition automatique du solde (`money`, total de tous les comptes) :
+// 1. si une dépense a entamé le compte courant au-delà de son contenu, elle
+//    reprend d'abord le compte au rendement le plus faible (ordre des
+//    placements) ;
+// 2. le surplus au-dessus du matelas va dans le premier compte qui a de la
+//    place. Les revenus remplissent donc le compte courant avant tout.
+export const rebalance = (state: GameState): GameState => {
+  if (!isPlaying(state)) {
     return state;
   }
-  return {
-    ...state,
-    money: state.money - moved,
-    placements: { ...state.placements, [id]: state.placements[id] + moved },
-  };
-};
-
-// Reprend du capital sur le compte courant : jamais bloqué.
-export const withdraw = (
-  state: GameState,
-  id: PlacementId,
-  amount: number,
-): GameState => {
-  const moved = Math.min(Math.floor(amount), state.placements[id]);
-  if (!isPlaying(state) || !(moved > 0)) {
-    return state;
-  }
-  return {
-    ...state,
-    money: state.money + moved,
-    placements: { ...state.placements, [id]: state.placements[id] - moved },
-  };
-};
-
-// Étape 2 ter : si l'argent ne couvre pas les dépenses fixes, les placements
-// sont repris (épargne d'abord) : on peut toujours dépenser son capital.
-export const coverExpenses = (state: GameState): GameState => {
-  let covered = state;
+  const total = Math.max(0, Math.floor(state.money));
+  const accounts = { ...state.placements };
+  let overdrawn = capitalOf(state) - total;
   for (const id of placementIds) {
-    const shortfall = fixedExpensesOf(covered) - covered.money;
-    if (shortfall <= 0) {
-      break;
-    }
-    covered = withdraw(covered, id, shortfall);
+    const taken = Math.min(Math.max(0, overdrawn), accounts[id]);
+    accounts[id] -= taken;
+    overdrawn -= taken;
   }
-  return covered;
+  let surplus =
+    total - capitalOf({ ...state, placements: accounts }) - bufferOf(state);
+  for (const id of placementIds) {
+    const moved = Math.max(
+      0,
+      Math.min(surplus, ceilingOf(state, id) - accounts[id]),
+    );
+    accounts[id] += moved;
+    surplus -= moved;
+  }
+  return placementIds.every((id) => accounts[id] === state.placements[id])
+    ? state
+    : { ...state, placements: accounts };
 };
 
 // Rendement qu'apporterait la prochaine période : somme des gains versés sur le
@@ -109,18 +91,12 @@ export const expectedYield = (state: GameState) =>
     0,
   );
 
-// Rendement par période qu'aurait le joueur s'il plaçait tout ce qu'il peut,
-// les titres d'abord (mesure du simulateur, pas un geste du jeu).
-export const maxYield = (state: GameState) => {
-  let placed = state;
-  for (const id of [...placementIds].toReversed()) {
-    placed = deposit(placed, id, depositable(placed, id));
-  }
-  return expectedYield(placed);
-};
+// Rendement par période de la répartition actuelle, une fois le solde réparti
+// (mesure du simulateur : le joueur virtuel n'attend pas la clôture).
+export const maxYield = (state: GameState) => expectedYield(rebalance(state));
 
 // Étape 4 : chaque placement rapporte à la période. Un gain est versé sur le
-// compte courant ; une perte (krach) retire du capital placé.
+// compte courant ; une perte (krach) retire du capital placé, donc du solde.
 export const payYields = (state: GameState): GameState => {
   let paid = state;
   for (const placement of placements) {
@@ -132,13 +108,15 @@ export const payYields = (state: GameState): GameState => {
         { yields: change },
       );
     } else if (change < 0) {
-      paid = {
-        ...paid,
-        placements: {
-          ...paid.placements,
-          [placement.id]: Math.max(0, capital + change),
+      const lost = Math.min(-change, capital);
+      paid = withRecord(
+        {
+          ...paid,
+          money: paid.money - lost,
+          placements: { ...paid.placements, [placement.id]: capital - lost },
         },
-      };
+        { otherExpenses: lost },
+      );
     }
   }
   return paid;

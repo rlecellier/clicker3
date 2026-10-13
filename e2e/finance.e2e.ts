@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { itemOf, openTab, preloadSave } from './helpers';
 
-test('finance : placer son argent, toucher le rendement, le reprendre', async ({
+test('finance : le surplus se place tout seul, du Livret A au compte-titres', async ({
   page,
 }) => {
-  // Acteur majeur, à un geste de la fin de la période : le premier travail
+  // Une marque, riche, à un geste de la fin de la période : le premier travail
   // clôture le mois.
   await preloadSave(page, {
     state: {
@@ -16,40 +16,40 @@ test('finance : placer son argent, toucher le rendement, le reprendre', async ({
   });
   await page.goto('/jeu');
 
-  await openTab(page, 'finance');
-  const savings = itemOf(page, 'Compte épargne optimisée');
-  const stocks = itemOf(page, 'Portefeuille de valeur actionnariale');
-  await expect(
-    savings.getByRole('button', { name: 'Placer tout' }),
-  ).toBeEnabled();
-
-  // Un tap place la moitié de ce que le plafond permet : une seule action.
-  await savings.getByRole('button', { name: 'Placer la moitié' }).tap();
-  await expect(savings.getByText('10 000 €').first()).toBeVisible();
-  await expect(page.getByText('Capital placé :')).toContainText('10 000 €');
-
-  // Les titres se placent aussi, jusqu'au plafond ou à la dernière pièce.
-  await stocks.getByRole('button', { name: 'Placer la moitié' }).tap();
-  await expect(stocks.getByText('30 000 €').first()).toBeVisible();
-
-  // Le rendement attendu suit le capital : 0,3 % de l'épargne, 0,8 % des titres.
-  await expect(page.getByText('Rendement attendu :')).toContainText('270 €');
-
-  // La période passe : le rendement tombe sur le compte courant.
+  // Un tap travaille : la clôture verse le rendement et répartit l'argent.
   await openTab(page, 'vie');
   await page
     .getByRole('button', { name: /^Travailler/ })
     .first()
     .tap();
+
+  await openTab(page, 'finance');
+  const savings = itemOf(page, 'Livret A');
+  const pel = itemOf(page, 'Plan d’épargne logement');
+  const stocks = itemOf(page, 'Compte-titres');
+
+  // Le Livret A se remplit d'abord, jusqu'à son plafond (100 € par point de
+  // réputation gagné, 20 000 € pour 200 points), puis le PEL (200 €) : le reste va aux titres.
+  await expect(savings.getByText(/^20\s\d{3}\s€$/).first()).toBeVisible();
+  await expect(pel.getByText(/^40\s\d{3}\s€$/).first()).toBeVisible();
+  await expect(stocks.getByText(/^3\d\s\d{3}\s€$/).first()).toBeVisible();
+
+  // Le total affiché est celui de tous les comptes, et le compte courant reste
+  // au matelas (deux mois de dépenses).
+  await expect(page.getByText('Total des comptes :')).toBeVisible();
+  await expect(page.getByText('Capital placé :')).toContainText(
+    /9\d\s\d{3}\s€/,
+  );
+  await expect(page.getByText('Rendement attendu :')).toContainText(
+    /4\d{2}\s€/,
+  );
+
+  // Les comptes ne se manipulent plus à la main.
+  await expect(page.getByRole('button', { name: /^Placer/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Retirer/ })).toHaveCount(0);
+
+  // Le rendement apparaît dans les comptes.
   await openTab(page, 'comptes');
   await page.getByRole('tab', { name: 'Cumulé' }).tap();
   await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
-
-  // Le capital se reprend à tout moment.
-  await openTab(page, 'finance');
-  await savings.getByRole('button', { name: 'Retirer tout' }).tap();
-  await expect(page.getByText('Capital placé :')).not.toContainText('40 000');
-  await expect(
-    savings.getByRole('button', { name: 'Retirer tout' }),
-  ).toBeDisabled();
 });

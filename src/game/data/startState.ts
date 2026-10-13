@@ -26,7 +26,7 @@ export const startState: GameState = {
   phase: 'youngAdult',
 
   money: 0,
-  placements: { savings: 0, stocks: 0 },
+  placements: { savings: 0, pel: 0, stocks: 0 },
   stock: 0,
   stockCapacity: 50,
   warehouses: 0,

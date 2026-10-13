@@ -1,14 +1,13 @@
 export {
+  bufferOf,
   capitalOf,
   ceilingOf,
-  coverExpenses,
-  deposit,
-  depositable,
+  checkingOf,
   expectedYield,
   isPlacementUnlocked,
   maxYield,
   payYields,
   placementById,
   rateOf,
-  withdraw,
+  rebalance,
 } from './placements';

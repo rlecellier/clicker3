@@ -33,13 +33,13 @@ describe('lifeSummary', () => {
     });
   });
 
-  it('compte le capital placé à part de l’argent', () => {
+  it('compte le capital placé dans l’argent', () => {
     const state = {
       ...startState,
-      money: 10,
-      placements: { savings: 300, stocks: 700 },
+      money: 1010,
+      placements: { savings: 300, pel: 0, stocks: 700 },
     };
-    expect(lifeSummary(state)).toMatchObject({ money: 10, capital: 1000 });
+    expect(lifeSummary(state)).toMatchObject({ money: 1010, capital: 1000 });
   });
 
   it('reprend les indicateurs d’impact dans le bilan', () => {

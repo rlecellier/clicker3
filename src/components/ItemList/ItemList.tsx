@@ -30,9 +30,15 @@ export type ListItem = {
   extraActions?: readonly ListAction[];
 };
 
+// Ligne purement informative : mêmes champs, sans bouton.
+export type InfoListItem = Omit<
+  ListItem,
+  'actionLabel' | 'isDisabled' | 'reason' | 'onAction' | 'extraActions'
+>;
+
 type ItemListProperties = {
   caption: string;
-  items: readonly ListItem[];
+  items: readonly (ListItem | InfoListItem)[];
   // Ligne mise en évidence (ex. cible d'un lien).
   highlightedId?: string;
 };
@@ -78,24 +84,28 @@ export const ItemList = ({
                 ))}
               </ul>
             )}
-            {item.isDisabled && item.reason !== undefined ? (
+            {'actionLabel' in item &&
+            item.isDisabled &&
+            item.reason !== undefined ? (
               <span className={styles.reason}>{item.reason}</span>
             ) : null}
           </div>
-          <div className={styles.actions}>
-            <Button isDisabled={item.isDisabled} onClick={item.onAction}>
-              {item.actionLabel}
-            </Button>
-            {item.extraActions?.map((action) => (
-              <Button
-                key={action.id}
-                isDisabled={action.isDisabled}
-                onClick={action.onAction}
-              >
-                {action.label}
+          {'actionLabel' in item ? (
+            <div className={styles.actions}>
+              <Button isDisabled={item.isDisabled} onClick={item.onAction}>
+                {item.actionLabel}
               </Button>
-            ))}
-          </div>
+              {item.extraActions?.map((action) => (
+                <Button
+                  key={action.id}
+                  isDisabled={action.isDisabled}
+                  onClick={action.onAction}
+                >
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          ) : null}
         </li>
       ))}
     </ul>

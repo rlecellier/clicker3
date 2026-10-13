@@ -1,5 +1,6 @@
 import { triggerEvents } from '@game/events';
 import { pruneSeen } from '@game/novelty';
+import { rebalance } from '@game/placements';
 import { updatePhase } from '@game/phases';
 import { offerPromotion } from '@game/promotion';
 import { settleSleep } from '@game/sleep';
@@ -14,6 +15,7 @@ import type { GameState } from '@game/state';
  * l'appliquent tous les deux.
  */
 export const afterAction = (state: GameState): GameState => {
-  const events = triggerEvents(updatePhase(settleSleep(state)));
+  const placed = rebalance(state);
+  const events = triggerEvents(updatePhase(settleSleep(placed)));
   return pruneSeen(offerPromotion(events));
 };

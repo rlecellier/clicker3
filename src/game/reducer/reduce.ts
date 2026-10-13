@@ -8,7 +8,6 @@ import { changeJob, startingJobs } from '@game/jobs';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { addGauge } from '@game/period';
-import { deposit, withdraw } from '@game/placements';
 import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
 import { queueAction, setSleepHours } from '@game/sleep';
@@ -55,12 +54,6 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'buyWarehouse': {
       return buyWarehouse(state);
-    }
-    case 'deposit': {
-      return deposit(state, action.id, action.amount);
-    }
-    case 'withdraw': {
-      return withdraw(state, action.id, action.amount);
     }
     case 'sellSurplus': {
       return sellSurplus(state);
