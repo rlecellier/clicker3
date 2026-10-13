@@ -13,7 +13,6 @@ import { InfoPanel } from '@component/InfoPanel';
 import { ItemList } from '@component/ItemList';
 import { LedgerSection } from '@component/LedgerSection';
 import { LedgerTable } from '@component/LedgerTable';
-import { MailPopup } from '@component/MailPopup';
 import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
@@ -235,15 +234,6 @@ export const StyleguidePage = () => (
         ]}
       />
       <Note>Bienvenue dans l’euro. Votre compte est crédité de 0 €.</Note>
-      <MailPopup
-        date="3 mars 2026"
-        text="Votre loyer augmente de 20 € par mois."
-        otherCount={2}
-        mailPath="/jeu/courrier"
-        onDismiss={() => {}}
-        onPause={() => {}}
-        onResume={() => {}}
-      />
       <LedgerSection
         title="D’où vient l’argent ?"
         help="Les commerces vendent tout le stock, production de la période comprise."

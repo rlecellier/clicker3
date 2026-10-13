@@ -56,8 +56,6 @@ Le jeu tient à partir de 360 pixels de large, sans défilement horizontal. Il a
 - **Zones tactiles.** Chaque lien de la sidebar mesure au moins 44 × 44 pixels ;
   les boutons et les onglets font au moins 44 pixels de haut.
 - **L'en-tête est fixe.** L'argent et la jauge du mois restent visibles en haut.
-- **La popup de courrier** flotte en bas de la zone de jeu, sans couvrir la
-  sidebar, et se ferme d'un toucher sur « Fermer ».
 - **Appui maintenu.** Garder le doigt posé sur Travailler, Étudier ou Vendre le
   surplus répète l'action quatre fois par seconde. Le menu contextuel du
   navigateur ne s'ouvre pas pendant l'appui.

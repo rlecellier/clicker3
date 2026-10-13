@@ -1,22 +1,18 @@
 import { Outlet } from 'react-router';
 import { GameHeader } from '@component/GameHeader';
-import { MailPopup } from '@component/MailPopup';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { useCourseChoiceState } from '@hook/useCourseChoice';
 import { useGameHeader } from '@hook/useGameHeader';
 import { useGameTabs } from '@hook/useGameTabs';
-import { useMailPopup } from '@hook/useMailPopup';
 import { useGameShortcuts } from '@hook/useKeyboardShortcuts';
 import styles from './GamePage.module.css';
 
 // Layout de l'écran de jeu : la sidebar et, à droite, la page de l'onglet
 // ouvert (routes imbriquées, ADR 0008), sous l'en-tête (argent et jauge de
-// temps) visible quel que soit l'onglet. La popup de courrier flotte en bas de la
-// zone de contenu, hors flux.
+// temps) visible quel que soit l'onglet.
 export const GamePage = () => {
   const { tabs, footer } = useGameTabs();
   const header = useGameHeader();
-  const mailPopup = useMailPopup();
   const courseChoice = useCourseChoiceState();
   useGameShortcuts(courseChoice.chosenCourse);
 
@@ -37,11 +33,6 @@ export const GamePage = () => {
             <Outlet context={courseChoice} />
           </div>
         </main>
-        {mailPopup && (
-          <div className={styles.popup}>
-            <MailPopup {...mailPopup} />
-          </div>
-        )}
       </div>
     </div>
   );

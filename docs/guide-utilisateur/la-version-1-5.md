@@ -35,7 +35,7 @@ les règles du jeu, elle rend lisibles celles qui existaient.
 | Avant                                                                 | Maintenant                                                                                                   |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | Une seule page empilait huit fenêtres                                 | Sept onglets, un par ancienne fenêtre. L'onglet ouvert reste le même quand vous rechargez la page (voir [les onglets](README.md#les-sept-onglets)) |
-| Les messages faisaient sauter l'écran                                 | Une pastille de non-lus sur Courrier et une petite popup qui ne bloque jamais le jeu ([Courrier](onglet-courrier.md)) |
+| Les messages faisaient sauter l'écran                                 | Une pastille de non-lus sur Courrier et aucune popup : les messages vont au courrier ([Courrier](onglet-courrier.md)) |
 | L'argent et la date se perdaient dans la page                         | Un en-tête fixe : l'argent et la jauge du mois sont visibles sur tous les onglets                            |
 | La prochaine amélioration était une simple phrase                     | La phrase est un lien : un clic vous mène à l'amélioration visée, mise en évidence quelques secondes         |
 | La réputation s'affichait autrement que les compétences               | Le palier de réputation est une barre de progression, comme une compétence ([Compétences](onglet-competences.md)) |
