@@ -1,4 +1,4 @@
-import { startState } from '@game/data';
+import { companies, startState, upgrades } from '@game/data';
 import { impactOf } from '@game/impact';
 import { lifeFigures, lifeSummary } from './summary';
 
@@ -14,6 +14,11 @@ describe('lifeFigures', () => {
   });
 });
 
+const companiesTotal = companies.reduce(
+  (total, company) => total + company.maxCopies,
+  0,
+);
+
 describe('lifeSummary', () => {
   it('compte les entreprises possédées, l’argent, l’âge et la réputation', () => {
     const state = {
@@ -28,6 +33,11 @@ describe('lifeSummary', () => {
       companies: 3,
       money: 4200,
       capital: 0,
+      earned: 0,
+      companiesTotal,
+      upgradesOwned: 0,
+      upgradesTotal: upgrades.length,
+      housing: 'Studio',
       reputation: 7,
       impact: impactOf(state),
     });
@@ -56,6 +66,11 @@ describe('lifeSummary', () => {
       companies: 0,
       money: 0,
       capital: 0,
+      earned: 0,
+      companiesTotal,
+      upgradesOwned: 0,
+      upgradesTotal: upgrades.length,
+      housing: 'Studio',
       reputation: 0,
       impact: impactOf(startState),
     });
@@ -63,5 +78,34 @@ describe('lifeSummary', () => {
       { id: 'pollution', value: 0 },
       { id: 'inequality', value: 0 },
     ]);
+  });
+
+  it('cumule tout l’argent gagné, pas seulement ce qui reste', () => {
+    const state = {
+      ...startState,
+      money: 5,
+      ledger: {
+        ...startState.ledger,
+        total: {
+          ...startState.ledger.total,
+          wages: 100,
+          sales: 2000,
+          yields: 30,
+        },
+      },
+    };
+    expect(lifeSummary(state)).toMatchObject({ money: 5, earned: 2130 });
+  });
+
+  it('compte les améliorations achetées et le logement', () => {
+    const state = {
+      ...startState,
+      upgrades: ['cartes-visite', 'loft-pole'],
+      housingId: 'loft-pole',
+    };
+    expect(lifeSummary(state)).toMatchObject({
+      upgradesOwned: 2,
+      housing: "Loft au Pôle d'Excellence",
+    });
   });
 });
