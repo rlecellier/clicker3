@@ -85,10 +85,27 @@ Rien d'autre n'est imposé : pas de test « par principe ».
 
 ## Fin de travail
 
-Quand la demande contient une condition de fin du type « si X, alors ton
-travail est terminé », on vérifie cette condition avant de conclure. Si on
-considère qu'elle est remplie, la réponse se termine par la phrase « Mon travail
-est terminé. » ; sinon on ne l'écrit pas et on dit ce qui reste à faire.
+On passe souvent d'un agent à l'autre : la fin du message dit s'il reste quelque
+chose en cours, pour ne pas perdre de temps. Ce n'est pas lié à une formule
+dans la demande.
+
+La phrase « Mon travail est terminé. » ne se met qu'en toute fin de message, et
+seulement si **tout ce qu'il était possible de faire dans la discussion est
+traité** : chaque demande et chaque problème relevé est fait, invalidé (avec la
+raison) ou suivi par une issue créée. Pour un développement, « fait » veut dire
+la MR ouverte, la CI verte sur le dernier commit, puis mergée (voir « Merge des
+MR ») ; du code poussé sur une branche n'est pas terminé.
+
+- **Il reste du travail important** (une tâche assignée, un problème relevé, une
+  MR pas poussée, pas mergée ou à la CI rouge, une question qui bloque) : on
+  n'écrit pas la phrase. On liste ce qui reste à faire, point par point.
+- **Il ne reste que de l'accessoire** (amélioration possible, idée, nettoyage
+  facultatif) : on peut conclure par « Mon travail est terminé. » après avoir
+  listé ces pistes en une ligne chacune, sous « On pourrait aussi ».
+- **Rien ne reste** : on écrit seulement « Mon travail est terminé. ».
+
+Une action qui dépend de l'utilisateur (relecture, décision, accès manquant)
+est un reste important : on le dit, et on ne conclut pas.
 
 ## Documentation
 
