@@ -39,9 +39,11 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   // Les déblocages de la partie chargée s'annoncent sur les onglets concernés,
   // et la visite d'un onglet éteint son badge.
   const sidebar = page.getByRole('navigation', { name: 'Navigation du jeu' });
-  const investLink = sidebar.getByRole('link', { name: /^Investir/ });
+  const companiesLink = sidebar.getByRole('link', { name: /^Entreprises/ });
   const jobsLink = sidebar.getByRole('link', { name: /^Emploi/ });
-  await expect(investLink).toHaveAccessibleName(/^Investir, \d+ nouveautés?$/);
+  await expect(companiesLink).toHaveAccessibleName(
+    /^Entreprises, \d+ nouveautés?$/,
+  );
   await expect(jobsLink).toHaveAccessibleName('Emploi, 1 nouveauté');
 
   // Le palier de métier ouvre un meilleur poste ; les autres restent fermés.
@@ -67,8 +69,8 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   // Un commerce sans production : à la fin de la période, rupture de stock.
   // Les raccourcis clavier ouvrent l'onglet (5) et travaillent (T) de partout.
   await page.keyboard.press('5');
-  await expect(page).toHaveURL('/jeu/investir');
-  await expect(investLink).toHaveAccessibleName('Investir');
+  await expect(page).toHaveURL('/jeu/entreprises');
+  await expect(companiesLink).toHaveAccessibleName('Entreprises');
   const shop = itemOf(page, 'Boutique');
   await shop.getByRole('button', { name: 'Acheter' }).click();
   await expect(shop.getByText('1 possédé(s)')).toBeVisible();
@@ -97,7 +99,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   }
   await work.click();
   await expectNoOverflow(page);
-  await openTab(page, 'investir');
+  await openTab(page, 'entreprises');
   await expect(warehouse).toHaveAccessibleName(/en rupture/);
   // Le message arrivé en jouant s'annonce par un badge, qui se vide à la visite.
   const mailLink = page
@@ -128,7 +130,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expectNoOverflow(page);
 
   // Des ateliers produisent plus que la boutique ne vend : le stock se remplit.
-  await openTab(page, 'investir');
+  await openTab(page, 'entreprises');
   const workshop = itemOf(page, 'Atelier d’assemblage');
   await workshop.getByRole('button', { name: 'Acheter' }).click();
   await workshop.getByRole('button', { name: 'Acheter' }).click();
@@ -150,7 +152,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await expect(sellSurplus).toBeDisabled();
 
   // Un petit entrepôt agrandit le stock, sans condition : l'issue de secours.
-  await openTab(page, 'investir');
+  await openTab(page, 'entreprises');
   const smallWarehouse = itemOf(page, 'Petit entrepôt');
   await expect(warehouse).toHaveAccessibleName(/ 1\D?000\)/);
   await smallWarehouse.getByRole('button', { name: 'Acheter' }).click();
@@ -164,18 +166,21 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   await page
     .getByRole('link', { name: /Prochain achat : Cartes de visite/ })
     .click();
-  await expect(page).toHaveURL(/\/jeu\/investir\?amelioration=cartes-visite$/);
+  await expect(page).toHaveURL(
+    /\/jeu\/ameliorations\?amelioration=cartes-visite$/,
+  );
   const cards = itemOf(page, 'Cartes de visite');
   await expect(cards).toBeInViewport();
   await expect(cards).toHaveClass(/highlighted/);
   await cards.getByRole('button', { name: 'Acheter' }).click();
   await expect(cards).toBeHidden();
   await page.reload();
-  await expect(
-    page.getByRole('tab', { name: 'Améliorations' }),
-  ).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'À acheter' })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
 
-  // Les chiffres de l'écran Investir sont les valeurs finales : acheter un
+  // Les chiffres de l'écran Améliorations sont les valeurs finales : acheter un
   // bonus de production change la production affichée, avant et après l'achat.
   const collaborator = itemOf(page, 'Premier collaborateur');
   const hireBonus =
@@ -195,7 +200,7 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   );
   await collaborator.getByRole('button', { name: 'Acheter' }).click();
   await expect(collaborator).toBeHidden();
-  await page.getByRole('tab', { name: 'Entreprises' }).click();
+  await openTab(page, 'entreprises');
   await expect(page.locator('#item-atelier')).toContainText(
     `${produced.toLocaleString('fr-FR')} articles par période (2 × ${perCopy})`,
   );

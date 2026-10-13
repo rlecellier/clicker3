@@ -8,7 +8,7 @@ export type ShortcutAction =
 export const WORK_SHORTCUT = 't';
 export const STUDY_SHORTCUT = 'e';
 
-// Table des raccourcis : touche (en minuscule) vers action. `1` à `7` suivent
+// Table des raccourcis : touche (en minuscule) vers action. `1` à `8` suivent
 // l'ordre de la sidebar (ADR 0008). Pas d'Espace ni d'Entrée (ils activent déjà
 // le bouton qui a le focus), ni d'achat, de vente ni de « Recommencer ».
 export const shortcutTable: Readonly<Record<string, ShortcutAction>> = {

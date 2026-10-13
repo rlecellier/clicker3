@@ -1,6 +1,6 @@
 # Onglet Emploi
 
-[Sommaire](README.md) · Raccourci : touche 4 · Précédent : [Compétences](onglet-competences.md) · Suite : [Investir](onglet-investir.md)
+[Sommaire](README.md) · Raccourci : touche 4 · Précédent : [Compétences](onglet-competences.md) · Suite : [Entreprises](onglet-entreprises.md)
 
 Quatre postes se succèdent. Cet onglet les liste tous, avec leur salaire, leur
 prix en réputation et ce qu'il manque pour y accéder. Une pastille de nouveautés
@@ -55,7 +55,7 @@ de poste, y compris si vous revenez à un poste déjà occupé.
 Les paliers de compétences et de réputation gagnée ne baissent jamais : une
 condition remplie le reste. La seule exception est l'amélioration « Directeur
 de la transformation » exigée pour le poste 4 : si vous l'annulez dans
-[Obtenues](onglet-investir.md#obtenues), le poste 4 redevient inaccessible.
+[Obtenues](onglet-ameliorations.md#obtenues), le poste 4 redevient inaccessible.
 
 ## Les promotions
 

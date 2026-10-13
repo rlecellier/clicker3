@@ -7,7 +7,8 @@ export type SidebarIconId =
   | 'life'
   | 'skills'
   | 'jobs'
-  | 'invest'
+  | 'companies'
+  | 'upgrades'
   | 'accounts'
   | 'city'
   | 'new-life';
@@ -43,14 +44,20 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       <path d="M1 5h14v9H1z" />
     </>
   ),
-  // Pièces empilées.
-  invest: (
+  // Immeuble : façade et fenêtres.
+  companies: (
     <>
-      <ellipse cx="8" cy="12" rx="6" ry="2.5" />
-      <ellipse cx="8" cy="8" rx="6" ry="2.5" />
-      <ellipse cx="8" cy="4" rx="6" ry="2.5" />
+      <path d="M2 15V3h8v12z" />
+      <path d="M10 15V7h4v8z" />
+      <path
+        d="M4 5.5h4M4 8.5h4M4 11.5h4"
+        stroke="var(--color-surface)"
+        strokeWidth="1.2"
+      />
     </>
   ),
+  // Flèche vers le haut.
+  upgrades: <path d="M8 1l6 7H10v7H6V8H2z" />,
   // Registre : page à lignes.
   accounts: (
     <>

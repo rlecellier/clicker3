@@ -6,7 +6,14 @@ import type { NoveltyTab } from '@game/novelty';
 import { screenPaths } from '@hook/useGameFlow';
 
 export type GameTabId =
-  'mail' | 'life' | 'skills' | 'jobs' | 'invest' | 'accounts' | 'city';
+  | 'mail'
+  | 'life'
+  | 'skills'
+  | 'jobs'
+  | 'companies'
+  | 'upgrades'
+  | 'accounts'
+  | 'city';
 
 export type GameTab = { id: GameTabId; label: string; slug: string };
 
@@ -17,12 +24,13 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'life', label: 'Vie', slug: 'vie' },
   { id: 'skills', label: 'Compétences', slug: 'competences' },
   { id: 'jobs', label: 'Emploi', slug: 'emploi' },
-  { id: 'invest', label: 'Investir', slug: 'investir' },
+  { id: 'companies', label: 'Entreprises', slug: 'entreprises' },
+  { id: 'upgrades', label: 'Améliorations', slug: 'ameliorations' },
   { id: 'accounts', label: 'Comptes', slug: 'comptes' },
   { id: 'city', label: 'Ville', slug: 'ville' },
 ];
 
-// Touche qui ouvre l'onglet de ce rang (1 à 7), dans l'ordre de la sidebar.
+// Touche qui ouvre l'onglet de ce rang (1 à 8), dans l'ordre de la sidebar.
 export const tabShortcut = (index: number) => String(index + 1);
 
 export const DEFAULT_TAB: GameTabId = 'life';
@@ -58,11 +66,11 @@ const mailLabel = (unread: number) => {
   return `Courrier, ${count} ${unread === 1 ? 'message non lu' : 'messages non lus'}`;
 };
 
-// Paramètre d'URL qui désigne l'amélioration visée dans Investir.
+// Paramètre d'URL qui désigne l'amélioration visée dans Améliorations.
 export const UPGRADE_PARAM = 'amelioration';
 
 export const upgradePath = (upgradeId: string) =>
-  `${tabPath('invest')}?${UPGRADE_PARAM}=${encodeURIComponent(upgradeId)}`;
+  `${tabPath('upgrades')}?${UPGRADE_PARAM}=${encodeURIComponent(upgradeId)}`;
 
 const isNoveltyTab = (id: GameTabId): id is NoveltyTab =>
   (noveltyTabs as readonly string[]).includes(id);

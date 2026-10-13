@@ -19,10 +19,9 @@ import {
 } from '@game/economy';
 import { formatCount, formatDecimal, formatMoney } from '@game/format';
 import type { GameState } from '@game/state';
-import { availableUpgrades, warehouseCapacity } from '@game/upgrades';
+import { warehouseCapacity } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
 import { districtItem } from '@view/districtItem';
-import { boostItems, ownedUpgradeItems, upgradeItem } from '@view/upgradeItems';
 import {
   NO_MONEY,
   missingConditions,
@@ -74,8 +73,8 @@ const companyEffect = (state: GameState, company: Company) => {
     : `${verb} ${formatCount(total)} articles par période (${formatCount(owned)} × ${perCopy})${price}`;
 };
 
-// Achats d'entreprises, d'améliorations et déblocage de quartiers.
-export const useInvestScreen = () => {
+// Achats d'entreprises et d'entrepôts, et déblocage de quartiers.
+export const useCompaniesScreen = () => {
   const { state } = useGameContext();
   const actions = useGameActions();
 
@@ -125,11 +124,6 @@ export const useInvestScreen = () => {
     },
   };
 
-  // Toutes les améliorations disponibles, plus la prochaine indisponible.
-  const availableUpgradeItems = availableUpgrades(state).map((upgrade) =>
-    upgradeItem(state, upgrade, actions.buyUpgrade),
-  );
-
   const districtItems: ListItem[] = districts.map((district) =>
     districtItem(state, district, () => {
       actions.unlockDistrict(district.id);
@@ -143,9 +137,6 @@ export const useInvestScreen = () => {
       max: state.stockCapacity,
     },
     companies: [...companyItems, warehouseItem],
-    availableUpgrades: availableUpgradeItems,
-    boosts: boostItems(state, actions.buyBoost),
-    ownedUpgrades: ownedUpgradeItems(state, actions.cancelUpgrade),
     districts: districtItems,
   };
 };

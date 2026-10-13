@@ -84,7 +84,7 @@ Un quartier ouvert :
 - déclenche un message quand vous l'ouvrez.
 
 Une fois ouvert, il le reste. L'ouverture se fait depuis
-[Investir](onglet-investir.md) ou [Ville](onglet-ville.md).
+[Entreprises](onglet-entreprises.md) ou [Ville](onglet-ville.md).
 
 ## Les entreprises, le stock et les ventes
 

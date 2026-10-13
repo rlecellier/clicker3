@@ -289,13 +289,13 @@ export const StyleguidePage = () => (
               to: '#',
             },
             {
-              id: 'invest',
-              label: 'Investir',
-              icon: <SidebarIcon id="invest" />,
+              id: 'companies',
+              label: 'Entreprises',
+              icon: <SidebarIcon id="companies" />,
               to: '#',
               badge: 1,
               badgeTone: 'info',
-              accessibleLabel: 'Investir, 1 nouveauté',
+              accessibleLabel: 'Entreprises, 1 nouveauté',
             },
             {
               id: 'jobs',

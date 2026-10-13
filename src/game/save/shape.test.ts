@@ -1,8 +1,8 @@
 import { startState } from '@game/data';
 
 // Figer la forme de l'état avec sa version : si ce test échoue, l'état a
-// changé de forme. Monter `startState.version`, ajouter la migration de
-// l'ancienne version dans `migrations` (save.ts), puis mettre cette liste à jour.
+// changé de forme. Monter `startState.version` puis mettre cette liste à jour
+// (pas de migration : ADR 0010).
 describe('forme de l’état', () => {
   const keyPaths = (value: unknown, prefix = ''): string[] =>
     typeof value === 'object' &&
@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 15,
+    version: 16,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -116,9 +116,10 @@ describe('forme de l’état', () => {
       'salesMultiplier',
       'seed',
       'seenItems.city',
-      'seenItems.invest',
+      'seenItems.companies',
       'seenItems.jobs',
       'seenItems.skills',
+      'seenItems.upgrades',
       'sleepMultiplier',
       'stats.endurance',
       'stats.gestion',

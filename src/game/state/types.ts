@@ -220,7 +220,10 @@ export type GameState = {
   mailRead: number;
   // Nouveautés déjà vues par onglet (voir `@game/novelty`) : les ids débloqués
   // quand le joueur a ouvert l'onglet.
-  seenItems: Record<'skills' | 'jobs' | 'invest' | 'city', string[]>;
+  seenItems: Record<
+    'skills' | 'jobs' | 'companies' | 'upgrades' | 'city',
+    string[]
+  >;
   // Événements uniques déjà survenus.
   firedEvents: string[];
   activeEffects: ActiveEffect[];

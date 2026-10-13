@@ -14,7 +14,7 @@ les trois gestes de tous les jours et l'état de votre cerveau.
 2. **Le stock** : « Stock 0 / 50 », articles en entrepôt sur capacité.
 3. **La note du prochain achat** : « Prochain achat : Cartes de visite (58 €) »
    quand l'amélioration est débloquée, ou « Prochain déblocage : … » suivi de ce
-   qui manque, sinon. C'est un lien : un clic ouvre [Investir](onglet-investir.md),
+   qui manque, sinon. C'est un lien : un clic ouvre [Améliorations](onglet-ameliorations.md),
    onglet Améliorations, et met l'amélioration en évidence quelques secondes. Quand
    tout est acheté : « Plus rien à acheter pour le moment. »
    La note désigne l'amélioration non achetée la moins chère déjà débloquée, sans

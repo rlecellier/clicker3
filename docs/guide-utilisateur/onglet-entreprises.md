@@ -1,10 +1,12 @@
-# Onglet Investir
+# Onglet Entreprises
 
-[Sommaire](README.md) · Raccourci : touche 5 · Précédent : [Emploi](onglet-emploi.md) · Suite : [Comptes](onglet-comptes.md)
+[Sommaire](README.md) · Raccourci : touche 5 · Précédent : [Emploi](onglet-emploi.md) · Suite : [Améliorations](onglet-ameliorations.md)
 
-C'est là que l'argent (et la réputation) se dépense. L'onglet est découpé en
-quatre sous-onglets, sous une barre d'entrepôt. Une pastille de nouveautés
-compte ce qui vient de se débloquer.
+C'est là que l'argent (et la réputation) se dépense pour bâtir son affaire. La
+page est découpée en deux sous-onglets, **À acheter** et **Quartiers**, sous une
+barre d'entrepôt. Une pastille de nouveautés compte ce qui vient de se
+débloquer. Les améliorations ont leur propre onglet,
+[Améliorations](onglet-ameliorations.md).
 
 ## La barre d'entrepôt
 
@@ -36,7 +38,7 @@ Toutes les lignes suivent le même modèle :
 valeurs de base. Si vous avez acheté la Camionnette d'occasion, le Stand au
 marché annonce environ 33 articles par exemplaire au lieu de 29.
 
-## Entreprises
+## À acheter
 
 La liste des six types d'entreprises, plus le **Petit entrepôt**. Chaque
 ligne dit ce que fait l'entreprise et le prix du prochain exemplaire :
@@ -54,36 +56,6 @@ jeu refuse l'achat tant qu'une amélioration d'entrepôt reste à acheter :
 Chaque achat est immédiat. Détail de chaque type dans
 [Les entreprises](entreprises.md).
 
-## Coups de pouce
-
-Sous la liste des améliorations, trois coups de pouce **temporaires** s'achètent
-et se rachètent une fois leur effet écoulé (un seul actif de chaque à la fois) :
-
-| Coup de pouce                              | Prix     | Durée   | Prérequis      | Effet                                      |
-| ------------------------------------------ | -------- | ------- | -------------- | ------------------------------------------ |
-| Cure de ginkgo biloba                      | 20 €     | 3 mois  | Intelligence 3 | Chance de marqueur +10 %                   |
-| Séminaire intensif « Mémoire totale »      | 4 500 €  | 6 mois  | Intelligence 5 | Étudier donne deux chances de marqueur     |
-| Clinique du sommeil de Montreux            | 25 000 € | 12 mois | Endurance 5    | Conversion du sommeil ×2 (avec le logement) |
-
-## Améliorations
-
-La liste des achats uniques que vous pouvez faire. Elle montre toutes celles
-dont les conditions sont remplies, de la moins chère à la plus chère, puis **la
-moins chère de celles qui sont encore verrouillées**, pour vous montrer la suite.
-
-Chaque amélioration affiche :
-
-- son **effet chiffré**, en une ou plusieurs lignes : par exemple « Production de
-  toutes les entreprises +110 % » ou « Capacité du stock ×120 » ;
-- si elle change la production, un avant-après calculé sur votre situation
-  actuelle : « Production : 4 → 8 articles par période » ;
-- sa phrase d'humour, son prix, et le loyer ou les salaires qu'elle ajoute ;
-- ses conditions manquantes.
-
-Le guide détaille chaque amélioration dans [Les améliorations](ameliorations.md).
-Quand le lien « Prochain achat » de la Vie vous amène ici, la ligne visée est
-entourée quelques secondes et l'écran défile jusqu'à elle.
-
 ## Quartiers (réputation)
 
 Les quatre quartiers de la ville, avec leur description et leur prix **en
@@ -97,19 +69,3 @@ Les quartiers se débloquent aussi depuis l'onglet [Ville](onglet-ville.md).
 | Les Hauts-Fourneaux         | 1    | Palier 1 de réputation (6 gagnés)              |
 | Parc d'activités Horizon    | 22   | Palier 2 de réputation (100 gagnés)            |
 | Le Pôle d'Excellence        | 33   | Palier 3 de réputation (170 gagnés)            |
-
-## Obtenues
-
-La liste de vos améliorations, dans l'ordre d'achat, avec leur effet. Chacune
-porte un bouton **Annuler**.
-
-- Annuler **retire** l'effet, le loyer et les salaires de l'amélioration.
-- Annuler **ne rend pas** l'argent dépensé.
-- Il n'y a pas de confirmation : le bouton agit tout de suite.
-- Vous pouvez racheter l'amélioration au prix d'origine, si ses conditions sont
-  toujours remplies.
-- Vous ne reviendrez pas à une phase de vie inférieure : la phase atteinte est
-  définitive.
-
-Tant que rien n'est acheté : « Aucune amélioration obtenue pour le moment. »
-Quand il ne reste rien à acheter : « Plus rien à acheter pour le moment. »

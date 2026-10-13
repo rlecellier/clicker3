@@ -9,7 +9,8 @@ const tabLabels = {
   vie: 'Vie',
   competences: 'Compétences',
   emploi: 'Emploi',
-  investir: 'Investir',
+  entreprises: 'Entreprises',
+  ameliorations: 'Améliorations',
   comptes: 'Comptes',
   ville: 'Ville',
 } as const;

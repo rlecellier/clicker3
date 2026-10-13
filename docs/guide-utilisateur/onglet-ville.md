@@ -1,6 +1,6 @@
 # Onglet Ville
 
-[Sommaire](README.md) · Raccourci : touche 7 · Précédent : [Comptes](onglet-comptes.md) · Suite : [Les actions](actions.md)
+[Sommaire](README.md) · Raccourci : touche 8 · Précédent : [Comptes](onglet-comptes.md) · Suite : [Les actions](actions.md)
 
 Le plan de Sainte-Croissance : quatre quartiers, les bâtiments de vos
 entreprises et deux indicateurs sur l'état de la ville. Une pastille de
@@ -38,7 +38,7 @@ Les entreprises prennent leur place sur le plan selon leur type :
 
 Sous le plan, la « Fiche de quartier » détaille le quartier choisi : son nom, un
 repère « Ouvert » le cas échéant, sa description, son prix en réputation, le
-bouton **Débloquer** (le même que dans [Investir](onglet-investir.md#quartiers-réputation)),
+bouton **Débloquer** (le même que dans [Entreprises](onglet-entreprises.md#quartiers-réputation)),
 et les deux jauges d'impact de ce quartier.
 
 | Quartier                    | Description                                                                                             | Prix en réputation |

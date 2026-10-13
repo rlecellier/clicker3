@@ -12,11 +12,11 @@ coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 | Vendre le surplus              | [Vie](onglet-vie.md)            | 5                   | Aucun                    |
 | Dormir                         | Automatique                     | 40 en tout          | Aucun                    |
 | Prendre un poste               | [Emploi](onglet-emploi.md)      | 0                   | 0 à 10 de réputation     |
-| Acheter une entreprise         | [Investir](onglet-investir.md)  | 0                   | Prix de l'entreprise     |
-| Acheter un petit entrepôt      | [Investir](onglet-investir.md)  | 0                   | 160 € puis +3 % chaque   |
-| Acheter une amélioration       | [Investir](onglet-investir.md)  | 0                   | Prix de l'amélioration   |
-| Annuler une amélioration       | [Investir](onglet-investir.md#obtenues) | 0           | Aucun, sans remboursement |
-| Débloquer un quartier          | Investir ou [Ville](onglet-ville.md) | 0              | 1, 22 ou 33 de réputation |
+| Acheter une entreprise         | [Entreprises](onglet-entreprises.md) | 0                   | Prix de l'entreprise     |
+| Acheter un petit entrepôt      | [Entreprises](onglet-entreprises.md) | 0                   | 160 € puis +3 % chaque   |
+| Acheter une amélioration       | [Améliorations](onglet-ameliorations.md) | 0                   | Prix de l'amélioration   |
+| Annuler une amélioration       | [Améliorations](onglet-ameliorations.md#obtenues) | 0           | Aucun, sans remboursement |
+| Débloquer un quartier          | Entreprises ou [Ville](onglet-ville.md) | 0              | 1, 22 ou 33 de réputation |
 
 Les achats, les changements de poste et les déblocages n'avancent pas la
 jauge : le temps ne passe que par le travail, l'étude, le surplus et le sommeil.
@@ -80,7 +80,7 @@ noires.
 
 Le cerveau contient 5 marqueurs au maximum. L'**Agenda électronique** (+30 %)
 et l'**Assistante de direction** relèvent la chance d'en gagner, comme les
-coups de pouce temporaires de [Investir](onglet-investir.md). Il n'y a pas
+coups de pouce temporaires de [Améliorations](onglet-ameliorations.md). Il n'y a pas
 d'autre source de marqueurs dans cette version : Gestion, Intelligence et Endurance ne
 progressent que par l'étude.
 
@@ -119,7 +119,7 @@ immédiat : le salaire change à la prochaine action.
 
 ## Acheter une entreprise ou un petit entrepôt
 
-Dans [Investir](onglet-investir.md), sous-onglet Entreprises. Le prix de
+Dans [Entreprises](onglet-entreprises.md), sous-onglet À acheter. Le prix de
 l'exemplaire suivant (l'**apport**) augmente de 32 % à 130 % selon le type à
 chaque exemplaire possédé (3 % pour le petit entrepôt), arrondi à l'euro.
 L'achat est refusé si l'argent manque, si les conditions ne sont pas remplies,
@@ -129,15 +129,15 @@ dépasserait la capacité d'un entrepôt que vous pouvez encore agrandir. Détai
 
 ## Acheter ou annuler une amélioration
 
-Dans [Investir](onglet-investir.md), sous-onglet Améliorations. Une
+Dans [Améliorations](onglet-ameliorations.md), sous-onglet À acheter. Une
 amélioration s'achète une seule fois. Son prix est dépensé tout de suite, et
 son éventuel loyer ou ses salaires s'ajoutent aux prélèvements de chaque mois.
 Détails dans [Les améliorations](ameliorations.md). Pour l'annulation, voir
-[Obtenues](onglet-investir.md#obtenues).
+[Obtenues](onglet-ameliorations.md#obtenues).
 
 ## Débloquer un quartier
 
-Dans [Investir](onglet-investir.md) (« Quartiers ») ou dans la fiche de
+Dans [Entreprises](onglet-entreprises.md) (« Quartiers ») ou dans la fiche de
 [Ville](onglet-ville.md). Il faut le palier de réputation du quartier et
 dépenser son prix en réputation. Voir [Les systèmes](systemes.md#les-quartiers).
 

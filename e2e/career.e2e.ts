@@ -75,11 +75,10 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   const stage = itemOf(page, 'Stage « Posture professionnelle »');
   const owned = page.getByRole('region', { name: 'Obtenues', exact: true });
   const openUpgrades = async () => {
-    await openTab(page, 'investir');
-    await page.getByRole('tab', { name: 'Améliorations' }).click();
+    await openTab(page, 'ameliorations');
   };
   const openOwned = async () => {
-    await openTab(page, 'investir');
+    await openTab(page, 'ameliorations');
     await page.getByRole('tab', { name: 'Obtenues' }).click();
   };
   const cashAtCards = await money();
@@ -188,7 +187,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .getByRole('button', { name: 'Annuler' })
     .click();
   await expect(owned.getByText('Cartes de visite')).toBeHidden();
-  await page.getByRole('tab', { name: 'Améliorations' }).click();
+  await page.getByRole('tab', { name: 'À acheter' }).click();
   await expect(cards.getByRole('button', { name: 'Acheter' })).toBeVisible();
   await openTab(page, 'vie');
   expect(await money()).toBe(beforeCancel);

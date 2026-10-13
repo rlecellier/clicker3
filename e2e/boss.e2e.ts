@@ -61,8 +61,7 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   const work = page.getByRole('button', { name: /Travailler/ });
   const workOn = page.getByText('Appui long : couper l’automatique');
   const openUpgrades = async () => {
-    await openTab(page, 'investir');
-    await page.getByRole('tab', { name: 'Améliorations' }).click();
+    await openTab(page, 'ameliorations');
   };
 
   // Sans amélioration d'automatisation, aucun appui long ne s'annonce.
