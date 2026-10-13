@@ -37,13 +37,15 @@ export const useProfileScreen = () => {
     max: reputation.max,
   };
 
-  const { min, max } = actionRules.sleep.hours;
   const schedule = chosenSchedule(state);
   const isPending = state.sleepHours !== state.periodSleepHours;
-  const sleepOptions = Array.from({ length: max - min + 1 }, (_, index) => ({
-    hours: min + index,
-    label: `${min + index} h`,
-  }));
+  const sleepOptions = Object.entries(actionRules.sleep.schedule).map(
+    ([hours, { name }]) => ({
+      hours: Number(hours),
+      label: `${name} · ${hours} h`,
+    }),
+  );
+  const markers = sleepMarkers(state, state.sleepHours);
 
   return {
     header: characterHeader(state),
@@ -61,7 +63,7 @@ export const useProfileScreen = () => {
       options: sleepOptions,
       value: state.sleepHours,
       select: actions.setSleepHours,
-      summary: `Coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${sleepMarkers(state, state.sleepHours)} marqueurs.${isPending ? ' À partir de la période suivante.' : ''}`,
+      summary: `${schedule.name} : coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${markers} marqueurs${schedule.left > 0 ? ` (${schedule.left} restent pour la nuit suivante)` : ' (tout le cerveau)'}.${isPending ? ' À partir de la période suivante.' : ''}`,
     },
   };
 };
