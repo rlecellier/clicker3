@@ -55,17 +55,21 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
 
 ## Décisions (v1.6)
 
-1. **Périmètre** : compte courant, Livret A, PEL, compte-titres. L'immobilier
-   locatif attend la v3, l'héritage la v2.
-2. **Rendement fixe, sans hasard** : une échelle française, par mois :
-   Livret A 0,1 % (~1,2 % par an), PEL 0,3 % (~3,6 %), compte-titres 0,8 %
-   (~10 %). Les événements (bulle +1,2 point, krach et crise financière
-   −3 points pendant un an) ne touchent que les titres. Un rendement négatif
-   retire du capital placé, donc du solde total (noté en « autres dépenses »).
-3. **Plafond de capital par placement**, proportionnel à la réputation gagnée
-   (Livret A 100 € par point, PEL 200 €, titres 300 €), donc il suit la
-   richesse. Déblocage aux paliers de réputation 1, 2 et 3. Ni frais ni
-   fiscalité.
+1. **Périmètre** : compte courant, Livret A, LDDS, PEL, compte-titres.
+   L'immobilier locatif attend la v3, l'héritage la v2.
+2. **Rendement fixe, sans hasard** : par mois, Livret A et LDDS 0,1 % (~1,2 %
+   par an), PEL 0,25 % (~3 %), compte-titres 0,6 % (~7,4 %, dans la fourchette
+   réelle de 5 à 9 %). Les événements (bulle +1,2 point, krach et crise
+   financière −3 points pendant un an) ne touchent que les titres. Un
+   rendement négatif retire du capital placé, donc du solde total (noté en
+   « autres dépenses »).
+3. **Plafonds fixes (#232)**, ceux de la vraie vie : Livret A 22 950 €, LDDS
+   12 000 €, PEL 61 200 €. La réputation ne sert qu'à **débloquer** un compte
+   (paliers 1, 1 et 2) ; une fois débloqué, on le remplit jusqu'à son plafond.
+   Le **compte-titres (palier 3) n'a aucun plafond** et rapporte plus que
+   tous les comptes d'épargne : les intérêts s'y capitalisent, le capital peut
+   devenir exponentiel, face à des plafonds d'épargne qui deviennent vite
+   dérisoires. Ni frais ni fiscalité.
 4. **Répartition automatique (#230)** : pas de geste de dépôt ni de retrait.
    `money` est le **total de tous les comptes** (c'est ce que le joueur voit) ;
    la séparation ne sert qu'à savoir quelle part du capital rapporte. Le
