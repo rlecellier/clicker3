@@ -9,7 +9,7 @@
 | Action               | Un geste qui fait avancer la jauge de temps : travailler, étudier, vendre le surplus                              |
 | Article              | L'unique marchandise du jeu, produite par les ateliers et vendue par les commerces                               |
 | Auto                 | Le travail automatique : une action de travail toutes les demi-secondes, à moitié rendement                       |
-| Bilan                | Les quatre chiffres de l'écran de fin : entreprises, argent, âge, réputation                                      |
+| Bilan                | Les chiffres de l'écran de fin : argent cumulé, entreprises, améliorations, logement, âge, réputation            |
 | Capacité             | Pour un commerce, le nombre d'articles qu'il peut vendre par mois ; pour l'entrepôt, le nombre d'articles qu'il contient |
 | Cerveau              | Le réservoir de marqueurs du personnage (5 au départ)                                                             |
 | Commerce             | Une entreprise qui vend des articles : Stand au marché, Boutique, Corner en hypermarché, Plateforme en ligne                                |
