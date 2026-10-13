@@ -13,7 +13,7 @@ de marqueurs en compétences ; dormir plus l'inverse (issue #202).
 ## Décision
 
 - Le joueur choisit une durée `sleepHours` parmi trois : court (4 h), moyen
-  (6 h) et long (8 h, au départ), dans le profil, avec un indicatif de ce que
+  (6 h) et long (8 h, au départ), dans l'onglet Vie sous « Étudier », avec un indicatif de ce que
   chacune vide comme marqueurs (révision de l'issue #202 : six durées, c'était
   trop) (action `setSleepHours`). Le choix ne sert qu'à partir de la période
   suivante : `periodSleepHours`, copiée de `sleepHours` à chaque passage de

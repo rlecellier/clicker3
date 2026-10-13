@@ -10,7 +10,7 @@ coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 | Travailler                     | [Vie](onglet-vie.md)            | 10                  | Aucun                    |
 | Étudier                        | [Vie](onglet-vie.md)            | 15                  | 20 à 260 €               |
 | Vendre le surplus              | [Vie](onglet-vie.md)            | 5                   | Aucun                    |
-| Dormir                         | Automatique, durée dans [Profil](onglet-profil.md) | 12 à 26 en tout (selon la durée) | Aucun |
+| Dormir                         | Automatique, durée dans [Vie](onglet-vie.md) | 12 à 26 en tout (selon la durée) | Aucun |
 | Prendre un poste               | [Emploi](onglet-emploi.md)      | 0                   | 0 à 10 de réputation     |
 | Acheter une entreprise         | [Entreprises](onglet-entreprises.md) | 0                   | Prix de l'entreprise     |
 | Acheter un petit entrepôt      | [Entreprises](onglet-entreprises.md) | 0                   | 160 € puis +3 % chaque   |
@@ -89,8 +89,8 @@ progressent que par l'étude.
 Dormir n'est pas une action : le personnage dort **une fois par période**, à
 heure fixe. Une période est une journée qui commence au réveil de 7 h ; vous
 choisissez la durée de sommeil (court 4 h, moyen 6 h ou long 8 h ; long au
-départ) dans l'onglet
-[Profil](onglet-profil.md#le-sommeil).
+départ) dans l'onglet [Vie](onglet-vie.md#le-cerveau-et-le-sommeil), sous le
+bouton Étudier.
 
 | Durée   | Long (8 h) | Moyen (6 h) | Court (4 h) |
 | ------- | ---------- | ----------- | ----------- |
