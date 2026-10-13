@@ -1,10 +1,16 @@
-import { startState } from '@game/data';
+import { companies, startState } from '@game/data';
 import { fixedExpensesOf } from '@game/economy';
 import { ageOf } from '@game/time';
 import { deepFreeze } from '@test/deepFreeze';
 import { addGauge, endPeriod, periodOutlook } from './period';
 
 const capacity = startState.gaugeCapacity;
+
+// Débits lus dans les données : les tests suivent le recalage de l'équilibrage.
+const workshop = companies.find((company) => company.id === 'atelier');
+const shop = companies.find((company) => company.id === 'boutique');
+const workshopOutput = workshop?.kind === 'production' ? workshop.output : 0;
+const shopCapacity = shop?.kind === 'commerce' ? shop.capacity : 0;
 
 describe('addGauge', () => {
   it('remplit la jauge sans faire passer de période', () => {
@@ -54,9 +60,9 @@ describe('addGauge', () => {
 
   it('fait payer l’intérêt de la dette en fin de période', () => {
     const next = addGauge({ ...startState, money: -1000 }, capacity, 'work');
-    // Loyer et train de vie prélevés, puis 5 % d'intérêt sur le solde.
+    // Loyer et train de vie prélevés, puis 1,5 % d’intérêt sur le solde.
     const balance = -1000 - fixedExpensesOf(startState);
-    const interest = Math.ceil(-balance * 0.05);
+    const interest = Math.ceil(-balance * 0.015);
     expect(next.money).toBe(balance - interest);
     expect(next.ledger.history[0]?.figures.interest).toBe(interest);
   });
@@ -90,7 +96,8 @@ describe('periodOutlook', () => {
     const state = {
       ...startState,
       money: 500,
-      stock: 10,
+      stock: shopCapacity,
+      stockCapacity: 2 * shopCapacity,
       companies: { ...startState.companies, atelier: 1, boutique: 1 },
     };
     const outlook = periodOutlook(state);
@@ -103,10 +110,11 @@ describe('periodOutlook', () => {
     const state = {
       ...startState,
       stock: 0,
-      companies: { ...startState.companies, atelier: 1, boutique: 1 },
+      // Assez de commerces pour vendre plus que la production.
+      companies: { ...startState.companies, atelier: 1, boutique: 3 },
     };
     expect(endPeriod(state).stock).toBe(0);
-    expect(periodOutlook(state).stock).toBe(-1);
+    expect(periodOutlook(state).stock).toBe(workshopOutput - 3 * shopCapacity);
   });
 
   it('reste positive à stock plein quand la production dépasse les ventes', () => {
@@ -116,7 +124,7 @@ describe('periodOutlook', () => {
       companies: { ...startState.companies, atelier: 5 },
     };
     expect(endPeriod(state).stock).toBe(state.stockCapacity);
-    expect(periodOutlook(state).stock).toBe(10);
+    expect(periodOutlook(state).stock).toBe(5 * workshopOutput);
   });
 
   it('ne recompte pas ce qui est déjà payé dans la période', () => {

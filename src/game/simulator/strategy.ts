@@ -1,6 +1,14 @@
 import { boostById, canBuyBoost } from '@game/boosts';
 import { canEnableAuto, isAutoActive } from '@game/automation';
-import { canBuyCompany, companyCost, ownedCount } from '@game/companies';
+import {
+  canBuyCompany,
+  canBuyWarehouse,
+  companyCost,
+  fitsWarehouse,
+  isCompanyMaxed,
+  ownedCount,
+  warehouseCost,
+} from '@game/companies';
 import {
   boosts,
   companies,
@@ -62,12 +70,14 @@ const neededStat = (
         requirement: upgrade.requirement,
         isSaving: true,
       })),
-    ...companies.map((company) => ({
-      cost: companyCost(company.id, ownedCount(state, company.id)),
-      requirement: company.requirement,
-      // Une entreprise ouverte s'achète par `wantedCompany`, pas en économisant.
-      isSaving: false,
-    })),
+    ...companies
+      .filter((company) => !isCompanyMaxed(state, company.id))
+      .map((company) => ({
+        cost: companyCost(company.id, ownedCount(state, company.id)),
+        requirement: company.requirement,
+        // Une entreprise ouverte s'achète par `wantedCompany`, pas en économisant.
+        isSaving: false,
+      })),
   ].toSorted((first, second) => first.cost - second.cost);
   for (const goal of goals) {
     const missing = statNeeds(goal.requirement).find(
@@ -120,6 +130,20 @@ const wantedCompany = (state: GameState): Company | undefined => {
             throughputPerEuro(state, second) - throughputPerEuro(state, first),
         )[0];
 };
+
+// Il manque de la place : de la production a été perdue à la dernière période,
+// ou une production ouverte et payable est refusée faute d'entrepôt. Un joueur
+// range alors son stock avec un petit entrepôt, l'issue de secours.
+const needsRoom = (state: GameState) =>
+  state.lastStatement?.stockFull === true ||
+  companies.some(
+    (company) =>
+      company.kind === 'production' &&
+      !isCompanyMaxed(state, company.id) &&
+      isRequirementMet(state, company.requirement) &&
+      state.money >= companyCost(company.id, ownedCount(state, company.id)) &&
+      !fitsWarehouse(state, company.id),
+  );
 
 // Un achat qui alourdit loyer ou salaires doit rester couvert par les recettes.
 const isCovered = (state: GameState, extra: number) =>
@@ -177,6 +201,14 @@ const nextPurchase = (
         action: { type: 'buyBoost', id: boost.id },
       });
     }
+  }
+  // L'issue de secours : un petit entrepôt, tant que la place manque.
+  const warehousePrice = warehouseCost(state.warehouses);
+  if (canBuyWarehouse(state) && needsRoom(state)) {
+    purchases.push({
+      cost: warehousePrice,
+      action: { type: 'buyWarehouse' },
+    });
   }
   const company = wantedCompany(state);
   if (company !== undefined) {

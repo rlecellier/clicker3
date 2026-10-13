@@ -36,11 +36,33 @@ export const guardrailConfig = {
   // Âge où l'on relève les recettes pour le test d'utilité.
   revenueAge: 60,
   // Exemptées du test d'utilité : formations, automatisation et employés
-  // obligatoires à la progression, tableau de bord (affichage seulement).
+  // obligatoires à la progression, tableau de bord (affichage seulement), et les
+  // montées en gamme (issue #167) : production et vente se limitent l'une
+  // l'autre, donc multiplier un seul maillon ne rapporte rien tant que son
+  // voisin n'a pas suivi, et les derniers niveaux sont des puits de fin de
+  // partie, achetés après l'âge où l'on relève les recettes.
   exemptUpgrades: [
     'premier-collaborateur',
     'directeur-transformation',
     'tableau-de-bord',
+    'ligne-semi-automatisee',
+    'ligne-automatisee',
+    'atelier-sans-lumiere',
+    'enseigne-regionale',
+    'enseigne-nationale',
+    'franchise-internationale',
+    'machines-outils-neuves',
+    'chaine-robotisee',
+    'usine-du-futur',
+    'tete-de-gondole',
+    'rayon-complet',
+    'galerie-marchande',
+    'equipes-3x8',
+    'second-site',
+    'zone-franche',
+    'moteur-recommandation',
+    'livraison-24h',
+    'marketplace',
   ],
 } as const;
 
@@ -49,7 +71,4 @@ export const guardrailConfig = {
 // chantier d'équilibrage retire ceux qu'il corrige.
 export const knownGuardrailFailures: readonly string[] = [
   'utility:studio-renove',
-  'utility:pavillon-tilleuls',
-  'utility:cartes-visite',
-  'utility:camionnette',
 ];

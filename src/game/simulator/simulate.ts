@@ -54,6 +54,8 @@ export type SimulationResult = {
   // Durée totale de la vie : jeu actif + attente.
   elapsedMs: number;
   manualActions: number;
+  // Actions manuelles par genre (travail, étude, achat…), pour lire où passe le temps.
+  actionCounts: Record<string, number>;
   // Clics de travail, d'étude ou de vente après le travail automatique (0 : le
   // joueur virtuel a bien lâché la souris).
   clicksAfterAutoWork: number;
@@ -132,6 +134,7 @@ export const simulateLife = (
   let activeMs = 0;
   let waitMs = 0;
   let manualActions = 0;
+  const actionCounts: Record<string, number> = {};
   let clicksAfterAutoWork = 0;
   let lastProgressMs = 0;
   let longestGapMs = 0;
@@ -258,6 +261,8 @@ export const simulateLife = (
     } else {
       activeMs += stepMs;
       manualActions += 1;
+      const kind = action?.type ?? 'wait';
+      actionCounts[kind] = (actionCounts[kind] ?? 0) + 1;
       if (
         reached.has('autoWork') &&
         ['work', 'study', 'sellSurplus'].includes(action?.type ?? '')
@@ -288,6 +293,7 @@ export const simulateLife = (
     waitMs,
     elapsedMs: elapsedMs(),
     manualActions,
+    actionCounts,
     clicksAfterAutoWork,
     milestones,
     phasesReached: phaseOrder.filter((phase) => phases.has(phase)),

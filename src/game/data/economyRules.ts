@@ -18,8 +18,8 @@ export const economyRules = {
   // Coût employeur minimal d'un salarié (SMIC 1999 chargé, par mois) : aucun
   // employé ne coûte moins (contrôlé par data.test.ts).
   minimumEmployeeCost: 1300,
-  // Intérêt prélevé à chaque période sur un solde négatif (0,05 = 5 %).
-  debtInterestRate: 0.05,
+  // Intérêt prélevé à chaque période sur un solde négatif (0,015 = 1,5 %, 18 % par an, axe D de l’issue #167).
+  debtInterestRate: 0.015,
   // Bonus de production ou de vente d'une entreprise par action de travail
   // faite dedans pendant la période (0,5 = +50 %).
   workBonus: 0.5,
@@ -30,7 +30,7 @@ export const economyRules = {
   surplusGauge: 5,
   // Petit entrepôt supplémentaire, toujours achetable : l'issue de secours
   // quand la production dépasse le stock que l'on peut ranger.
-  warehouse: { baseCost: 100, growth: 1.15, capacity: 25 },
+  warehouse: { baseCost: 160, growth: 1.03, capacity: 35 },
 } as const;
 
 // Nombre de périodes terminées gardées dans l'historique du ledger.

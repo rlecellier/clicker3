@@ -95,8 +95,12 @@ describe('jobWage et balance de la période', () => {
 
   const ready: GameState = {
     ...trading,
-    money: 1_000_000,
-    stock: 50,
+    money: 1_000_000_000,
+    // Du stock et de la place pour toute la production (la capacité se
+    // recalcule des petits entrepôts).
+    stock: 100_000,
+    warehouses: 40_000,
+    stockCapacity: 1_000_050,
     reputationEarned: 1000,
     stats: { ...startState.stats, gestion: 10 },
   };
@@ -108,10 +112,7 @@ describe('jobWage et balance de la période', () => {
     // Ateliers, boutique, amélioration de ventes : après du travail à l'emploi,
     // la balance est ce que fait la clôture (stock ni vide ni plein).
     expect(salesUpgrade).toBeDefined();
-    let state: GameState = buyUpgrade(
-      { ...ready, stock: 20 },
-      salesUpgrade?.id ?? '',
-    );
+    let state: GameState = buyUpgrade(ready, salesUpgrade?.id ?? '');
     state = buyCompany(state, 'atelier');
     for (let click = 0; click < 4; click += 1) {
       state = work(state);

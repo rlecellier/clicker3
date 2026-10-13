@@ -259,3 +259,110 @@ describe('crédibilité des salaires, du train de vie et des employés', () => {
     );
   });
 });
+
+// Crédibilité des entreprises (issue #167, propositions-equilibrage.md § 3 C et D).
+// Rapport entre le prix du dernier exemplaire et celui du premier.
+const lastCopyRatio = (company: (typeof companies)[number]) =>
+  company.growth ** (company.maxCopies - 1);
+// Mois pour rembourser une paire production + commerce d'après le débit de
+// base (articles produits ou vendus, le plus petit des deux, au prix du commerce).
+const payback = (productionId: string, commerceId: string) => {
+  const production = companies.find((company) => company.id === productionId);
+  const commerce = companies.find((company) => company.id === commerceId);
+  if (production?.kind !== 'production' || commerce?.kind !== 'commerce') {
+    throw new Error('paire invalide');
+  }
+  const monthly =
+    Math.min(production.output, commerce.capacity) * commerce.price;
+  return (production.baseCost + commerce.baseCost) / monthly;
+};
+
+describe('crédibilité des entreprises, des charges et de la montée en gamme', () => {
+  it('ne dépasse jamais 10 fois le prix de base pour un exemplaire', () => {
+    const outside = companies
+      .filter((company) => lastCopyRatio(company) > 10)
+      .map((company) => company.id);
+    expect(outside).toEqual([]);
+  });
+
+  it('plafonne chaque type : quelques dizaines d’établissements au total', () => {
+    const total = companies.reduce(
+      (sum, company) => sum + company.maxCopies,
+      0,
+    );
+    expect(total).toBeGreaterThanOrEqual(20);
+    expect(total).toBeLessThanOrEqual(60);
+  });
+
+  it('place chaque type dans un quartier existant', () => {
+    for (const company of companies) {
+      const district = impactRules.companyDistricts[company.id];
+      expect(ids.district.has(district ?? ''), company.id).toBe(true);
+    }
+  });
+
+  it('rembourse une paire production + commerce en 10 à 36 mois de débit de base', () => {
+    expect(payback('atelier', 'boutique')).toBeGreaterThanOrEqual(10);
+    // Les multiplicateurs de milieu de partie (employés, bonus de travail)
+    // ramènent ce retour vers les 10 à 18 mois visés (equilibrage.md).
+    expect(payback('atelier', 'boutique')).toBeLessThanOrEqual(36);
+  });
+
+  it('ouvre par des micro-activités à quelques milliers d’euros', () => {
+    for (const id of ['etabli', 'stand']) {
+      const company = companies.find((candidate) => candidate.id === id);
+      expect(company?.baseCost, id).toBeLessThanOrEqual(5000);
+    }
+    expect(payback('etabli', 'stand')).toBeGreaterThanOrEqual(6);
+    expect(payback('etabli', 'stand')).toBeLessThanOrEqual(24);
+  });
+
+  it('prélève une mensualité de crédit proportionnelle à l’apport', () => {
+    // Crédit de même montant que l'apport, à 6 % sur 7 ans (1,46 % par mois).
+    const financed = companies.filter((company) => company.baseCost >= 30_000);
+    expect(financed.length).toBeGreaterThan(0);
+    for (const company of financed) {
+      const ratio = company.charges / company.baseCost;
+      expect(ratio, company.id).toBeGreaterThan(0.014);
+      expect(ratio, company.id).toBeLessThan(0.015);
+    }
+    expect(companies.every((company) => company.charges >= 0)).toBe(true);
+  });
+
+  it('garde les charges d’un exemplaire sous le double de ses recettes de base', () => {
+    for (const company of companies) {
+      const revenue =
+        company.kind === 'commerce'
+          ? company.capacity * company.price
+          : company.output * 12;
+      expect(company.charges, company.id).toBeLessThan(2 * revenue);
+    }
+  });
+
+  it('offre trois niveaux de montée en gamme, de plus en plus chers, à chaque entreprise financée à crédit', () => {
+    const financed = companies.filter((company) => company.baseCost >= 30_000);
+    for (const company of financed) {
+      const chain = upgrades.filter((candidate) =>
+        candidate.effects.some(
+          (effect) =>
+            effect.type === 'companyBonus' && effect.companyId === company.id,
+        ),
+      );
+      expect(chain, company.id).toHaveLength(3);
+      // Le premier niveau est le moins cher ; les suivants coûtent plus.
+      const [first, ...others] = chain.map((upgrade) => upgrade.price);
+      for (const price of others) {
+        expect(price, company.id).toBeGreaterThan(first ?? Infinity);
+      }
+      // Le premier niveau demande des exemplaires, sans dépasser le plafond.
+      const requirement = chain[0]?.requirement;
+      expect(requirement?.type).toBe('company');
+      if (requirement?.type !== 'company') {
+        continue;
+      }
+
+      expect(requirement.id).toBe(company.id);
+      expect(requirement.count ?? 1).toBeLessThanOrEqual(company.maxCopies);
+    }
+  });
+});

@@ -189,7 +189,8 @@ describe('sauvegarde', () => {
         serialize(
           {
             ...startState,
-            money: 1_000_000,
+            money: 1_000_000_000,
+            stockCapacity: 1_000_000,
             stats: { ...startState.stats, gestion: 1_000_000 },
           },
           START,

@@ -120,7 +120,7 @@ describe('pollution', () => {
 describe('inégalités', () => {
   it('montent avec l’argent du personnage', () => {
     let previous = -1;
-    for (const money of [0, 500, 5000, 100_000]) {
+    for (const money of [0, 50_000, 500_000, 10_000_000]) {
       const value = cityValue({ ...open, money }, 'inequality');
       expect(value).toBeGreaterThan(previous);
       previous = value;
