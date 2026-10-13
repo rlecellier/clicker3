@@ -1,12 +1,14 @@
 import { useGameContext } from '@context/GameContext';
 import { formatCount, formatDecimal, statLabels } from '@game/format';
+import { jobById } from '@game/jobs';
 import { reputationTierProgress } from '@game/reputation';
 import { statIds } from '@game/state';
 import { statProgress } from '@game/stats';
+import { characterHeader } from '@view/characterHeader';
 
-// Onglet Compétences : une barre par stat, puis la réputation au même format
-// (son palier se calcule sur le cumul gagné).
-export const useSkillsScreen = () => {
+// Onglet Profil : la fiche du personnage, puis une barre par stat et la
+// réputation au même format (son palier se calcule sur le cumul gagné).
+export const useProfileScreen = () => {
   const { state } = useGameContext();
 
   const skillBars = statIds.map((id) => {
@@ -30,6 +32,11 @@ export const useSkillsScreen = () => {
   };
 
   return {
+    header: characterHeader(state),
+    job:
+      state.jobId === null
+        ? 'Sans emploi'
+        : (jobById(state.jobId)?.name ?? '—'),
     stats: [...skillBars, reputationBar],
     reputation: formatDecimal(state.reputation),
   };

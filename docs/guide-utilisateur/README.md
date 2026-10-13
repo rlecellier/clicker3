@@ -32,7 +32,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 | ------------------------------------------- | --------- | ---------------------------------------------------- |
 | [Courrier](onglet-courrier.md)              | 1         | Les messages reçus, la pastille de non-lus            |
 | [Vie](onglet-vie.md)                        | 2         | Travailler, étudier, vendre le surplus, le cerveau   |
-| [Compétences](onglet-competences.md)        | 3         | Quatre compétences, la réputation et leurs paliers   |
+| [Profil](onglet-profil.md)                  | 3         | La fiche du personnage, les compétences, la réputation |
 | [Emploi](onglet-emploi.md)                  | 4         | Les quatre postes successifs                         |
 | [Entreprises](onglet-entreprises.md)        | 5         | Acheter des entreprises, quartiers, barre d'entrepôt |
 | [Améliorations](onglet-ameliorations.md)    | 6         | Toutes les améliorations, coups de pouce, « Obtenues » |

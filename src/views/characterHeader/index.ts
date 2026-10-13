@@ -1,0 +1,1 @@
+export { characterHeader } from './characterHeader';

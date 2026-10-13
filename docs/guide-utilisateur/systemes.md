@@ -59,7 +59,7 @@ le palier, lui, ne baisse pas)
 22, 33).
 
 **Les paliers** : 6, 100 et 170 de réputation gagnée. Voir
-[Compétences](onglet-competences.md#la-réputation) et
+[Profil](onglet-profil.md#la-réputation) et
 [Les autres sources de bonus](autres-bonus.md#la-réputation).
 
 ## Les quartiers

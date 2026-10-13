@@ -8,7 +8,7 @@ donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
 
 Les repères de lecture :
 
-- les **paliers** sont ceux de [Compétences](onglet-competences.md) : huit
+- les **paliers** sont ceux de [Profil](onglet-profil.md) : huit
   paliers, de 2 points (palier 1) à 700 points (palier 8) ;
 - les **paliers de réputation** sont comptés sur la réputation gagnée : 6, 100 et
   170 ;

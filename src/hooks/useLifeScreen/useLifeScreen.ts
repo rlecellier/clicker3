@@ -4,11 +4,8 @@ import { useGameContext } from '@context/GameContext';
 import { canSellSurplus } from '@game/surplus';
 import {
   describeRequirement,
-  formatAge,
   formatBalance,
-  formatPeriodDate,
   formatMoney,
-  formatPhase,
   statLabels,
 } from '@game/format';
 import { jobById } from '@game/jobs';
@@ -16,7 +13,6 @@ import { periodOutlook } from '@game/period';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
 import { canStudy, studiableCourses } from '@game/study';
-import { ageOf } from '@game/time';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { isOvertime, overtimeWageFactor } from '@game/overtime';
 import { JOB_TARGET, canWork, jobWage } from '@game/work';
@@ -26,6 +22,7 @@ import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
 import { accountsPath, upgradePath } from '@hook/useGameTabs';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
+import { characterHeader } from '@view/characterHeader';
 import { ENDED, NO_MONEY } from '@view/purchase';
 
 const START_TEXT =
@@ -195,12 +192,7 @@ export const useLifeScreen = () => {
 
   return {
     isOver,
-    header: {
-      name: state.characterName,
-      age: formatAge(ageOf(state)),
-      date: formatPeriodDate(state),
-      phase: formatPhase(state),
-    },
+    header: characterHeader(state),
     // Balances de la période en cours (prévision à la clôture).
     balances: {
       money: formatBalance(outlook.money, ' €'),

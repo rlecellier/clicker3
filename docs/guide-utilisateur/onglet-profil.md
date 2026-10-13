@@ -1,14 +1,21 @@
-# Onglet Compétences
+# Onglet Profil
 
 [Sommaire](README.md) · Raccourci : touche 3 · Précédent : [Vie](onglet-vie.md) · Suite : [Emploi](onglet-emploi.md)
 
 Cet onglet est un tableau de bord de lecture seule : aucune action à faire. Il
-sert à savoir où vous en êtes. Une pastille de nouveautés l'accompagne dans la
-sidebar quand un palier vient d'être franchi.
+rappelle qui vous jouez et où vous en êtes. Une pastille de nouveautés
+l'accompagne dans la sidebar quand un palier vient d'être franchi.
 
-## Ce qu'on y voit
+## La fiche du personnage
 
-Cinq barres de progression, puis un compteur.
+En haut : le nom, l'âge, la date, la phase de vie, puis le **poste** actuel
+(« Sans emploi » tant que vous n'en avez pas) et la **réputation disponible**,
+c'est-à-dire celle que vous pouvez encore dépenser (un chiffre avec une
+décimale au plus).
+
+## Compétences et réputation
+
+Cinq barres de progression.
 
 | Barre          | Ce qu'elle mesure                                                                 |
 | -------------- | --------------------------------------------------------------------------------- |
@@ -21,9 +28,6 @@ Cinq barres de progression, puis un compteur.
 Chaque libellé donne le palier atteint et les points : « Métier · palier 0 · 0 pts ».
 Au dernier palier, la barre est pleine et le libellé finit par « max ». Les points
 s'affichent arrondis à l'entier.
-
-Le compteur « **Réputation disponible** » est la réputation que vous pouvez encore
-dépenser (un chiffre avec une décimale au plus).
 
 ## Les paliers des quatre compétences
 

@@ -10,7 +10,7 @@ Pendant la partie, ces touches fonctionnent sur tous les onglets :
 | ------ | --------------------------------------------------- |
 | 1      | Ouvrir Courrier                                     |
 | 2      | Ouvrir Vie                                          |
-| 3      | Ouvrir Compétences                                  |
+| 3      | Ouvrir Profil                                       |
 | 4      | Ouvrir Emploi                                       |
 | 5      | Ouvrir Entreprises                                  |
 | 6      | Ouvrir Améliorations                                |

@@ -7,7 +7,7 @@ import { expectNoOverflow } from './game';
 const tabLabels = {
   courrier: 'Courrier',
   vie: 'Vie',
-  competences: 'Compétences',
+  profil: 'Profil',
   emploi: 'Emploi',
   entreprises: 'Entreprises',
   ameliorations: 'Améliorations',

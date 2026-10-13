@@ -30,8 +30,8 @@ describe('newItems', () => {
   });
 
   it('signale un palier de compétence', () => {
-    expect(newItems(withStats(2), 'skills')).toEqual(['stat:metier:1']);
-    expect(newItems(withStats(6), 'skills')).toEqual([
+    expect(newItems(withStats(2), 'profile')).toEqual(['stat:metier:1']);
+    expect(newItems(withStats(6), 'profile')).toEqual([
       'stat:metier:1',
       'stat:metier:2',
     ]);
@@ -41,7 +41,7 @@ describe('newItems', () => {
     const state: GameState = { ...startState, reputationEarned: 6 };
     expect(newItems(state, 'city')).toEqual(['district:hauts-fourneaux']);
     expect(newItems(state, 'companies')).toContain('district:hauts-fourneaux');
-    expect(newItems(state, 'skills')).toEqual(['reputation:1']);
+    expect(newItems(state, 'profile')).toEqual(['reputation:1']);
   });
 
   it('ne dépend pas de l’argent', () => {
@@ -70,10 +70,10 @@ describe('markSeen', () => {
   });
 
   it('signale seulement ce qui s’ajoute ensuite', () => {
-    const seen = markSeen(withStats(2), 'skills');
-    expect(newItems({ ...seen, stats: withStats(9).stats }, 'skills')).toEqual([
-      'stat:metier:2',
-    ]);
+    const seen = markSeen(withStats(2), 'profile');
+    expect(newItems({ ...seen, stats: withStats(9).stats }, 'profile')).toEqual(
+      ['stat:metier:2'],
+    );
   });
 });
 

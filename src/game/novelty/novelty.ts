@@ -14,7 +14,7 @@ import { tierOf } from '@game/stats';
 
 // Onglets qui signalent des nouveautés (Courrier a son propre compteur).
 export const noveltyTabs = [
-  'skills',
+  'profile',
   'jobs',
   'companies',
   'upgrades',
@@ -61,7 +61,7 @@ const unlockedFor = (state: GameState, tab: NoveltyTab): string[] => {
     case 'city': {
       return districtIds(state);
     }
-    case 'skills': {
+    case 'profile': {
       const stats = statIds.flatMap((stat) =>
         Array.from(
           { length: tierOf(state, stat) },

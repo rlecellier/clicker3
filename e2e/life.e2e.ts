@@ -65,7 +65,7 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
     page.getByRole('group', { name: 'Plan de la ville' }),
   ).toBeVisible();
   await openTab(page, 'ameliorations');
-  await openTab(page, 'competences');
+  await openTab(page, 'profil');
   await openTab(page, 'emploi');
   await openTab(page, 'comptes');
   await openTab(page, 'courrier');
