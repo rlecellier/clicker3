@@ -31,6 +31,8 @@ export type GameAction =
   | { type: 'answerPromotion'; isAccepted: boolean }
   // Le joueur a fermé la fenêtre d'un anniversaire symbolique.
   | { type: 'answerBirthday' }
+  // Le joueur a lu la pop-up de la dernière amélioration.
+  | { type: 'acknowledgeFinalUpgrade' }
   // Le joueur a ouvert un onglet : ses nouveautés sont vues.
   | { type: 'markSeen'; tab: NoveltyTab }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi
