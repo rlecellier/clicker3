@@ -1,6 +1,6 @@
 # Onglet Ville
 
-[Sommaire](README.md) · Raccourci : touche 8 · Précédent : [Comptes](onglet-comptes.md) · Suite : [Les actions](actions.md)
+[Sommaire](README.md) · Raccourci : touche 9 · Précédent : [Finance](onglet-finance.md) · Suite : [Les actions](actions.md)
 
 Le plan de Sainte-Croissance : quatre quartiers, les bâtiments de vos
 entreprises et deux indicateurs sur l'état de la ville. Une pastille de

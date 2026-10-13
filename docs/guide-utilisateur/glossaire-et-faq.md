@@ -14,6 +14,7 @@
 | Cerveau              | Le réservoir de marqueurs du personnage (5 au départ)                                                             |
 | Commerce             | Une entreprise qui vend des articles : Stand au marché, Boutique, Corner en hypermarché, Plateforme en ligne                                |
 | Compétence           | Métier, Gestion, Intelligence ou Endurance : quatre jauges à quatre paliers                                       |
+| Capital placé        | L'argent mis sur un placement : il rapporte à chaque mois et se reprend à tout moment                            |
 | Cumulé               | Dans les Comptes, tous les mois depuis le début de la vie                                                         |
 | Cursus               | Ce que l'on étudie, ouvert par une formation                                                                      |
 | Dette                | Argent négatif. Le loyer et les salaires restent dus, 1,5 % d'intérêts s'ajoutent chaque mois                       |
@@ -29,7 +30,7 @@
 | Réputation           | Ce que la ville pense de vous. Gagnée (qui donne le palier) ou disponible (qu'on dépense)                         |
 | Rupture              | Un commerce n'a pas pu vendre toute sa capacité faute de stock                                                    |
 | Senior               | À partir de 60 ans : les gains des actions manuelles sont divisés par deux                                        |
-| Sidebar              | La barre de navigation à gauche : les huit onglets et « Recommencer ». En icônes seules sur petit écran          |
+| Sidebar              | La barre de navigation à gauche : les neuf onglets et « Recommencer ». En icônes seules sur petit écran          |
 | Sommeil              | Une fois par période, à l'heure du coucher ; convertit les marqueurs en points                             |
 | Stock                | Les articles en entrepôt                                                                                          |
 | Surplus              | Le stock qu'on vend d'un coup à 4 € l'article                                                                     |

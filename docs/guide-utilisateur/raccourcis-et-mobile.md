@@ -15,7 +15,8 @@ Pendant la partie, ces touches fonctionnent sur tous les onglets :
 | 5      | Ouvrir Entreprises                                  |
 | 6      | Ouvrir Améliorations                                |
 | 7      | Ouvrir Comptes                                      |
-| 8      | Ouvrir Ville                                        |
+| 8      | Ouvrir Finance                                      |
+| 9      | Ouvrir Ville                                        |
 | T      | Travailler (un clic simple)                         |
 | E      | Étudier le cursus actuellement choisi               |
 
