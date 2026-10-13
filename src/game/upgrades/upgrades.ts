@@ -1,5 +1,5 @@
 import { findById, upgrades } from '@game/data';
-import type { UpgradeEffect } from '@game/data';
+import type { UpgradeEffect, UpgradeScope } from '@game/data';
 import { withRecord } from '@game/ledger';
 import { isRequirementMet } from '@game/requirements';
 import { isPlaying } from '@game/state';
@@ -53,10 +53,15 @@ export const hasDashboard = (state: GameState) =>
 
 export const hasEmployee = (state: GameState) => ownsEffect(state, 'employee');
 
-// Améliorations pas encore possédées, de la moins chère à la plus chère.
-export const remainingUpgrades = (state: GameState) =>
+// Améliorations pas encore possédées, de la moins chère à la plus chère ; la
+// portée limite la liste à celles de la personne ou des entreprises.
+export const remainingUpgrades = (state: GameState, scope?: UpgradeScope) =>
   upgrades
-    .filter((upgrade) => !isOwned(state, upgrade.id))
+    .filter(
+      (upgrade) =>
+        !isOwned(state, upgrade.id) &&
+        (scope === undefined || upgrade.scope === scope),
+    )
     .toSorted((first, second) => first.price - second.price);
 
 // L'état si l'amélioration était possédée, sans en payer le prix : sert à
@@ -124,8 +129,9 @@ export const nextUpgrade = (state: GameState) => {
 
 // Améliorations à proposer : toutes celles déjà débloquées (de la moins chère à
 // la plus chère), plus la moins chère encore verrouillée pour montrer la suite.
-export const availableUpgrades = (state: GameState) => {
-  const remaining = remainingUpgrades(state);
+// Avec une portée, la « suite » est celle de cette portée.
+export const availableUpgrades = (state: GameState, scope?: UpgradeScope) => {
+  const remaining = remainingUpgrades(state, scope);
   const isOpen = (upgrade: (typeof upgrades)[number]) =>
     isRequirementMet(state, upgrade.requirement);
   const locked = remaining.find((upgrade) => !isOpen(upgrade));
