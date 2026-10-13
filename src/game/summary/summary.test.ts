@@ -27,9 +27,19 @@ describe('lifeSummary', () => {
       age: 75,
       companies: 3,
       money: 4200,
+      capital: 0,
       reputation: 7,
       impact: impactOf(state),
     });
+  });
+
+  it('compte le capital placé à part de l’argent', () => {
+    const state = {
+      ...startState,
+      money: 10,
+      placements: { savings: 300, stocks: 700 },
+    };
+    expect(lifeSummary(state)).toMatchObject({ money: 10, capital: 1000 });
   });
 
   it('reprend les indicateurs d’impact dans le bilan', () => {
@@ -45,6 +55,7 @@ describe('lifeSummary', () => {
       age: 18,
       companies: 0,
       money: 0,
+      capital: 0,
       reputation: 0,
       impact: impactOf(startState),
     });

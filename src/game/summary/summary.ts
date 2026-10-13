@@ -1,4 +1,5 @@
 import { impactOf } from '@game/impact';
+import { capitalOf } from '@game/placements';
 import type { ImpactReport } from '@game/impact';
 import type { GameState } from '@game/state';
 import { ageOf } from '@game/time';
@@ -13,6 +14,8 @@ export type LifeFigures = {
 };
 
 export type LifeSummary = LifeFigures & {
+  // Capital placé (hors compte courant).
+  capital: number;
   // Pollution et inégalités de la ville et de ses quartiers (ADR 0004).
   impact: ImpactReport;
 };
@@ -30,5 +33,6 @@ export const lifeFigures = (state: GameState): LifeFigures => ({
 // Bilan de fin de partie, calculé depuis l'état.
 export const lifeSummary = (state: GameState): LifeSummary => ({
   ...lifeFigures(state),
+  capital: capitalOf(state),
   impact: impactOf(state),
 });

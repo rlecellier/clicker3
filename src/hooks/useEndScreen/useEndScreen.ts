@@ -17,6 +17,7 @@ export const useEndScreen = () => {
   const figures: FigureItem[] = [
     { label: 'Entreprises possédées', value: formatCount(summary.companies) },
     { label: 'Argent', value: formatMoney(summary.money) },
+    { label: 'Capital placé', value: formatMoney(summary.capital) },
     { label: 'Âge', value: formatAge(summary.age) },
     { label: 'Réputation', value: formatDecimal(summary.reputation) },
   ];
