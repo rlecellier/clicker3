@@ -595,8 +595,9 @@ la camionnette garde son achat et gagne le nouvel effet.
 
 ## Placements (issue #211)
 
-Le joueur virtuel ne place rien (il dépense tout en entreprises et améliorations) ;
-la colonne « rend. max » de `npm run sim` donne ce que rapporterait par mois le
+Depuis #230 la répartition est automatique : le joueur virtuel garde le
+matelas du compte courant et son surplus rapporte ; trois garde-fous d'utilité
+basculent de peu (voir `knownGuardrailFailures`, à recaler dans #205). La colonne « rend. max » de `npm run sim` donne ce que rapporterait par mois le
 placement maximal de l'argent qu'il détient (titres d'abord), à comparer aux
 recettes.
 
@@ -604,8 +605,9 @@ recettes.
   réputation suit l'économie (recettes ≈ 10 à 20 fois la réputation gagnée), donc
   le plafond suit la richesse ; des plafonds fixes en euros devenaient
   négligeables dès 40 ans.
-- **Rendements** : épargne 0,3 % par mois (~3,6 % par an, livret 1999), titres
-  0,8 % (~10 % par an) avant événements.
+- **Rendements** : Livret A 0,1 % par mois (~1,2 % par an), PEL 0,3 % (~3,6 %),
+  titres 0,8 % (~10 %) avant événements (#230 : échelle crédible, répartition
+  automatique).
 - **Mesure** : le plafond est rarement le facteur limitant, c'est l'argent
   détenu : le rendement maximal pèse 1 à 10 % des recettes (pics à 15 % les mois
   où beaucoup d'argent dort), ni négligeable ni dominant. Le placement est un

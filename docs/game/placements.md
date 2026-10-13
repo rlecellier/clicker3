@@ -1,6 +1,6 @@
 # Placements et comptes
 
-> Statut : **décidé, en cours de réalisation (issue #211, v1.6)**. Les
+> Statut : **décidé, en cours de réalisation (issues #211, v1.6, et #230 pour la répartition automatique)**. Les
 > questions ouvertes sont tranchées ci-dessous ; rendements et plafonds sont calés
 > au simulateur. Périmètre v1 : [v1.md](v1.md).
 
@@ -55,23 +55,33 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
 
 ## Décisions (v1.6)
 
-1. **Périmètre** : compte courant, compte épargne, compte titres. L'immobilier
+1. **Périmètre** : compte courant, Livret A, PEL, compte-titres. L'immobilier
    locatif attend la v3, l'héritage la v2.
-2. **Rendement fixe, sans hasard** : épargne 0,3 % par mois, titres 0,8 % ;
-   les événements (bulle +1,2 point, krach et crise financière −3 points
-   pendant un an) ne touchent que les titres. Un rendement négatif retire du
-   capital placé. S'il faut du hasard, on réintroduit une graine dans l'état.
+2. **Rendement fixe, sans hasard** : une échelle française, par mois :
+   Livret A 0,1 % (~1,2 % par an), PEL 0,3 % (~3,6 %), compte-titres 0,8 %
+   (~10 %). Les événements (bulle +1,2 point, krach et crise financière
+   −3 points pendant un an) ne touchent que les titres. Un rendement négatif
+   retire du capital placé, donc du solde total (noté en « autres dépenses »).
 3. **Plafond de capital par placement**, proportionnel à la réputation gagnée
-   (épargne 100 € par point, titres 300 €), donc il suit la richesse. Ni frais
-   ni fiscalité.
-4. **UI** : onglet Finance (touche 8), avec des gestes explicites (placer tout,
-   la moitié, retirer tout), pas de curseurs.
-5. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
+   (Livret A 100 € par point, PEL 200 €, titres 300 €), donc il suit la
+   richesse. Déblocage aux paliers de réputation 1, 2 et 3. Ni frais ni
+   fiscalité.
+4. **Répartition automatique (#230)** : pas de geste de dépôt ni de retrait.
+   `money` est le **total de tous les comptes** (c'est ce que le joueur voit) ;
+   la séparation ne sert qu'à savoir quelle part du capital rapporte. Le
+   compte courant garde un matelas de **2 × les dépenses fixes** d'une période ;
+   le surplus va dans le premier compte (par rendement croissant) qui a de la
+   place. Une dépense puise d'abord dans le compte courant, puis dans le compte
+   au rendement le plus faible. Un revenu remplit le compte courant avant tout.
+5. **UI** : onglet Finance (touche 8), en lecture seule : total, compte
+   courant et matelas, capital placé, un compte par ligne.
+6. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
 
 Mécanique : le rendement d'un gain est **versé sur le compte courant** à la
-clôture (il ne se capitalise pas) ; si l'argent ne couvre pas les dépenses
-fixes, les placements sont repris avant l'impayé (épargne d'abord). Le capital
-n'entre pas dans `money` ; le bilan de fin de vie le montre à part (« Capital placé »).
+clôture, puis la répartition le place s'il dépasse le matelas (il se capitalise
+donc). Un impayé n'existe que si le total de tous les comptes ne couvre pas les
+dépenses. Le capital est compris dans `money` ; le bilan de fin de vie le
+montre en « dont capital placé ».
 
 ## Calibrage
 
