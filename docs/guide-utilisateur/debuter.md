@@ -74,7 +74,7 @@ pendant le sommeil. Capacité d'une période : **70**.
 | --------------------------- | ------------------- |
 | Travailler                  | 10                  |
 | Étudier                     | 15                  |
-| Dormir (sommeil complet)    | 40                  |
+| Dormir (sommeil complet)    | 12 à 26 (8 h : 23)  |
 | Vendre le surplus           | 5                   |
 
 Quand la jauge atteint 70, le mois se termine dans cet ordre :

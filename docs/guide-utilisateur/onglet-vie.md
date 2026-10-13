@@ -73,10 +73,11 @@ Voir [Les entreprises](entreprises.md#le-surplus).
 ## Le cerveau et le sommeil
 
 Les marqueurs obtenus s'accumulent dans le cerveau, 5 au maximum au départ.
-Quand il est plein, le personnage s'endort : une pastille « Zzz » apparaît, la
-barre passe sur « Sommeil » et les marqueurs se vident un à un, en
-transformant chacun en point de compétence. Le sommeil complet dure environ
-une demi-seconde. Voir [Les actions](actions.md#dormir).
+Une fois par période, à l'heure du coucher, le personnage s'endort : une
+pastille « Zzz » apparaît, la barre passe sur « Sommeil » et les marqueurs se
+vident un à un, en transformant chacun en point de compétence. Le sommeil
+complet dure environ une demi-seconde. Sa durée se règle dans le
+[Profil](onglet-profil.md#le-sommeil). Voir [Les actions](actions.md#dormir).
 
 Pendant le sommeil, vos clics sur Travailler et Étudier ne sont pas perdus : le
 message « Vous dormez. Cela sera fait au réveil. » apparaît et les gestes sont

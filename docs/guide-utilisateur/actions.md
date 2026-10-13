@@ -10,7 +10,7 @@ coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 | Travailler                     | [Vie](onglet-vie.md)            | 10                  | Aucun                    |
 | Étudier                        | [Vie](onglet-vie.md)            | 15                  | 20 à 260 €               |
 | Vendre le surplus              | [Vie](onglet-vie.md)            | 5                   | Aucun                    |
-| Dormir                         | Automatique                     | 40 en tout          | Aucun                    |
+| Dormir                         | Automatique, durée dans [Profil](onglet-profil.md) | 12 à 26 en tout (selon la durée) | Aucun |
 | Prendre un poste               | [Emploi](onglet-emploi.md)      | 0                   | 0 à 10 de réputation     |
 | Acheter une entreprise         | [Entreprises](onglet-entreprises.md) | 0                   | Prix de l'entreprise     |
 | Acheter un petit entrepôt      | [Entreprises](onglet-entreprises.md) | 0                   | 160 € puis +3 % chaque   |
@@ -86,16 +86,34 @@ progressent que par l'étude.
 
 ## Dormir
 
-Dormir n'est pas une action : le personnage s'endort **tout seul** quand son
-cerveau est plein.
+Dormir n'est pas une action : le personnage dort **une fois par période**, à
+heure fixe. Une période est une journée qui commence au réveil de 7 h ; vous
+choisissez la durée de sommeil (4 à 9 h, 8 h au départ) dans l'onglet
+[Profil](onglet-profil.md#le-sommeil).
 
-1. Le cerveau est plein : pastille « Zzz », barre « Sommeil ».
-2. Les marqueurs sont vidés un à un, du plus ancien au plus récent.
+| Durée | 9 h  | 8 h  | 7 h | 6 h | 5 h | 4 h |
+| ----- | ---- | ---- | --- | --- | --- | --- |
+| Coucher | 22 h | 23 h | 0 h | 1 h | 1 h | 2 h |
+| Réveil  | 7 h  | 7 h  | 7 h | 7 h | 6 h | 6 h |
+
+1. La jauge atteint l'heure du coucher : pastille « Zzz », barre « Sommeil ». Un
+   cerveau plein ne fait plus dormir ; ses marqueurs en trop sont perdus.
+2. Le sommeil se joue en pas, un par marqueur que la durée permet de vider
+   (5 pour 9 h, 4 pour 8 h, et un de moins par heure en moins : 0 pour 4 h, qui
+   ne prennent qu'un pas de temps).
+   Chaque pas vide le plus ancien marqueur, s'il y en a un.
 3. Chaque marqueur vidé donne des **points** à sa compétence : 1 point multiplié
    par la conversion du logement (voir ci-dessous).
-4. Le sommeil complet remplit 40 de jauge au total, répartis sur les marqueurs
-   (8 par marqueur avec un cerveau de 5), et dure une demi-seconde.
+4. Le sommeil complet coûte la durée dormie sur les 24 h de la jauge (8 h = 23,3
+   de jauge sur 70), et dure une demi-seconde.
 5. Au réveil, les gestes manuels gardés pendant le sommeil sont rejoués.
+
+Si une action traverse l'heure du coucher et la fin de la période d'un coup, le
+sommeil manqué est rattrapé : le personnage s'endort dès le début de la période
+suivante.
+
+Dormir moins laisse plus de temps éveillé pour travailler, mais convertit moins
+de marqueurs en points : c'est un compromis.
 
 | Logement                  | Conversion du sommeil | Loyer ajouté       |
 | ------------------------- | --------------------- | ------------------ |
