@@ -6,6 +6,7 @@ import { statIds } from '@game/state';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { lastPeriodReport } from '@game/ledger';
+import { maxYield } from '@game/placements';
 import { simulatorConfig } from './config';
 import { chooseAction } from './strategy';
 
@@ -29,6 +30,9 @@ export type CurvePoint = {
   upgrades: number;
   // Recettes de la dernière période.
   revenue: number;
+  // Rendement par période si tout l'argent possible était placé (le joueur
+  // virtuel ne place rien : c'est une mesure de calibrage, voir placements.md).
+  yieldPotential: number;
 };
 
 /** Achat d'une amélioration, avec les points de stat déjà gagnés à ce moment. */
@@ -170,6 +174,7 @@ export const simulateLife = (
       companies: totalCompanies(state),
       upgrades: state.upgrades.length,
       revenue: lastPeriodReport(state).revenue,
+      yieldPotential: maxYield(state),
     });
   };
   const noteProgress = () => {

@@ -21,6 +21,7 @@ const rowOf = (point: CurvePoint) =>
     pad(point.companies, 5),
     pad(point.upgrades, 5),
     pad(Math.round(point.revenue), 10),
+    pad(Math.round(point.yieldPotential), 10),
   ].join(' | ');
 
 /** Résumé lisible en console : durée, jalons, zone morte, puis la courbe par an. */
@@ -59,8 +60,11 @@ export const formatReport = (result: SimulationResult): string => {
       'entr.',
       'amél.',
       'recettes',
+      'rend. max',
     ]
-      .map((title, index) => pad(title, [3, 7, 12, 7, 8, 5, 5, 10][index] ?? 8))
+      .map((title, index) =>
+        pad(title, [3, 7, 12, 7, 8, 5, 5, 10, 10][index] ?? 8),
+      )
       .join(' | '),
     ...result.curve
       .filter((point) => point.period % PERIODS_PER_YEAR === 0)
@@ -72,7 +76,7 @@ export const formatReport = (result: SimulationResult): string => {
 /** La courbe complète (une ligne par période), au format CSV. */
 export const formatCsv = (result: SimulationResult): string =>
   [
-    'period,age,minutes,money,stock,reputation,companies,upgrades,revenue',
+    'period,age,minutes,money,stock,reputation,companies,upgrades,revenue,yield_potential',
     ...result.curve.map((point) =>
       [
         point.period,
@@ -84,6 +88,7 @@ export const formatCsv = (result: SimulationResult): string =>
         point.companies,
         point.upgrades,
         Math.round(point.revenue),
+        Math.round(point.yieldPotential),
       ].join(','),
     ),
   ].join('\n');

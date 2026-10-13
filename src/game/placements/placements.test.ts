@@ -43,16 +43,13 @@ describe('déblocage et plafond', () => {
     expect(isPlacementUnlocked(rich, 'stocks')).toBe(true);
   });
 
-  it('monte le plafond avec les paliers, sans le dépasser au dernier', () => {
+  it('proportionne le plafond à la réputation gagnée', () => {
     expect(ceilingOf({ ...startState, reputationEarned: 6 }, 'savings')).toBe(
-      savings.ceilings[0],
+      6 * savings.ceilingPerReputation,
     );
-    expect(ceilingOf(rich, 'savings')).toBe(savings.ceilings[1]);
-    expect(ceilingOf({ ...startState, reputationEarned: 170 }, 'savings')).toBe(
-      savings.ceilings[2],
-    );
-    expect(ceilingOf({ ...startState, reputationEarned: 170 }, 'stocks')).toBe(
-      stocks.ceilings[1],
+    expect(ceilingOf(rich, 'stocks')).toBe(100 * stocks.ceilingPerReputation);
+    expect(ceilingOf({ ...startState, reputationEarned: 5000 }, 'stocks')).toBe(
+      5000 * stocks.ceilingPerReputation,
     );
   });
 });

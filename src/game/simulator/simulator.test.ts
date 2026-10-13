@@ -168,7 +168,7 @@ describe('rapport', () => {
   it('exporte la courbe en CSV, une ligne par période', () => {
     const lines = formatCsv(result).split('\n');
     expect(lines[0]).toBe(
-      'period,age,minutes,money,stock,reputation,companies,upgrades,revenue',
+      'period,age,minutes,money,stock,reputation,companies,upgrades,revenue,yield_potential',
     );
     expect(lines).toHaveLength(result.curve.length + 1);
   });
