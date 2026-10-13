@@ -601,15 +601,14 @@ basculent de peu (voir `knownGuardrailFailures`, à recaler dans #205). La colon
 placement maximal de l'argent qu'il détient (titres d'abord), à comparer aux
 recettes.
 
-- **Plafond** : réputation gagnée × 100 € (épargne) ou × 300 € (titres). La
-  réputation suit l'économie (recettes ≈ 10 à 20 fois la réputation gagnée), donc
-  le plafond suit la richesse ; des plafonds fixes en euros devenaient
-  négligeables dès 40 ans.
-- **Rendements** : Livret A 0,1 % par mois (~1,2 % par an), PEL 0,3 % (~3,6 %),
-  titres 0,8 % (~10 %) avant événements (#230 : échelle crédible, répartition
-  automatique).
+- **Plafond** : depuis #232, des plafonds fixes (Livret A 22 950 €, LDDS 12 000 €,
+  PEL 61 200 €) et aucun plafond pour le compte-titres. Les plafonds
+  proportionnels à la réputation de #211 sont abandonnés : l'écart entre
+  épargne plafonnée et titres illimités est le propos.
+- **Rendements** : Livret A et LDDS 0,1 % par mois (~1,2 % par an), PEL 0,25 %
+  (~3 %), titres 0,6 % (~7,4 %) avant événements.
 - **Mesure** : le plafond est rarement le facteur limitant, c'est l'argent
   détenu : le rendement maximal pèse 1 à 10 % des recettes (pics à 15 % les mois
   où beaucoup d'argent dort), ni négligeable ni dominant. Le placement est un
   revenu d'appoint, pas encore un basculement « rentier » (backlog : à trancher).
-  Aucun garde-fou du simulateur ne change.
+  Le joueur virtuel garde un surplus placé : voir `knownGuardrailFailures`.
