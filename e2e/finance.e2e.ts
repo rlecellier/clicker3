@@ -22,18 +22,25 @@ test('finance : le surplus se place tout seul, du Livret A au compte-titres', as
   await expect(
     page.getByRole('link', { name: /^Finance, 4 nouveautés/ }),
   ).toBeVisible();
-  for (let account = 0; account < 4; account++) {
+  // Chaque compte a son rendez-vous : 2, 3, 4 puis 5 questions, puis un mot de
+  // fin qui ouvre le compte.
+  const farewells = [
+    { questions: 2, farewell: 'Merci.' },
+    { questions: 3, farewell: 'Merci, au revoir.' },
+    { questions: 4, farewell: 'À bientôt, peut-être.' },
+    { questions: 5, farewell: 'Que la bourse soit avec moi.' },
+  ];
+  for (const { questions, farewell } of farewells) {
     await page
       .getByRole('button', { name: 'Prendre rendez-vous' })
       .first()
       .tap();
     const dialog = page.getByRole('alertdialog');
     await expect(dialog).toBeVisible();
-    // Les quatre premières réponses font avancer, la dernière ouvre le compte.
-    for (let step = 0; step < 4; step++) {
+    for (let step = 0; step < questions; step++) {
       await dialog.getByRole('button').first().tap();
     }
-    await dialog.getByRole('button', { name: 'Merci.' }).tap();
+    await dialog.getByRole('button', { name: farewell }).tap();
     await expect(dialog).toBeHidden();
   }
   await expect(
