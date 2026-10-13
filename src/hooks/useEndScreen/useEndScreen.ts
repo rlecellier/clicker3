@@ -9,15 +9,33 @@ import {
 import { screenPaths } from '@hook/useGameFlow';
 import { useLifeSummary } from '@hook/useGameImpact';
 
+const ratio = (owned: number, total: number) =>
+  `${formatCount(owned)} sur ${formatCount(total)}`;
+
 // « You died » : le bilan calculé depuis l'état et le geste pour rejouer.
 export const useEndScreen = () => {
   const summary = useLifeSummary();
   const navigate = useNavigate();
 
   const figures: FigureItem[] = [
-    { label: 'Entreprises possédées', value: formatCount(summary.companies) },
-    { label: 'Argent (tous comptes)', value: formatMoney(summary.money) },
+    {
+      label: 'Argent gagné sur toute la vie',
+      value: formatMoney(summary.earned),
+    },
+    {
+      label: 'Argent à la fin (tous comptes)',
+      value: formatMoney(summary.money),
+    },
     { label: 'dont capital placé', value: formatMoney(summary.capital) },
+    {
+      label: 'Entreprises possédées',
+      value: ratio(summary.companies, summary.companiesTotal),
+    },
+    {
+      label: 'Améliorations achetées',
+      value: ratio(summary.upgradesOwned, summary.upgradesTotal),
+    },
+    { label: 'Logement', value: summary.housing },
     { label: 'Âge', value: formatAge(summary.age) },
     { label: 'Réputation', value: formatDecimal(summary.reputation) },
   ];

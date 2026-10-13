@@ -111,7 +111,10 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await page.reload();
   await expect(page).toHaveURL('/fin');
   await expect(page.getByRole('heading', { name: 'You died' })).toBeVisible();
+  await expect(page.getByText('Argent gagné sur toute la vie')).toBeVisible();
   await expect(page.getByText('Entreprises possédées')).toBeVisible();
+  await expect(page.getByText('Améliorations achetées')).toBeVisible();
+  await expect(page.getByText('Logement')).toBeVisible();
   await expectNoOverflow(page);
   await page.goto('/jeu');
   await expect(page).toHaveURL('/fin');
