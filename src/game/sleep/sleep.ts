@@ -39,7 +39,7 @@ const periodHours = (state: GameState) =>
 export const sleepSchedule = (state: GameState) =>
   scheduleOf(state.periodSleepHours);
 
-// Horaire de la durée choisie, pour l'annoncer dans le profil.
+// Horaire de la durée choisie, pour l'annoncer dans l'onglet Vie.
 export const chosenSchedule = (state: GameState) =>
   scheduleOf(state.sleepHours);
 

@@ -40,6 +40,13 @@
   gap: 2px;
 }
 
+/* Sur mobile, la pastille de la sidebar annonce déjà l'amélioration à acheter. */
+@media (max-width: 40rem) {
+  .objective {
+    display: none;
+  }
+}
+
 /* Copie invisible : mêmes dimensions, aucun effet. */
 .reserved {
   composes: study;

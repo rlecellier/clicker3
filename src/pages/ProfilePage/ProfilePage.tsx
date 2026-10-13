@@ -2,7 +2,6 @@ import { CharacterHeader } from '@component/CharacterHeader';
 import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
-import { SleepPicker } from '@component/SleepPicker';
 import { Stat } from '@component/Stat';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
@@ -23,14 +22,6 @@ export const ProfilePage = () => {
           <Stat label="Poste" value={screen.job} />
           <Stat label="Réputation disponible" value={screen.reputation} />
         </dl>
-      </Window>
-      <Window title="Sommeil">
-        <SleepPicker
-          options={screen.sleep.options}
-          value={screen.sleep.value}
-          onChange={screen.sleep.select}
-          summary={screen.sleep.summary}
-        />
       </Window>
       <Window title="Compétences et améliorations">
         <Tabs
