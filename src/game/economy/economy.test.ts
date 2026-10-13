@@ -344,7 +344,7 @@ describe('chargeInterest', () => {
   });
 });
 
-// L'affichage de l'écran Investir et le moteur partagent les mêmes fonctions.
+// L'affichage des écrans Entreprises et Améliorations et le moteur partagent les mêmes fonctions.
 describe('valeurs finales', () => {
   const atelier = companies.find((company) => company.id === 'atelier');
   const boutique = companies.find((company) => company.id === 'boutique');

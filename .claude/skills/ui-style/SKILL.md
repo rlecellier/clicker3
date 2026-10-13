@@ -56,7 +56,7 @@ illustrations. Voix administrative pince-sans-rire.
    - Un composant n'importe ni `@game`, ni `@hook`, ni `@context`, ni `@view`
      (imposé par ESLint) : ses types d'entrée sont déclarés chez lui.
 6. **Séparation** : composant visuel (props seulement, pas de test) → hook de
-   vue dans `src/hooks/` (`useLifeScreen`, `useInvestScreen`,
+   vue dans `src/hooks/` (`useLifeScreen`, `useCompaniesScreen`,
    `useAccountsScreen`) → page orchestratrice (`LifePage`…) qui ne fait que
    brancher.
 7. **Textes** : formatage via `@game/format` (`formatMoney`, `formatDate`…) ;

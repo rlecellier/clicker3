@@ -44,7 +44,7 @@ les types qu'il reçoit (`ListItem`, `PressHandlers`…) ; le hook s'y conforme.
 - **Une mise en forme partagée entre deux écrans** (ligne d'achat, lettre du
   journal) : une fonction de `src/views/`.
 - **Ce qui ne sert qu'à un onglet** : son hook d'écran (`useLifeScreen`,
-  `useJobsScreen`, `useInvestScreen`…). Un hook d'écran n'en appelle pas un
+  `useJobsScreen`, `useCompaniesScreen`…). Un hook d'écran n'en appelle pas un
   autre pour lui prendre une partie : la partie commune va dans `src/views/`.
 - **Un morceau de JSX répété** : un composant de `src/components/`.
 
@@ -65,6 +65,10 @@ les types qu'il reçoit (`ListItem`, `PressHandlers`…) ; le hook s'y conforme.
 | Date d'une période                         | `dateAt`, `formatPeriodDate`                                 |
 | Pourquoi un achat est impossible           | `missingConditions`, `unavailableReason` (`@view/purchase`)  |
 | Route d'un onglet                          | `tabPath(id)` ; un slug n'est écrit que dans `gameTabs`      |
+| Ligne d'une amélioration ou d'un coup de pouce | `upgradeItem`, `ownedUpgradeItems`, `boostItems` (`@view/upgradeItems`) |
+| Améliorations d'une portée (personne, entreprise) | `availableUpgrades(state, scope)`                          |
+| Ce que rapporte chaque entreprise          | `buildingsLedger` (`@view/buildingsLedger`)                  |
+| Nom, âge, date et phase du personnage      | `characterHeader` (`@view/characterHeader`)                  |
 
 Un helper qui manque s'ajoute dans le module de sa couche, avec son test, et
 dans ce tableau.
