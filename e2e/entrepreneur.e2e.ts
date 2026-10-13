@@ -156,7 +156,6 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   const moneyBefore = await amountOf(counter(page, 'Argent'));
   await expect(sellSurplus).toBeEnabled();
   await sellSurplus.click();
-  await expect(page.getByText('Surplus liquidé.')).toBeVisible();
   expect(await stock()).toBe(0);
   expect(await amountOf(counter(page, 'Argent'))).toBeGreaterThan(moneyBefore);
   await expect(sellSurplus).toBeDisabled();

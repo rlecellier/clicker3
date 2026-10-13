@@ -170,7 +170,6 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   // le clic qui suit le relâchement ne compte pas comme un travail de plus.
   await longPress(page, work);
   await expect(workOn).toBeVisible();
-  await expect(page.getByText('Travail automatique activé.')).toBeVisible();
   const afterLongPress = await snapshot();
   await page.clock.runFor(1000);
   await expect.poll(snapshot).not.toBe(afterLongPress);

@@ -230,9 +230,6 @@ export const useLifeScreen = () => {
       count: state.markers.length,
       max: state.maxMarkers,
       isSleeping: state.isSleeping,
-      // Pas déjà faits pendant ce sommeil, sur le total des pas.
-      sleepProgress: state.isSleeping ? state.sleepTotal - state.sleepLeft : 0,
-      sleepSteps: state.sleepTotal,
     },
     actions: { work, sellSurplus },
     sleep: {
@@ -255,8 +252,7 @@ export const useLifeScreen = () => {
           ? undefined
           : upgradePath(objective.upgradeId),
     },
-    // Avant la première action, le message d'accueil occupe la place du retour
-    // d'action : rien ne s'affiche ni ne disparaît ailleurs dans la page.
+    // Retour d'action, pas affiché pour l'instant (à replacer ailleurs).
     feedback:
       feedback ?? (state.period === 0 && state.gauge === 0 ? START_TEXT : null),
   };
