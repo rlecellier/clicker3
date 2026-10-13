@@ -5,6 +5,7 @@ import { buyCompany, buyWarehouse } from '@game/companies';
 import { findById, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
+import { answerBirthday, isBirthdayPending } from '@game/birthday';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { openPlacement } from '@game/placements';
@@ -19,13 +20,15 @@ import { work } from '@game/work';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
 
-// Nouvelle vie : l'état de départ, avec les événements déjà présents au départ.
+// Nouvelle vie : l'état de départ, ses 18 ans à fêter, avec les événements déjà présents au départ.
 // Un emploi qui n'est pas un emploi de départ est ignoré (on garde celui par défaut).
 export const newGame = (jobId?: string): GameState =>
   markAllSeen(
     triggerEvents({
       ...startState,
       jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
+      // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
+      pendingBirthday: { age: startState.life.startAge, recap: null },
     }),
   );
 
@@ -86,6 +89,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     case 'answerPromotion': {
       return answerPromotion(state, action.isAccepted);
     }
+    case 'answerBirthday': {
+      return answerBirthday(state);
+    }
     case 'markSeen': {
       return markSeen(state, action.tab);
     }
@@ -95,10 +101,11 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
   }
 };
 
-// Tant qu'une promotion attend une réponse, le jeu est arrêté : seules la
+// Tant qu'une promotion ou un anniversaire attend une réponse, le jeu est arrêté : seules la
 // réponse, la lecture du courrier, les nouveautés vues et la nouvelle vie passent.
 const passesDuringPromotion = new Set<GameAction['type']>([
   'answerPromotion',
+  'answerBirthday',
   'readMail',
   'markSeen',
   'restart',
@@ -106,6 +113,7 @@ const passesDuringPromotion = new Set<GameAction['type']>([
 
 // Sommeil, phase de vie et événements suivent chaque action (`afterAction`).
 export const reduce = (state: GameState, action: GameAction): GameState =>
-  isPromotionPending(state) && !passesDuringPromotion.has(action.type)
+  (isPromotionPending(state) || isBirthdayPending(state)) &&
+  !passesDuringPromotion.has(action.type)
     ? state
     : afterAction(applyAction(state, action));

@@ -250,6 +250,10 @@ export const simulateLife = (
       endedBy = 'death';
       break;
     }
+    // Fermer la fenêtre d'un anniversaire ne coûte ni temps ni geste mesuré.
+    if (state.pendingBirthday !== null) {
+      state = reduce(state, { type: 'answerBirthday' });
+    }
     const before = state;
     const action = chooseAction(state, excluded);
     const after = action === undefined ? state : reduce(state, action);

@@ -228,11 +228,14 @@ describe('invariants sur une partie jouée', () => {
     const states = [rich];
     for (let index = 0; index < steps; index++) {
       const previous = states.at(-1);
-      // Une promotion arrête le jeu : on l'accepte pour continuer à jouer.
-      const action: GameAction | undefined =
-        previous?.pendingPromotion === null
-          ? script[index % script.length]
-          : { type: 'answerPromotion', isAccepted: true };
+      // Un anniversaire ou une promotion arrête le jeu : on y répond pour
+      // continuer à jouer.
+      let action: GameAction | undefined = script[index % script.length];
+      if (previous?.pendingBirthday !== null) {
+        action = { type: 'answerBirthday' };
+      } else if (previous.pendingPromotion !== null) {
+        action = { type: 'answerPromotion', isAccepted: true };
+      }
       if (action !== undefined && previous !== undefined) {
         states.push(reduce(previous, action));
       }

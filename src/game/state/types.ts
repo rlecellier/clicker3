@@ -38,6 +38,28 @@ export type ActiveEffect = {
 // Promotion proposée : l'emploi et son rang (0 à 2, la première est le rang 0).
 export type PendingPromotion = { jobId: string; rank: number };
 
+// Photo de la vie à un anniversaire (ou au départ) : le prochain bilan s'y compare.
+export type BirthdayBase = {
+  age: number;
+  period: number;
+  money: number;
+  companies: number;
+  upgrades: number;
+  reputationEarned: number;
+};
+
+// Ce qui a changé depuis l'anniversaire précédent.
+export type BirthdayRecap = {
+  months: number;
+  money: number;
+  companies: number;
+  upgrades: number;
+  reputation: number;
+};
+
+// Anniversaire qui attend d'être lu : son âge et le bilan (absent au départ).
+export type PendingBirthday = { age: number; recap: BirthdayRecap | null };
+
 // Drapeaux de la dernière période résolue, lus par les conditions
 // (`statement`). Les montants et les flux sont dans le `Ledger`.
 export type PeriodStatement = {
@@ -263,6 +285,10 @@ export type GameState = {
   promotionsOffered: Record<string, number>;
   // Promotion qui attend une réponse : le jeu est arrêté tant qu'elle est là.
   pendingPromotion: PendingPromotion | null;
+  // Dernier anniversaire fêté, et celui qui attend : le jeu est arrêté tant
+  // qu'il est là.
+  birthdayBase: BirthdayBase;
+  pendingBirthday: PendingBirthday | null;
 
   // Interrupteurs des actions automatiques (activables une fois achetées).
   autoWork: boolean;

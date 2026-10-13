@@ -1,5 +1,7 @@
 export { actionRules, jobMarkerStat } from './actionRules';
 export { automationRules } from './automationRules';
+export { birthdays } from './birthdays';
+export type { Birthday } from './birthdays';
 export { boosts } from './boosts';
 export type { Boost } from './boosts';
 export { companies } from './companies';

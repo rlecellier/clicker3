@@ -1,6 +1,7 @@
 import { afterAction } from '@game/afterAction';
 import { automationRules } from '@game/data';
 import { eventById, fireEvent } from '@game/events';
+import { isBirthdayPending } from '@game/birthday';
 import { isPromotionPending, offerPromotion } from '@game/promotion';
 import { sleepStep, sleepStepMs } from '@game/sleep';
 import { isPlaying } from '@game/state';
@@ -26,9 +27,10 @@ export const isAutoActive = (state: GameState, action: AutoAction) =>
 
 // Le temps réel fait avancer la partie : travail automatique actif, ou
 // sommeil en cours. Sinon, le temps écoulé n'a aucun effet.
-// Une promotion qui attend une réponse arrête le temps.
+// Une promotion ou un anniversaire qui attend une réponse arrête le temps.
 export const isTimeRunning = (state: GameState) =>
   !isPromotionPending(state) &&
+  !isBirthdayPending(state) &&
   (isAutoActive(state, 'work') || state.isSleeping);
 
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
@@ -89,8 +91,16 @@ const runAuto = (
       return { ...current, autoElapsed: 0 };
     }
     const afterwards = afterAction(acted);
+    // Le joueur absent ne répond pas : l'offre de promotion et l'anniversaire
+    // sont reproposés à son retour (sauf au décès, où rien ne rejoue).
     const settled = isAway
-      ? { ...afterwards, pendingPromotion: null }
+      ? {
+          ...afterwards,
+          pendingPromotion: null,
+          pendingBirthday: isPlaying(afterwards)
+            ? null
+            : afterwards.pendingBirthday,
+        }
       : afterwards;
     onAction?.(current, settled);
     current = {
@@ -99,7 +109,9 @@ const runAuto = (
     };
   }
   // Le temps accumulé n'attend pas la réponse : il serait rejoué d'un coup.
-  return isPromotionPending(current) ? { ...current, autoElapsed: 0 } : current;
+  return isPromotionPending(current) || isBirthdayPending(current)
+    ? { ...current, autoElapsed: 0 }
+    : current;
 };
 
 // Fait avancer les actions automatiques de `elapsedMs` (temps réel écoulé).

@@ -269,6 +269,9 @@ export const chooseAction = (
   excluded: ReadonlySet<string> = new Set(),
 ): GameAction | undefined => {
   // Une promotion arrête le jeu : le joueur virtuel l'accepte toujours.
+  if (state.pendingBirthday !== null) {
+    return { type: 'answerBirthday' };
+  }
   if (state.pendingPromotion !== null) {
     return { type: 'answerPromotion', isAccepted: false };
   }
