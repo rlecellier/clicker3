@@ -13,6 +13,7 @@ export type GameTabId =
   | 'companies'
   | 'upgrades'
   | 'accounts'
+  | 'finance'
   | 'city';
 
 export type GameTab = { id: GameTabId; label: string; slug: string };
@@ -27,10 +28,11 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'companies', label: 'Entreprises', slug: 'entreprises' },
   { id: 'upgrades', label: 'Améliorations', slug: 'ameliorations' },
   { id: 'accounts', label: 'Comptes', slug: 'comptes' },
+  { id: 'finance', label: 'Finance', slug: 'finance' },
   { id: 'city', label: 'Ville', slug: 'ville' },
 ];
 
-// Touche qui ouvre l'onglet de ce rang (1 à 8), dans l'ordre de la sidebar.
+// Touche qui ouvre l'onglet de ce rang (1 à 9), dans l'ordre de la sidebar.
 export const tabShortcut = (index: number) => String(index + 1);
 
 export const DEFAULT_TAB: GameTabId = 'life';

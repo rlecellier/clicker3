@@ -10,6 +10,7 @@ export type SidebarIconId =
   | 'companies'
   | 'upgrades'
   | 'accounts'
+  | 'finance'
   | 'city'
   | 'new-life';
 
@@ -69,6 +70,18 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
         d="M5 5h6M5 8h6M5 11h4"
         stroke="var(--color-surface)"
         strokeWidth="1.2"
+      />
+    </>
+  ),
+  // Pièce de monnaie.
+  finance: (
+    <>
+      <circle cx="8" cy="8" r="7" />
+      <path
+        d="M8 4v8M10.5 6C10 5 6 5 6 7s4 1 4 3-4 2-4.5 1"
+        fill="none"
+        stroke="var(--color-surface)"
+        strokeWidth="1.3"
       />
     </>
   ),

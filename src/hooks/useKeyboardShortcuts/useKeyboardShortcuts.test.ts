@@ -33,7 +33,7 @@ describe('useKeyboardShortcuts', () => {
     document.body.replaceChildren();
   });
 
-  it('1 à 8 ouvrent les onglets dans l’ordre de la sidebar', () => {
+  it('1 à 9 ouvrent les onglets dans l’ordre de la sidebar', () => {
     const handlers = setup();
     for (const index of gameTabs.keys()) {
       press(String(index + 1));
@@ -55,11 +55,11 @@ describe('useKeyboardShortcuts', () => {
   it('n’a aucun raccourci d’Espace, d’Entrée, d’achat ni de vente', () => {
     expect(
       Object.keys(shortcutTable).toSorted((a, b) => a.localeCompare(b)),
-    ).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', 'e', 't']);
+    ).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', 'e', 't']);
     const handlers = setup();
     press(' ');
     press('Enter');
-    press('9');
+    press('0');
     expectNothing(handlers);
   });
 

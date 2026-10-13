@@ -8,6 +8,7 @@ import { AccountsPage } from '@page/AccountsPage';
 import { CompaniesPage } from '@page/CompaniesPage';
 import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
+import { FinancePage } from '@page/FinancePage';
 import { GamePage } from '@page/GamePage';
 import { JobsPage } from '@page/JobsPage';
 import { LifePage } from '@page/LifePage';
@@ -30,6 +31,7 @@ const tabPages: Record<GameTabId, ReactNode> = {
   companies: <CompaniesPage />,
   upgrades: <UpgradesPage />,
   accounts: <AccountsPage />,
+  finance: <FinancePage />,
   city: <CityPage />,
 };
 

@@ -88,6 +88,7 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   ).toBeVisible();
   await openTab(page, 'emploi');
   await openTab(page, 'comptes');
+  await openTab(page, 'finance');
   await openTab(page, 'courrier');
 
   // Les anciens liens et les onglets inconnus mènent à l'onglet par défaut.

@@ -12,6 +12,7 @@ const tabLabels = {
   entreprises: 'Entreprises',
   ameliorations: 'Améliorations',
   comptes: 'Comptes',
+  finance: 'Finance',
   ville: 'Ville',
 } as const;
 

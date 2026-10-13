@@ -5,6 +5,13 @@ import styles from './ItemList.module.css';
 
 export type ListCondition = { label: string; isMet: boolean };
 
+export type ListAction = {
+  id: string;
+  label: string;
+  isDisabled: boolean;
+  onAction: () => void;
+};
+
 export type ListItem = {
   id: string;
   title: string;
@@ -19,6 +26,8 @@ export type ListItem = {
   // Prérequis, chacun en vert (obtenu) ou en rouge (manquant).
   conditions?: readonly ListCondition[];
   onAction: () => void;
+  // Autres gestes sur la même ligne (ex. retirer, placer la moitié).
+  extraActions?: readonly ListAction[];
 };
 
 type ItemListProperties = {
@@ -73,9 +82,20 @@ export const ItemList = ({
               <span className={styles.reason}>{item.reason}</span>
             ) : null}
           </div>
-          <Button isDisabled={item.isDisabled} onClick={item.onAction}>
-            {item.actionLabel}
-          </Button>
+          <div className={styles.actions}>
+            <Button isDisabled={item.isDisabled} onClick={item.onAction}>
+              {item.actionLabel}
+            </Button>
+            {item.extraActions?.map((action) => (
+              <Button
+                key={action.id}
+                isDisabled={action.isDisabled}
+                onClick={action.onAction}
+              >
+                {action.label}
+              </Button>
+            ))}
+          </div>
         </li>
       ))}
     </ul>
