@@ -5,6 +5,7 @@ import {
   reputationTiers,
   upgrades,
 } from '@game/data';
+import type { UpgradeScope } from '@game/data';
 import { isUnlocked } from '@game/requirements';
 import type { Requirement } from '@game/requirements';
 import { reputationTierOf } from '@game/reputation';
@@ -39,6 +40,10 @@ const unlockedIds = (
     )
     .map((candidate) => `${prefix}:${candidate.id}`);
 
+// Les améliorations d'une portée, celles que montre la vue contextuelle.
+const upgradesOf = (scope: UpgradeScope) =>
+  upgrades.filter((upgrade) => upgrade.scope === scope);
+
 const districtIds = (state: GameState) =>
   unlockedIds(state, 'district', districts);
 
@@ -49,6 +54,7 @@ const unlockedFor = (state: GameState, tab: NoveltyTab): string[] => {
     case 'companies': {
       return [
         ...unlockedIds(state, 'company', companies),
+        ...unlockedIds(state, 'upgrade', upgradesOf('company')),
         ...districtIds(state),
       ];
     }
@@ -72,7 +78,11 @@ const unlockedFor = (state: GameState, tab: NoveltyTab): string[] => {
         { length: Math.min(reputationTierOf(state), reputationTiers.length) },
         (_, index) => `reputation:${index + 1}`,
       );
-      return [...stats, ...reputation];
+      return [
+        ...stats,
+        ...reputation,
+        ...unlockedIds(state, 'upgrade', upgradesOf('person')),
+      ];
     }
   }
 };

@@ -81,8 +81,10 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   await expect(miniGauge('Endurance')).toBeVisible();
   await expect(miniGauge('Métier')).toBeHidden();
 
-  // Le premier collaborateur fait de vous un dirigeant.
-  await openUpgrades();
+  // Le premier collaborateur fait de vous un dirigeant ; il touche les
+  // entreprises, donc il s'achète depuis Entreprises.
+  await openTab(page, 'entreprises');
+  await page.getByRole('tab', { name: 'Améliorations' }).click();
   await itemOf(page, 'Premier collaborateur')
     .getByRole('button', { name: 'Acheter' })
     .click();

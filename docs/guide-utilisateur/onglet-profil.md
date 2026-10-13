@@ -15,6 +15,11 @@ décimale au plus).
 
 ## Compétences et réputation
 
+Le bloc du bas a deux sous-onglets : **Compétences** (les cinq barres ci-dessous)
+et **Améliorations** (celles qui touchent la personne : formations, logement,
+marqueurs, automatisation, tableau de bord). Ce sont les mêmes achats que dans
+l'onglet [Améliorations](onglet-ameliorations.md), simplement filtrés.
+
 Cinq barres de progression.
 
 | Barre          | Ce qu'elle mesure                                                                 |

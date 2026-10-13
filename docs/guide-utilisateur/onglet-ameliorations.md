@@ -2,7 +2,10 @@
 
 [Sommaire](README.md) · Raccourci : touche 6 · Précédent : [Entreprises](onglet-entreprises.md) · Suite : [Comptes](onglet-comptes.md)
 
-Tous les achats qui changent votre vie ou vos entreprises, au même endroit. La
+Tous les achats qui changent votre vie ou vos entreprises, au même endroit. Les
+mêmes lignes se retrouvent, filtrées, dans [Profil](onglet-profil.md) (celles de
+la personne) et dans [Entreprises](onglet-entreprises.md#améliorations) (celles des
+entreprises) : on achète d'où l'on veut. La
 page a deux sous-onglets : **À acheter** et **Obtenues**. Les lignes se lisent
 comme dans [Entreprises](onglet-entreprises.md#comment-se-lisent-les-lignes).
 
