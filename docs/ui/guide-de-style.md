@@ -222,7 +222,7 @@ Les règles ESLint (`unicorn` strict) imposent :
 ### Séparation visuel / hook / page
 
 1. **Composant visuel** (`src/components/`) : props seulement.
-2. **Hook de vue** (`src/hooks/`, ex. `useLifeScreen`, `useInvestScreen`,
+2. **Hook de vue** (`src/hooks/`, ex. `useLifeScreen`, `useCompaniesScreen`,
    `useAccountsScreen`) : état, calculs, appels au context ; renvoie des
    données prêtes à afficher (textes déjà formatés).
 3. **Page orchestratrice** (`src/pages/`, ex. `LifePage`) : branche les hooks

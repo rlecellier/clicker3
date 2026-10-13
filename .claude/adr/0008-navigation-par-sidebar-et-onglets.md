@@ -115,3 +115,24 @@ Le cursus sélectionné par la flèche d'Étudier vit dans `GamePage`
 (`useCourseChoice`), pour que `E` et le bouton visent le même cursus. Les
 raccourcis sont affichés dans l'infobulle des onglets (« Entreprises (5) ») et par
 `aria-keyshortcuts`.
+
+## Mise à jour v1.6 (#201)
+
+L'onglet « Investir » est éclaté et « Compétences » devient « Profil » : huit
+onglets au lieu de sept, pour passer de l'écran principal aux entreprises ou aux
+améliorations en un tap.
+
+- **Entreprises** : barre d'entrepôt, achats, sous-onglets Quartiers,
+  Comptabilité et Améliorations (celles des entreprises).
+- **Améliorations** : toutes les améliorations, les coups de pouce et
+  « Obtenues ».
+- **Profil** : fiche du personnage, compétences et réputation, sous-onglet
+  Améliorations (celles de la personne).
+
+Les améliorations forment un seul catalogue : chacune porte une `scope`
+(`person` ou `company`) et les vues de Profil et d'Entreprises sont des filtres
+de la même liste, avec les mêmes lignes (`@view/upgradeItems`). Les nouveautés
+suivent la même répartition (`seenItems` : `profile`, `jobs`, `companies`,
+`upgrades`, `city`). Les anciennes routes `/jeu/investir` et `/jeu/competences`
+ne redirigent pas (ADR 0010).
+

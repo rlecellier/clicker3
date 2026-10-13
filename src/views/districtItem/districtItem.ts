@@ -9,7 +9,7 @@ import {
   unavailableReason,
 } from '@view/purchase';
 
-// Ligne d'un quartier à débloquer, partagée par Investir et la fiche de la
+// Ligne d'un quartier à débloquer, partagée par Entreprises et la fiche de la
 // carte de la ville.
 export const districtItem = (
   state: GameState,
