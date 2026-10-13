@@ -77,9 +77,17 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
    le surplus va dans le premier compte (par rendement croissant) qui a de la
    place. Une dépense puise d'abord dans le compte courant, puis dans le compte
    au rendement le plus faible. Un revenu remplit le compte courant avant tout.
-5. **UI** : onglet Finance (touche 8), en lecture seule : total, compte
+5. **Ouverture chez le banquier (#234)** : la réputation ne fait que rendre un
+   compte *éligible*. Il reste fermé (plafond 0, aucun capital) jusqu'à un
+   rendez-vous : l'onglet Finance propose « Prendre rendez-vous » et la sidebar
+   affiche une pastille avec le nombre de comptes à ouvrir. Le rendez-vous est
+   un court dialogue en cinq répliques (banquier cynique, réponses au choix qui
+   ne changent rien) ; la dernière, « Merci. », ouvre le compte et écrit une
+   ligne au courrier. « Reporter le rendez-vous » ferme sans rien ouvrir. Le
+   joueur virtuel du simulateur ouvre les comptes dès qu'ils sont possibles.
+6. **UI** : onglet Finance (touche 8), en lecture seule : total, compte
    courant et matelas, capital placé, un compte par ligne.
-6. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
+7. **Hors-ligne** : le rendement s'applique aux périodes simulées en l'absence.
 
 Mécanique : le rendement d'un gain est **versé sur le compte courant** à la
 clôture, puis la répartition le place s'il dépasse le matelas (il se capitalise
