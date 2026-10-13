@@ -18,9 +18,12 @@ import {
   salesCapacity,
 } from '@game/economy';
 import { formatCount, formatDecimal, formatMoney } from '@game/format';
+import { currentPeriodReport } from '@game/ledger';
 import type { GameState } from '@game/state';
 import { availableUpgrades, warehouseCapacity } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
+import { accountsPath } from '@hook/useGameTabs';
+import { buildingsLedger } from '@view/buildingsLedger';
 import { districtItem } from '@view/districtItem';
 import { upgradeItem } from '@view/upgradeItems';
 import {
@@ -136,7 +139,11 @@ export const useCompaniesScreen = () => {
       label: `Entrepôt : ${stockLabel(state)} (${formatCount(state.stock)} / ${formatCount(state.stockCapacity)})`,
       value: state.stock,
       max: state.stockCapacity,
+      // Le détail des entrées et sorties se lit dans Comptes.
+      detailPath: accountsPath('stock'),
     },
+    // La période en cours, entreprise par entreprise.
+    ledger: buildingsLedger(state, currentPeriodReport(state), true),
     companies: [...companyItems, warehouseItem],
     districts: districtItems,
     // Les améliorations qui touchent les entreprises, achetables d'ici.

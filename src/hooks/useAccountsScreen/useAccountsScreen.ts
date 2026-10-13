@@ -11,6 +11,7 @@ import type { GameState } from '@game/state';
 import { jobById } from '@game/jobs';
 import { courseById } from '@game/study';
 import { hasDashboard, upgradeById } from '@game/upgrades';
+import { buildingsLedger } from '@view/buildingsLedger';
 
 const TOTAL_ID = 'total';
 const unavailableLabel = 'Détail indisponible pour cette période';
@@ -241,31 +242,6 @@ const stockRows = (
   ];
 };
 
-// Une ligne par entreprise possédée : ce qu'elle rapporte et les articles
-// qu'elle fournit ou vend. Une production ne rapporte rien par elle-même.
-const buildingRows = (
-  state: GameState,
-  report: LedgerReport,
-  hasDetail: boolean,
-) =>
-  companies
-    .filter((company) => (state.companies[company.id] ?? 0) > 0)
-    .map((company) => ({
-      id: company.id,
-      cells:
-        company.kind === 'commerce'
-          ? [
-              company.name,
-              hasDetail ? formatMoney(report.salesBy[company.id] ?? 0) : '—',
-              `${formatCount(report.stockOut[company.id] ?? 0)} vendus`,
-            ]
-          : [
-              company.name,
-              '—',
-              `${formatCount(report.stockIn[company.id] ?? 0)} fournis`,
-            ],
-    }));
-
 const reputationRows = (report: LedgerReport): LedgerRow[] => [
   countRow('reputationGained', 'Réputation gagnée', report.reputationGained),
   countRow('reputationLost', 'Réputation perdue', report.reputationLost),
@@ -380,16 +356,7 @@ export const useAccountsScreen = () => {
             help: 'Les entreprises de production remplissent le stock, les commerces le vident. Seul l’invendu au-delà de la capacité de l’entrepôt est perdu, après les ventes.',
             rows: stockRows(state, entry.selection, hasDetail),
           },
-          buildings: {
-            title: 'Ce que rapporte chaque entreprise',
-            help: 'Une production ne rapporte rien par elle-même : elle fournit le stock que vendent les commerces.',
-            columns: [
-              { id: 'company', header: 'Entreprise' },
-              { id: 'earned', header: 'Rapporte', isNumeric: true },
-              { id: 'items', header: 'Articles', isNumeric: true },
-            ] as const,
-            rows: buildingRows(state, report, hasDetail),
-          },
+          buildings: buildingsLedger(state, report, hasDetail),
           reputation: {
             title: 'Et la réputation ?',
             help: 'Gagnée en travaillant et en vendant, perdue en cas de rupture ou de découvert, dépensée pour débloquer emplois et quartiers.',

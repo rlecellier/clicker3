@@ -1,5 +1,6 @@
 export {
   closePeriod,
+  currentPeriodReport,
   emptyFigures,
   emptyLedger,
   lastPeriodReport,

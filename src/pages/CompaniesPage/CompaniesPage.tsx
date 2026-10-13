@@ -1,5 +1,8 @@
+import { DataTable } from '@component/DataTable';
 import { ItemList } from '@component/ItemList';
+import { LedgerSection } from '@component/LedgerSection';
 import { Note } from '@component/Note';
+import { PageLink } from '@component/PageLink';
 import { ProgressBar } from '@component/ProgressBar';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
@@ -19,6 +22,7 @@ export const CompaniesPage = () => {
         value={screen.stock.value}
         max={screen.stock.max}
       />
+      <PageLink to={screen.stock.detailPath}>Détail du stock</PageLink>
       <Tabs
         tabs={[
           {
@@ -32,6 +36,25 @@ export const CompaniesPage = () => {
             id: 'districts',
             label: 'Quartiers',
             content: <ItemList caption="Quartiers" items={screen.districts} />,
+          },
+          {
+            id: 'ledger',
+            label: 'Comptabilité',
+            content:
+              screen.ledger.rows.length === 0 ? (
+                <Note>Aucune entreprise pour le moment.</Note>
+              ) : (
+                <LedgerSection
+                  title={screen.ledger.title}
+                  help={screen.ledger.help}
+                >
+                  <DataTable
+                    caption="Entreprises"
+                    columns={screen.ledger.columns}
+                    rows={screen.ledger.rows}
+                  />
+                </LedgerSection>
+              ),
           },
           {
             id: 'upgrades',

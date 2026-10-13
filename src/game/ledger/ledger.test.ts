@@ -7,6 +7,7 @@ import {
   closePeriod,
   emptyFigures,
   emptyLedger,
+  currentPeriodReport,
   lastPeriodReport,
   periodReports,
   record,
@@ -130,6 +131,16 @@ describe('sélecteurs', () => {
     const later = withRecord(state, { wages: 10 });
     expect(totals(later).revenue).toBe(175);
     expect(lastPeriodReport(later).revenue).toBe(165);
+  });
+
+  it('lit la période en cours, pas la dernière terminée', () => {
+    const later = withRecord(state, { wages: 10 });
+    expect(currentPeriodReport(later).wages).toBe(
+      currentPeriodReport(state).wages + 10,
+    );
+    expect(currentPeriodReport(later).wages).not.toBe(
+      lastPeriodReport(later).wages,
+    );
   });
 
   it('est vide au départ', () => {

@@ -152,6 +152,10 @@ export type PeriodReport = LedgerReport & { period: number };
 export const lastPeriodReport = (state: GameState): LedgerReport =>
   reportOf(state.ledger.history[0]?.figures ?? emptyFigures());
 
+/** Recettes, dépenses et flux de la période en cours. */
+export const currentPeriodReport = (state: GameState): LedgerReport =>
+  reportOf(state.ledger.current);
+
 /**
  * La période en cours, puis les périodes terminées de la plus récente à la
  * plus ancienne (au plus `ledgerHistoryLength`).
