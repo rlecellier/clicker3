@@ -24,7 +24,7 @@ import type { GameState } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
-import { upgradePath } from '@hook/useGameTabs';
+import { accountsPath, upgradePath } from '@hook/useGameTabs';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
 import { ENDED, NO_MONEY } from '@view/purchase';
 
@@ -205,6 +205,11 @@ export const useLifeScreen = () => {
     balances: {
       money: formatBalance(outlook.money, ' €'),
       stock: formatBalance(outlook.stock),
+    },
+    // Récaps de Comptes que les tuiles de balance ouvrent.
+    balanceLinks: {
+      money: accountsPath('money'),
+      stock: accountsPath('stock'),
     },
     brain: {
       count: state.markers.length,

@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
 import { GameProvider } from '@context/GameContext';
 import { startState } from '@game/data';
 import { emptyFigures } from '@game/ledger';
@@ -9,12 +10,14 @@ import { useAccountsScreen } from './useAccountsScreen';
 
 const setup = (state: GameState) => {
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <GameProvider
-      storage={createMemoryStorage(serialize(state, 0))}
-      now={() => 0}
-    >
-      {children}
-    </GameProvider>
+    <MemoryRouter>
+      <GameProvider
+        storage={createMemoryStorage(serialize(state, 0))}
+        now={() => 0}
+      >
+        {children}
+      </GameProvider>
+    </MemoryRouter>
   );
   return renderHook(() => useAccountsScreen(), { wrapper });
 };

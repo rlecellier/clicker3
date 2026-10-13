@@ -34,7 +34,7 @@ export const balanceOf = async (page: Page, label: string) => {
   const text = await page
     .getByRole('region', { name: 'Balance de la période' })
     .getByText(label, { exact: true })
-    .locator('xpath=following-sibling::dd[1]')
+    .locator('xpath=ancestor::dt/following-sibling::dd[1]')
     .textContent();
   const raw = (text ?? '').replace('−', '-');
   // Les grands montants sont abrégés (« 1,1 k ») : à une unité près de l'abréviation.

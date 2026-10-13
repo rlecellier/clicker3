@@ -194,6 +194,15 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await openTab(page, 'vie');
   expect(await money()).toBe(beforeCancel);
 
+  // Les tuiles de balance mènent aux comptes de la période.
+  await page
+    .getByRole('region', { name: 'Balance de la période' })
+    .getByRole('link', { name: 'Argent' })
+    .tap();
+  await expect(page).toHaveURL(/\/comptes#argent$/);
+  await expect(page.getByRole('cell', { name: 'Recettes' })).toBeVisible();
+  await openTab(page, 'vie');
+
   // Le courrier garde les messages reçus ; les comptes, la comptabilité.
   await openTab(page, 'courrier');
   await expect(page.getByText("Bienvenue dans l'euro.").first()).toBeVisible();

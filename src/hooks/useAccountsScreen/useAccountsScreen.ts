@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import type { LedgerRow } from '@component/LedgerTable';
 import { useGameContext } from '@context/GameContext';
 import { companyById } from '@game/companies';
@@ -321,6 +322,21 @@ const selectionsOf = (state: GameState) => {
 export const useAccountsScreen = () => {
   const { state } = useGameContext();
   const [chosen, setChosen] = useState('current');
+  const { hash } = useLocation();
+  const hasBoard = hasDashboard(state);
+
+  // Arrivée depuis la balance de la période (`#argent`, `#stock`) : défile
+  // jusqu'à la section visée.
+  useEffect(() => {
+    if (!hasBoard || hash === '') {
+      return;
+    }
+    const isReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelector(`#${CSS.escape(hash.slice(1))}`)?.scrollIntoView({
+      block: 'start',
+      behavior: isReduced ? 'auto' : 'smooth',
+    });
+  }, [hash, hasBoard]);
 
   const entries = selectionsOf(state);
   const entry =
@@ -330,7 +346,6 @@ export const useAccountsScreen = () => {
   }
   const { report, date } = entry.selection;
   const hasDetail = isDetailed(report);
-  const hasBoard = hasDashboard(state);
 
   return {
     tabs: entries.map(({ id, label }) => ({ id, label })),

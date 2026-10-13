@@ -1,4 +1,5 @@
 .tile {
+  position: relative;
   aspect-ratio: 1;
   display: flex;
   flex-direction: column;
@@ -31,4 +32,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Lien étiré : toute la tuile est cliquable, sans sortir le texte du `<dt>`. */
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.tile:active {
+  box-shadow: var(--bevel-out);
 }

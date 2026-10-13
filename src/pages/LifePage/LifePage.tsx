@@ -26,11 +26,13 @@ export const LifePage = () => {
             icon="money"
             label="Argent"
             balance={screen.balances.money}
+            to={screen.balanceLinks.money}
           />
           <ResourceTile
             icon="stock"
             label="Stock"
             balance={screen.balances.stock}
+            to={screen.balanceLinks.stock}
           />
         </dl>
       </Window>

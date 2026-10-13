@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { Balance } from '@component/Balance';
 import { ResourceIcon } from '@component/ResourceIcon';
 import type { ResourceIconId } from '@component/ResourceIcon';
@@ -8,6 +9,8 @@ type ResourceTileProperties = {
   label: string;
   // Variation de la période en cours, déjà signée (« +120 € »).
   balance: string;
+  // Récap de la période pour cette ressource : toute la tuile y mène.
+  to: string;
 };
 
 // Tuile carrée : icône, nom de la ressource et balance de la période. À placer
@@ -16,10 +19,15 @@ export const ResourceTile = ({
   icon,
   label,
   balance,
+  to,
 }: ResourceTileProperties) => (
   <div className={styles.tile}>
     <ResourceIcon id={icon} />
-    <dt className={styles.label}>{label}</dt>
+    <dt className={styles.label}>
+      <Link className={styles.link} to={to}>
+        {label}
+      </Link>
+    </dt>
     <Balance balance={balance} className={styles.balance} />
   </div>
 );
