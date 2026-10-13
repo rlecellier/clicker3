@@ -1,4 +1,4 @@
-import type { GaugeKind, PlacementId } from '@game/state';
+import type { GaugeKind } from '@game/state';
 import type { NoveltyTab } from '@game/novelty';
 
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
@@ -12,8 +12,6 @@ export type GameAction =
   | { type: 'buyWarehouse' }
   | { type: 'sellSurplus' }
   // Place de l'argent du compte courant, ou le reprend (jamais bloqué).
-  | { type: 'deposit'; id: PlacementId; amount: number }
-  | { type: 'withdraw'; id: PlacementId; amount: number }
   | { type: 'buyUpgrade'; id: string }
   // Coup de pouce temporaire (cure, séminaire, clinique).
   | { type: 'buyBoost'; id: string }

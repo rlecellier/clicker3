@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useGameContext } from '@context/GameContext';
-import type { PlacementId } from '@game/state';
 
 // Les gestes du joueur : chacun envoie une action au reducer des règles.
 export const useGameActions = () => {
@@ -24,12 +23,6 @@ export const useGameActions = () => {
       },
       sellSurplus: () => {
         dispatch({ type: 'sellSurplus' });
-      },
-      deposit: (id: PlacementId, amount: number) => {
-        dispatch({ type: 'deposit', id, amount });
-      },
-      withdraw: (id: PlacementId, amount: number) => {
-        dispatch({ type: 'withdraw', id, amount });
       },
       buyUpgrade: (id: string) => {
         dispatch({ type: 'buyUpgrade', id });

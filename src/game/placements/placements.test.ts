@@ -2,160 +2,216 @@ import { events, placements, startState } from '@game/data';
 import { fixedExpensesOf } from '@game/economy';
 import { triggerEvents } from '@game/events';
 import { addGauge, endPeriod, periodOutlook } from '@game/period';
+import { afterAction } from '@game/afterAction';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import {
+  bufferOf,
   capitalOf,
   ceilingOf,
-  deposit,
-  depositable,
+  checkingOf,
   expectedYield,
   isPlacementUnlocked,
   rateOf,
-  withdraw,
+  rebalance,
 } from './placements';
 
-const savings = placements[0];
-const stocks = placements[1];
-if (savings?.id !== 'savings' || stocks?.id !== 'stocks') {
+const [savings, pel, stocks] = placements;
+if (savings?.id !== 'savings' || pel?.id !== 'pel' || stocks?.id !== 'stocks') {
   throw new Error('placements introuvables');
 }
 
-// Acteur majeur (palier 2) : épargne et titres débloqués.
+// Marque (palier 3) : Livret A, PEL et compte-titres débloqués.
 const rich: GameState = {
   ...startState,
-  money: 10_000,
-  reputationEarned: 100,
+  money: 0,
+  reputationEarned: 200,
   rent: 0,
+  jobId: null,
 };
+const buffer = bufferOf(rich);
+const savingsCeiling = ceilingOf(rich, 'savings');
+const pelCeiling = ceilingOf(rich, 'pel');
+
+const unlocked = (reputationEarned: number) =>
+  (['savings', 'pel', 'stocks'] as const).filter((id) =>
+    isPlacementUnlocked({ ...startState, reputationEarned }, id),
+  );
 
 describe('déblocage et plafond', () => {
   it('verrouille les placements au départ', () => {
     expect(isPlacementUnlocked(startState, 'savings')).toBe(false);
     expect(ceilingOf(startState, 'savings')).toBe(0);
-    expect(depositable({ ...startState, money: 999 }, 'savings')).toBe(0);
   });
 
-  it('débloque l’épargne au palier 1 et les titres au palier 2', () => {
-    const tier1 = { ...startState, reputationEarned: 6 };
-    expect(isPlacementUnlocked(tier1, 'savings')).toBe(true);
-    expect(isPlacementUnlocked(tier1, 'stocks')).toBe(false);
-    expect(isPlacementUnlocked(rich, 'stocks')).toBe(true);
+  it('monte l’échelle avec les paliers : Livret A, PEL, compte-titres', () => {
+    expect(unlocked(6)).toEqual(['savings']);
+    expect(unlocked(100)).toEqual(['savings', 'pel']);
+    expect(unlocked(170)).toEqual(['savings', 'pel', 'stocks']);
+  });
+
+  it('des rendements croissants, du plus sûr au plus risqué', () => {
+    expect(savings.rate).toBeLessThan(pel.rate);
+    expect(pel.rate).toBeLessThan(stocks.rate);
   });
 
   it('proportionne le plafond à la réputation gagnée', () => {
-    expect(ceilingOf({ ...startState, reputationEarned: 6 }, 'savings')).toBe(
-      6 * savings.ceilingPerReputation,
-    );
-    expect(ceilingOf(rich, 'stocks')).toBe(100 * stocks.ceilingPerReputation);
-    expect(ceilingOf({ ...startState, reputationEarned: 5000 }, 'stocks')).toBe(
-      5000 * stocks.ceilingPerReputation,
-    );
+    expect(savingsCeiling).toBe(200 * savings.ceilingPerReputation);
+    expect(ceilingOf(rich, 'stocks')).toBe(200 * stocks.ceilingPerReputation);
   });
 });
 
-describe('déposer et retirer', () => {
-  it('déplace l’argent du compte courant vers le placement', () => {
-    const next = deposit(rich, 'savings', 4000);
-    expect(next.money).toBe(6000);
-    expect(next.placements.savings).toBe(4000);
-    expect(capitalOf(next)).toBe(4000);
+describe('répartition automatique', () => {
+  it('garde le compte courant au matelas : deux périodes de dépenses fixes', () => {
+    expect(buffer).toBe(2 * fixedExpensesOf(rich));
+    const next = rebalance({ ...rich, money: buffer });
+    expect(capitalOf(next)).toBe(0);
+    expect(checkingOf(next)).toBe(buffer);
   });
 
-  it('limite le dépôt à l’argent disponible et au plafond', () => {
-    expect(deposit({ ...rich, money: 100 }, 'savings', 5000).money).toBe(0);
-    const capped = deposit({ ...rich, money: 1_000_000 }, 'savings', 1_000_000);
-    expect(capped.placements.savings).toBe(ceilingOf(rich, 'savings'));
+  it('place le surplus dans le premier compte qui a de la place', () => {
+    const next = rebalance({ ...rich, money: buffer + 5000 });
+    expect(next.placements).toEqual({ savings: 5000, pel: 0, stocks: 0 });
+    expect(next.money).toBe(buffer + 5000);
+    expect(checkingOf(next)).toBe(buffer);
   });
 
-  it('ne dépose rien d’un placement verrouillé, d’un montant nul ou d’une dette', () => {
-    expect(deposit(startState, 'savings', 100)).toBe(startState);
-    expect(deposit(rich, 'savings', 0)).toBe(rich);
-    expect(deposit({ ...rich, money: -50 }, 'savings', 100).placements).toEqual(
-      startState.placements,
+  it('déborde sur le compte suivant quand un plafond est atteint', () => {
+    const next = rebalance({
+      ...rich,
+      money: buffer + savingsCeiling + pelCeiling + 100,
+    });
+    expect(next.placements).toEqual({
+      savings: savingsCeiling,
+      pel: pelCeiling,
+      stocks: 100,
+    });
+  });
+
+  it('laisse le surplus sur le compte courant quand tout est plein', () => {
+    const full = rebalance({ ...rich, money: 10_000_000 });
+    expect(capitalOf(full)).toBe(
+      savingsCeiling + pelCeiling + ceilingOf(rich, 'stocks'),
     );
+    expect(checkingOf(full)).toBe(10_000_000 - capitalOf(full));
   });
 
-  it('retire à tout moment, au plus le capital placé', () => {
-    const placed = deposit(rich, 'stocks', 3000);
-    const back = withdraw(placed, 'stocks', 99_999);
-    expect(back.money).toBe(rich.money);
-    expect(back.placements.stocks).toBe(0);
-    expect(withdraw(rich, 'stocks', 10)).toBe(rich);
+  it('n’ouvre pas un compte verrouillé', () => {
+    const next = rebalance({
+      ...startState,
+      rent: 0,
+      reputationEarned: 6,
+      money: 100_000,
+    });
+    expect(next.placements.savings).toBe(600);
+    expect(next.placements.pel).toBe(0);
+  });
+
+  it('une dépense puise d’abord dans le compte courant', () => {
+    const placed = rebalance({ ...rich, money: buffer + 5000 });
+    const spent = rebalance({ ...placed, money: placed.money - 300 });
+    expect(spent.placements).toEqual(placed.placements);
+    expect(checkingOf(spent)).toBe(buffer - 300);
+  });
+
+  it('puis dans le compte au rendement le plus faible', () => {
+    const placed = rebalance({
+      ...rich,
+      money: buffer + savingsCeiling + 4000,
+    });
+    expect(placed.placements.pel).toBe(4000);
+    const spent = rebalance({ ...placed, money: placed.money - buffer - 1000 });
+    expect(spent.placements.savings).toBe(savingsCeiling - 1000);
+    expect(spent.placements.pel).toBe(4000);
+    expect(checkingOf(spent)).toBe(0);
+  });
+
+  it('un revenu remplit le compte courant avant les placements', () => {
+    const placed = rebalance({ ...rich, money: buffer + 5000 });
+    const spent = rebalance({ ...placed, money: placed.money - 300 });
+    const earned = rebalance({ ...spent, money: spent.money + 100 });
+    expect(earned.placements.savings).toBe(5000);
+    expect(checkingOf(earned)).toBe(buffer - 200);
+    const refilled = rebalance({ ...spent, money: spent.money + 1000 });
+    expect(refilled.placements.savings).toBe(5700);
+    expect(checkingOf(refilled)).toBe(buffer);
+  });
+
+  it('suit chaque action du jeu', () => {
+    expect(
+      afterAction({ ...rich, money: buffer + 800 }).placements.savings,
+    ).toBe(800);
   });
 
   it('ne mute pas l’état', () => {
-    const frozen = deepFreeze(structuredClone(rich));
-    expect(() => deposit(frozen, 'savings', 100)).not.toThrow();
+    const frozen = deepFreeze(structuredClone({ ...rich, money: buffer + 10 }));
+    expect(() => rebalance(frozen)).not.toThrow();
   });
 });
 
 describe('rendement par période', () => {
-  const base = { ...rich, jobId: null };
-  const fixed = fixedExpensesOf(base);
+  const placed = rebalance({
+    ...rich,
+    money: buffer + savingsCeiling + 10_000,
+  });
+  const expected =
+    Math.round(savingsCeiling * savings.rate) + Math.round(10_000 * pel.rate);
 
-  it('verse le rendement de chaque placement sur le compte courant', () => {
-    const placed = {
-      ...base,
-      placements: { savings: 4000, stocks: 10_000 },
-    };
+  it('verse le rendement sur le compte courant, puis le place', () => {
     const next = endPeriod(placed);
-    const expected =
-      Math.round(4000 * savings.rate) + Math.round(10_000 * stocks.rate);
-    expect(next.money).toBe(placed.money - fixed + expected);
-    expect(next.placements).toEqual(placed.placements);
+    const fixed = fixedExpensesOf(placed);
     expect(next.ledger.total.yields).toBe(expected);
+    expect(next.money).toBe(placed.money - fixed + expected);
+    expect(capitalOf(next)).toBeGreaterThanOrEqual(capitalOf(placed));
   });
 
   it('est compté dans la balance prévue', () => {
-    const placed = { ...base, placements: { savings: 4000, stocks: 0 } };
     expect(periodOutlook(placed).money).toBe(
-      Math.round(4000 * savings.rate) - fixed,
+      expected - fixedExpensesOf(placed),
     );
   });
 
   it('s’applique aux périodes simulées hors ligne', () => {
-    const placed = { ...base, placements: { savings: 4000, stocks: 0 } };
     const away = addGauge(placed, placed.gaugeCapacity * 3, 'work');
     expect(away.period).toBe(3);
-    expect(away.ledger.total.yields).toBe(3 * Math.round(4000 * savings.rate));
+    expect(away.ledger.total.yields).toBeGreaterThanOrEqual(3 * expected);
   });
 
   it('annonce le rendement de la prochaine période, celui que la clôture verse', () => {
-    const placed = {
-      ...base,
-      placements: { savings: 4000, stocks: 10_000 },
-    };
-    const announced = expectedYield(placed);
-    expect(announced).toBe(
-      Math.round(4000 * savings.rate) + Math.round(10_000 * stocks.rate),
-    );
-    expect(endPeriod(placed).ledger.total.yields).toBe(announced);
-    expect(expectedYield(base)).toBe(0);
+    expect(expectedYield(placed)).toBe(expected);
+    expect(endPeriod(placed).ledger.total.yields).toBe(expected);
+    expect(expectedYield(rich)).toBe(0);
   });
 
   it('ne rapporte rien sans capital placé', () => {
-    expect(endPeriod(base).ledger.total.yields).toBe(0);
+    expect(endPeriod({ ...rich, money: buffer }).ledger.total.yields).toBe(0);
   });
 });
 
 describe('événements', () => {
-  const placed = { ...rich, placements: { savings: 0, stocks: 10_000 } };
+  const held = rebalance({
+    ...rich,
+    money: buffer + savingsCeiling + pelCeiling + 10_000,
+  });
 
   it('la bulle fait monter le rendement des titres, le krach le fait chuter', () => {
-    const bubble = triggerEvents({ ...placed, period: 14 });
+    const bubble = triggerEvents({ ...held, period: 14 });
     expect(rateOf(bubble, stocks)).toBeGreaterThan(stocks.rate);
     const crash = triggerEvents({ ...bubble, period: 33 });
     expect(rateOf(crash, stocks)).toBeLessThan(0);
     expect(rateOf(crash, savings)).toBe(savings.rate);
   });
 
-  it('un rendement négatif retire du capital sans toucher à l’argent', () => {
-    const crash = triggerEvents({ ...placed, period: 33 });
-    const next = endPeriod({ ...crash, jobId: null });
+  it('un rendement négatif retire du capital et du solde total', () => {
+    const crash = triggerEvents({ ...held, period: 33 });
     const loss = Math.round(10_000 * rateOf(crash, stocks));
-    expect(next.placements.stocks).toBe(10_000 + loss);
-    expect(next.ledger.total.yields).toBe(0);
+    const next = endPeriod(crash);
+    expect(next.placements.stocks).toBeLessThanOrEqual(10_000 + loss);
+    expect(next.ledger.total.yields).toBeLessThan(
+      Math.round(held.placements.savings * savings.rate) +
+        Math.round(held.placements.pel * pel.rate) +
+        1,
+    );
   });
 
   it('les événements de rendement existent dans les données', () => {
@@ -171,30 +227,24 @@ describe('événements', () => {
   });
 });
 
-describe('dépenser un placement', () => {
-  it('reprend l’épargne puis les titres pour couvrir les dépenses', () => {
+describe('dépenses de la période', () => {
+  it('puisent dans les placements quand le compte courant ne suffit pas', () => {
     const state: GameState = {
       ...startState,
       jobId: null,
-      money: 0,
-      placements: { savings: 100, stocks: 5000 },
+      reputationEarned: 200,
+      money: 5000,
+      placements: { savings: 5000, pel: 0, stocks: 0 },
     };
     const due = fixedExpensesOf(state);
     const next = endPeriod(state);
     expect(next.lastStatement?.unpaid).toBe(false);
-    expect(next.placements.savings).toBe(0);
-    expect(next.placements.stocks).toBeLessThan(5000);
-    expect(next.money).toBeGreaterThanOrEqual(0);
-    expect(due).toBeGreaterThan(100);
+    expect(next.money).toBe(5000 - due + next.ledger.total.yields);
+    expect(capitalOf(next)).toBeLessThanOrEqual(next.money);
   });
 
-  it('ne touche pas aux placements quand l’argent suffit', () => {
-    const state: GameState = {
-      ...startState,
-      jobId: null,
-      money: 100_000,
-      placements: { savings: 100, stocks: 0 },
-    };
-    expect(endPeriod(state).placements.savings).toBe(100);
+  it('est un impayé quand le total de tous les comptes ne suffit pas', () => {
+    const state: GameState = { ...startState, jobId: null, money: 10 };
+    expect(endPeriod(state).lastStatement?.unpaid).toBe(true);
   });
 });

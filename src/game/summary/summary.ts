@@ -14,7 +14,7 @@ export type LifeFigures = {
 };
 
 export type LifeSummary = LifeFigures & {
-  // Capital placé (hors compte courant).
+  // Capital placé, compris dans `money` (total de tous les comptes).
   capital: number;
   // Pollution et inégalités de la ville et de ses quartiers (ADR 0004).
   impact: ImpactReport;

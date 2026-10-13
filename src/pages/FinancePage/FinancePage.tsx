@@ -10,14 +10,17 @@ export const FinancePage = () => {
   return (
     <Window title="Finance">
       <p>
-        Compte courant : <strong>{finance.checking}</strong> · Capital placé :{' '}
-        <strong>{finance.capital}</strong> · Rendement attendu :{' '}
+        Total des comptes : <strong>{finance.total}</strong> · Compte courant :{' '}
+        <strong>{finance.checking}</strong> (matelas {finance.buffer}) · Capital
+        placé : <strong>{finance.capital}</strong> · Rendement attendu :{' '}
         <strong>{finance.yield}</strong> par mois
       </p>
       <Note>
-        Le rendement tombe sur le compte courant à chaque période. Le capital
-        placé se reprend à tout moment, et couvre vos dépenses si l’argent
-        manque.
+        La répartition est automatique : le compte courant garde de quoi vivre
+        deux mois, le surplus remplit le Livret A, puis le PEL, puis le
+        compte-titres, dans la limite de leur plafond. Les dépenses puisent
+        d’abord dans le compte courant, puis dans le compte le moins
+        rémunérateur.
       </Note>
       <ItemList caption="Placements" items={finance.items} />
     </Window>
