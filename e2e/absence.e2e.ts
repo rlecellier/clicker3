@@ -45,5 +45,9 @@ test('absence : le travail automatique avance pendant la fermeture', async ({
   await expect(page).toHaveURL('/absence');
   await page.getByRole('button', { name: 'Voir le bilan' }).click();
   await expect(page).toHaveURL('/fin');
+  // Les 75 ans sont fêtés avant le bilan.
+  const birthday = page.getByRole('alertdialog');
+  await expect(birthday.getByText('75 ans… bravo !')).toBeVisible();
+  await birthday.getByRole('button', { name: 'Voir le bilan' }).tap();
   await expect(page.getByRole('heading', { name: 'You died' })).toBeVisible();
 });

@@ -1,0 +1,1 @@
+export { BirthdayPrompt } from './BirthdayPrompt';

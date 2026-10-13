@@ -5,6 +5,7 @@ import {
   amountOf,
   balanceOf,
   clickThroughPromotion,
+  closeBirthday,
   counter,
   itemOf,
   openTab,
@@ -22,6 +23,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   ).toBeVisible();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await expect(page).toHaveURL('/jeu/vie');
+  await closeBirthday(page, 'Joyeux 18e anniversaire !');
   await expect(
     page.getByRole('heading', { name: 'Camille Morel' }),
   ).toBeVisible();
@@ -241,6 +243,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .getByRole('alertdialog')
     .getByRole('button', { name: 'Recommencer' })
     .click();
+  await closeBirthday(page, 'Joyeux 18e anniversaire !');
   await expect(counter(page, 'Argent')).toHaveText(/^0\s€$/);
   await openOwned();
   await expect(owned).toBeHidden();
