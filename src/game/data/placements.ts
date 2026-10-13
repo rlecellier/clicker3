@@ -7,18 +7,19 @@ export type Placement = {
   description: string;
   // Rendement par période (une période : un mois), versé sur le compte courant.
   rate: number;
-  // Débloqué par ce palier de réputation.
+  // Débloqué par ce palier de réputation ; une fois débloqué, seul le plafond
+  // limite le capital.
   requirement: Requirement & { type: 'reputationTier' };
-  // Plafond de capital placé : euros par point de réputation gagné. La
-  // réputation suit l'économie (les recettes valent 10 à 20 fois la réputation
-  // gagnée sur toute la vie, simulateur), donc le plafond suit la richesse.
-  ceilingPerReputation: number;
+  // Plafond fixe du capital placé, en euros (`Infinity` : aucun plafond).
+  ceiling: number;
 };
 
-// Une échelle française, du plus sûr au plus risqué ; le surplus de l'argent
-// remplit les comptes dans cet ordre (docs/game/placements.md). Rendements par
-// mois, ~1,2 % par an pour le Livret A, ~3,6 % pour le PEL, ~10 % pour le
-// compte-titres tant qu'aucun événement ne le fait bouger (`stocksRate`).
+// Trois comptes d'épargne à plafond fixe (ceux de la vraie vie), puis le
+// compte-titres, plus rémunérateur et sans plafond : le capital y devient
+// exponentiel (docs/game/placements.md). Rendements par mois : ~1,2 % par an
+// pour le Livret A et le LDDS, ~3 % pour le PEL, ~7,4 % pour le compte-titres
+// tant qu'aucun événement ne le fait bouger (`stocksRate`). Le surplus remplit
+// les comptes dans cet ordre.
 export const placements: readonly Placement[] = [
   {
     id: 'savings',
@@ -27,24 +28,33 @@ export const placements: readonly Placement[] = [
       'Sûr, liquide, défiscalisé, et presque aussi excitant que votre compte courant.',
     rate: 0.001,
     requirement: { type: 'reputationTier', tier: 1 },
-    ceilingPerReputation: 100,
+    ceiling: 22_950,
+  },
+  {
+    id: 'ldds',
+    name: 'Livret de développement durable et solidaire',
+    description:
+      'Le Livret A, en plus vert, et surtout en plus petit : on ne sait jamais ce qu’il développe.',
+    rate: 0.001,
+    requirement: { type: 'reputationTier', tier: 1 },
+    ceiling: 12_000,
   },
   {
     id: 'pel',
     name: 'Plan d’épargne logement',
     description:
       'Le placement de ceux qui ont « un projet », et qui l’ont depuis vingt ans.',
-    rate: 0.003,
+    rate: 0.0025,
     requirement: { type: 'reputationTier', tier: 2 },
-    ceilingPerReputation: 200,
+    ceiling: 61_200,
   },
   {
     id: 'stocks',
     name: 'Compte-titres',
     description:
-      'Rend plus, bouge avec l’actualité, et se vend « à moyen terme ».',
-    rate: 0.008,
+      'Rend plus, bouge avec l’actualité, se vend « à moyen terme », et n’a aucun plafond.',
+    rate: 0.006,
     requirement: { type: 'reputationTier', tier: 3 },
-    ceilingPerReputation: 300,
+    ceiling: Infinity,
   },
 ];

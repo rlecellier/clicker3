@@ -112,6 +112,7 @@ describe('forme de l’état', () => {
       'period',
       'periodSleepHours',
       'phase',
+      'placements.ldds',
       'placements.pel',
       'placements.savings',
       'placements.stocks',

@@ -25,14 +25,17 @@ test('finance : le surplus se place tout seul, du Livret A au compte-titres', as
 
   await openTab(page, 'finance');
   const savings = itemOf(page, 'Livret A');
+  const ldds = itemOf(page, 'Livret de développement durable et solidaire');
   const pel = itemOf(page, 'Plan d’épargne logement');
   const stocks = itemOf(page, 'Compte-titres');
 
-  // Le Livret A se remplit d'abord, jusqu'à son plafond (100 € par point de
-  // réputation gagné, 20 000 € pour 200 points), puis le PEL (200 €) : le reste va aux titres.
-  await expect(savings.getByText(/^20\s\d{3}\s€$/).first()).toBeVisible();
-  await expect(pel.getByText(/^40\s\d{3}\s€$/).first()).toBeVisible();
-  await expect(stocks.getByText(/^3\d\s\d{3}\s€$/).first()).toBeVisible();
+  // Les comptes d'épargne se remplissent dans l'ordre, chacun jusqu'à son
+  // plafond fixe ; le reste va au compte-titres, qui n'a pas de plafond.
+  await expect(savings.getByText(/^22\s950\s€$/).first()).toBeVisible();
+  await expect(ldds.getByText(/^12\s000\s€$/).first()).toBeVisible();
+  await expect(pel.getByText(/^61\s200\s€$/).first()).toBeVisible();
+  await expect(stocks.getByText(/^\d[\d\s]*\s€$/).first()).toBeVisible();
+  await expect(stocks.getByText(/sans plafond/)).toBeVisible();
 
   // Le total affiché est celui de tous les comptes, et le compte courant reste
   // au matelas (deux mois de dépenses).
@@ -41,7 +44,7 @@ test('finance : le surplus se place tout seul, du Livret A au compte-titres', as
     /9\d\s\d{3}\s€/,
   );
   await expect(page.getByText('Rendement attendu :')).toContainText(
-    /4\d{2}\s€/,
+    /Rendement attendu : [12]\d{2}\s€/,
   );
 
   // Les comptes ne se manipulent plus à la main.

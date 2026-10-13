@@ -16,12 +16,17 @@ import {
   rebalance,
 } from './placements';
 
-const [savings, pel, stocks] = placements;
-if (savings?.id !== 'savings' || pel?.id !== 'pel' || stocks?.id !== 'stocks') {
+const [savings, ldds, pel, stocks] = placements;
+if (
+  savings?.id !== 'savings' ||
+  ldds?.id !== 'ldds' ||
+  pel?.id !== 'pel' ||
+  stocks?.id !== 'stocks'
+) {
   throw new Error('placements introuvables');
 }
 
-// Marque (palier 3) : Livret A, PEL et compte-titres débloqués.
+// Marque (palier 3) : Livret A, LDDS, PEL et compte-titres débloqués.
 const rich: GameState = {
   ...startState,
   money: 0,
@@ -31,10 +36,11 @@ const rich: GameState = {
 };
 const buffer = bufferOf(rich);
 const savingsCeiling = ceilingOf(rich, 'savings');
+const lddsCeiling = ceilingOf(rich, 'ldds');
 const pelCeiling = ceilingOf(rich, 'pel');
 
 const unlocked = (reputationEarned: number) =>
-  (['savings', 'pel', 'stocks'] as const).filter((id) =>
+  (['savings', 'ldds', 'pel', 'stocks'] as const).filter((id) =>
     isPlacementUnlocked({ ...startState, reputationEarned }, id),
   );
 
@@ -44,20 +50,34 @@ describe('déblocage et plafond', () => {
     expect(ceilingOf(startState, 'savings')).toBe(0);
   });
 
-  it('monte l’échelle avec les paliers : Livret A, PEL, compte-titres', () => {
-    expect(unlocked(6)).toEqual(['savings']);
-    expect(unlocked(100)).toEqual(['savings', 'pel']);
-    expect(unlocked(170)).toEqual(['savings', 'pel', 'stocks']);
+  it('monte l’échelle avec les paliers : épargne, PEL, compte-titres', () => {
+    expect(unlocked(6)).toEqual(['savings', 'ldds']);
+    expect(unlocked(100)).toEqual(['savings', 'ldds', 'pel']);
+    expect(unlocked(170)).toEqual(['savings', 'ldds', 'pel', 'stocks']);
   });
 
   it('des rendements croissants, du plus sûr au plus risqué', () => {
-    expect(savings.rate).toBeLessThan(pel.rate);
-    expect(pel.rate).toBeLessThan(stocks.rate);
+    const rates = placements.map((placement) => placement.rate);
+    expect(rates).toEqual(rates.toSorted((first, second) => first - second));
+    expect(pel.rate).toBeGreaterThan(savings.rate);
+    // Le compte-titres rapporte plus que tous les comptes d'épargne.
+    expect(stocks.rate).toBeGreaterThan(pel.rate);
   });
 
-  it('proportionne le plafond à la réputation gagnée', () => {
-    expect(savingsCeiling).toBe(200 * savings.ceilingPerReputation);
-    expect(ceilingOf(rich, 'stocks')).toBe(200 * stocks.ceilingPerReputation);
+  it('fixe les plafonds : la réputation ne fait que débloquer le compte', () => {
+    expect(savingsCeiling).toBe(savings.ceiling);
+    expect(lddsCeiling).toBe(ldds.ceiling);
+    expect(pelCeiling).toBe(pel.ceiling);
+    expect(ceilingOf({ ...rich, reputationEarned: 5000 }, 'pel')).toBe(
+      pelCeiling,
+    );
+    expect(ceilingOf({ ...rich, reputationEarned: 6 }, 'savings')).toBe(
+      savingsCeiling,
+    );
+  });
+
+  it('ne met aucun plafond au compte-titres', () => {
+    expect(ceilingOf(rich, 'stocks')).toBe(Infinity);
   });
 });
 
@@ -71,7 +91,12 @@ describe('répartition automatique', () => {
 
   it('place le surplus dans le premier compte qui a de la place', () => {
     const next = rebalance({ ...rich, money: buffer + 5000 });
-    expect(next.placements).toEqual({ savings: 5000, pel: 0, stocks: 0 });
+    expect(next.placements).toEqual({
+      savings: 5000,
+      ldds: 0,
+      pel: 0,
+      stocks: 0,
+    });
     expect(next.money).toBe(buffer + 5000);
     expect(checkingOf(next)).toBe(buffer);
   });
@@ -79,21 +104,23 @@ describe('répartition automatique', () => {
   it('déborde sur le compte suivant quand un plafond est atteint', () => {
     const next = rebalance({
       ...rich,
-      money: buffer + savingsCeiling + pelCeiling + 100,
+      money: buffer + savingsCeiling + lddsCeiling + pelCeiling + 100,
     });
     expect(next.placements).toEqual({
       savings: savingsCeiling,
+      ldds: lddsCeiling,
       pel: pelCeiling,
       stocks: 100,
     });
   });
 
-  it('laisse le surplus sur le compte courant quand tout est plein', () => {
-    const full = rebalance({ ...rich, money: 10_000_000 });
-    expect(capitalOf(full)).toBe(
-      savingsCeiling + pelCeiling + ceilingOf(rich, 'stocks'),
+  it('le compte-titres absorbe tout le surplus, sans limite', () => {
+    const huge = 10_000_000_000;
+    const full = rebalance({ ...rich, money: huge });
+    expect(full.placements.stocks).toBe(
+      huge - buffer - savingsCeiling - lddsCeiling - pelCeiling,
     );
-    expect(checkingOf(full)).toBe(10_000_000 - capitalOf(full));
+    expect(checkingOf(full)).toBe(buffer);
   });
 
   it('n’ouvre pas un compte verrouillé', () => {
@@ -103,8 +130,10 @@ describe('répartition automatique', () => {
       reputationEarned: 6,
       money: 100_000,
     });
-    expect(next.placements.savings).toBe(600);
+    expect(next.placements.savings).toBe(savingsCeiling);
+    expect(next.placements.ldds).toBe(lddsCeiling);
     expect(next.placements.pel).toBe(0);
+    expect(next.placements.stocks).toBe(0);
   });
 
   it('une dépense puise d’abord dans le compte courant', () => {
@@ -119,10 +148,10 @@ describe('répartition automatique', () => {
       ...rich,
       money: buffer + savingsCeiling + 4000,
     });
-    expect(placed.placements.pel).toBe(4000);
+    expect(placed.placements.ldds).toBe(4000);
     const spent = rebalance({ ...placed, money: placed.money - buffer - 1000 });
     expect(spent.placements.savings).toBe(savingsCeiling - 1000);
-    expect(spent.placements.pel).toBe(4000);
+    expect(spent.placements.ldds).toBe(4000);
     expect(checkingOf(spent)).toBe(0);
   });
 
@@ -155,7 +184,7 @@ describe('rendement par période', () => {
     money: buffer + savingsCeiling + 10_000,
   });
   const expected =
-    Math.round(savingsCeiling * savings.rate) + Math.round(10_000 * pel.rate);
+    Math.round(savingsCeiling * savings.rate) + Math.round(10_000 * ldds.rate);
 
   it('verse le rendement sur le compte courant, puis le place', () => {
     const next = endPeriod(placed);
@@ -191,7 +220,7 @@ describe('rendement par période', () => {
 describe('événements', () => {
   const held = rebalance({
     ...rich,
-    money: buffer + savingsCeiling + pelCeiling + 10_000,
+    money: buffer + savingsCeiling + lddsCeiling + pelCeiling + 10_000,
   });
 
   it('la bulle fait monter le rendement des titres, le krach le fait chuter', () => {
@@ -209,6 +238,7 @@ describe('événements', () => {
     expect(next.placements.stocks).toBeLessThanOrEqual(10_000 + loss);
     expect(next.ledger.total.yields).toBeLessThan(
       Math.round(held.placements.savings * savings.rate) +
+        Math.round(held.placements.ldds * ldds.rate) +
         Math.round(held.placements.pel * pel.rate) +
         1,
     );
@@ -234,7 +264,7 @@ describe('dépenses de la période', () => {
       jobId: null,
       reputationEarned: 200,
       money: 5000,
-      placements: { savings: 5000, pel: 0, stocks: 0 },
+      placements: { savings: 5000, ldds: 0, pel: 0, stocks: 0 },
     };
     const due = fixedExpensesOf(state);
     const next = endPeriod(state);
