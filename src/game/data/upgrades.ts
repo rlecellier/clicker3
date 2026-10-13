@@ -54,7 +54,7 @@ const stat = (name: StatId, tier: number): Requirement => ({
   tier,
 });
 
-// Les 20 améliorations (docs/game/ameliorations-et-evenements.md).
+// Les améliorations (docs/game/ameliorations-et-evenements.md).
 // Prix et effets calés en V1-24 (docs/game/equilibrage.md).
 export const upgrades: readonly Upgrade[] = [
   // Formations
