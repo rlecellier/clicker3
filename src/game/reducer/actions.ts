@@ -1,4 +1,4 @@
-import type { GaugeKind } from '@game/state';
+import type { GaugeKind, PlacementId } from '@game/state';
 import type { NoveltyTab } from '@game/novelty';
 
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
@@ -23,6 +23,8 @@ export type GameAction =
   // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
   // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.
   | { type: 'autoTick'; elapsedMs: number }
+  // Rendez-vous chez le banquier terminé : le compte d'épargne s'ouvre.
+  | { type: 'openPlacement'; id: PlacementId }
   // Le joueur a lu le courrier : plus de message non lu.
   | { type: 'readMail' }
   // Réponse à la promotion proposée : accepter (augmentation) ou refuser.

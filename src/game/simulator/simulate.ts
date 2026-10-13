@@ -6,7 +6,7 @@ import { statIds } from '@game/state';
 import type { GameState, StatId } from '@game/state';
 import { tierOf } from '@game/stats';
 import { lastPeriodReport } from '@game/ledger';
-import { maxYield } from '@game/placements';
+import { maxYield, openablePlacements } from '@game/placements';
 import { simulatorConfig } from './config';
 import { chooseAction } from './strategy';
 
@@ -278,6 +278,10 @@ export const simulateLife = (
     state = hasAuto
       ? reduce(after, { type: 'autoTick', elapsedMs: stepMs })
       : after;
+    // Le joueur virtuel honore les rendez-vous chez le banquier aussitôt.
+    for (const id of openablePlacements(state)) {
+      state = reduce(state, { type: 'openPlacement', id });
+    }
     notePurchases(before);
     if (hasProgressed(before, state)) {
       noteProgress();

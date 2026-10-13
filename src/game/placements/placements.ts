@@ -1,4 +1,4 @@
-import { findById, placements } from '@game/data';
+import { findById, journalLimit, placements } from '@game/data';
 import type { Placement } from '@game/data';
 import { activeBonus } from '@game/effects';
 import { fixedExpensesOf } from '@game/economy';
@@ -9,18 +9,51 @@ import type { GameState, PlacementId } from '@game/state';
 
 export const placementById = (id: PlacementId) => findById(placements, id);
 
-export const isPlacementUnlocked = (state: GameState, id: PlacementId) => {
+// La réputation permet d'ouvrir le compte (il peut ne pas l'être encore).
+export const isPlacementEligible = (state: GameState, id: PlacementId) => {
   const placement = placementById(id);
   return (
     placement !== undefined && isRequirementMet(state, placement.requirement)
   );
 };
 
+// Compte ouvert chez le banquier : seul un compte ouvert reçoit du capital.
+export const isPlacementOpen = (state: GameState, id: PlacementId) =>
+  state.openedPlacements.includes(id) && isPlacementEligible(state, id);
+
+// Comptes que la réputation permet d'ouvrir et qui attendent un rendez-vous.
+export const openablePlacements = (state: GameState) =>
+  placementIds.filter(
+    (id) => isPlacementEligible(state, id) && !isPlacementOpen(state, id),
+  );
+
+// Ouvre un compte éligible (rendez-vous terminé) et l'écrit au courrier. Sans
+// effet si le compte n'est pas éligible ou déjà ouvert.
+export const openPlacement = (state: GameState, id: PlacementId): GameState => {
+  const placement = placementById(id);
+  if (placement === undefined || !openablePlacements(state).includes(id)) {
+    return state;
+  }
+  return {
+    ...state,
+    openedPlacements: [...state.openedPlacements, id],
+    mailReceived: state.mailReceived + 1,
+    events: [
+      ...state.events,
+      {
+        period: state.period,
+        id: `placement-open-${id}`,
+        text: `Votre ${placement.name} est ouvert. Votre conseiller vous recontactera pour vous proposer autre chose.`,
+      },
+    ].slice(-journalLimit),
+  };
+};
+
 // Plafond de capital placé : fixe (`Infinity` pour le compte-titres), 0 tant
-// que le placement n'est pas débloqué par la réputation.
+// que le compte n'est pas ouvert.
 export const ceilingOf = (state: GameState, id: PlacementId) => {
   const placement = placementById(id);
-  return placement === undefined || !isPlacementUnlocked(state, id)
+  return placement === undefined || !isPlacementOpen(state, id)
     ? 0
     : placement.ceiling;
 };
@@ -93,7 +126,11 @@ export const expectedYield = (state: GameState) =>
 
 // Rendement par période de la répartition actuelle, une fois le solde réparti
 // (mesure du simulateur : le joueur virtuel n'attend pas la clôture).
-export const maxYield = (state: GameState) => expectedYield(rebalance(state));
+// Le joueur virtuel ouvre tous les comptes dès qu'ils sont possibles.
+export const maxYield = (state: GameState) => {
+  const opened = [...state.openedPlacements, ...openablePlacements(state)];
+  return expectedYield(rebalance({ ...state, openedPlacements: opened }));
+};
 
 // Étape 4 : chaque placement rapporte à la période. Un gain est versé sur le
 // compte courant ; une perte (krach) retire du capital placé, donc du solde.

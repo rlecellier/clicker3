@@ -11,7 +11,10 @@ import {
   ceilingOf,
   checkingOf,
   expectedYield,
-  isPlacementUnlocked,
+  isPlacementEligible,
+  isPlacementOpen,
+  openablePlacements,
+  openPlacement,
   rateOf,
   rebalance,
 } from './placements';
@@ -26,9 +29,10 @@ if (
   throw new Error('placements introuvables');
 }
 
-// Marque (palier 3) : Livret A, LDDS, PEL et compte-titres débloqués.
+// Marque (palier 3) : Livret A, LDDS, PEL et compte-titres débloqués et ouverts.
 const rich: GameState = {
   ...startState,
+  openedPlacements: ['savings', 'ldds', 'pel', 'stocks'],
   money: 0,
   reputationEarned: 200,
   rent: 0,
@@ -41,12 +45,37 @@ const pelCeiling = ceilingOf(rich, 'pel');
 
 const unlocked = (reputationEarned: number) =>
   (['savings', 'ldds', 'pel', 'stocks'] as const).filter((id) =>
-    isPlacementUnlocked({ ...startState, reputationEarned }, id),
+    isPlacementEligible({ ...startState, reputationEarned }, id),
   );
+
+describe('ouverture chez le banquier', () => {
+  const eligible: GameState = { ...startState, reputationEarned: 6 };
+
+  it('un compte éligible reste fermé (plafond 0) tant qu’on ne l’a pas ouvert', () => {
+    expect(openablePlacements(eligible)).toEqual(['savings', 'ldds']);
+    expect(isPlacementOpen(eligible, 'savings')).toBe(false);
+    expect(ceilingOf(eligible, 'savings')).toBe(0);
+  });
+
+  it('l’ouverture ouvre le compte et l’écrit au courrier', () => {
+    const opened = openPlacement(deepFreeze(eligible), 'savings');
+    expect(isPlacementOpen(opened, 'savings')).toBe(true);
+    expect(ceilingOf(opened, 'savings')).toBeGreaterThan(0);
+    expect(openablePlacements(opened)).toEqual(['ldds']);
+    expect(opened.mailReceived).toBe(eligible.mailReceived + 1);
+    expect(opened.events.at(-1)?.id).toBe('placement-open-savings');
+  });
+
+  it('refuse un compte non éligible et ignore une seconde ouverture', () => {
+    expect(openPlacement(startState, 'savings')).toBe(startState);
+    const opened = openPlacement(eligible, 'savings');
+    expect(openPlacement(opened, 'savings')).toBe(opened);
+  });
+});
 
 describe('déblocage et plafond', () => {
   it('verrouille les placements au départ', () => {
-    expect(isPlacementUnlocked(startState, 'savings')).toBe(false);
+    expect(isPlacementEligible(startState, 'savings')).toBe(false);
     expect(ceilingOf(startState, 'savings')).toBe(0);
   });
 
@@ -126,6 +155,7 @@ describe('répartition automatique', () => {
   it('n’ouvre pas un compte verrouillé', () => {
     const next = rebalance({
       ...startState,
+      openedPlacements: ['savings', 'ldds', 'pel', 'stocks'],
       rent: 0,
       reputationEarned: 6,
       money: 100_000,
