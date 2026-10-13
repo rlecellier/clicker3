@@ -10,7 +10,7 @@ export type Boost = {
   duration: number;
   requirement: Requirement;
   // Effet temporaire posé dans `activeEffects` à l'achat.
-  kind: Exclude<ActiveEffect['kind'], 'sales' | 'workSlow'>;
+  kind: Exclude<ActiveEffect['kind'], 'sales' | 'workSlow' | 'stocksRate'>;
   value: number;
 };
 

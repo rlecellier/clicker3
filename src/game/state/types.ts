@@ -1,9 +1,12 @@
 import type { lifePhases } from './lifePhases';
+import type { placementIds } from './placements';
 import type { statIds } from './stats';
 
 export type GameStatus = 'playing' | 'dead';
 
 export type StatId = (typeof statIds)[number];
+
+export type PlacementId = (typeof placementIds)[number];
 
 export type LifePhase = (typeof lifePhases)[number];
 
@@ -24,7 +27,9 @@ export type ActiveEffect = {
     // d'étude en plus, sommeil converti en plus (+ facteur).
     | 'markerChance'
     | 'studyMarkers'
-    | 'sleepBoost';
+    | 'sleepBoost'
+    // Écart de rendement du compte titres par période (bulle, krach).
+    | 'stocksRate';
   value: number;
   // Période à partir de laquelle l'effet n'agit plus.
   until: number;
@@ -54,6 +59,8 @@ export type LedgerFigures = {
   wages: number;
   sales: number;
   surplus: number;
+  // Rendement des placements, versé sur le compte courant.
+  yields: number;
   otherIncome: number;
   // Dépenses (euros).
   rent: number;
@@ -154,6 +161,9 @@ export type GameState = {
 
   /** Euros entiers. */
   money: number;
+  // Capital placé par compte (euros) : il rapporte à chaque période mais ne
+  // compte pas dans `money`. Se retire à tout moment.
+  placements: Record<PlacementId, number>;
   stock: number;
   // Capacité de l'entrepôt : la production au-delà est perdue.
   stockCapacity: number;

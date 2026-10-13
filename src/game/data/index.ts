@@ -15,6 +15,8 @@ export { impactRules } from './impactRules';
 export type { EventEffect, GameEvent } from './events';
 export { jobs } from './jobs';
 export type { Job } from './jobs';
+export { placements } from './placements';
+export type { Placement } from './placements';
 export { reputationTiers } from './reputationTiers';
 export type { ReputationTier } from './reputationTiers';
 export { startState } from './startState';

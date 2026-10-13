@@ -189,7 +189,9 @@ describe('effets', () => {
 
     const after = triggerEvents({ ...during, period: 33 });
     expect(activeBonus(after, 'sales')).toBe(0);
-    expect(after.activeEffects).toEqual([]);
+    expect(after.activeEffects.map((effect) => effect.kind)).not.toContain(
+      'sales',
+    );
   });
 
   it('n’ajoute pas un effet temporaire déjà échu', () => {
