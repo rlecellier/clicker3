@@ -47,12 +47,18 @@ soi : à n'ouvrir que si la boucle de base est solide.
 
 | Idée                                                                  | Coût | Intérêt | Verdict   |
 | --------------------------------------------------------------------- | ---- | ------- | --------- |
-| Comptes (courant, épargne) avec rendement, sans blocage d'argent      | M    | ★★      | v2        |
-| Placements risqués (actions) sensibles aux événements                 | M    | ★★★     | v2 / v3   |
+| Comptes (courant, épargne) avec rendement, sans blocage d'argent      | M    | ★★      | v1.6 (#211) |
+| Placements risqués (actions) sensibles aux événements                 | M    | ★★★     | v1.6 (#211) |
 | Immobilier locatif                                                    | L    | ★★      | plus tard |
 | Basculement : le capital rapporte plus que les entreprises            | M    | ★★★     | à trancher |
 
-Détail et questions ouvertes dans [placements.md](placements.md).
+Suivi dans l'issue #211 (v1.6) ; le périmètre exact de la 1.6 (quels comptes
+et placements en premier) reste à trancher. Détail et questions ouvertes dans
+[placements.md](placements.md).
+
+Les événements qui changent un élément du jeu s'annoncent par une pop-up
+(issue #209, v1.6) : règle dans
+[ameliorations-et-evenements.md](ameliorations-et-evenements.md#présentation--pop-up-ou-courrier).
 
 ## La ville
 
@@ -103,11 +109,11 @@ demande un système d'événements aléatoires : prévoir un tirage reproductibl
 2. **v2 : plusieurs vies.** Changement de vie (transmission d'argent, de statut,
    de compétences ou d'idéologie, à trancher), deuxième départ et
    personnalisation, famille, quartiers aux propriétés différentes, chaînes
-   d'entreprises, activités illégales et police, premiers comptes et
+   d'entreprises, activités illégales et police, suite des
    placements ([placements.md](placements.md)). (Le bilan de fin de vie est
   déjà dans la v1.)
 3. **v3 : la ville vivante.** Politique, PNJ, amis et contacts, chaînes de
-   production, indicateurs d'impact qui agissent sur le jeu, placements
-   risqués et immobilier.
+   production, indicateurs d'impact qui agissent sur le jeu, immobilier
+   locatif.
 
 On ne passe à la tranche suivante que quand la précédente est amusante.

@@ -1,7 +1,7 @@
-# Placements et comptes (piste v2 / v3)
+# Placements et comptes
 
-> Statut : **idée**, hors v1. Rien n'est décidé ni chiffré ; ce document garde
-> la piste pour ne pas la perdre. Périmètre v1 : [v1.md](v1.md).
+> Statut : **piste suivie par l'issue #211 (v1.6)**. Rien n'est décidé ni
+> chiffré ; les questions ouvertes ci-dessous sont à trancher avant de coder. Périmètre v1 : [v1.md](v1.md).
 
 ## Constat
 
@@ -54,7 +54,7 @@ phase de la partie (le joueur devient rentier). Conséquences à étudier :
 
 ## Questions ouvertes
 
-1. Les placements entrent-ils en v2 (avec l'héritage) ou en v3 (ville vivante) ?
+1. Quels comptes et placements entrent dans la 1.6, lesquels attendent la v2 (héritage) ou la v3 (immobilier) ?
 2. Rendement garanti ou aléatoire ? Un seul niveau de risque pour commencer ?
 3. Faut-il des frais, un plafond ou une fiscalité pour éviter qu'un placement
    domine tout dès qu'il est débloqué ?
