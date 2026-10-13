@@ -35,6 +35,15 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await expect(page).toHaveURL('/jeu/vie');
   await page.getByRole('button', { name: /Travailler/ }).click();
 
+  // L'en-tête dit ce que fait le personnage ; les étoiles de réputation sont
+  // dans la barre de titre de la fenêtre Vie, plus dans l'en-tête.
+  await expect(page.getByRole('banner').getByText('Au travail')).toBeVisible();
+  await expect(
+    page
+      .getByRole('region', { name: 'Ma vie à Sainte-Croissance' })
+      .getByRole('img', { name: /^Réputation/ }),
+  ).toBeVisible();
+
   // À 480 px, la sidebar est à gauche et en icônes seules, mais chaque onglet
   // garde son nom accessible.
   const sidebar = page.getByRole('navigation', { name: 'Navigation du jeu' });
