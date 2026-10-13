@@ -75,7 +75,8 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   ).toBeVisible();
   await openTab(page, 'ameliorations');
   await openTab(page, 'profil');
-  // La durée du sommeil se règle au toucher ; l'horaire annoncé suit.
+  await openTab(page, 'vie');
+  // La durée du sommeil se règle au toucher, sous Étudier ; l'horaire annoncé suit.
   await expect(
     page.getByRole('status').filter({ hasText: 'Long : coucher 23 h' }),
   ).toBeVisible();

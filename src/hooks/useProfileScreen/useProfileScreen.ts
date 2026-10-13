@@ -1,9 +1,7 @@
 import { useGameContext } from '@context/GameContext';
 import { formatCount, formatDecimal, statLabels } from '@game/format';
-import { actionRules } from '@game/data';
 import { jobById } from '@game/jobs';
 import { reputationTierProgress } from '@game/reputation';
-import { chosenSchedule, sleepGauge, sleepMarkers } from '@game/sleep';
 import { statIds } from '@game/state';
 import { statProgress } from '@game/stats';
 import { availableUpgrades } from '@game/upgrades';
@@ -37,16 +35,6 @@ export const useProfileScreen = () => {
     max: reputation.max,
   };
 
-  const schedule = chosenSchedule(state);
-  const isPending = state.sleepHours !== state.periodSleepHours;
-  const sleepOptions = Object.entries(actionRules.sleep.schedule).map(
-    ([hours, { name }]) => ({
-      hours: Number(hours),
-      label: `${name} · ${hours} h`,
-    }),
-  );
-  const markers = sleepMarkers(state, state.sleepHours);
-
   return {
     header: characterHeader(state),
     job:
@@ -59,11 +47,5 @@ export const useProfileScreen = () => {
       upgradeItem(state, upgrade, actions.buyUpgrade),
     ),
     reputation: formatDecimal(state.reputation),
-    sleep: {
-      options: sleepOptions,
-      value: state.sleepHours,
-      select: actions.setSleepHours,
-      summary: `${schedule.name} : coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${markers} marqueurs${schedule.left > 0 ? ` (${schedule.left} restent pour la nuit suivante)` : ' (tout le cerveau)'}.${isPending ? ' À partir de la période suivante.' : ''}`,
-    },
   };
 };

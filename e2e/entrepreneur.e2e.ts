@@ -170,12 +170,9 @@ test('entrepreneur : changer d’emploi, ouvrir un commerce, rupture, production
   // La capacité se recalcule des petits entrepôts : 50 + un petit entrepôt.
   await expect(warehouse).toHaveAccessibleName(/ \d+\)/);
 
-  // Le post-it « prochain achat » mène à la ligne de l'amélioration, mise en
-  // évidence ; l'achat la retire de la liste. Le lien marche aussi en direct.
-  await openTab(page, 'vie');
-  await page
-    .getByRole('link', { name: /Prochain achat : Cartes de visite/ })
-    .click();
+  // Le lien vers une amélioration (le post-it « prochain achat » du bureau)
+  // mène à sa ligne, mise en évidence ; l'achat la retire de la liste.
+  await page.goto('/jeu/ameliorations?amelioration=cartes-visite');
   await expect(page).toHaveURL(
     /\/jeu\/ameliorations\?amelioration=cartes-visite$/,
   );

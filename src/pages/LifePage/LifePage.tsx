@@ -4,6 +4,7 @@ import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { ReputationStars } from '@component/ReputationStars';
+import { SleepPicker } from '@component/SleepPicker';
 import { SplitActionButton } from '@component/SplitActionButton';
 import { ResourceTile } from '@component/ResourceTile';
 import { Window } from '@component/Window';
@@ -42,9 +43,12 @@ export const LifePage = () => {
         actions={<ReputationStars {...screen.reputation} />}
       >
         <CharacterHeader {...screen.header} />
-        <Note minLines={2} to={screen.objective.to}>
-          {screen.objective.text}
-        </Note>
+        {/* Sur mobile, la pastille de la sidebar remplace cette note. */}
+        <div className={styles.objective}>
+          <Note minLines={2} to={screen.objective.to}>
+            {screen.objective.text}
+          </Note>
+        </div>
         <div className={styles.actions}>
           <ActionButton
             label="Travailler"
@@ -65,6 +69,12 @@ export const LifePage = () => {
             aria-hidden={study.action === null ? 'true' : undefined}
             inert={study.action === null}
           >
+            <ProgressBar
+              size="small"
+              label={study.gauge?.label ?? '\u{A0}'}
+              value={study.gauge?.value ?? 0}
+              max={study.gauge?.max ?? 1}
+            />
             <SplitActionButton
               label="Étudier"
               detail={study.action?.detail ?? ' '}
@@ -78,12 +88,6 @@ export const LifePage = () => {
               shortcut={study.action === null ? undefined : STUDY_SHORTCUT}
               onClick={study.action?.run ?? noop}
             />
-            <ProgressBar
-              size="small"
-              label={study.gauge?.label ?? '\u{A0}'}
-              value={study.gauge?.value ?? 0}
-              max={study.gauge?.max ?? 1}
-            />
           </div>
           <ActionButton
             label="Vendre le surplus"
@@ -94,6 +98,12 @@ export const LifePage = () => {
             onClick={sellSurplus.run}
           />
         </div>
+        <SleepPicker
+          options={screen.sleep.options}
+          value={screen.sleep.value}
+          onChange={screen.sleep.select}
+          summary={screen.sleep.summary}
+        />
         <p className={styles.feedback} role="status">
           {screen.feedback}
         </p>

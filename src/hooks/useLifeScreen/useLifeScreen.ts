@@ -5,15 +5,17 @@ import { canSellSurplus } from '@game/surplus';
 import {
   describeRequirement,
   formatBalance,
+  formatDecimal,
   formatMoney,
   statLabels,
 } from '@game/format';
 import { jobById } from '@game/jobs';
 import { periodOutlook } from '@game/period';
-import { reputationTiers } from '@game/data';
+import { actionRules, reputationTiers } from '@game/data';
 import { reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
+import { chosenSchedule, sleepGauge, sleepMarkers } from '@game/sleep';
 import { canStudy, studiableCourses } from '@game/study';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { isOvertime, overtimeWageFactor } from '@game/overtime';
@@ -194,6 +196,17 @@ export const useLifeScreen = () => {
 
   const { tier, name } = reputationTierProgress(state);
 
+  // Durée du sommeil quotidien : court, moyen ou long, sous « Étudier ».
+  const schedule = chosenSchedule(state);
+  const isSleepPending = state.sleepHours !== state.periodSleepHours;
+  const sleepOptions = Object.entries(actionRules.sleep.schedule).map(
+    ([hours, { name: label }]) => ({
+      hours: Number(hours),
+      label: `${label} · ${hours} h`,
+    }),
+  );
+  const sleepEmptied = sleepMarkers(state, state.sleepHours);
+
   return {
     isOver,
     header: characterHeader(state),
@@ -222,6 +235,12 @@ export const useLifeScreen = () => {
       sleepSteps: state.sleepTotal,
     },
     actions: { work, sellSurplus },
+    sleep: {
+      options: sleepOptions,
+      value: state.sleepHours,
+      select: actions.setSleepHours,
+      summary: `${schedule.name} : coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${sleepEmptied} marqueurs${schedule.left > 0 ? ` (${schedule.left} restent pour la nuit suivante)` : ' (tout le cerveau)'}.${isSleepPending ? ' À partir de la période suivante.' : ''}`,
+    },
     study: {
       action: studyView,
       gauge: studyGauge,
