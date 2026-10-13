@@ -216,8 +216,12 @@ describe('invariants sur une partie jouée', () => {
   const play = (steps: number) => {
     const states = [rich];
     for (let index = 0; index < steps; index++) {
-      const action = script[index % script.length];
       const previous = states.at(-1);
+      // Une promotion arrête le jeu : on l'accepte pour continuer à jouer.
+      const action: GameAction | undefined =
+        previous?.pendingPromotion === null
+          ? script[index % script.length]
+          : { type: 'answerPromotion', isAccepted: true };
       if (action !== undefined && previous !== undefined) {
         states.push(reduce(previous, action));
       }

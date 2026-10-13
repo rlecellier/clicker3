@@ -184,6 +184,13 @@ describe('sommeil', () => {
 });
 
 describe('catchUp', () => {
+  it('ne s’arrête pas à une promotion : l’offre attend le retour', () => {
+    const { state } = catchUp(workOnly, 100 * autoIntervalMs);
+    expect(state.period).toBeGreaterThan(10);
+    expect(state.pendingPromotion).not.toBeNull();
+    expect(state.promotionsOffered).toEqual({});
+  });
+
   const periodMs =
     (startState.gaugeCapacity / actionRules.work.gauge) * autoIntervalMs;
 
@@ -203,8 +210,13 @@ describe('catchUp', () => {
   });
 
   it('donne le même état qu’une suite de tics', () => {
-    const viaCatchUp = catchUp(workOnly, 40 * autoIntervalMs).state;
-    let viaTicks = workOnly;
+    // Sans promotion en route : en direct elle arrêterait les tics.
+    const noPromotion = {
+      ...workOnly,
+      promotionsOffered: { [firstJob?.id ?? '']: 3 },
+    };
+    const viaCatchUp = catchUp(noPromotion, 40 * autoIntervalMs).state;
+    let viaTicks = noPromotion;
     for (let index = 0; index < 40; index++) {
       viaTicks = autoTick(viaTicks, autoIntervalMs);
     }

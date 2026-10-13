@@ -30,6 +30,9 @@ export type ActiveEffect = {
   until: number;
 };
 
+// Promotion proposée : l'emploi et son rang (0 à 2, la première est le rang 0).
+export type PendingPromotion = { jobId: string; rank: number };
+
 // Drapeaux de la dernière période résolue, lus par les conditions
 // (`statement`). Les montants et les flux sont dans le `Ledger`.
 export type PeriodStatement = {
@@ -223,6 +226,13 @@ export type GameState = {
   activeEffects: ActiveEffect[];
   // Facteur de salaire par emploi (1 si absent).
   jobSalaryFactors: Record<string, number>;
+  // Actions de travail en heures supplémentaires faites à chaque emploi (id),
+  // cumulées sur la vie.
+  overtimeActions: Record<string, number>;
+  // Promotions déjà proposées par emploi (id), acceptées ou refusées.
+  promotionsOffered: Record<string, number>;
+  // Promotion qui attend une réponse : le jeu est arrêté tant qu'elle est là.
+  pendingPromotion: PendingPromotion | null;
 
   // Interrupteurs des actions automatiques (activables une fois achetées).
   autoWork: boolean;

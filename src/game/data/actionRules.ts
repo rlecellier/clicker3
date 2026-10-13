@@ -23,6 +23,14 @@ export const actionRules = {
       ],
       gaugeSurcharge: 0.35,
     },
+    // Promotions (issue #195) : un emploi offre jusqu'à trois promotions,
+    // chacune quand le joueur a fait ce nombre cumulé d'actions de travail en
+    // heures supplémentaires à cet emploi. Le jeu s'arrête : accepter garde le
+    // poste, payé `raise` de plus (cumulé) ; refuser ne change rien.
+    promotion: {
+      overtimeActions: [10, 30, 60],
+      raise: 0.1,
+    },
   },
   study: {
     gauge: 15,

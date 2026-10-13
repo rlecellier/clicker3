@@ -22,6 +22,8 @@ export type GameAction =
   | { type: 'autoTick'; elapsedMs: number }
   // Le joueur a lu le courrier : plus de message non lu.
   | { type: 'readMail' }
+  // Réponse à la promotion proposée : accepter (augmentation) ou refuser.
+  | { type: 'answerPromotion'; isAccepted: boolean }
   // Le joueur a ouvert un onglet : ses nouveautés sont vues.
   | { type: 'markSeen'; tab: NoveltyTab }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi
