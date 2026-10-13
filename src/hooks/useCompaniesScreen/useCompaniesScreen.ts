@@ -19,9 +19,10 @@ import {
 } from '@game/economy';
 import { formatCount, formatDecimal, formatMoney } from '@game/format';
 import type { GameState } from '@game/state';
-import { warehouseCapacity } from '@game/upgrades';
+import { availableUpgrades, warehouseCapacity } from '@game/upgrades';
 import { useGameActions } from '@hook/useGameActions';
 import { districtItem } from '@view/districtItem';
+import { upgradeItem } from '@view/upgradeItems';
 import {
   NO_MONEY,
   missingConditions,
@@ -138,5 +139,9 @@ export const useCompaniesScreen = () => {
     },
     companies: [...companyItems, warehouseItem],
     districts: districtItems,
+    // Les améliorations qui touchent les entreprises, achetables d'ici.
+    upgrades: availableUpgrades(state, 'company').map((upgrade) =>
+      upgradeItem(state, upgrade, actions.buyUpgrade),
+    ),
   };
 };

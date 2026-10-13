@@ -3,10 +3,11 @@
 [Sommaire](README.md) · Raccourci : touche 5 · Précédent : [Emploi](onglet-emploi.md) · Suite : [Améliorations](onglet-ameliorations.md)
 
 C'est là que l'argent (et la réputation) se dépense pour bâtir son affaire. La
-page est découpée en deux sous-onglets, **À acheter** et **Quartiers**, sous une
-barre d'entrepôt. Une pastille de nouveautés compte ce qui vient de se
-débloquer. Les améliorations ont leur propre onglet,
-[Améliorations](onglet-ameliorations.md).
+page est découpée en trois sous-onglets, **À acheter**, **Quartiers** et
+**Améliorations**, sous une barre d'entrepôt. Une pastille de nouveautés compte ce qui vient de se
+débloquer. Le sous-onglet Améliorations ne montre que celles qui
+touchent vos entreprises (stock, employés, montée en gamme) ; elles s'achètent
+aussi depuis l'onglet [Améliorations](onglet-ameliorations.md), qui les réunit toutes.
 
 ## La barre d'entrepôt
 
@@ -69,3 +70,11 @@ Les quartiers se débloquent aussi depuis l'onglet [Ville](onglet-ville.md).
 | Les Hauts-Fourneaux         | 1    | Palier 1 de réputation (6 gagnés)              |
 | Parc d'activités Horizon    | 22   | Palier 2 de réputation (100 gagnés)            |
 | Le Pôle d'Excellence        | 33   | Palier 3 de réputation (170 gagnés)            |
+
+## Améliorations
+
+Les améliorations qui touchent vos entreprises : agrandissements de l'entrepôt,
+employés, montée en gamme de chaque type d'entreprise, bonus de ventes. Ce sont
+les mêmes lignes et les mêmes achats que dans l'onglet
+[Améliorations](onglet-ameliorations.md), simplement filtrées : acheter ici ou
+là donne le même résultat. Une amélioration achetée passe dans « Obtenues ».

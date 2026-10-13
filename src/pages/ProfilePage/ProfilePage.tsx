@@ -1,6 +1,9 @@
 import { CharacterHeader } from '@component/CharacterHeader';
+import { ItemList } from '@component/ItemList';
+import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
+import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
 import { useProfileScreen } from '@hook/useProfileScreen';
 import { useSeenTab } from '@hook/useSeenTab';
@@ -20,15 +23,36 @@ export const ProfilePage = () => {
           <Stat label="Réputation disponible" value={screen.reputation} />
         </dl>
       </Window>
-      <Window title="Compétences et réputation">
-        {screen.stats.map((stat) => (
-          <ProgressBar
-            key={stat.id}
-            label={stat.label}
-            value={stat.value}
-            max={stat.max}
-          />
-        ))}
+      <Window title="Compétences et améliorations">
+        <Tabs
+          tabs={[
+            {
+              id: 'skills',
+              label: 'Compétences',
+              content: screen.stats.map((stat) => (
+                <ProgressBar
+                  key={stat.id}
+                  label={stat.label}
+                  value={stat.value}
+                  max={stat.max}
+                />
+              )),
+            },
+            {
+              id: 'upgrades',
+              label: 'Améliorations',
+              content:
+                screen.upgrades.length === 0 ? (
+                  <Note>Plus d’amélioration personnelle à acheter.</Note>
+                ) : (
+                  <ItemList
+                    caption="Améliorations personnelles"
+                    items={screen.upgrades}
+                  />
+                ),
+            },
+          ]}
+        />
       </Window>
     </>
   );

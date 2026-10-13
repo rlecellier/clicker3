@@ -100,9 +100,11 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     () => clickThroughPromotion(page, work),
     async () => (await money()) >= 150,
   );
-  await openUpgrades();
+  // Le stage change la personne : il s'achète aussi depuis Profil.
+  await openTab(page, 'profil');
+  await page.getByRole('tab', { name: 'Améliorations' }).click();
   await stage.getByRole('button', { name: 'Acheter' }).click();
-  await page.getByRole('tab', { name: 'Obtenues' }).click();
+  await openOwned();
   await expect(
     owned.getByText('Stage « Posture professionnelle »'),
   ).toBeVisible();

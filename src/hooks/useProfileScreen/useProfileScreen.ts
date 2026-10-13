@@ -4,12 +4,16 @@ import { jobById } from '@game/jobs';
 import { reputationTierProgress } from '@game/reputation';
 import { statIds } from '@game/state';
 import { statProgress } from '@game/stats';
+import { availableUpgrades } from '@game/upgrades';
+import { useGameActions } from '@hook/useGameActions';
 import { characterHeader } from '@view/characterHeader';
+import { upgradeItem } from '@view/upgradeItems';
 
 // Onglet Profil : la fiche du personnage, puis une barre par stat et la
 // réputation au même format (son palier se calcule sur le cumul gagné).
 export const useProfileScreen = () => {
   const { state } = useGameContext();
+  const actions = useGameActions();
 
   const skillBars = statIds.map((id) => {
     const progress = statProgress(state, id);
@@ -38,6 +42,10 @@ export const useProfileScreen = () => {
         ? 'Sans emploi'
         : (jobById(state.jobId)?.name ?? '—'),
     stats: [...skillBars, reputationBar],
+    // Les améliorations qui touchent la personne, achetables d'ici.
+    upgrades: availableUpgrades(state, 'person').map((upgrade) =>
+      upgradeItem(state, upgrade, actions.buyUpgrade),
+    ),
     reputation: formatDecimal(state.reputation),
   };
 };

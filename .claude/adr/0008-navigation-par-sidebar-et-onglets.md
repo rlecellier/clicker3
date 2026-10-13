@@ -49,7 +49,7 @@ L'onglet actif vient de l'URL : recharger la page ou revenir en arrière doit
 garder l'onglet. `Sidebar` est donc faite de vrais liens `NavLink`
 (`aria-current="page"` sur l'onglet actif, clic droit et nouvel onglet qui
 fonctionnent), dans un `<nav aria-label="Navigation du jeu">`. Le composant
-`Tabs` (Base UI) reste réservé aux sous-onglets d'une page (Entreprises, Améliorations, Comptes),
+`Tabs` (Base UI) reste réservé aux sous-onglets d'une page (Entreprises, Améliorations, Profil, Comptes),
 dont l'état n'a pas à vivre dans l'URL.
 
 ### 4. Seuil mobile

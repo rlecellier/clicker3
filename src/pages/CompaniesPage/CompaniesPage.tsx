@@ -1,4 +1,5 @@
 import { ItemList } from '@component/ItemList';
+import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { Tabs } from '@component/Tabs';
 import { Window } from '@component/Window';
@@ -31,6 +32,19 @@ export const CompaniesPage = () => {
             id: 'districts',
             label: 'Quartiers',
             content: <ItemList caption="Quartiers" items={screen.districts} />,
+          },
+          {
+            id: 'upgrades',
+            label: 'Améliorations',
+            content:
+              screen.upgrades.length === 0 ? (
+                <Note>Plus d’amélioration d’entreprise à acheter.</Note>
+              ) : (
+                <ItemList
+                  caption="Améliorations des entreprises"
+                  items={screen.upgrades}
+                />
+              ),
           },
         ]}
       />
