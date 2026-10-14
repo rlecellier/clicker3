@@ -17,6 +17,8 @@ export { impactRules } from './impactRules';
 export type { EventEffect, GameEvent } from './events';
 export { jobs } from './jobs';
 export type { Job } from './jobs';
+export { lifeSlices } from './lifeSlices';
+export type { LifeSlice } from './lifeSlices';
 export { placements } from './placements';
 export type { Placement } from './placements';
 export { reputationTiers } from './reputationTiers';

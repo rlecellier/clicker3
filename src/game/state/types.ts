@@ -1,4 +1,5 @@
 import type { lifePhases } from './lifePhases';
+import type { lifeSliceIds } from './lifeSlices';
 import type { placementIds } from './placements';
 import type { statIds } from './stats';
 
@@ -9,6 +10,7 @@ export type StatId = (typeof statIds)[number];
 export type PlacementId = (typeof placementIds)[number];
 
 export type LifePhase = (typeof lifePhases)[number];
+export type LifeSliceId = (typeof lifeSliceIds)[number];
 
 // Ligne du journal : un événement survenu, avec son texte final.
 export type JournalEntry = {
@@ -180,6 +182,10 @@ export type GameState = {
   gaugeCapacity: number;
   status: GameStatus;
   phase: LifePhase;
+  /** Tranche de vie où la partie a commencé (docs/game/tranches-de-vie.md). */
+  lifeSlice: LifeSliceId;
+  /** Compteur du bouton d'une tranche avant 18 ans (0 ailleurs). */
+  growth: number;
 
   /** Euros entiers. */
   money: number;
