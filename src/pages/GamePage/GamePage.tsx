@@ -9,6 +9,7 @@ import { useFinalUpgradePrompt } from '@hook/useFinalUpgradePrompt';
 import { useGameHeader } from '@hook/useGameHeader';
 import { useGameTabs } from '@hook/useGameTabs';
 import { usePromotionPrompt } from '@hook/usePromotionPrompt';
+import { useLifeSlice } from '@hook/useLifeSlice';
 import { useGameShortcuts } from '@hook/useKeyboardShortcuts';
 import styles from './GamePage.module.css';
 
@@ -18,6 +19,7 @@ import styles from './GamePage.module.css';
 export const GamePage = () => {
   const { tabs, footer } = useGameTabs();
   const header = useGameHeader();
+  const { hasGrowth } = useLifeSlice();
   const promotion = usePromotionPrompt();
   const birthday = useBirthdayPrompt();
   const finale = useFinalUpgradePrompt();
@@ -37,7 +39,7 @@ export const GamePage = () => {
         footer={{ ...footer, icon: <SidebarIcon id="new-life" /> }}
       />
       <div className={styles.main}>
-        <GameHeader {...header} />
+        {hasGrowth ? null : <GameHeader {...header} />}
         <main className={styles.content}>
           <div className={styles.page}>
             <Outlet context={courseChoice} />

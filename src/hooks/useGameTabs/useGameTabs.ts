@@ -1,4 +1,5 @@
 import { useGameContext } from '@context/GameContext';
+import { sliceTabs } from '@game/lifeSlices';
 import { findById } from '@game/data';
 import { unreadMail } from '@game/mail';
 import { newItems, noveltyTabs } from '@game/novelty';
@@ -87,47 +88,54 @@ const noveltyLabel = (label: string, count: number) =>
 export const useGameTabs = () => {
   const { state } = useGameContext();
   const unread = unreadMail(state);
+  const openTabs = sliceTabs(state);
   return {
-    tabs: gameTabs.map((tab, index) => {
-      const item = {
-        id: tab.id,
-        label: tab.label,
-        to: tabPath(tab.id),
-        shortcut: tabShortcut(index),
-      };
-      if (tab.id === 'mail') {
-        return {
-          ...item,
-          badge: countBadge(unread),
-          badgeTone: 'alert' as const,
-          accessibleLabel: mailLabel(unread),
+    // Les touches 1 à 9 restent celles de la liste complète : un onglet fermé
+    // dans la tranche ne décale pas les autres.
+    tabs: gameTabs
+      .map((tab, index) => ({ tab, index }))
+      .filter(({ tab }) => openTabs.includes(tab.id))
+      .map(({ tab, index }) => {
+        const item = {
+          id: tab.id,
+          label: tab.label,
+          to: tabPath(tab.id),
+          shortcut: tabShortcut(index),
         };
-      }
-      if (tab.id === 'finance') {
-        // Comptes à ouvrir : rendez-vous chez le banquier.
-        const count = openablePlacements(state).length;
-        return {
-          ...item,
-          badge: countBadge(count),
-          badgeTone: 'info' as const,
-          accessibleLabel: noveltyLabel(tab.label, count),
-        };
-      }
-      if (isNoveltyTab(tab.id)) {
-        const count = newItems(state, tab.id).length;
-        return {
-          ...item,
-          badge: countBadge(count),
-          badgeTone: 'info' as const,
-          accessibleLabel: noveltyLabel(tab.label, count),
-        };
-      }
-      return item;
-    }),
+        if (tab.id === 'mail') {
+          return {
+            ...item,
+            badge: countBadge(unread),
+            badgeTone: 'alert' as const,
+            accessibleLabel: mailLabel(unread),
+          };
+        }
+        if (tab.id === 'finance') {
+          // Comptes à ouvrir : rendez-vous chez le banquier.
+          const count = openablePlacements(state).length;
+          return {
+            ...item,
+            badge: countBadge(count),
+            badgeTone: 'info' as const,
+            accessibleLabel: noveltyLabel(tab.label, count),
+          };
+        }
+        if (isNoveltyTab(tab.id)) {
+          const count = newItems(state, tab.id).length;
+          return {
+            ...item,
+            badge: countBadge(count),
+            badgeTone: 'info' as const,
+            accessibleLabel: noveltyLabel(tab.label, count),
+          };
+        }
+        return item;
+      }),
     footer: {
       id: 'new-life',
       label: 'Recommencer',
-      to: screenPaths.newLife,
+      // Le choix du premier emploi n'existe qu'en Jeunesse.
+      to: state.lifeSlice === 'youth' ? screenPaths.newLife : screenPaths.title,
     },
   };
 };

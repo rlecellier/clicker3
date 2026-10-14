@@ -11,11 +11,12 @@ import { EndPage } from '@page/EndPage';
 import { FinancePage } from '@page/FinancePage';
 import { GamePage } from '@page/GamePage';
 import { JobsPage } from '@page/JobsPage';
-import { LifePage } from '@page/LifePage';
+import { LifeTabPage } from '@page/LifeTabPage';
 import { MailPage } from '@page/MailPage';
 import { NewLifePage } from '@page/NewLifePage';
 import { ProfilePage } from '@page/ProfilePage';
 import { ScreenGuard } from '@page/ScreenGuard';
+import { TabGuard } from '@page/TabGuard';
 import { StyleguidePage } from '@page/StyleguidePage';
 import { TitlePage } from '@page/TitlePage';
 import { UpgradesPage } from '@page/UpgradesPage';
@@ -25,7 +26,7 @@ const toDefaultTab = <Navigate to={tabPath(DEFAULT_TAB)} replace />;
 // La page de chaque onglet : un onglet sans page ne compile pas.
 const tabPages: Record<GameTabId, ReactNode> = {
   mail: <MailPage />,
-  life: <LifePage />,
+  life: <LifeTabPage />,
   profile: <ProfilePage />,
   jobs: <JobsPage />,
   companies: <CompaniesPage />,
@@ -38,7 +39,7 @@ const tabPages: Record<GameTabId, ReactNode> = {
 // Une route `/jeu/<slug>` par onglet, dans l'ordre de la sidebar.
 const tabRoutes = gameTabs.map((tab) => ({
   path: tab.slug,
-  element: tabPages[tab.id],
+  element: <TabGuard tab={tab.id}>{tabPages[tab.id]}</TabGuard>,
 }));
 
 // `/styleguide` n'existe qu'en développement.

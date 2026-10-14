@@ -1,0 +1,1 @@
+export { useLifeSlice } from './useLifeSlice';

@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { isTimeRunning, resume } from '@game/automation';
 import { reduce } from '@game/reducer';
-import type { GameState } from '@game/state';
+import type { GameState, LifeSliceId } from '@game/state';
 import { saveGame } from '@game/save';
 import { bootGame } from './bootGame';
 import { GameContext } from './GameContext';
@@ -129,8 +129,8 @@ export const GameProvider = ({
     }
   }, [startCount, save]);
 
-  const startGame = useCallback((jobId: string) => {
-    dispatch({ type: 'restart', jobId });
+  const startGame = useCallback((jobId?: string, lifeSlice?: LifeSliceId) => {
+    dispatch({ type: 'restart', jobId, lifeSlice });
     setAbsence(null);
     setHasSave(true);
     setStartCount((count) => count + 1);

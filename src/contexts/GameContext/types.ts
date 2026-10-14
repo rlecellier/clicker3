@@ -2,7 +2,7 @@ import type { Dispatch, ReactNode } from 'react';
 import type { AbsenceSummary } from '@game/automation';
 import type { GameAction } from '@game/reducer';
 import type { SaveStorage } from '@game/save';
-import type { GameState } from '@game/state';
+import type { GameState, LifeSliceId } from '@game/state';
 
 // Horloge injectable (ms) : les règles ne la lisent jamais, seul le provider.
 export type GameClock = () => number;
@@ -15,8 +15,9 @@ export type GameContextValue = {
   dismissAbsence: () => void;
   // Une partie est sauvegardée : sans elle, on reste à l'écran titre.
   hasSave: boolean;
-  // Commence une vie neuve avec ce premier emploi et la sauvegarde.
-  startGame: (jobId: string) => void;
+  // Commence une vie neuve avec ce premier emploi (ou dans cette tranche de
+  // vie, Jeunesse par défaut) et la sauvegarde.
+  startGame: (jobId?: string, lifeSlice?: LifeSliceId) => void;
   // Efface la sauvegarde et revient à une vie neuve non sauvegardée.
   eraseSave: () => void;
 };

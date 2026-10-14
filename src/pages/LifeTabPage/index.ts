@@ -1,0 +1,1 @@
+export { LifeTabPage } from './LifeTabPage';
