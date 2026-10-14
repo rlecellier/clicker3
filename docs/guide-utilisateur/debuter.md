@@ -10,8 +10,15 @@ mouvement. ».
 | Bouton                    | Quand il apparaît           | Effet                                                                                      |
 | ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
 | Démarrer ma vie           | Toujours                    | Mène au choix du premier emploi                                                            |
+| Petite enfance, Enfance, Adolescence | Toujours (sous « Ou commencer plus tôt : ») | Commence une tranche de vie d'avant 18 ans : un seul onglet, Vie, avec un bouton et un compteur. Demande confirmation si une vie est en cours |
 | Reprendre                 | Si une partie est sauvegardée | Reprend la vie en cours là où vous l'avez laissée                                          |
 | Effacer la sauvegarde     | Si une partie est sauvegardée | Demande confirmation (« Votre exercice sera clos sans bilan »), puis supprime la sauvegarde |
+
+« Démarrer ma vie » est la tranche **Jeunesse**, le jeu complet décrit dans
+ce guide. Les trois autres tranches sont à peine ébauchées : l'onglet Vie
+propose un bouton (« Gazouiller », « Jouer » ou « Se chercher ») qui fait monter
+un compteur (« Éveil », « Curiosité » ou « Identité »), sans autre effet pour
+l'instant. Détails : [tranches de vie](../game/tranches-de-vie.md).
 
 Sans partie sauvegardée, tout lien vers le jeu vous ramène à l'écran titre.
 
