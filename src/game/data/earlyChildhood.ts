@@ -205,6 +205,12 @@ export const childTraits: readonly ChildTrait[] = [
     drawback: 'Mal à l’aise avec le mensonge',
   },
   {
+    id: 'resourceful',
+    name: 'Débrouillard',
+    advantage: 'Se débrouille avec presque rien',
+    drawback: 'Se méfie des inconnus',
+  },
+  {
     id: 'protector',
     name: 'Protecteur',
     advantage: 'Veille sur les autres',

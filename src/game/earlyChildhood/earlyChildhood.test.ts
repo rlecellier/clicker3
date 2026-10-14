@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  birthSituations,
   childActivities,
   childEvents,
   childObjects,
@@ -20,6 +21,7 @@ import {
   availableActivities,
   canEnterChildhood,
   childCarry,
+  childEventText,
   enterChildhood,
   axisReading,
   babble,
@@ -553,6 +555,163 @@ describe('petite enfance : le bilan et le passage en Enfance', () => {
   it('s’efface quand on recommence une vie', () => {
     const next = reduce(grown(), { type: 'enterChildhood' });
     expect(reduce(next, { type: 'restart' }).carry).toBeNull();
+  });
+});
+
+const playedBy = (situation: string, seed: number) =>
+  untilQuarter(
+    newGame(undefined, 'earlyChildhood', situation, seed),
+    childRules.quarters,
+  );
+
+const firstBond = (state: GameState) => state.relations[0]?.bond ?? 0;
+
+// Tous les événements vécus dans une situation, sur trente graines.
+const livedIn = (situation: string) =>
+  new Set(
+    Array.from(
+      { length: 30 },
+      (_, seed) => playedBy(situation, seed + 1).child.firedEvents,
+    ).flat(),
+  );
+
+describe('petite enfance : les situations de naissance', () => {
+  it('donnent à chacune un départ visiblement différent de la famille standard', () => {
+    const standard = newGame(undefined, 'earlyChildhood', 'standard');
+    for (const situation of birthSituations) {
+      if (situation.id === 'standard') {
+        continue;
+      }
+      const state = newGame(undefined, 'earlyChildhood', situation.id);
+      const differs =
+        state.child.objects.length > 0 ||
+        state.child.traits.length > 0 ||
+        Object.values(state.child.axes).some((value) => value !== 0) ||
+        state.relations.length !== standard.relations.length;
+      expect(differs, situation.id).toBe(true);
+    }
+  });
+
+  it('posent les objets, les traits et les axes de la situation', () => {
+    const homeless = newGame(undefined, 'earlyChildhood', 'homeless');
+    expect(homeless.child.objects).toEqual(['teddy']);
+    expect(homeless.child.traits).toEqual(['resourceful']);
+    expect(homeless.child.axes).toEqual({
+      energy: -10,
+      sociability: 0,
+      mind: 12,
+      bond: 0,
+    });
+    // Un seul parent, très présent.
+    expect(homeless.relations.map(({ id }) => id)).toEqual(['mother']);
+    const rich = newGame(undefined, 'earlyChildhood', 'millionaire');
+    expect(rich.child.objects).toHaveLength(4);
+    expect(sliceTabs(rich)).toContain('house');
+  });
+
+  it('donnent des liens et de l’Attention selon la disponibilité des parents', () => {
+    const rich = newGame(undefined, 'earlyChildhood', 'millionaire');
+    const poor = newGame(undefined, 'earlyChildhood', 'homeless');
+    // Un parent présent et tendre : un lien de départ plus fort.
+    expect(firstBond(poor)).toBeGreaterThan(firstBond(rich));
+    expect(untilQuarter(poor, 8).child.attention).toBeGreaterThan(
+      untilQuarter(rich, 8).child.attention,
+    );
+  });
+
+  it('répondent aux demandes selon leurs moyens', () => {
+    const bike = wishAt('bike');
+    const answer = (situation: string) =>
+      wishAnswer(newGame(undefined, 'earlyChildhood', situation), bike);
+    expect(answer('millionaire')).toBe('yes');
+    expect(answer('standard')).toBe('no');
+    expect(answer('homeless')).toBe('no');
+    expect(answer('farm')).toBe('no');
+  });
+
+  it('racontent un même événement autrement selon le contexte', () => {
+    const supermarket = required(
+      childEvents.find(({ id }) => id === 'supermarket'),
+    );
+    const texts = ['millionaire', 'rockStar', 'homeless', 'farm'].map(
+      (situation) =>
+        childEventText(
+          newGame(undefined, 'earlyChildhood', situation),
+          supermarket,
+        ),
+    );
+    expect(new Set(texts).size).toBe(4);
+    expect(texts).not.toContain(supermarket.text);
+    for (const situation of ['standard', 'teachers']) {
+      expect(
+        childEventText(
+          newGame(undefined, 'earlyChildhood', situation),
+          supermarket,
+        ),
+      ).toBe(supermarket.text);
+    }
+  });
+
+  it('ouvrent leurs événements de contexte, et seulement ceux-là', () => {
+    const rich = livedIn('millionaire');
+    expect(rich.has('hotelHall')).toBe(true);
+    expect(rich.has('tourBus')).toBe(false);
+    expect(livedIn('rockStar').has('tourBus')).toBe(true);
+    expect(livedIn('homeless').has('shelterNight')).toBe(true);
+    expect(livedIn('farm').has('henHouse')).toBe(true);
+    expect(livedIn('teachers').has('bookShelf')).toBe(true);
+    expect(livedIn('standard').has('hotelHall')).toBe(false);
+  });
+
+  it('se jouent jusqu’au bilan avec 4 à 8 événements, quelle que soit la graine', () => {
+    for (const { id } of birthSituations) {
+      for (let seed = 1; seed <= 12; seed += 1) {
+        const done = playedBy(id, seed);
+        const count = done.child.firedEvents.length;
+        expect(count, `${id} ${seed}`).toBeGreaterThanOrEqual(
+          childRules.events.min,
+        );
+        expect(count, `${id} ${seed}`).toBeLessThanOrEqual(
+          childRules.events.max + 1,
+        );
+        expect(canEnterChildhood(done), id).toBe(true);
+        expect(done.child.traits.length).toBeLessThanOrEqual(
+          childRules.traitLimit,
+        );
+      }
+    }
+  });
+
+  it('ne citent que des contextes que une situation donne', () => {
+    const tags = new Set(birthSituations.flatMap(({ contexts }) => contexts));
+    const used = childEvents.flatMap((event) => [
+      ...event.conditions.flatMap((condition) =>
+        condition.type === 'context' ? [condition.tag] : [],
+      ),
+      ...(event.variants ?? []).map(({ context }) => context),
+    ]);
+    expect(used.length).toBeGreaterThan(0);
+    expect(used.every((tag) => tags.has(tag))).toBe(true);
+  });
+
+  it('ne contiennent que des objets, des traits et des axes connus', () => {
+    const objectIds = new Set(childObjects.map(({ id }) => id));
+    const traitIds = new Set(childTraits.map(({ id }) => id));
+    for (const situation of birthSituations) {
+      expect(
+        situation.objects.every((id) => objectIds.has(id)),
+        situation.id,
+      ).toBe(true);
+      expect(
+        situation.traits.every((id) => traitIds.has(id)),
+        situation.id,
+      ).toBe(true);
+      expect(
+        Object.values(situation.axes).every((value) => Math.abs(value) <= 25),
+        situation.id,
+      ).toBe(true);
+      expect(situation.parents.length, situation.id).toBeGreaterThan(0);
+    }
   });
 });
 

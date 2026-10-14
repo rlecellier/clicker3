@@ -4,6 +4,22 @@ La petite enfance se choisit à l'écran titre, sous « Ou commencer ailleurs da
 la vie : », puis on choisit sa famille. Elle dure 24 trimestres (6 ans), soit
 336 gestes et quelques événements : **6 à 8 minutes**.
 
+## Les familles
+
+Avant de jouer, on choisit sa famille. Chacune change le départ :
+
+| Famille                       | Ce qu'elle apporte                                                      | Ce qui manque                              |
+| ----------------------------- | ----------------------------------------------------------------------- | ------------------------------------------ |
+| Famille standard              | La référence, sans relief                                               | Rien ne dépasse                            |
+| Fils ou fille de millionnaire | Quatre jouets dès la naissance, des moyens énormes (on obtient un vélo) | Des parents absents : liens faibles, Attention lente à revenir |
+| Fils ou fille de star du rock | Sociabilité et Esprit d'avance, hochet et casseroles, tournées          | Instabilité                                |
+| Sans domicile fixe            | Un parent très présent, le trait Débrouillard, Esprit d'avance          | Peu de moyens, Énergie réduite, un seul parent |
+| Parents enseignants           | Livres et cubes, Esprit Appliqué et Sociabilité d'avance                | Moyens modestes                            |
+| Ferme familiale               | Énergie Vive, un bâton et un chat                                       | Peu de jouets                              |
+
+Chaque famille a aussi ses événements : l'hôtel, le tour bus, le foyer d'accueil,
+le poulailler, la bibliothèque. Les autres événements sont racontés à sa façon.
+
 ## L'écran Vie
 
 - **Âge** : « 1 an et 3 mois ». Un trimestre se remplit en 14 gestes.

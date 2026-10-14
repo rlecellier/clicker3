@@ -9,6 +9,7 @@ import {
   doActivity,
   enterChildhood,
   explore,
+  newChild,
 } from '@game/earlyChildhood';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
@@ -57,7 +58,7 @@ export const newGame = (
       lifeSlice,
       birthSituation: situation,
       relations: initialRelations(situation),
-      child: { ...startState.child, seed },
+      child: newChild(situation, seed),
     };
   }
   return markAllSeen(
