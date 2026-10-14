@@ -22,9 +22,26 @@ export {
   childActivities,
   childAxes,
   childObjects,
+  childPlaces,
   childRules,
+  childTraits,
+  childWishes,
 } from './earlyChildhood';
-export type { ChildActivity, ChildAxis, ChildObject } from './earlyChildhood';
+export type {
+  ChildActivity,
+  ChildAxis,
+  ChildObject,
+  ChildPlace,
+  ChildTrait,
+  ChildWish,
+} from './earlyChildhood';
+export { childEvents } from './childEvents';
+export type {
+  ChildCondition,
+  ChildEffect,
+  ChildEvent,
+  ChildEventChoice,
+} from './childEvents';
 export { events, journalLimit } from './events';
 export { impactRules } from './impactRules';
 export type { EventEffect, GameEvent } from './events';

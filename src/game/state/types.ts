@@ -1,4 +1,4 @@
-import type { childAxisIds } from './child';
+import type { childAxisIds, childPlaceIds } from './child';
 import type { lifePhases } from './lifePhases';
 import type { lifeSliceIds } from './lifeSlices';
 import type { placementIds } from './placements';
@@ -11,6 +11,7 @@ export type StatId = (typeof statIds)[number];
 export type PlacementId = (typeof placementIds)[number];
 
 export type ChildAxisId = (typeof childAxisIds)[number];
+export type ChildPlaceId = (typeof childPlaceIds)[number];
 
 // État de la petite enfance (0 à 5 ans). Inerte dans les autres tranches.
 export type ChildState = {
@@ -22,6 +23,23 @@ export type ChildState = {
   quarter: number;
   // Remplissage de la jauge du trimestre en cours.
   fill: number;
+  // Graine du hasard (jamais `Math.random()` dans les règles) : le même état
+  // redonne le même tirage.
+  seed: number;
+  // Événements déjà vécus, dans l'ordre.
+  firedEvents: string[];
+  // Trimestre du dernier événement (pour les espacer).
+  lastEventQuarter: number;
+  // Événement qui attend le choix du joueur ; le jeu est arrêté entre-temps.
+  pendingEvent: string | null;
+  // Traits gagnés (3 au plus).
+  traits: string[];
+  // Progression de la fouille dans chaque lieu, vers la prochaine trouvaille.
+  search: Record<ChildPlaceId, number>;
+  // Attention des parents disponible, de 0 à 100.
+  attention: number;
+  // Souhaits exaucés plus tard : l'objet arrive au trimestre `at`.
+  later: { id: string; at: number }[];
 };
 
 export type LifePhase = (typeof lifePhases)[number];

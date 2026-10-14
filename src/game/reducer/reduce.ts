@@ -3,11 +3,11 @@ import { autoTick, setAuto } from '@game/automation';
 import { buyBoost } from '@game/boosts';
 import { buyCompany, buyWarehouse } from '@game/companies';
 import { birthSituations, findById, lifeSlices, startState } from '@game/data';
-import { doActivity } from '@game/earlyChildhood';
+import { askFor, chooseEvent, doActivity, explore } from '@game/earlyChildhood';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { answerBirthday, isBirthdayPending } from '@game/birthday';
-import { grow, sliceGame } from '@game/lifeSlices';
+import { grow, hasGrowth, sliceGame } from '@game/lifeSlices';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { openPlacement } from '@game/placements';
@@ -32,6 +32,7 @@ export const newGame = (
   jobId?: string,
   lifeSlice: LifeSliceId = startState.lifeSlice,
   birthSituation?: string,
+  seed: number = startState.child.seed,
 ): GameState => {
   const slice = findById(lifeSlices, lifeSlice);
   // Une situation inconnue est ignorée (on garde celle par défaut).
@@ -41,7 +42,12 @@ export const newGame = (
     return { ...sliceGame(slice.start, lifeSlice), birthSituation: situation };
   }
   if (slice?.growth != null) {
-    return { ...startState, lifeSlice, birthSituation: situation };
+    return {
+      ...startState,
+      lifeSlice,
+      birthSituation: situation,
+      child: { ...startState.child, seed },
+    };
   }
   return markAllSeen(
     triggerEvents({
@@ -126,8 +132,22 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     case 'doActivity': {
       return doActivity(state, action.id);
     }
+    case 'explore': {
+      return explore(state, action.place);
+    }
+    case 'askFor': {
+      return askFor(state, action.wishId);
+    }
+    case 'chooseEvent': {
+      return chooseEvent(state, action.choice);
+    }
     case 'restart': {
-      return newGame(action.jobId, action.lifeSlice, action.birthSituation);
+      return newGame(
+        action.jobId,
+        action.lifeSlice,
+        action.birthSituation,
+        action.seed,
+      );
     }
   }
 };
@@ -144,8 +164,15 @@ const passesDuringPromotion = new Set<GameAction['type']>([
 ]);
 
 // Sommeil, phase de vie et événements suivent chaque action (`afterAction`).
-export const reduce = (state: GameState, action: GameAction): GameState =>
-  (isPromotionPending(state) || isBirthdayPending(state)) &&
-  !passesDuringPromotion.has(action.type)
-    ? state
-    : afterAction(applyAction(state, action));
+export const reduce = (state: GameState, action: GameAction): GameState => {
+  if (
+    (isPromotionPending(state) || isBirthdayPending(state)) &&
+    !passesDuringPromotion.has(action.type)
+  ) {
+    return state;
+  }
+  const next = applyAction(state, action);
+  // Avant 18 ans, ni sommeil, ni événements du monde, ni anniversaire : seuls
+  // les gestes de la tranche comptent (la petite enfance a ses propres événements).
+  return hasGrowth(next) ? next : afterAction(next);
+};

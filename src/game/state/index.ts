@@ -1,4 +1,4 @@
-export { childAxisIds } from './child';
+export { childAxisIds, childPlaceIds } from './child';
 export { lifePhases } from './lifePhases';
 export { lifeSliceIds } from './lifeSlices';
 export { placementIds } from './placements';

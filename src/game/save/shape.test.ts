@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 22,
+    version: 23,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -32,9 +32,18 @@ describe('forme de l’état', () => {
       'child.axes.energy',
       'child.axes.mind',
       'child.axes.sociability',
+      'child.attention',
       'child.fill',
+      'child.firedEvents',
+      'child.lastEventQuarter',
+      'child.later',
       'child.objects',
+      'child.pendingEvent',
       'child.quarter',
+      'child.search.home',
+      'child.search.outside',
+      'child.seed',
+      'child.traits',
       'companies',
       'companyMultipliers',
       'districts',
