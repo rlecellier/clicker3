@@ -52,7 +52,7 @@ fonctionnent), dans un `<nav aria-label="Navigation du jeu">`. Le composant
 `Tabs` (Base UI) reste réservé aux sous-onglets d'une page (Entreprises, Améliorations, Profil, Comptes),
 dont l'état n'a pas à vivre dans l'URL.
 
-### 4. Seuil mobile
+### 4. Seuil mobile (voir aussi la mise à jour #247 : barre des tâches sous 40 rem)
 
 Au-dessus de **40 rem** (640 px), la sidebar affiche icônes et libellés. À
 40 rem et en dessous (donc à 480 px), elle n'affiche que les icônes, **toujours
@@ -136,3 +136,35 @@ suivent la même répartition (`seenItems` : `profile`, `jobs`, `companies`,
 `upgrades`, `city`). Les anciennes routes `/jeu/investir` et `/jeu/competences`
 ne redirigent pas (ADR 0010).
 
+
+## Mise à jour #247 : barre des tâches et menu Démarrer sur téléphone
+
+La colonne d'icônes à gauche mangeait ≈ 12 % de la largeur d'un téléphone et ne
+laissait pas de place aux menus à venir. Au-dessus de 40 rem, rien ne change.
+**À 40 rem et en dessous**, la sidebar est remplacée par :
+
+- une **`Taskbar` en bas** : le bouton Démarrer (icône `start`, libellé
+  « Démarrer ») à gauche, puis les onglets épinglés en icônes seules : Courrier,
+  Vie, Emploi, Entreprises (`pinnedTabIds` dans `useGameNavigation`) ;
+- un **`StartMenu`** ouvert par Démarrer : panneau ancré en bas à gauche, qui liste
+  **tous** les onglets (libellés, pastilles, raccourcis) et « Recommencer » à
+  l'écart. Hauteur plafonnée (100 dvh moins 8 rem) pour laisser voir le jeu ; la liste défile, « Recommencer » reste fixe en bas. Il se ferme au
+  choix d'un onglet, à `Échap`, au tap sur le fond transparent et à tout
+  changement de page (`useStartMenu`, qui compare le chemin à celui de
+  l'ouverture).
+
+Choix et conséquences :
+
+- **Un seul rendu à la fois** : `useIsCompact` (`matchMedia`, même seuil que les
+  media queries des CSS Modules) décide entre `Sidebar` et `Taskbar`, pour ne pas
+  avoir deux `<nav>` du même nom dans le DOM. Les deux s'appellent « Navigation
+  du jeu » ; le menu est un `<nav>` « Menu Démarrer » hors de la barre.
+- **Pastille sur Démarrer** : le nombre d'onglets non épinglés qui ont une
+  pastille (nom accessible « Démarrer, 2 onglets à consulter »). Les pastilles des
+  onglets épinglés restent sur leurs icônes.
+- Le menu n'a pas le rôle `menu` (ce sont des liens) : les raccourcis clavier
+  continuent de marcher menu ouvert, et ils le ferment en changeant de page.
+- Le helper e2e `openTab` passe par l'onglet épinglé s'il existe, sinon par
+  Démarrer.
+- `Window` et la colonne de contenu resserrent bordure, marge et barre de titre
+  sous 40 rem.

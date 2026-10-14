@@ -74,6 +74,8 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
 | `Tabs`        | `tabs` (`id`, `label`, `content`), `defaultTab?`, `value?` + `onValueChange?` (mode contrôlé) ; Base UI Tabs                                                                                    | Regrouper des panneaux                         |
 | `Sidebar`     | `label`, `items` (`id`, `label`, `icon`, `to`, `badge?`, `badgeTone?`, `accessibleLabel?`, `shortcut?`), `footer?` (un item, à l'écart) ; `NavLink`, icônes `SidebarIcon`      | Navigation de l'écran de jeu (ADR 0008)        |
+| `Taskbar`     | `label`, `items` (onglets épinglés, icônes seules), `start` (`label`, `accessibleLabel?`, `badge?`, `isOpen`, `onToggle`), `menu?` (le `StartMenu`, posé au-dessus) ; `<nav>` nommé | Navigation de l'écran de jeu sous 40 rem, en bas (ADR 0008) |
+| `StartMenu`   | `label`, `banner` (texte vertical de la bande bleue), `items`, `footer`, `onClose` ; panneau ancré en bas à gauche, hauteur plafonnée (100 dvh moins 8 rem), liste qui défile et « Recommencer » fixe, fond cliquable qui le ferme | Menu Démarrer : tous les onglets et « Recommencer » |
 | `GameHeader`  | `resources` (props de `ResourceBar`), `date` (texte formaté), `activity` (ce que fait le personnage, en quelques mots), `gauge` (`value`, `max`) ; sur toute la largeur de la zone de contenu, à droite de la sidebar, hauteur fixe : une ligne de ressources, une mini-barre de temps avec la date à gauche et l'activité à droite | En-tête fixe de l'écran de jeu |
 | `ResourceBar` | `money` et `stock` (`value` abrégé, `exact` en infobulle), icônes `ResourceIcon` | Ressources sur une ligne (argent, stock) |
 | `ReputationStars` | `tier`, `max`, `label` (lu à la place des étoiles) ; étoiles pleines ou vides | Palier de réputation, à droite de la barre de titre de la fenêtre « Ma vie à Sainte-Croissance » (couleur du contexte) |
@@ -152,11 +154,14 @@ distinct ; sinon, composer les existants.
 
 ## 5. Mise en page
 
-- L'écran de jeu est une **sidebar fixe à gauche** (composant `Sidebar`) et
-  une zone de contenu qui défile seule (ADR 0008). Au-dessus de `40rem`, la
-  sidebar montre icônes et libellés ; à `40rem` et en dessous (480 px compris),
-  des icônes seules, toujours à gauche, avec le libellé en `aria-label` et en
-  infobulle. Un seul onglet est affiché à la fois (`/jeu/<onglet>`).
+- L'écran de jeu est une **navigation fixe** et une zone de contenu qui défile
+  seule (ADR 0008). Au-dessus de `40rem`, une `Sidebar` à gauche, icônes et
+  libellés. À `40rem` et en dessous (480 px compris), une `Taskbar` en bas :
+  bouton Démarrer, onglets épinglés en icônes (libellé en `aria-label` et en
+  infobulle), et le `StartMenu` qui liste tous les onglets. Un seul onglet est
+  affiché à la fois (`/jeu/<onglet>`).
+- Sous `40rem`, `Window` et la colonne de contenu resserrent bordure, marge et
+  barre de titre.
 - Dans la zone de contenu : une colonne de fenêtres `Window` ; largeur
   maximale `40rem`, centrée.
 - Les écrans hors jeu (titre, nouvelle vie, absence, fin) n'ont pas de
