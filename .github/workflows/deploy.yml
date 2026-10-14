@@ -12,10 +12,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  deployments: read
 
 jobs:
   # Ne déploie que si le jeu a changé depuis le dernier déploiement réussi :
@@ -39,8 +36,16 @@ jobs:
         run: |
           game=true
           if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            last=$(gh run list --workflow=deploy.yml --status=success \
-              --json headSha --jq '.[0].headSha // empty')
+            # Dernier commit réellement publié : un run dont le deploy est
+            # skippé ou annulé ne compte pas, seul un déploiement réussi compte.
+            last=""
+            for id in $(gh api "repos/${{ github.repository }}/deployments?environment=github-pages&per_page=10" --jq '.[].id'); do
+              state=$(gh api "repos/${{ github.repository }}/deployments/$id/statuses" --jq '.[0].state // empty')
+              if [ "$state" = "success" ]; then
+                last=$(gh api "repos/${{ github.repository }}/deployments/$id" --jq '.sha')
+                break
+              fi
+            done
             if [ -n "$last" ] && git cat-file -e "$last^{commit}" 2>/dev/null; then
               if git diff --quiet "$last" HEAD -- \
                 src index.html package.json package-lock.json \
@@ -55,6 +60,11 @@ jobs:
   deploy:
     needs: changes
     if: needs.changes.outputs.game == 'true'
+    # La concurrence est ici et pas sur le workflow : un run qui skippe le
+    # deploy ne doit pas annuler un déploiement en cours.
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
