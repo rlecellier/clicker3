@@ -41,6 +41,27 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expect(awakening).toHaveText('1');
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('2');
+  // Pas d'objet encore : la Maison reste fermée.
+  await expect(sidebar(page).getByRole('link')).toHaveCount(2);
+  await expectNoOverflow(page);
+
+  // Le nounours arrive à l'éveil 4 : la Maison s'ouvre. On y met « Câliner le
+  // nounours » en favori, et il apparaît sur la Vie, où un tap vaut une activité.
+  await page.getByRole('button', { name: 'Gazouiller' }).tap();
+  await page.getByRole('button', { name: 'Gazouiller' }).tap();
+  await expect(awakening).toHaveText('4');
+  await expect(sidebar(page).getByRole('link')).toHaveCount(3);
+  await sidebar(page).getByRole('link', { name: 'Maison' }).tap();
+  await expect(page).toHaveURL('/jeu/maison');
+  await expect(page.getByText('Câliner le nounours')).toBeVisible();
+  await page.getByRole('button', { name: '☆ Favori' }).first().tap();
+  await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
+  await sidebar(page).getByRole('link', { name: 'Vie' }).tap();
+  const bond = page.getByRole('progressbar', { name: /^Lien : / });
+  await expect(bond).toHaveAccessibleName('Lien : Neutre');
+  await page.getByRole('button', { name: /Câliner le nounours/ }).tap();
+  await expect(bond).toHaveAccessibleName('Lien : Câlin');
+  await expect(awakening).toHaveText('5');
   await expectNoOverflow(page);
 
   // Un onglet du jeu complet renvoie à la Vie.

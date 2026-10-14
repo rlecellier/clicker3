@@ -9,6 +9,9 @@ export const useGameActions = () => {
       grow: () => {
         dispatch({ type: 'grow' });
       },
+      doActivity: (id: string) => {
+        dispatch({ type: 'doActivity', id });
+      },
       work: (target: string) => {
         dispatch({ type: 'work', target });
       },

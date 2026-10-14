@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { gameTabs } from '@hook/useGameTabs';
+import { gameTabs, tabShortcut } from '@hook/useGameTabs';
 import { shortcutTable } from './shortcuts';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
@@ -33,14 +33,20 @@ describe('useKeyboardShortcuts', () => {
     document.body.replaceChildren();
   });
 
-  it('1 à 9 ouvrent les onglets dans l’ordre de la sidebar', () => {
+  it('1 à 9 ouvrent les neuf premiers onglets dans l’ordre de la sidebar', () => {
     const handlers = setup();
-    for (const index of gameTabs.keys()) {
+    const firstNine = gameTabs.slice(0, 9);
+    for (const index of firstNine.keys()) {
       press(String(index + 1));
     }
     expect(handlers.openTab.mock.calls.map(([tab]) => tab)).toEqual(
-      gameTabs.map((tab) => tab.id),
+      firstNine.map((tab) => tab.id),
     );
+  });
+
+  it('au-delà du neuvième, un onglet n’a pas de raccourci', () => {
+    expect(gameTabs.length).toBeGreaterThan(9);
+    expect(tabShortcut(9)).toBeUndefined();
   });
 
   it('T travaille et E étudie, majuscule comprise', () => {

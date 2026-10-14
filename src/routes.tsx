@@ -10,6 +10,7 @@ import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
 import { FinancePage } from '@page/FinancePage';
 import { GamePage } from '@page/GamePage';
+import { HousePage } from '@page/HousePage';
 import { JobsPage } from '@page/JobsPage';
 import { LifeTabPage } from '@page/LifeTabPage';
 import { MailPage } from '@page/MailPage';
@@ -34,6 +35,7 @@ const tabPages: Record<GameTabId, ReactNode> = {
   accounts: <AccountsPage />,
   finance: <FinancePage />,
   city: <CityPage />,
+  house: <HousePage />,
 };
 
 // Une route `/jeu/<slug>` par onglet, dans l'ordre de la sidebar.

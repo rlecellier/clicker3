@@ -13,10 +13,10 @@ export const STUDY_SHORTCUT = 'e';
 // le bouton qui a le focus), ni d'achat, de vente ni de « Recommencer ».
 export const shortcutTable: Readonly<Record<string, ShortcutAction>> = {
   ...Object.fromEntries(
-    gameTabs.map((tab, index): [string, ShortcutAction] => [
-      tabShortcut(index),
-      { type: 'openTab', tab: tab.id },
-    ]),
+    gameTabs.flatMap((tab, index): [string, ShortcutAction][] => {
+      const key = tabShortcut(index);
+      return key === undefined ? [] : [[key, { type: 'openTab', tab: tab.id }]];
+    }),
   ),
   [WORK_SHORTCUT]: { type: 'work' },
   [STUDY_SHORTCUT]: { type: 'study' },
