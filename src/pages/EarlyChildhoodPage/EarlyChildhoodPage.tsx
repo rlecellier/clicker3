@@ -28,7 +28,18 @@ export const EarlyChildhoodPage = () => {
             size="small"
           />
         ))}
+        {screen.attention.isVisible ? (
+          <ProgressBar
+            label="Attention des parents"
+            value={screen.attention.value}
+            max={screen.attention.max}
+            size="small"
+          />
+        ) : null}
       </section>
+      {screen.traits.length === 0 ? null : (
+        <Note>Traits : {screen.traits.join(', ')}</Note>
+      )}
       <div className={styles.actions}>
         <ActionButton
           label="Gazouiller"
@@ -42,11 +53,13 @@ export const EarlyChildhoodPage = () => {
             key={favorite.id}
             label={favorite.label}
             detail={favorite.detail}
+            reason={favorite.reason}
             isDisabled={favorite.isDisabled}
             onClick={favorite.run}
           />
         ))}
       </div>
+      {screen.feedback === null ? null : <p role="status">{screen.feedback}</p>}
       {screen.hasHouse && screen.favorites.length === 0 ? (
         <Note>
           Ouvrez la Maison pour mettre vos activités préférées en favori.

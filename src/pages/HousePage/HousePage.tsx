@@ -10,6 +10,7 @@ export const HousePage = () => {
   return (
     <Window title="Maison">
       <Note>{screen.favoritesText}</Note>
+      {screen.feedback === null ? null : <p role="status">{screen.feedback}</p>}
       {screen.sections.map((section) => (
         <ItemList
           key={section.caption}

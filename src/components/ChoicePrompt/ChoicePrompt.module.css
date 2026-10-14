@@ -1,0 +1,73 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(26rem, calc(100vw - 2 * var(--space)));
+  background: var(--color-surface);
+  box-shadow:
+    var(--bevel-out),
+    2px 2px 0 var(--color-surface-dark);
+  padding: 3px;
+}
+
+.title {
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  padding: 2px 6px;
+  min-height: 1.75rem;
+  font-size: var(--font-size);
+  font-weight: bold;
+}
+
+.content {
+  padding: var(--space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.message {
+  margin: 0;
+}
+
+.detail {
+  margin: 0;
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  padding: var(--space);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(var(--space) / 2);
+}
+
+.effects {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}

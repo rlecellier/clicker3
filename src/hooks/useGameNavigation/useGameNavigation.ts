@@ -5,7 +5,14 @@ import { useStartMenu } from '@hook/useStartMenu';
 
 // Onglets épinglés dans la barre des tâches ; les autres sont dans le menu
 // Démarrer (ADR 0008).
-const pinnedTabIds = new Set<GameTabId>(['mail', 'life', 'jobs', 'companies']);
+// La Maison et les Relations n'existent qu'avant 18 ans : on les épingle.
+const pinnedTabIds = new Set<GameTabId>([
+  'mail',
+  'life',
+  'jobs',
+  'companies',
+  'house',
+]);
 
 const startLabel = 'Démarrer';
 

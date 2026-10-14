@@ -1,17 +1,13 @@
 import { useGameContext } from '@context/GameContext';
-import { childAxes, childRules, findById } from '@game/data';
-import {
-  activityPole,
-  availableActivities,
-  axisReading,
-  childAge,
-  isChildhoodOver,
-} from '@game/earlyChildhood';
+import { childAxes, childRules, childTraits, findById } from '@game/data';
+import { axisReading, childAge, isChildhoodOver } from '@game/earlyChildhood';
 import { formatCount } from '@game/format';
 import { useFavorites } from '@hook/useFavorites';
+import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
 import { useLifeSlice } from '@hook/useLifeSlice';
+import { houseEntries } from '@view/houseEntries';
 
 const agePart = (count: number, unit: string) =>
   `${count} ${unit}${unit !== 'mois' && count > 1 ? 's' : ''}`;
@@ -26,19 +22,20 @@ const formatChildAge = (years: number, months: number) => {
 };
 
 // Onglet « Vie » de la petite enfance : l'éveil, les quatre axes, « Gazouiller »
-// et les activités mises en favori dans la Maison.
+// et les lignes de la Maison mises en favori.
 export const useEarlyChildhoodScreen = () => {
-  const { state } = useGameContext();
+  const { state, dispatch } = useGameContext();
   const { slice } = useLifeSlice();
   const actions = useGameActions();
   const { favorites } = useFavorites();
+  const { feedback, say } = useFeedback();
+  const isOver = isChildhoodOver(state);
   const babblePress = useHoldRepeat({
     onClick: actions.grow,
-    isDisabled: isChildhoodOver(state),
+    isDisabled: isOver,
   });
-  const isOver = isChildhoodOver(state);
   const { years, months } = childAge(state);
-  const available = availableActivities(state);
+  const entries = houseEntries(state);
 
   return {
     title: slice?.name ?? '',
@@ -56,25 +53,33 @@ export const useEarlyChildhoodScreen = () => {
         max: childRules.axisLimit,
       };
     }),
+    attention: {
+      value: Math.round(state.child.attention),
+      max: childRules.attentionMax,
+      // Elle ne sert qu'à réclamer, donc à partir de 4 ans.
+      isVisible: entries.some(({ id }) => id.startsWith('ask:')),
+    },
+    traits: state.child.traits
+      .map((id) => findById(childTraits, id)?.name)
+      .filter((name) => name !== undefined),
     babble: { run: babblePress.onClick, press: babblePress.press },
     favorites: favorites
-      .map((id) => available.find((candidate) => candidate.id === id))
-      .filter((activity) => activity !== undefined)
-      .map((activity) => {
-        const axis = findById(childAxes, activity.axis);
+      .map((id) => entries.find((entry) => entry.id === id))
+      .filter((entry) => entry !== undefined)
+      .map((entry) => {
+        const run = () => {
+          dispatch(entry.action);
+        };
         return {
-          id: activity.id,
-          label: activity.name,
-          detail:
-            axis === undefined
-              ? ''
-              : `${axis.name} → ${activityPole(activity, axis)}`,
-          isDisabled: isOver,
-          run: () => {
-            actions.doActivity(activity.id);
-          },
+          id: entry.id,
+          label: entry.title,
+          detail: entry.detail,
+          reason: entry.reason,
+          isDisabled: entry.isDisabled,
+          run: entry.feedback === undefined ? run : say(entry.feedback, run),
         };
       }),
+    feedback,
     hasHouse: state.child.objects.length > 0,
   };
 };
