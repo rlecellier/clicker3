@@ -1,4 +1,4 @@
-import { resume } from '@game/automation';
+import { reloadGraceMs, resume } from '@game/automation';
 import type { AbsenceSummary } from '@game/automation';
 import { newGame } from '@game/reducer';
 import { loadGame } from '@game/save';
@@ -23,7 +23,7 @@ export const bootGame = (storage: SaveStorage, now: number): Boot => {
       hasSave: false,
     };
   }
-  const { state, summary } = resume(loaded.state, now);
+  const { state, summary } = resume(loaded.state, now, reloadGraceMs);
   return {
     state,
     absence: summary.actions > 0 ? summary : null,

@@ -91,6 +91,14 @@ describe('chargement et rattrapage', () => {
     expect(result.current.absence).toBeNull();
   });
 
+  it('ne montre pas de résumé au rechargement d’une page', () => {
+    const storage = createMemoryStorage(serialize(automated, START));
+    clock.time = START + autoIntervalMs;
+    const { result } = setup(storage);
+    expect(result.current.absence).toBeNull();
+    expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
+  });
+
   it('ne montre pas de résumé sans action automatique rattrapée', () => {
     const storage = createMemoryStorage(serialize(startState, START));
     clock.time = START + 60_000;

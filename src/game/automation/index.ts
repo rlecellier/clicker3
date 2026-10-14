@@ -5,6 +5,7 @@ export {
   catchUp,
   isAutoActive,
   isTimeRunning,
+  reloadGraceMs,
   resume,
   setAuto,
 } from './automation';
