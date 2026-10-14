@@ -10,15 +10,16 @@ mouvement. ».
 | Bouton                    | Quand il apparaît           | Effet                                                                                      |
 | ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
 | Démarrer ma vie           | Toujours                    | Mène au choix du premier emploi                                                            |
-| Petite enfance, Enfance, Adolescence | Toujours (sous « Ou commencer plus tôt : ») | Commence une tranche de vie d'avant 18 ans : un seul onglet, Vie, avec un bouton et un compteur. Demande confirmation si une vie est en cours |
+| Petite enfance, Enfance, Adolescence | Toujours (sous « Ou commencer ailleurs dans la vie : ») | Commence une tranche de vie d'avant 18 ans : un seul onglet, Vie, avec un bouton et un compteur. Demande confirmation si une vie est en cours |
+| Âge adulte, Maturité, Vieillesse | Toujours (au même endroit) | Reprend le jeu complet à 30, 50 ou 65 ans, avec ce que le personnage possède à cet âge. Demande confirmation si une vie est en cours |
 | Reprendre                 | Si une partie est sauvegardée | Reprend la vie en cours là où vous l'avez laissée                                          |
 | Effacer la sauvegarde     | Si une partie est sauvegardée | Demande confirmation (« Votre exercice sera clos sans bilan »), puis supprime la sauvegarde |
 
 « Démarrer ma vie » est la tranche **Jeunesse**, le jeu complet décrit dans
-ce guide. Les trois autres tranches sont à peine ébauchées : l'onglet Vie
+ce guide. Les trois tranches d'avant 18 ans sont à peine ébauchées : l'onglet Vie
 propose un bouton (« Gazouiller », « Jouer » ou « Se chercher ») qui fait monter
 un compteur (« Éveil », « Curiosité » ou « Identité »), sans autre effet pour
-l'instant. Détails : [tranches de vie](../game/tranches-de-vie.md).
+l'instant. Âge adulte, Maturité et Vieillesse sont le même jeu, commencé plus loin dans la vie : l'argent, les entreprises, les améliorations et les stats sont ceux d'un joueur à cet âge, et la date suit (janvier 2011 à 30 ans). Détails : [tranches de vie](../game/tranches-de-vie.md).
 
 Sans partie sauvegardée, tout lien vers le jeu vous ramène à l'écran titre.
 
