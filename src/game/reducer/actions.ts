@@ -40,4 +40,10 @@ export type GameAction =
   // Le bouton d'une tranche avant 18 ans : le compteur monte d'un cran.
   | { type: 'grow' }
   // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
-  | { type: 'restart'; jobId?: string; lifeSlice?: LifeSliceId };
+  // `birthSituation` : la situation de naissance (famille standard par défaut).
+  | {
+      type: 'restart';
+      jobId?: string;
+      lifeSlice?: LifeSliceId;
+      birthSituation?: string;
+    };

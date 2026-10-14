@@ -15,11 +15,12 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 20,
+    version: 21,
     keys: [
       'activeEffects',
       'autoElapsed',
       'autoWork',
+      'birthSituation',
       'birthdayBase.age',
       'birthdayBase.companies',
       'birthdayBase.money',

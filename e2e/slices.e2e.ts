@@ -23,6 +23,10 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   // Petite enfance : un seul onglet (et « Recommencer » en pied de sidebar), sans l'en-tête d'argent, et un bouton
   // dont un tap vaut une action avec le gain affiché.
   await page.getByRole('button', { name: /Petite enfance/ }).tap();
+  await expect(
+    page.getByText('Dans quelle famille naissez-vous ?'),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Famille standard' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
   await expect(sidebar(page).getByRole('link')).toHaveCount(2);
   await expect(page.getByLabel('Ressources')).toBeHidden();

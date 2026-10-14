@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Requirement } from '@game/requirements';
 import { actionRules } from './actionRules';
+import { birthSituations, defaultBirthSituationId } from './birthSituations';
 import { companies } from './companies';
 import { courses } from './courses';
 import { districts } from './districts';
@@ -394,5 +395,28 @@ describe('portée des améliorations', () => {
   it('range des améliorations dans chacune des deux vues', () => {
     expect(upgrades.some((upgrade) => upgrade.scope === 'person')).toBe(true);
     expect(upgrades.some((upgrade) => upgrade.scope === 'company')).toBe(true);
+  });
+});
+
+describe('situations de naissance', () => {
+  it('ont des ids uniques et une situation par défaut qui existe', () => {
+    const situationIds = birthSituations.map(({ id }) => id);
+    expect(new Set(situationIds).size).toBe(situationIds.length);
+    expect(situationIds).toContain(defaultBirthSituationId);
+    expect(startState.birthSituation).toBe(defaultBirthSituationId);
+  });
+
+  it('décrivent des parents aux qualités entre 0 et 100', () => {
+    for (const situation of birthSituations) {
+      expect(situation.parents.length, situation.id).toBeGreaterThan(0);
+      const parentIds = situation.parents.map(({ id }) => id);
+      expect(new Set(parentIds).size, situation.id).toBe(parentIds.length);
+      for (const { qualities } of situation.parents) {
+        for (const value of Object.values(qualities)) {
+          expect(value).toBeGreaterThanOrEqual(0);
+          expect(value).toBeLessThanOrEqual(100);
+        }
+      }
+    }
   });
 });

@@ -1,6 +1,7 @@
 # Petite enfance (0 à 5 ans)
 
-> Statut : **proposition à discuter**. Rien n'est codé. Ce document répond à
+> Statut : **validée**, en cours de développement (suivi : #253). Fait : la
+> situation de naissance (#254, « Famille standard » seule). Le reste n'est pas codé. Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
 > pour toutes les suivantes. Cadre général : [tranches-de-vie.md](tranches-de-vie.md).
@@ -383,7 +384,15 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 5. **Bilan et passage vers l'Enfance** : écran de fin, objet transmis.
 6. **Autres situations** (millionnaire, rock, SDF…) : données uniquement.
 
-## 9. Questions ouvertes
+## 9. Décisions prises et questions ouvertes
+
+Retenu pour démarrer (issue de suivi #253), révisable dans la MR concernée :
+axe d'Énergie **Vif ↔ Posé** ; une seule jauge d'**Attention** (la Patience est
+abandonnée) ; situation **choisie à l'écran titre** ; **aucune mort** avant
+6 ans ; **un seul ami** (le premier copain) ; **une jauge de temps** pour la
+tranche ; **4 favoris** ; explorer et réclamer sont des activités de la Maison ;
+l'exploration montre les lieux, pas leur contenu. Les questions ci-dessous sont
+celles que ces choix rendent caduques ou à revoir.
 
 - **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
 - **Nombre de favoris** (UX) : 3 ou 4, à caler sur la largeur d'un téléphone.
