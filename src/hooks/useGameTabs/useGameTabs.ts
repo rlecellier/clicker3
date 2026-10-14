@@ -16,7 +16,8 @@ export type GameTabId =
   | 'upgrades'
   | 'accounts'
   | 'finance'
-  | 'city';
+  | 'city'
+  | 'house';
 
 export type GameTab = { id: GameTabId; label: string; slug: string };
 
@@ -32,10 +33,14 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'accounts', label: 'Comptes', slug: 'comptes' },
   { id: 'finance', label: 'Finance', slug: 'finance' },
   { id: 'city', label: 'Ville', slug: 'ville' },
+  // La Maison de la petite enfance : toutes les activités, en dernier.
+  { id: 'house', label: 'Maison', slug: 'maison' },
 ];
 
-// Touche qui ouvre l'onglet de ce rang (1 à 9), dans l'ordre de la sidebar.
-export const tabShortcut = (index: number) => String(index + 1);
+// Touche qui ouvre l'onglet de ce rang (1 à 9), dans l'ordre de la sidebar ;
+// au-delà du neuvième, pas de raccourci.
+export const tabShortcut = (index: number) =>
+  index < 9 ? String(index + 1) : undefined;
 
 export const DEFAULT_TAB: GameTabId = 'life';
 

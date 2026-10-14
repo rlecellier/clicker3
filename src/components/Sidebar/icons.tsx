@@ -12,6 +12,7 @@ export type SidebarIconId =
   | 'accounts'
   | 'finance'
   | 'city'
+  | 'house'
   | 'new-life';
 
 type SidebarIconProperties = { id: SidebarIconId };
@@ -86,6 +87,14 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
     </>
   ),
   // Repère de carte : le plan de la ville.
+  // Coffre à jouets.
+  house: (
+    <>
+      <path d="M2 6h12v8H2z" />
+      <path d="M1 3h14v3H1z" />
+      <path d="M6.5 8h3v2h-3z" fill="var(--color-surface)" />
+    </>
+  ),
   city: (
     <>
       <path d="M8 1a5 5 0 0 0-5 5c0 4 5 9 5 9s5-5 5-9a5 5 0 0 0-5-5z" />

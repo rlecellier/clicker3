@@ -24,6 +24,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 | Page                                  | Contenu                                                                                        |
 | ------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | [La version 1.5](la-version-1-5.md)   | Ce qu'est le jeu, ce que la version 1.5 change et ce qu'elle laisse tel quel                   |
+| [Petite enfance](petite-enfance.md)   | Les quatre axes, la Maison, les favoris, les objets et savoir-faire de 0 à 5 ans |
 | [Débuter](debuter.md)                 | Écran titre, premier tour de jeu, jauge de temps, argent, une vie de 18 ans à la fin, « Recommencer » |
 
 ### Les neuf onglets
