@@ -181,15 +181,31 @@ export const catchUp = (state: GameState, elapsedMs: number): CatchUpResult => {
   };
 };
 
+// En deçà de ce délai, une ouverture est un rechargement de page, pas une
+// absence : le temps écoulé se joue comme au fil de l'eau, sans écran « pendant
+// votre absence » (le sommeil et le travail auto avancent en temps réel).
+export const reloadGraceMs = 3000;
+
 /**
  * Point d'entrée unique du retour dans le jeu : rattrape l'absence depuis
  * `lastSeenAt` (écrit par `serialize` à la sauvegarde), puis note `now`, fourni
  * par l'appelant (les règles ne lisent jamais l'horloge). Sans `lastSeenAt`
- * (première partie) ou si `now` le précède, rien n'est rattrapé.
+ * (première partie) ou si `now` le précède, rien n'est rattrapé. Sous
+ * `graceMs`, le temps écoulé se joue sans résumé ni événement de retour.
  */
-export const resume = (state: GameState, now: number): CatchUpResult => {
+export const resume = (
+  state: GameState,
+  now: number,
+  graceMs = 0,
+): CatchUpResult => {
   const elapsedMs =
     state.lastSeenAt === null ? 0 : Math.max(0, now - state.lastSeenAt);
+  if (elapsedMs < graceMs) {
+    return {
+      state: { ...autoTick(state, elapsedMs), lastSeenAt: now },
+      summary: catchUp(state, 0).summary,
+    };
+  }
   const { state: caughtUp, summary } = catchUp(state, elapsedMs);
   return { state: { ...caughtUp, lastSeenAt: now }, summary };
 };

@@ -11,6 +11,7 @@ import {
   catchUp,
   isAutoActive,
   isTimeRunning,
+  reloadGraceMs,
   resume,
   setAuto,
 } from './automation';
@@ -299,5 +300,42 @@ describe('resume', () => {
     expect(summary.actions).toBe(0);
     expect(summary.elapsedMs).toBe(0);
     expect(state.lastSeenAt).toBe(10);
+  });
+
+  describe('rechargement de page', () => {
+    it('joue le temps écoulé sans résumé ni événement de retour', () => {
+      const { state, summary } = resume(
+        saved,
+        1000 + autoIntervalMs,
+        reloadGraceMs,
+      );
+      expect(wagesDueOf(state)).toBeGreaterThan(0);
+      expect(summary.actions).toBe(0);
+      expect(state.events.some((entry) => entry.id === 'retour-absence')).toBe(
+        false,
+      );
+      expect(state.lastSeenAt).toBe(1000 + autoIntervalMs);
+    });
+
+    it('joue le sommeil en cours sans résumé', () => {
+      const asleep: GameState = {
+        ...startState,
+        isSleeping: true,
+        sleepTotal: 4,
+        lastSeenAt: 1000,
+      };
+      const { summary } = resume(asleep, 1000 + 2000, reloadGraceMs);
+      expect(summary.actions).toBe(0);
+    });
+
+    it('rattrape comme une absence dès le délai atteint', () => {
+      const { summary } = resume(saved, 1000 + reloadGraceMs, reloadGraceMs);
+      expect(summary.actions).toBeGreaterThan(0);
+    });
+
+    it('rattrape toujours en absence sans délai de grâce', () => {
+      const { summary } = resume(saved, 1000 + autoIntervalMs);
+      expect(summary.actions).toBe(1);
+    });
   });
 });
