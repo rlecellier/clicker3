@@ -132,6 +132,52 @@ choisir quel enfant on devient avec la même chose.
   jamais un mur de 10 boutons, et choisir ses 3 ou 4 activités, c'est déjà
   choisir son enfant.
 
+**Les emplacements, en clair.** Les chiffres 1, 2, 3, 4 sont le nombre de
+**boutons d'activité** affichés en même temps (en plus de « Gazouiller », qui
+reste toujours disponible). À 1 an, deux activités à portée ; à 3 ans, trois ;
+à 5 ans, quatre. Le joueur possède souvent plus d'objets que cela, d'où le choix.
+
+### Trouver des choses soi-même
+
+Au début, **rien ne se trouve** : un bébé de 8 mois ne va nulle part, tout vient
+des événements. Le joueur gagne ensuite deux façons d'obtenir des objets, qui
+sont de **vraies actions** (elles occupent un emplacement, donc explorer, c'est
+renoncer à une activité à portée).
+
+**Explorer (à partir de 3 ans).** L'enfant marche, il est autonome : il part
+fouiller la maison. Chaque appui remplit une jauge de fouille ; à 100 %, il
+trouve un objet, tiré au hasard (graine de l'état) parmi les trouvailles du
+lieu qu'il n'a pas encore :
+
+- *maison* (3 ans) : pot de confiture, casseroles, télécommande, chaussures de
+  papa, plante, tiroir à chaussettes. Le pot de confiture ouvre l'événement
+  « Pot de confiture » (avouer / s'enfuir / partager) et consomme de la
+  Patience ;
+- *dehors, jardin, école* (4 à 5 ans) : bâton, escargot, ballon d'un copain,
+  craies, trésor de la cour. Le champ s'élargit : l'enfant peut trouver à peu
+  près n'importe quoi de fun ;
+- le **contexte** de la situation ajoute ses trouvailles (coquillage à la plage,
+  menu du room service à l'hôtel, médiator du père guitariste).
+
+L'axe d'Énergie décide *où* l'enfant va : un Vif grimpe et trouve les objets
+en hauteur (étagère, arbre), un Posé trouve les objets cachés (fond du tiroir,
+dessous du lit). Le joueur voit à l'avance la liste des lieux, pas le contenu.
+
+**Réclamer (à partir de 4 ans).** L'enfant sait demander ce qu'il veut. Il
+choisit un objet de sa **liste de souhaits** (un vélo, un jeu de logique, un
+déguisement) et un parent à qui le demander. La réponse **ne dépend pas du
+hasard** mais de choses lisibles :
+
+- le **lien** avec ce parent et ses **moyens** (le fils de millionnaire a
+  presque toujours oui, l'enfant SDF presque toujours « on verra ») ;
+- l'**Attention** que le joueur dépense (insister coûte, et peut user la
+  Patience du parent) ;
+- la réponse est **oui**, **plus tard** (l'objet arrive après un nombre
+  d'événements) ou **non** (le lien baisse un peu, et l'idée de souhait reste).
+
+L'école (4-5 ans) élargit enfin la liste de souhaits : on réclame ce qu'on a vu
+chez les copains.
+
 **Le contexte décide ce qu'on a.** L'état de départ donne ses objets (le fils de
 millionnaire a dix jouets et peu de parents, l'enfant SDF a un nounours et un
 parent très présent). Une même activité peut aussi se perdre (jouet cassé,
@@ -327,7 +373,10 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 
 - **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
 - **Emplacements** : 1 / 2 / 3 / 4 selon l'âge, ou fixes (3) dès le début ?
-- **Objets** : donnés seulement par les événements, ou aussi achetables / trouvables par le joueur ?
+- **Explorer et réclamer** prennent-ils un emplacement (choix : on renonce à
+  jouer), ou sont-ils des boutons à part ?
+- **Trouvailles** : le tirage au hasard est-il acceptable, ou le joueur doit-il
+  voir ce qu'il va trouver ?
 - **Patience / Attention** : les deux, ou une seule jauge « Attention » pour
   limiter le nombre de ressources (risque « trop d'idées d'un coup » du
   [concept](concept.md)) ?
