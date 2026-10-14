@@ -2,11 +2,11 @@ import { afterAction } from '@game/afterAction';
 import { autoTick, setAuto } from '@game/automation';
 import { buyBoost } from '@game/boosts';
 import { buyCompany, buyWarehouse } from '@game/companies';
-import { findById, startState } from '@game/data';
+import { findById, lifeSlices, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { answerBirthday, isBirthdayPending } from '@game/birthday';
-import { grow } from '@game/lifeSlices';
+import { grow, sliceGame } from '@game/lifeSlices';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { openPlacement } from '@game/placements';
@@ -24,21 +24,29 @@ import type { GameAction } from './actions';
 
 // Nouvelle vie : l'état de départ, ses 18 ans à fêter, avec les événements déjà présents au départ.
 // Un emploi qui n'est pas un emploi de départ est ignoré (on garde celui par défaut).
-// Une tranche avant 18 ans n'a ni emploi, ni événement, ni anniversaire : seulement son compteur.
+// Une tranche avant 18 ans n'a ni emploi, ni événement, ni anniversaire :
+// seulement son compteur. Les tranches adultes reprennent le jeu complet avec
+// leur état de départ (`sliceGame`).
 export const newGame = (
   jobId?: string,
   lifeSlice: LifeSliceId = startState.lifeSlice,
-): GameState =>
-  lifeSlice === startState.lifeSlice
-    ? markAllSeen(
-        triggerEvents({
-          ...startState,
-          jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
-          // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
-          pendingBirthday: { age: startState.life.startAge, recap: null },
-        }),
-      )
-    : { ...startState, lifeSlice };
+): GameState => {
+  const slice = findById(lifeSlices, lifeSlice);
+  if (slice?.start != null) {
+    return sliceGame(slice.start, lifeSlice);
+  }
+  if (slice?.growth != null) {
+    return { ...startState, lifeSlice };
+  }
+  return markAllSeen(
+    triggerEvents({
+      ...startState,
+      jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
+      // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
+      pendingBirthday: { age: startState.life.startAge, recap: null },
+    }),
+  );
+};
 
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {

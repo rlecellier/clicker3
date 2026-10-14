@@ -6,4 +6,7 @@ export const lifeSliceIds = [
   'childhood',
   'adolescence',
   'youth',
+  'adulthood',
+  'maturity',
+  'oldAge',
 ] as const;
