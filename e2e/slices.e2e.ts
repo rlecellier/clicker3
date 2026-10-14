@@ -1,15 +1,23 @@
 import { expect, test } from '@playwright/test';
-import { closeBirthday, expectNoOverflow } from './helpers';
+import {
+  amountOf,
+  balanceOf,
+  closeBirthday,
+  counter,
+  expectNoOverflow,
+} from './helpers';
 
 const sidebar = (page: import('@playwright/test').Page) =>
   page.getByRole('navigation', { name: 'Navigation du jeu' });
 
-test('tranches de vie : commencer enfant, grandir, puis repartir en Jeunesse', async ({
+test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunesse', async ({
   page,
 }) => {
   // Le titre propose de commencer plus tôt.
   await page.goto('/');
-  await expect(page.getByText('Ou commencer plus tôt :')).toBeVisible();
+  await expect(
+    page.getByText('Ou commencer ailleurs dans la vie :'),
+  ).toBeVisible();
   await expectNoOverflow(page);
 
   // Petite enfance : un seul onglet (et « Recommencer » en pied de sidebar), sans l'en-tête d'argent, et un bouton
@@ -21,14 +29,14 @@ test('tranches de vie : commencer enfant, grandir, puis repartir en Jeunesse', a
   await expect(
     page.getByRole('heading', { name: 'Petite enfance' }),
   ).toBeVisible();
-  const counter = page
+  const awakening = page
     .getByText('Éveil', { exact: true })
     .locator('xpath=following-sibling::dd[1]');
-  await expect(counter).toHaveText('0');
+  await expect(awakening).toHaveText('0');
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
-  await expect(counter).toHaveText('1');
+  await expect(awakening).toHaveText('1');
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
-  await expect(counter).toHaveText('2');
+  await expect(awakening).toHaveText('2');
   await expectNoOverflow(page);
 
   // Un onglet du jeu complet renvoie à la Vie.
@@ -47,6 +55,31 @@ test('tranches de vie : commencer enfant, grandir, puis repartir en Jeunesse', a
       .getByText('Curiosité', { exact: true })
       .locator('xpath=following-sibling::dd[1]'),
   ).toHaveText('0');
+
+  // Âge adulte : le jeu complet à 30 ans, avec l'argent et les entreprises du
+  // départ. La fenêtre des 30 ans passe avant le jeu, et un tap sur Travailler
+  // vaut un gain réel.
+  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await page.getByRole('button', { name: /^Âge adulte/ }).tap();
+  await page.getByRole('button', { name: 'Recommencer' }).tap();
+  await closeBirthday(page, '30 ans !');
+  await expect(sidebar(page).getByRole('link')).toHaveCount(10);
+  const money = counter(page, 'Argent');
+  const before = await amountOf(money);
+  expect(before).toBe(12_000);
+  // Le salaire se compte dans la balance de la période, il est versé en fin de période.
+  const balance = await balanceOf(page, 'Argent');
+  await page.getByRole('button', { name: /Travailler/ }).tap();
+  await expect.poll(() => balanceOf(page, 'Argent')).toBeGreaterThan(balance);
+  await expectNoOverflow(page);
+
+  // Vieillesse : pas d'anniversaire à 65 ans, le jeu est jouable aussitôt.
+  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await page.getByRole('button', { name: /^Vieillesse/ }).tap();
+  await page.getByRole('button', { name: 'Recommencer' }).tap();
+  await expect(page.getByRole('alertdialog')).toBeHidden();
+  await expect(sidebar(page).getByRole('link')).toHaveCount(10);
+  await expect(page.getByRole('button', { name: /Travailler/ })).toBeVisible();
 
   // Jeunesse : le jeu complet, avec tous ses onglets.
   await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
