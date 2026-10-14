@@ -121,6 +121,21 @@ describe('boucle automatique', () => {
 });
 
 describe('sauvegarde', () => {
+  it('sauvegarde une partie commencée dans une tranche avant 18 ans', () => {
+    const { result, storage } = setup();
+    act(() => {
+      result.current.startGame(undefined, 'childhood');
+    });
+    act(() => {
+      result.current.dispatch({ type: 'grow' });
+    });
+    advance(5000);
+    const loaded = loadGame(storage);
+    expect(loaded?.ok).toBe(true);
+    expect(loaded?.ok && loaded.state.lifeSlice).toBe('childhood');
+    expect(loaded?.ok && loaded.state.growth).toBe(1);
+  });
+
   it('sauvegarde périodiquement', () => {
     const { storage, result } = setup();
     act(() => {
