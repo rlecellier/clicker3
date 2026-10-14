@@ -132,11 +132,13 @@ qu'on a sous la main** de **tout ce qu'on peut faire** :
 | **Maison**    | **Toutes** les activités possibles ici, sans limite de nombre (25 s'il le faut), groupées par objet ou par présence (le nounours, la cuisine, le chat, papa). Chacune se **marque en favori** (étoile). |
 | **Relations** | Famille, puis Amis (§ 3).                                            |
 
-- **Favoris limités.** Le joueur ne peut avoir en favori qu'un petit nombre
-  d'actions, et c'est elles qui s'affichent sur Vie : **1 au départ, 2 vers
-  1 an, 3 vers 3 ans, 4 vers 5 ans**. Mettre une étoile à une activité de la
-  Maison, c'est la poser sur l'écran principal ; une 5ᵉ étoile oblige à en
-  retirer une. Changer de favori est gratuit et immédiat.
+- **Favoris limités, par l'interface.** Le joueur ne peut avoir en favori qu'un
+  petit nombre d'actions (par exemple 4), pour que l'écran principal reste
+  lisible sur téléphone. C'est une **contrainte d'UX**, pas une règle du jeu :
+  elle ne dépend ni de l'âge, ni des axes, ni de la situation. Les règles de
+  `src/game/` ne la connaissent pas ; elle vit dans l'interface (constante et
+  hook de favoris). Une 5ᵉ étoile oblige à en retirer une ; changer de favori est
+  gratuit et immédiat.
 - **La Maison n'est pas limitée**, donc rien ne se perd : un objet débloqué reste
   dans la Maison même s'il n'est pas favori. Le choix porte seulement sur ce
   qu'on joue *en ce moment*, ce qui est un choix de caractère à lui seul.
@@ -384,7 +386,7 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 ## 9. Questions ouvertes
 
 - **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
-- **Favoris** : 1 / 2 / 3 / 4 selon l'âge, ou fixes (3) dès le début ?
+- **Nombre de favoris** (UX) : 3 ou 4, à caler sur la largeur d'un téléphone.
 - **Explorer et réclamer** : en favori comme les autres (et donc en concurrence
   avec jouer), ou toujours visibles dans Vie ?
 - **Trouvailles** : le tirage au hasard est-il acceptable, ou le joueur doit-il
