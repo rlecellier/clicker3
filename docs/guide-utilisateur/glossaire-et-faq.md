@@ -30,7 +30,8 @@
 | Réputation           | Ce que la ville pense de vous. Gagnée (qui donne le palier) ou disponible (qu'on dépense)                         |
 | Rupture              | Un commerce n'a pas pu vendre toute sa capacité faute de stock                                                    |
 | Senior               | À partir de 60 ans : les gains des actions manuelles sont divisés par deux                                        |
-| Sidebar              | La barre de navigation à gauche : les neuf onglets et « Recommencer ». En icônes seules sur petit écran          |
+| Sidebar              | La barre de navigation à gauche : les neuf onglets et « Recommencer ». Sur petit écran, remplacée par la barre des tâches |
+| Démarrer             | Sur petit écran, le bouton en bas à gauche qui ouvre le menu de tous les onglets et de « Recommencer »             |
 | Sommeil              | Une fois par période, à l'heure du coucher ; convertit les marqueurs en points                             |
 | Stock                | Les articles en entrepôt                                                                                          |
 | Surplus              | Le stock qu'on vend d'un coup à 4 € l'article                                                                     |

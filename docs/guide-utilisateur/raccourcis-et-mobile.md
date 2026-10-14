@@ -20,7 +20,7 @@ Pendant la partie, ces touches fonctionnent sur tous les onglets :
 | T      | Travailler (un clic simple)                         |
 | E      | Étudier le cursus actuellement choisi               |
 
-Les chiffres suivent l'ordre de la sidebar, de haut en bas. Les majuscules et les
+Les chiffres suivent l'ordre de la sidebar, de haut en bas (et du menu Démarrer sur téléphone). Les majuscules et les
 minuscules sont équivalentes.
 
 À savoir :
@@ -51,12 +51,20 @@ des pages Entreprises, Améliorations et Comptes, flèches du menu de cursus, pl
 Le jeu tient à partir de 360 pixels de large, sans défilement horizontal. Il a
 été vérifié à 480 × 560 et à 360 × 640.
 
-- **La sidebar reste à gauche, mais passe en icônes.** Sur un écran plus étroit que
-  640 pixels (40 rem), les libellés disparaissent et il reste les icônes et les
-  pastilles. Chaque icône garde son nom pour les lecteurs d'écran et dans son
-  infobulle. Au-dessus, les libellés réapparaissent.
-- **Zones tactiles.** Chaque lien de la sidebar mesure au moins 44 × 44 pixels ;
-  les boutons et les onglets font au moins 44 pixels de haut.
+- **Une barre des tâches en bas, comme sur un ordinateur de 1999.** Sur un écran
+  plus étroit que 640 pixels (40 rem), la sidebar laisse la place à une barre en
+  bas : le bouton **Démarrer** à gauche, puis quatre onglets épinglés en icônes
+  (Courrier, Vie, Emploi, Entreprises). Les pastilles restent sur les icônes.
+  Au-dessus de 640 pixels, la sidebar à gauche et ses libellés reviennent.
+- **Le menu Démarrer.** Il s'ouvre au-dessus du bouton, en bas à gauche, et laisse
+  voir le jeu à côté et au-dessus. Il liste **tous** les onglets avec leur nom,
+  leurs pastilles, et « Recommencer » tout en bas. Une pastille sur Démarrer
+  signale un onglet non épinglé qui a du nouveau. Choisissez un onglet pour
+  l'ouvrir ; touchez à côté du menu ou appuyez sur Échap pour le fermer.
+- **Fenêtres plus serrées.** Sur téléphone, les fenêtres ont moins de bordure et de
+  marge, pour garder la place au contenu.
+- **Zones tactiles.** Chaque bouton et lien de la barre mesure au moins 44 × 44
+  pixels ; les boutons et les onglets font au moins 44 pixels de haut.
 - **L'en-tête est fixe.** L'argent et la jauge du mois restent visibles en haut.
 - **Appui maintenu.** Garder le doigt posé sur Travailler, Étudier ou Vendre le
   surplus répète l'action quatre fois par seconde. Le menu contextuel du
