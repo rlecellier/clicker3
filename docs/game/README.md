@@ -10,6 +10,7 @@ la stack dans [`../stack.md`](../stack.md).
 | ---------------------------------------------- | -------------------------------------------------------- |
 | [concept.md](concept.md)                       | La vie d'un personnage : pitch, décisions, risques       |
 | [v1.md](v1.md)                                 | Périmètre exact de la v1 : temps, actions, sommeil, économie, stock |
+| [tranches-de-vie.md](tranches-de-vie.md)       | Tranches de vie : point de départ au choix, onglets par tranche (#242) |
 | [simulateur.md](simulateur.md)                 | Simulateur de vie : méthode, mesures, dernier relevé    |
 | [equilibrage.md](equilibrage.md)               | Valeurs retenues, leur justification et la preuve au simulateur |
 | [propositions-equilibrage.md](propositions-equilibrage.md) | Propositions à trancher : chiffres crédibles, stats longues, boosts utiles |
