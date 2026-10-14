@@ -27,9 +27,19 @@ type SidebarProperties = {
   footer?: SidebarItem;
 };
 
-type SidebarLinkProperties = { item: SidebarItem };
+type SidebarLinkProperties = {
+  item: SidebarItem;
+  // Libellé visible même sous 40 rem (menu Démarrer).
+  showLabel?: boolean;
+  onClick?: () => void;
+};
 
-const SidebarLink = ({ item }: SidebarLinkProperties) => (
+// Lien de navigation d'un onglet ; sous 40 rem, icône seule sauf `showLabel`.
+export const SidebarLink = ({
+  item,
+  showLabel = false,
+  onClick,
+}: SidebarLinkProperties) => (
   <InfoPanel
     content={
       item.shortcut === undefined
@@ -39,7 +49,8 @@ const SidebarLink = ({ item }: SidebarLinkProperties) => (
   >
     <NavLink
       to={item.to}
-      className={styles.link}
+      className={showLabel ? `${styles.link} ${styles.withLabel}` : styles.link}
+      onClick={onClick}
       aria-label={item.accessibleLabel ?? item.label}
       aria-keyshortcuts={item.shortcut}
     >

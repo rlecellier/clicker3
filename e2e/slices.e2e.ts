@@ -7,8 +7,26 @@ import {
   expectNoOverflow,
 } from './helpers';
 
-const sidebar = (page: import('@playwright/test').Page) =>
-  page.getByRole('navigation', { name: 'Navigation du jeu' });
+type Page = import('@playwright/test').Page;
+
+// À 480 px la navigation est la barre des tâches : tous les onglets (et
+// « Recommencer ») sont dans le menu Démarrer, qu'on ouvre au toucher.
+const openStartMenu = async (page: Page) => {
+  await page.getByRole('button', { name: /^Démarrer/ }).tap();
+  return page.getByRole('navigation', { name: 'Menu Démarrer' });
+};
+
+const expectMenuLinks = async (page: Page, count: number) => {
+  const menu = await openStartMenu(page);
+  await expect(menu.getByRole('link')).toHaveCount(count);
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+};
+
+const tapMenuLink = async (page: Page, name: string) => {
+  const menu = await openStartMenu(page);
+  await menu.getByRole('link', { name }).tap();
+};
 
 test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunesse', async ({
   page,
@@ -20,7 +38,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   ).toBeVisible();
   await expectNoOverflow(page);
 
-  // Petite enfance : un seul onglet (et « Recommencer » en pied de sidebar), sans l'en-tête d'argent, et un bouton
+  // Petite enfance : un seul onglet (et « Recommencer » en pied du menu Démarrer), sans l'en-tête d'argent, et un bouton
   // dont un tap vaut une action avec le gain affiché.
   await page.getByRole('button', { name: /Petite enfance/ }).tap();
   await expect(
@@ -28,7 +46,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   ).toBeVisible();
   await page.getByRole('button', { name: 'Famille standard' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
-  await expect(sidebar(page).getByRole('link')).toHaveCount(2);
+  await expectMenuLinks(page, 2);
   await expect(page.getByLabel('Ressources')).toBeHidden();
   await expect(
     page.getByRole('heading', { name: 'Petite enfance' }),
@@ -42,7 +60,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('2');
   // Pas d'objet encore : la Maison reste fermée.
-  await expect(sidebar(page).getByRole('link')).toHaveCount(2);
+  await expectMenuLinks(page, 2);
   await expectNoOverflow(page);
 
   // Le nounours arrive à l'éveil 4 : la Maison s'ouvre. On y met « Câliner le
@@ -50,13 +68,13 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('4');
-  await expect(sidebar(page).getByRole('link')).toHaveCount(3);
-  await sidebar(page).getByRole('link', { name: 'Maison' }).tap();
+  await expectMenuLinks(page, 3);
+  await tapMenuLink(page, 'Maison');
   await expect(page).toHaveURL('/jeu/maison');
   await expect(page.getByText('Câliner le nounours')).toBeVisible();
   await page.getByRole('button', { name: '☆ Favori' }).first().tap();
   await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
-  await sidebar(page).getByRole('link', { name: 'Vie' }).tap();
+  await tapMenuLink(page, 'Vie');
   const bond = page.getByRole('progressbar', { name: /^Lien : / });
   await expect(bond).toHaveAccessibleName('Lien : Neutre');
   await page.getByRole('button', { name: /Câliner le nounours/ }).tap();
@@ -70,7 +88,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
 
   // « Recommencer » ramène au titre : commencer l'Enfance par-dessus la vie en
   // cours demande confirmation, puis le compteur repart de zéro.
-  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await tapMenuLink(page, 'Recommencer');
   await expect(page).toHaveURL('/');
   await page.getByRole('button', { name: /^Enfance/ }).tap();
   await page.getByRole('button', { name: 'Recommencer' }).tap();
@@ -84,11 +102,11 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   // Âge adulte : le jeu complet à 30 ans, avec l'argent et les entreprises du
   // départ. La fenêtre des 30 ans passe avant le jeu, et un tap sur Travailler
   // vaut un gain réel.
-  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await tapMenuLink(page, 'Recommencer');
   await page.getByRole('button', { name: /^Âge adulte/ }).tap();
   await page.getByRole('button', { name: 'Recommencer' }).tap();
   await closeBirthday(page, '30 ans !');
-  await expect(sidebar(page).getByRole('link')).toHaveCount(10);
+  await expectMenuLinks(page, 10);
   const money = counter(page, 'Argent');
   const before = await amountOf(money);
   expect(before).toBe(12_000);
@@ -99,19 +117,19 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expectNoOverflow(page);
 
   // Vieillesse : pas d'anniversaire à 65 ans, le jeu est jouable aussitôt.
-  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await tapMenuLink(page, 'Recommencer');
   await page.getByRole('button', { name: /^Vieillesse/ }).tap();
   await page.getByRole('button', { name: 'Recommencer' }).tap();
   await expect(page.getByRole('alertdialog')).toBeHidden();
-  await expect(sidebar(page).getByRole('link')).toHaveCount(10);
+  await expectMenuLinks(page, 10);
   await expect(page.getByRole('button', { name: /Travailler/ })).toBeVisible();
 
   // Jeunesse : le jeu complet, avec tous ses onglets.
-  await sidebar(page).getByRole('link', { name: 'Recommencer' }).tap();
+  await tapMenuLink(page, 'Recommencer');
   await page.getByRole('link', { name: 'Démarrer ma vie' }).tap();
   await page.getByRole('button', { name: 'Prendre ce poste' }).tap();
   await page.getByRole('button', { name: 'Recommencer' }).tap();
   await closeBirthday(page, 'Joyeux 18e anniversaire !');
-  await expect(sidebar(page).getByRole('link')).toHaveCount(10);
+  await expectMenuLinks(page, 10);
   await expect(page.getByLabel('Ressources')).toBeVisible();
 });

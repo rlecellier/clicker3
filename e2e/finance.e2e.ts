@@ -17,11 +17,16 @@ test('finance : le surplus se place tout seul, du Livret A au compte-titres', as
   await page.goto('/jeu');
 
   // Les comptes sont possibles mais fermés : un rendez-vous chez le banquier
-  // (au tap) les ouvre. La sidebar annonce les comptes à ouvrir.
-  await openTab(page, 'finance');
-  await expect(
-    page.getByRole('link', { name: /^Finance, 4 nouveautés/ }),
-  ).toBeVisible();
+  // (au tap) les ouvre. Le bouton Démarrer signale un onglet à consulter et le
+  // menu annonce les comptes à ouvrir sur Finance.
+  await page
+    .getByRole('button', { name: /^Démarrer, \d+ onglets? à consulter/ })
+    .tap();
+  await page
+    .getByRole('navigation', { name: 'Menu Démarrer' })
+    .getByRole('link', { name: /^Finance, 4 nouveautés/ })
+    .tap();
+  await expect(page).toHaveURL('/jeu/finance');
   // Chaque compte a son rendez-vous : 2, 3, 4 puis 5 questions, puis un mot de
   // fin qui ouvre le compte.
   const farewells = [
