@@ -3,8 +3,8 @@
 > Statut : **validée**, en cours de développement (suivi : #253). Fait : la
 > situation de naissance (#254, « Famille standard » seule) ; les axes, les
 > objets et activités, l'onglet Maison et les favoris (#255) ; le pool d'événements,
-> les traits, l'exploration et les demandes (#256) ; le menu Relations (#257). Le reste n'est
-> pas codé (bilan, autres situations). Ce document répond à
+> les traits, l'exploration et les demandes (#256) ; le menu Relations (#257) ; le bilan et le passage en
+> Enfance (#258). Le reste n'est pas codé (autres situations). Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
 > pour toutes les suivantes. Cadre général : [tranches-de-vie.md](tranches-de-vie.md).
@@ -343,9 +343,10 @@ on en garde **3 au plus** à la sortie, ce qui oblige à renoncer.
 **Cible : 6 à 8 minutes de jeu actif**, sur 6 années.
 
 - Le temps avance par les actions (jauge de temps), comme dans la v1.
-- Une **période = un trimestre** (24 périodes pour 6 ans), à raison d'environ
-  10 secondes l'une, soit 4 minutes de jauge ; les événements et les paliers
-  font le reste.
+- Une **période = un trimestre** (24 périodes pour 6 ans) de 14 gestes
+  (environ 14 secondes à un geste par seconde), soit 5,6 minutes de gestes, plus
+  environ 10 secondes par événement : 6 à 8 minutes (vérifié par un joueur virtuel
+  dans `earlyChildhood.test.ts`).
 - Aucune attente de longue durée ni progression hors-ligne : la tranche se
   finit, elle ne s'étire pas.
 - Fin : à 6 ans (« 5 ans révolus »), le **bilan de la petite enfance** s'affiche

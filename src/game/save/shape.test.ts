@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 24,
+    version: 25,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -27,6 +27,7 @@ describe('forme de l’état', () => {
       'birthdayBase.period',
       'birthdayBase.reputationEarned',
       'birthdayBase.upgrades',
+      'carry',
       'characterName',
       'child.axes.bond',
       'child.axes.energy',

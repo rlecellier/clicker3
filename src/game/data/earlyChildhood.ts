@@ -4,7 +4,7 @@ import type { ChildAxisId, ChildPlaceId } from '@game/state';
 // un trimestre : 24 trimestres font les 6 ans de la tranche.
 export const childRules = {
   // Actions qui remplissent un trimestre (chaque action en vaut une).
-  quarterCapacity: 10,
+  quarterCapacity: 14,
   quarters: 24,
   // Un axe reste entre −limit et +limit.
   axisLimit: 100,

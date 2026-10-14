@@ -18,6 +18,9 @@ import {
   addTrait,
   askFor,
   availableActivities,
+  canEnterChildhood,
+  childCarry,
+  enterChildhood,
   axisReading,
   babble,
   canAsk,
@@ -85,6 +88,8 @@ const homeFinds = (seed: number) => {
   }
   return state.child.objects;
 };
+
+const grown = () => untilQuarter(baby(4), childRules.quarters);
 
 const eventsOf = (seed: number) =>
   untilQuarter(baby(seed), childRules.quarters).child.firedEvents;
@@ -505,6 +510,52 @@ describe('petite enfance : réclamer un objet', () => {
   });
 });
 
+describe('petite enfance : le bilan et le passage en Enfance', () => {
+  it('n’est possible qu’aux 6 ans', () => {
+    expect(canEnterChildhood(baby())).toBe(false);
+    expect(enterChildhood(baby())).toEqual(baby());
+    expect(canEnterChildhood(grown())).toBe(true);
+    expect(canEnterChildhood(newGame(undefined, 'childhood'))).toBe(false);
+  });
+
+  it('transmet le caractère, les traits, les objets et les événements', () => {
+    const done = grown();
+    const carry = childCarry(done);
+    expect(carry.axes).toEqual(done.child.axes);
+    expect(carry.traits).toEqual(done.child.traits);
+    expect(carry.objects).toEqual(done.child.objects);
+    expect(carry.events).toBe(done.child.firedEvents.length);
+    expect(carry.events).toBeGreaterThanOrEqual(childRules.events.min);
+  });
+
+  it('démarre l’Enfance avec ce qui a été transmis, sans rien d’autre', () => {
+    const done = grown();
+    const next = enterChildhood(done);
+    expect(next.lifeSlice).toBe('childhood');
+    expect(next.carry).toEqual(childCarry(done));
+    expect(next.relations).toEqual(done.relations);
+    expect(next.birthSituation).toBe(done.birthSituation);
+    expect(next.growth).toBe(0);
+    expect(next.child).toEqual({ ...startState.child, seed: done.child.seed });
+    expect(next.status).toBe('playing');
+  });
+
+  it('se joue par le reducer, et l’Enfance garde l’héritage', () => {
+    const next = reduce(grown(), { type: 'enterChildhood' });
+    expect(next.lifeSlice).toBe('childhood');
+    const played = reduce(next, { type: 'grow' });
+    expect(played.growth).toBe(1);
+    expect(played.carry).toEqual(next.carry);
+    // Pas de bilan avant l'heure.
+    expect(reduce(baby(), { type: 'enterChildhood' })).toEqual(baby());
+  });
+
+  it('s’efface quand on recommence une vie', () => {
+    const next = reduce(grown(), { type: 'enterChildhood' });
+    expect(reduce(next, { type: 'restart' }).carry).toBeNull();
+  });
+});
+
 describe('petite enfance : les données', () => {
   it('relient chaque activité à un objet connu', () => {
     const objectIds = new Set(childObjects.map(({ id }) => id));
@@ -641,8 +692,14 @@ describe('petite enfance : un joueur virtuel', () => {
       state = state.child.quarter >= 12 ? explore(state, 'home') : state;
     }
     expect(isChildhoodOver(state)).toBe(true);
-    const minutes = (actions * simulatorConfig.humanCadenceMs) / 60_000;
-    expect(minutes).toBeGreaterThanOrEqual(2);
+    // Un geste par seconde, et dix secondes pour lire et choisir à chaque
+    // événement.
+    const decisionMs = 10_000;
+    const minutes =
+      (actions * simulatorConfig.humanCadenceMs +
+        state.child.firedEvents.length * decisionMs) /
+      60_000;
+    expect(minutes).toBeGreaterThanOrEqual(6);
     expect(minutes).toBeLessThanOrEqual(8);
     expect(state.child.traits.length).toBeLessThanOrEqual(
       childRules.traitLimit,

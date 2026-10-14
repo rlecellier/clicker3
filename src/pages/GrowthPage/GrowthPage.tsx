@@ -1,4 +1,6 @@
 import { ActionButton } from '@component/ActionButton';
+import { FigureList } from '@component/FigureList';
+import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
 import { Stat } from '@component/Stat';
 import { Window } from '@component/Window';
@@ -15,6 +17,15 @@ export const GrowthPage = () => {
       <dl className={styles.counter}>
         <Stat label={screen.counterLabel} value={screen.count} />
       </dl>
+      {screen.inherited === null ? null : (
+        <>
+          <Note>Hérité de la petite enfance :</Note>
+          <FigureList figures={screen.inherited.figures} />
+          {screen.inherited.traits.length === 0 ? null : (
+            <ItemList caption="Traits" items={screen.inherited.traits} />
+          )}
+        </>
+      )}
       <ActionButton
         label={screen.actionLabel}
         variant="primary"

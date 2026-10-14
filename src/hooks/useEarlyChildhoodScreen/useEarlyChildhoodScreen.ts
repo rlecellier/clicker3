@@ -1,5 +1,6 @@
 import { useGameContext } from '@context/GameContext';
 import { childAxes, childRules, childTraits, findById } from '@game/data';
+import type { InfoListItem } from '@component/ItemList';
 import { axisReading, childAge, isChildhoodOver } from '@game/earlyChildhood';
 import { formatCount } from '@game/format';
 import { useFavorites } from '@hook/useFavorites';
@@ -7,6 +8,7 @@ import { useFeedback } from '@hook/useFeedback';
 import { useGameActions } from '@hook/useGameActions';
 import { useHoldRepeat } from '@hook/useHoldRepeat';
 import { useLifeSlice } from '@hook/useLifeSlice';
+import { axisFigures, traitItems } from '@view/childCharacter';
 import { houseEntries } from '@view/houseEntries';
 
 const agePart = (count: number, unit: string) =>
@@ -43,7 +45,6 @@ export const useEarlyChildhoodScreen = () => {
     age: formatChildAge(years, months),
     awakening: formatCount(state.growth),
     isOver,
-    overText: isOver ? 'Cinq ans révolus : la petite enfance est finie.' : '',
     axes: childAxes.map((axis) => {
       const { pole, amount } = axisReading(axis, state.child.axes[axis.id]);
       return {
@@ -80,6 +81,31 @@ export const useEarlyChildhoodScreen = () => {
         };
       }),
     feedback,
+    report: isOver
+      ? {
+          title: 'Carnet de santé',
+          intro:
+            'L’enfant a cinq ans révolus. Le service remercie les parents de leur coopération et prend acte de ce qui suit.',
+          figures: [
+            ...axisFigures(state.child.axes),
+            {
+              label: 'Événements vécus',
+              value: formatCount(state.child.firedEvents.length),
+            },
+            { label: 'Objets', value: formatCount(state.child.objects.length) },
+          ],
+          traits: traitItems(state.child.traits),
+          people: state.relations.map((relation): InfoListItem => ({
+            id: relation.id,
+            title: `${relation.name} (${relation.role})`,
+            detail: `Lien : ${relation.bond} sur 100.`,
+          })),
+          enterLabel: 'Entrer en Enfance',
+          enter: () => {
+            dispatch({ type: 'enterChildhood' });
+          },
+        }
+      : null,
     hasHouse: state.child.objects.length > 0,
   };
 };
