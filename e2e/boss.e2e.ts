@@ -197,14 +197,13 @@ test('patron : premier collaborateur, travail automatique, tableau de bord', asy
   // Quand tout est au dernier palier, « Étudier » disparaît sans que les
   // autres boutons bougent ; le raccourci E ne fait plus rien.
   const sellSurplus = page.getByRole('button', { name: /Vendre le surplus/ });
-  const boxes = async () => [
-    await work.boundingBox(),
-    await sellSurplus.boundingBox(),
-  ];
   // La page défile (fenêtre des balances au-dessus) : on mesure depuis le haut.
-  await page.getByRole('main').evaluate((main) => {
-    main.scrollTop = 0;
-  });
+  const boxes = async () => {
+    await page.getByRole('main').evaluate((main) => {
+      main.scrollTop = 0;
+    });
+    return [await work.boundingBox(), await sellSurplus.boundingBox()];
+  };
   const boxesBefore = await boxes();
   await preloadSave(page, {
     state: {

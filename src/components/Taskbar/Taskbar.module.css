@@ -1,0 +1,55 @@
+.wrapper {
+  position: relative;
+  flex: none;
+}
+
+/* Au-dessus du fond cliquable du menu Démarrer, pour que Démarrer reste
+   utilisable quand le menu est ouvert. */
+.bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  padding: calc(var(--space) / 2) var(--space);
+  background: var(--color-surface);
+  box-shadow:
+    var(--bevel-out),
+    0 -2px 0 var(--color-surface-dark);
+}
+
+.start {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space);
+  min-height: var(--touch-target);
+  padding: 0.25rem var(--space);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: bold;
+  box-shadow: var(--bevel-out);
+}
+
+.start[aria-expanded='true'] {
+  box-shadow: var(--bevel-in);
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.list {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  gap: 2px;
+  margin: 0;
+  padding: 0 0 0 var(--space);
+  border-left: 1px solid var(--color-surface-shadow);
+  list-style: none;
+}

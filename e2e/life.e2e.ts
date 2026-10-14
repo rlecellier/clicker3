@@ -46,20 +46,40 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
       .getByRole('img', { name: /^Réputation/ }),
   ).toBeVisible();
 
-  // À 480 px, la sidebar est à gauche et en icônes seules, mais chaque onglet
-  // garde son nom accessible.
-  const sidebar = page.getByRole('navigation', { name: 'Navigation du jeu' });
-  await expect(sidebar.getByText('Vie', { exact: true })).toBeHidden();
-  await expect(sidebar.getByRole('link', { name: 'Vie' })).toHaveAttribute(
+  // À 480 px, la barre des tâches est en bas : Démarrer et les onglets
+  // épinglés en icônes seules, qui gardent leur nom accessible.
+  const taskbar = page.getByRole('navigation', { name: 'Navigation du jeu' });
+  await expect(taskbar.getByText('Vie', { exact: true })).toBeHidden();
+  await expect(taskbar.getByRole('link', { name: 'Vie' })).toHaveAttribute(
     'aria-current',
     'page',
   );
   await expectNoOverflow(page);
 
-  // Zones tactiles : chaque lien de la sidebar fait au moins 44×44 px.
-  const links = await sidebar.getByRole('link').all();
-  for (const link of links) {
-    const box = await link.boundingBox();
+  // Le menu Démarrer liste tous les onglets avec leur libellé, laisse voir le
+  // jeu au-dessus, et se ferme d'un tap à côté ou sur Échap.
+  const start = taskbar.getByRole('button', { name: /^Démarrer/ });
+  await start.tap();
+  const menu = page.getByRole('navigation', { name: 'Menu Démarrer' });
+  await expect(menu.getByRole('link', { name: 'Ville' })).toBeVisible();
+  await expect(menu.getByText('Recommencer')).toBeVisible();
+  await expect(page.getByRole('banner')).toBeVisible();
+  await page.getByRole('button', { name: 'Fermer le menu' }).tap({
+    position: { x: 350, y: 100 },
+  });
+  await expect(menu).toBeHidden();
+  await start.tap();
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+
+  // Zones tactiles : chaque bouton et lien de la barre fait au moins 44×44 px.
+  const targets = [
+    ...(await taskbar.getByRole('link').all()),
+    ...(await taskbar.getByRole('button').all()),
+  ];
+  for (const target of targets) {
+    const box = await target.boundingBox();
     expect(box?.width).toBeGreaterThanOrEqual(44);
     expect(box?.height).toBeGreaterThanOrEqual(44);
   }

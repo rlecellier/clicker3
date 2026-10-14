@@ -77,3 +77,20 @@
     margin-left: 0;
   }
 }
+
+/* Libellé gardé sous 40 rem : le lien redevient une ligne (menu Démarrer). */
+@media (max-width: 40rem) {
+  .withLabel {
+    justify-content: flex-start;
+    padding: 0.25rem var(--space);
+  }
+
+  .withLabel .label {
+    display: block;
+  }
+
+  .withLabel .badge {
+    position: static;
+    margin-left: auto;
+  }
+}

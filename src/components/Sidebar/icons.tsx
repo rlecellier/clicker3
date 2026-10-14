@@ -13,7 +13,8 @@ export type SidebarIconId =
   | 'finance'
   | 'city'
   | 'house'
-  | 'new-life';
+  | 'new-life'
+  | 'start';
 
 type SidebarIconProperties = { id: SidebarIconId };
 
@@ -101,6 +102,8 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       <circle cx="8" cy="6" r="2" fill="var(--color-surface)" />
     </>
   ),
+  // Quatre vitres : le bouton Démarrer.
+  start: <path d="M1 2l6-1v6H1zM8 1l7-1v7H8zM1 9h6v6l-6-1zM8 9h7v7l-7-1z" />,
   // Flèche de retour.
   'new-life': (
     <path d="M8 2a6 6 0 1 1-6 6h2.5A3.5 3.5 0 1 0 8 4.5V7L3.5 3.5 8 0z" />

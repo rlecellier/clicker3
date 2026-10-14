@@ -225,8 +225,12 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
 
   // Recommencer ramène au choix du premier emploi ; la confirmation protège
   // la vie en cours.
-  const restart = page.getByRole('link', { name: 'Recommencer', exact: true });
-  await restart.click();
+  // « Recommencer » est au bas du menu Démarrer.
+  const restart = async () => {
+    await page.getByRole('button', { name: /^Démarrer/ }).tap();
+    await page.getByRole('link', { name: 'Recommencer', exact: true }).click();
+  };
+  await restart();
   await expect(page).toHaveURL('/nouvelle-vie');
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
@@ -237,7 +241,7 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   await page.getByRole('link', { name: 'Reprendre' }).click();
   await openOwned();
   await expect(owned).toBeVisible();
-  await restart.click();
+  await restart();
   await page.getByRole('button', { name: 'Prendre ce poste' }).click();
   await page
     .getByRole('alertdialog')
