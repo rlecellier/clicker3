@@ -31,3 +31,20 @@
   flex-direction: column;
   gap: var(--space);
 }
+
+/* Téléphone (≤ 40 rem) : moins de bordure, de barre de titre et de marge. */
+@media (max-width: 40rem) {
+  .window {
+    padding: 2px;
+  }
+
+  .titleBar {
+    padding: 1px 4px;
+    min-height: 1.5rem;
+  }
+
+  .content {
+    padding: calc(var(--space) * 0.75);
+    gap: calc(var(--space) * 0.75);
+  }
+}
