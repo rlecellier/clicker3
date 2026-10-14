@@ -22,6 +22,7 @@ les mêmes onglets.
   (id de `birthSituations`, `standard` par défaut), choisie à l'écran titre pour la
   petite enfance et conservée pour toute la vie. `restart` l'accepte ; une
   situation inconnue est ignorée. La version passe à 21, sans migration.
+- **La petite enfance a son sous-état** (#255) : `GameState.child` (quatre axes de −100 à +100, objets possédés, trimestre, remplissage de la jauge), inerte dans les autres tranches. Son temps est à part (`child.quarter`, 10 gestes par trimestre, 24 trimestres) : elle ne touche ni `period` ni `gauge`, que les événements et l'économie de l'adulte lisent. « Gazouiller » reste l'action `grow` (qui délègue à `babble`) et `doActivity` joue une activité. L'onglet Maison (`house`) s'ouvre au premier objet. Les favoris de l'écran Vie sont une préférence d'interface (`useFavorites`, localStorage, 4 au plus), pas un état du jeu. La version passe à 22, sans migration.
 - **Les tranches sont des données** (`lifeSlices`) : id, nom, âges, onglets
   ouverts, et le libellé du bouton et du compteur pour les tranches d'avant 18
   ans. Ajouter une tranche ne demande pas de code propre à cette tranche.

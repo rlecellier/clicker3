@@ -1,7 +1,8 @@
 # Petite enfance (0 à 5 ans)
 
 > Statut : **validée**, en cours de développement (suivi : #253). Fait : la
-> situation de naissance (#254, « Famille standard » seule). Le reste n'est pas codé. Ce document répond à
+> situation de naissance (#254, « Famille standard » seule) ; les axes, les
+> objets et activités, l'onglet Maison et les favoris (#255). Le reste n'est pas codé. Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
 > pour toutes les suivantes. Cadre général : [tranches-de-vie.md](tranches-de-vie.md).

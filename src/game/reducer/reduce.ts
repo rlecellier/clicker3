@@ -3,6 +3,7 @@ import { autoTick, setAuto } from '@game/automation';
 import { buyBoost } from '@game/boosts';
 import { buyCompany, buyWarehouse } from '@game/companies';
 import { birthSituations, findById, lifeSlices, startState } from '@game/data';
+import { doActivity } from '@game/earlyChildhood';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { answerBirthday, isBirthdayPending } from '@game/birthday';
@@ -121,6 +122,9 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'grow': {
       return grow(state);
+    }
+    case 'doActivity': {
+      return doActivity(state, action.id);
     }
     case 'restart': {
       return newGame(action.jobId, action.lifeSlice, action.birthSituation);
