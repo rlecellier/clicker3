@@ -27,7 +27,7 @@ export const economyRules = {
   companyMarkerStat: 'gestion',
   // Vente directe du surplus de stock, à bas prix.
   surplusPrice: 4,
-  surplusGauge: 5,
+  surplusMinutes: 100,
   // Petit entrepôt supplémentaire, toujours achetable : l'issue de secours
   // quand la production dépasse le stock que l'on peut ranger.
   warehouse: { baseCost: 160, growth: 1.03, capacity: 35 },

@@ -177,9 +177,9 @@ describe('findById', () => {
 const byName = (first: string, second: string) => first.localeCompare(second);
 
 describe('crédibilité des salaires, du train de vie et des employés', () => {
-  const { overtime, gauge } = actionRules.work;
-  // Actions de travail qui remplissent les 8 h de la journée.
-  const regularActions = overtime.regularGauge / gauge;
+  const { overtime, minutes } = actionRules.work;
+  // Actions de travail qui remplissent la journée de travail normale.
+  const regularActions = overtime.regularMinutes / minutes;
   const monthlyWage = (salary: number) => salary * regularActions;
   const housings = upgrades.flatMap((upgrade) =>
     upgrade.effects.flatMap((effect) =>
@@ -189,12 +189,11 @@ describe('crédibilité des salaires, du train de vie et des employés', () => {
   // Tout ce qui ajoute un salaire à payer (employés et assistante).
   const employees = upgrades.filter((upgrade) => (upgrade.payroll ?? 0) > 0);
 
-  it('compte un nombre entier d’actions pour les 8 h de travail', () => {
+  it('compte un nombre entier d’actions pour la journée de travail', () => {
     expect(Number.isSafeInteger(regularActions)).toBe(true);
-    // Une journée = ce qu'il reste de la jauge après le plus long sommeil.
-    expect(overtime.regularGauge).toBeLessThanOrEqual(
-      startState.gaugeCapacity *
-        (1 - actionRules.sleep.hours.max / actionRules.sleep.hoursPerPeriod),
+    // Elle tient dans le temps d'éveil de la plus longue des journées de départ.
+    expect(overtime.regularMinutes).toBeLessThanOrEqual(
+      startState.gaugeCapacity,
     );
   });
 
@@ -223,7 +222,7 @@ describe('crédibilité des salaires, du train de vie et des employés', () => {
     const starts = overtime.tiers.map((tier) => tier.from);
     expect(wages.every((wage) => wage > 1)).toBe(true);
     expect(wages).toEqual(wages.toSorted((first, second) => first - second));
-    expect(starts[0]).toBe(overtime.regularGauge);
+    expect(starts[0]).toBe(overtime.regularMinutes);
     expect(starts).toEqual(starts.toSorted((first, second) => first - second));
     expect(overtime.gaugeSurcharge).toBeGreaterThan(0);
   });
@@ -375,6 +374,8 @@ describe('portée des améliorations', () => {
     'course',
     'housing',
     'maxMarkers',
+    'sleepMore',
+    'sleepLess',
     'markerChance',
     'workReputation',
     'automation',

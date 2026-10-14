@@ -6,13 +6,13 @@ import { numberOf, openTab, preloadSave } from './helpers';
 const { overtimeActions } = actionRules.work.promotion;
 const jobId = startState.jobId ?? '';
 
-// À une action de la promotion `rank` : la journée est faite (30 de jauge de
+// À une action de la promotion `rank` : la journée est faite (600 minutes de
 // travail), le prochain clic est payé en heures sup. et atteint le seuil.
 const beforePromotion = (rank: number): Partial<GameState> => ({
   overtimeActions: { [jobId]: (overtimeActions[rank] ?? 0) - 1 },
   promotionsOffered: { [jobId]: rank },
-  gauge: 40,
-  gaugeSegments: [{ kind: 'work', amount: 40 }],
+  gauge: 600,
+  gaugeSegments: [{ kind: 'work', amount: 600 }],
   mailRead: 0,
 });
 

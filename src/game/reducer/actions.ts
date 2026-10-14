@@ -18,7 +18,6 @@ export type GameAction =
   // Annule une amélioration possédée : ses effets disparaissent, sans remboursement.
   | { type: 'cancelUpgrade'; id: string }
   // Durée du sommeil quotidien (court 4 h, moyen 6 h, long 8 h), réglée dans l'onglet Vie.
-  | { type: 'setSleepHours'; hours: number }
   | { type: 'setAuto'; action: 'work'; isEnabled: boolean }
   // Temps réel écoulé (ms), fourni par l'appelant : les règles ne lisent pas l'horloge.
   // Le retour d'absence passe par `resume` (@game/automation), pas par le reducer.

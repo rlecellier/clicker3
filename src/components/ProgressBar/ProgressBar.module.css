@@ -53,10 +53,6 @@
   --block-color: var(--color-gauge-work);
 }
 
-.sleep {
-  --block-color: var(--color-gauge-sleep);
-}
-
 /* Version mini : piste basse, blocs plus fins. */
 .small .track {
   height: 0.75rem;

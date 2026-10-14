@@ -12,8 +12,6 @@ const firstThreshold = overtimeActions[0] ?? 0;
 
 const stateWith = (changes: Partial<GameState>): GameState => ({
   ...startState,
-  // Déjà couché cette période : le sommeil ne garde pas les gestes de travail.
-  lastSleepPeriod: 0,
   ...changes,
 });
 
@@ -23,8 +21,8 @@ const onTheEdge = (rank = 0): GameState =>
   stateWith({
     overtimeActions: { [jobId]: (overtimeActions[rank] ?? 0) - 1 },
     promotionsOffered: { [jobId]: rank },
-    gauge: 40,
-    gaugeSegments: [{ kind: 'work', amount: 40 }],
+    gauge: 600,
+    gaugeSegments: [{ kind: 'work', amount: 600 }],
   });
 
 const offered = (): GameState =>
@@ -46,8 +44,8 @@ describe('compte des heures supplémentaires', () => {
   it('compte une action en heures supplémentaires', () => {
     const next = reduce(
       stateWith({
-        gauge: 40,
-        gaugeSegments: [{ kind: 'work', amount: 40 }],
+        gauge: 600,
+        gaugeSegments: [{ kind: 'work', amount: 600 }],
       }),
       { type: 'work', target: 'job' },
     );
@@ -65,8 +63,8 @@ describe('offre', () => {
   it('ne se déclenche pas avant le seuil', () => {
     const before = stateWith({
       overtimeActions: { [jobId]: firstThreshold - 2 },
-      gauge: 40,
-      gaugeSegments: [{ kind: 'work', amount: 40 }],
+      gauge: 600,
+      gaugeSegments: [{ kind: 'work', amount: 600 }],
     });
     const next = reduce(before, { type: 'work', target: 'job' });
     expect(next.pendingPromotion).toBeNull();
@@ -159,8 +157,8 @@ describe('trois promotions par emploi', () => {
       state = {
         ...state,
         overtimeActions: { [jobId]: threshold - 1 },
-        gauge: 40,
-        gaugeSegments: [{ kind: 'work', amount: 40 }],
+        gauge: 600,
+        gaugeSegments: [{ kind: 'work', amount: 600 }],
       };
       state = reduce(state, { type: 'work', target: 'job' });
       expect(state.pendingPromotion).toEqual({ jobId, rank });

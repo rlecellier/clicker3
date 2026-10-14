@@ -12,7 +12,7 @@ import {
   repeatUntil,
 } from './helpers';
 
-test('début de carrière : travailler, acheter un stage, étudier, s’endormir', async ({
+test('début de carrière : travailler, acheter un stage, étudier, passer la nuit', async ({
   page,
 }) => {
   await page.goto('/');
@@ -127,8 +127,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     .getByRole('menuitemradio', { name: /Posture professionnelle/ })
     .click();
   const studyCost = 20;
-  // Étudier est gardé pour le réveil si le personnage dort : on attend l'éveil.
-  await expect(page.getByText('Zzz')).toBeHidden();
   const before = await money();
   const balanceBefore = await balanceOf(page, 'Argent');
   await page.getByRole('button', { name: 'Étudier' }).click();
@@ -144,7 +142,6 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     () => clickThroughPromotion(page, work),
     async () => (await money()) >= 20,
   );
-  await expect(page.getByText('Zzz')).toBeHidden();
   const beforeShortcut = await money();
   const balanceBeforeShortcut = await balanceOf(page, 'Argent');
   await page.keyboard.press('3');
@@ -157,12 +154,10 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
     beforeShortcut - studyCost + balanceBeforeShortcut,
   ]).toContain(await money());
 
-  // À l'heure du coucher (la jauge de temps arrive aux 16/24 de la période, 8 h
-  // de sommeil), le personnage s'endort tout seul : les marqueurs se vident
-  // pas à pas et se convertissent en points de stat. Travailler est impossible
-  // pendant ce temps (Playwright attend que le bouton se réactive).
-  // Il faut d'abord un marqueur dans le cerveau : il n'a plus besoin d'être
-  // plein pour dormir. L'étude en donne 7 fois sur 10.
+  // La nuit vient à la fin de la période (la jauge de temps d'éveil est pleine) :
+  // les marqueurs du cerveau se convertissent d'un coup en points de stat, sans
+  // pause ni barre. Il faut d'abord un marqueur dans le cerveau. L'étude en
+  // donne 7 fois sur 10.
   await repeatUntil(
     async () => {
       await ((await money()) >= studyCost
@@ -173,14 +168,14 @@ test('début de carrière : travailler, acheter un stage, étudier, s’endormir
   );
   await repeatUntil(
     () => clickThroughPromotion(page, work),
-    () => page.getByText('Zzz').isVisible(),
+    () => page.getByText(/Cerveau 0\/\d+/).isVisible(),
     150,
   );
-  await expect(page.getByText(/Cerveau 0\/\d+/)).toBeVisible();
-  // Le sommeil finit la période (loyer, salaires) : on attend le réveil.
-  await expect(page.getByText('Zzz')).toBeHidden();
+  await expect(
+    page.getByText(/Dernière nuit : [1-9]\d* marqueurs? convertis?/),
+  ).toBeVisible();
 
-  // Les points gagnés en dormant s'affichent dans le profil (« Métier · palier
+  // Les points gagnés la nuit s'affichent dans le profil (« Métier · palier
   // 1 · 3 pts »), et la mini-jauge sous « Étudier » suit la même compétence.
   await openTab(page, 'profil');
   const metier = page.getByRole('progressbar', { name: /^Métier/ });

@@ -1,7 +1,6 @@
 import { wagesDueOf } from '@game/economy';
 import { autoIntervalMs } from '@game/automation';
-import { automationRules, startState } from '@game/data';
-import { bedtimeGauge, sleepGauge } from '@game/sleep';
+import { actionRules, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import type { GameAction } from './actions';
@@ -12,7 +11,7 @@ describe('reduce', () => {
   it('applique addGauge', () => {
     const next = reduce(startState, {
       type: 'addGauge',
-      amount: 250,
+      amount: startState.gaugeCapacity * 3 + 40,
       kind: 'work',
     });
     expect(next.period).toBe(3);
@@ -157,65 +156,29 @@ describe('reduce', () => {
     expect(cancelled.money).toBe(bought.money);
   });
 
-  it('s’endort quand un travail manuel amène la jauge à l’heure du coucher', () => {
+  it('convertit les marqueurs quand un travail manuel termine la période', () => {
     const state: GameState = {
       ...startState,
-      gauge: bedtimeGauge(startState) - 1,
+      gauge: startState.gaugeCapacity - 1,
       markers: ['metier'],
     };
     const next = reduce(state, { type: 'work', target: 'job' });
-    expect(next.isSleeping).toBe(true);
-    expect(next.stats.metier).toBe(0);
+    expect(next.period).toBe(1);
+    expect(next.stats.metier).toBe(1);
+    expect(next.markers).toEqual([]);
   });
 
-  it('règle la durée du sommeil', () => {
-    expect(
-      reduce(startState, { type: 'setSleepHours', hours: 6 }).sleepHours,
-    ).toBe(6);
-  });
-
-  it('garde les gestes manuels pendant le sommeil et les rejoue au réveil', () => {
-    const asleep: GameState = {
+  it('ne bloque jamais le travail ni l’étude : plus de pause de sommeil', () => {
+    const state: GameState = {
       ...startState,
       upgrades: ['stage-posture'],
       money: 500,
-      isSleeping: true,
-      markers: ['metier'],
     };
-    const worked = reduce(asleep, { type: 'work', target: 'job' });
+    const worked = reduce(state, { type: 'work', target: 'job' });
     const studied = reduce(worked, { type: 'study', courseId: 'metier' });
-    expect(studied.money).toBe(asleep.money);
-    expect(studied.gauge).toBe(0);
-    expect(studied.queuedActions).toEqual([
-      { type: 'work', target: 'job' },
-      { type: 'study', courseId: 'metier' },
-    ]);
-    const awake = reduce(studied, {
-      type: 'autoTick',
-      elapsedMs: automationRules.sleepDurationMs,
-    });
-    expect(awake.queuedActions).toEqual([]);
-    expect(awake.money).not.toBe(asleep.money);
-    expect(awake.gauge).toBeGreaterThan(studied.gauge);
-  });
-
-  it('vide le cerveau au fil du temps réel, puis se réveille', () => {
-    const state: GameState = {
-      ...startState,
-      isSleeping: true,
-      sleepLeft: 2,
-      sleepTotal: 2,
-      sleepStepGauge: sleepGauge(startState) / 2,
-      sleepConvertible: 2,
-      markers: ['metier', 'metier'],
-    };
-    const done = reduce(state, {
-      type: 'autoTick',
-      elapsedMs: automationRules.sleepDurationMs,
-    });
-    expect(done.isSleeping).toBe(false);
-    expect(done.stats.metier).toBe(2);
-    expect(done.gauge).toBeCloseTo(sleepGauge(state));
+    expect(studied.gauge).toBe(
+      actionRules.work.minutes + actionRules.study.minutes,
+    );
   });
 
   describe('automatisation', () => {

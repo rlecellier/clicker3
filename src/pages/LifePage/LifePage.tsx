@@ -4,7 +4,7 @@ import { MarkerTrack } from '@component/MarkerTrack';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { ReputationStars } from '@component/ReputationStars';
-import { SleepPicker } from '@component/SleepPicker';
+import { SleepSummary } from '@component/SleepSummary';
 import { SplitActionButton } from '@component/SplitActionButton';
 import { ResourceTile } from '@component/ResourceTile';
 import { Window } from '@component/Window';
@@ -103,12 +103,7 @@ export const LifePage = () => {
             />
           </div>
         </div>
-        <SleepPicker
-          options={screen.sleep.options}
-          value={screen.sleep.value}
-          onChange={screen.sleep.select}
-          summary={screen.sleep.summary}
-        />
+        <SleepSummary {...screen.sleep} />
       </Window>
     </>
   );

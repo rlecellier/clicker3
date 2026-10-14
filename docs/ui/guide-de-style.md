@@ -91,8 +91,8 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | Composant         | Rôle et props clés                                                                                                             | Quand l'utiliser                                           |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | `CharacterHeader` | `name`, `age`, `date`, `phase` (textes déjà formatés)                                                                          | En-tête du personnage                                      |
-| `MarkerTrack`     | `count`, `max`, `isSleeping` ; blocs décoratifs (`aria-hidden`)                                                                              | Jetons ou marqueurs limités                                |
-| `SleepPicker`     | `options`, `value`, `onChange`, `summary` ; cases exclusives (`radio`), résumé en `role="status"` | Choisir une durée parmi quelques valeurs |
+| `MarkerTrack`     | `count`, `max` ; blocs décoratifs (`aria-hidden`)                                                                                            | Jetons ou marqueurs limités                                |
+| `SleepSummary`    | `title`, `lines` ; le sommeil à lire, sans réglage | Afficher le rythme de la journée |
 | `ActionButton`    | `label`, `detail?`, `reason?`, `isDisabled?`, `variant?`, `isAuto?`, `autoHint?`, `press?`, `shortcut?`, `onClick`                          | Action de jeu ; `press` : appui maintenu = 4 clics par seconde, appui long = automatique |
 | `SplitActionButton` | `label`, `detail?`, `reason?`, `isDisabled?`, `menuLabel`, `choices` (`id`, `label`, `detail?`), `selectedId`, `onSelect`, `press?`, `shortcut?`, `onClick` ; flèche = Base UI Menu | Action de jeu dont la cible se choisit (cursus à étudier) |
 | `ActionInfo`      | `detail?`, `reason?`, `isDisabled` ; deux lignes réservées, texte complet en infobulle | Sous un bouton d'action : la raison du blocage, sinon le détail (dans `ActionButton` et `SplitActionButton`) |

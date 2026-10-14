@@ -13,7 +13,7 @@ describe('study', () => {
   it('coûte de l’argent et remplit la jauge', () => {
     const next = study(funded, 'metier');
     expect(next.money).toBe(1000 - (course?.cost ?? 0));
-    expect(next.gauge).toBe(actionRules.study.gauge);
+    expect(next.gauge).toBe(actionRules.study.minutes);
   });
 
   it('donne des marqueurs de la stat du cursus', () => {

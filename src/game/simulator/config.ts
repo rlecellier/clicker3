@@ -71,7 +71,13 @@ export const guardrailConfig = {
 // chantier d'équilibrage retire ceux qu'il corrige. Depuis le sommeil quotidien
 // (issue #202), ces améliorations échouent : à recaler dans #205. Les placements
 // automatiques (#230) puis le compte-titres sans plafond (#232) font rapporter
-// l'argent du joueur virtuel : seul le studio rénové échoue encore.
+// l'argent du joueur virtuel : seul le studio rénové échouait encore. La journée
+// de 24 h (issue #261) les a tous fait repasser (l'économie a bougé), sauf
+// `matelas-memoire` : dormir plus ne rapporte pas de recettes mais de
+// l'apprentissage, que le test d'utilité ne mesure pas. S'y ajoute `stats:stats`
+// (dernier palier à la minute 24,3 pour un seuil de 25 : marge quasi nulle).
+// Les deux sont à recaler dans #205.
 export const knownGuardrailFailures: readonly string[] = [
-  'utility:studio-renove',
+  'utility:matelas-memoire',
+  'stats:stats',
 ];

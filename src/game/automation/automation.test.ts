@@ -1,6 +1,5 @@
 import { wagesDueOf } from '@game/economy';
 import { actionRules, automationRules, jobs, startState } from '@game/data';
-import { sleepGauge } from '@game/sleep';
 import type { GameState } from '@game/state';
 import { deepFreeze } from '@test/deepFreeze';
 import { work } from '@game/work';
@@ -42,7 +41,7 @@ describe('rythme', () => {
 
   it('rejoue plusieurs actions dues d’un coup', () => {
     const next = autoTick(workOnly, 3 * autoIntervalMs + 10);
-    expect(next.gauge).toBe(3 * actionRules.work.gauge);
+    expect(next.gauge).toBe(3 * actionRules.work.minutes);
     expect(next.autoElapsed).toBe(10);
   });
 });
@@ -60,7 +59,7 @@ describe('efficacité', () => {
 
   it('coûte la même jauge de temps', () => {
     expect(autoTick(workOnly, autoIntervalMs).gauge).toBe(
-      actionRules.work.gauge,
+      actionRules.work.minutes,
     );
   });
 });
@@ -91,11 +90,10 @@ describe('interrupteurs', () => {
     expect(catchUp(off, 100 * autoIntervalMs).summary.actions).toBe(0);
   });
 
-  it('le temps réel ne compte qu’avec l’auto active ou pendant le sommeil', () => {
+  it('le temps réel ne compte qu’avec l’auto active', () => {
     expect(isTimeRunning(startState)).toBe(false);
     expect(isTimeRunning({ ...startState, autoWork: true })).toBe(false);
     expect(isTimeRunning(automated)).toBe(true);
-    expect(isTimeRunning({ ...startState, isSleeping: true })).toBe(true);
   });
 
   it('ne fait rien d’un temps nul ou négatif', () => {
@@ -105,86 +103,25 @@ describe('interrupteurs', () => {
 });
 
 describe('sommeil', () => {
-  const asleep: GameState = {
-    ...startState,
-    isSleeping: true,
-    sleepLeft: 5,
-    sleepTotal: 5,
-    sleepStepGauge: sleepGauge(startState) / 5,
-    sleepConvertible: 5,
-    markers: ['metier', 'metier', 'gestion', 'gestion', 'gestion'],
-  };
-  const sleepIntervalMs = automationRules.sleepDurationMs / asleep.sleepTotal;
-  const sleepCost = sleepGauge(asleep);
-  const perMarker = sleepCost / asleep.sleepTotal;
-
-  it('vide un marqueur à chaque délai, même sans travail automatique', () => {
-    const next = autoTick(asleep, 2 * sleepIntervalMs);
-    expect(next.markers).toEqual(['gestion', 'gestion', 'gestion']);
-    expect(next.stats.metier).toBe(2);
-    expect(next.gauge).toBeCloseTo(2 * perMarker);
-    expect(next.isSleeping).toBe(true);
-  });
-
-  it('ne fait rien avant le délai', () => {
-    const next = autoTick(asleep, sleepIntervalMs - 1);
-    expect(next.markers).toHaveLength(5);
-    expect(next.gauge).toBe(0);
-  });
-
-  it('dure toujours le même temps, quelle que soit la capacité du cerveau', () => {
-    const big: GameState = {
+  it('ne fait pas tourner le temps : la nuit vient avec la fin de période', () => {
+    const brain: GameState = {
       ...startState,
-      maxMarkers: 10,
-      isSleeping: true,
-      markers: Array.from({ length: 10 }, () => 'metier' as const),
+      markers: ['metier', 'metier', 'gestion'],
     };
-    expect(autoTick(big, automationRules.sleepDurationMs).isSleeping).toBe(
-      false,
-    );
-    expect(autoTick(asleep, automationRules.sleepDurationMs).isSleeping).toBe(
-      false,
-    );
-    expect(autoTick(big, automationRules.sleepDurationMs - 1).isSleeping).toBe(
-      true,
-    );
+    expect(isTimeRunning(brain)).toBe(false);
+    expect(autoTick(brain, 10_000)).toBe(brain);
   });
 
-  it('rejoue au réveil les gestes manuels gardés', () => {
-    const queued: GameState = {
-      ...asleep,
-      queuedActions: [{ type: 'work', target: 'job' }],
+  it('convertit les marqueurs au passage de période du travail automatique', () => {
+    const brain: GameState = {
+      ...workOnly,
+      markers: ['metier', 'metier', 'gestion'],
+      gauge: startState.gaugeCapacity - 1,
     };
-    const next = autoTick(queued, automationRules.sleepDurationMs);
-    expect(next.queuedActions).toEqual([]);
-    expect(wagesDueOf(next)).toBeGreaterThan(0);
-  });
-
-  it('ne garde pas le travail automatique pour le réveil', () => {
-    const next = autoTick(
-      { ...asleep, upgrades: automated.upgrades, autoWork: true },
-      automationRules.sleepDurationMs - 1,
-    );
-    expect(next.queuedActions).toEqual([]);
-    expect(next.money).toBe(0);
-  });
-
-  it('se réveille quand le dernier marqueur est vidé', () => {
-    const next = autoTick(asleep, 5 * sleepIntervalMs);
-    expect(next.markers).toEqual([]);
-    expect(next.isSleeping).toBe(false);
-    expect(next.gauge).toBeCloseTo(sleepCost);
-    expect(next.stats.gestion).toBe(3);
-  });
-
-  it('le travail automatique attend le réveil', () => {
-    const next = autoTick(
-      { ...asleep, upgrades: automated.upgrades, autoWork: true },
-      5 * sleepIntervalMs,
-    );
-    expect(wagesDueOf(next)).toBe(0);
-    const later = autoTick(next, autoIntervalMs);
-    expect(wagesDueOf(later)).toBeGreaterThan(0);
+    const next = autoTick(brain, autoIntervalMs);
+    expect(next.period).toBe(1);
+    expect(next.stats.metier).toBe(2);
+    expect(next.stats.gestion).toBe(1);
   });
 });
 
@@ -197,16 +134,14 @@ describe('catchUp', () => {
   });
 
   const periodMs =
-    (startState.gaugeCapacity / actionRules.work.gauge) * autoIntervalMs;
+    (startState.gaugeCapacity / actionRules.work.minutes) * autoIntervalMs;
 
   it('rejoue l’absence et résume ce qui s’est passé', () => {
     const { state, summary } = catchUp(workOnly, 25 * autoIntervalMs);
-    // 25 délais d'une demi-seconde : par période, cinq actions de travail
-    // (trois heures normales, deux heures sup.) puis cinq pas de sommeil de
-    // 100 ms (8 h, tout le cerveau), soit quatre périodes entières et une action.
-    expect(summary.actions).toBe(41);
-    expect(summary.periods).toBe(4);
-    expect(state.period).toBe(4);
+    // 25 délais d'une demi-seconde, une action de travail à chacun.
+    expect(summary.actions).toBe(25);
+    expect(summary.periods).toBe(5);
+    expect(state.period).toBe(5);
     expect(summary.money).toBe(state.money - workOnly.money);
     expect(summary.stock).toBe(0);
     expect(summary.reputation).toBeCloseTo(state.reputation);
@@ -282,8 +217,8 @@ describe('resume', () => {
 
   it('rattrape le temps écoulé depuis lastSeenAt puis note le retour', () => {
     const { state, summary } = resume(saved, 1000 + 25 * autoIntervalMs);
-    expect(summary.actions).toBe(41);
-    expect(state.period).toBe(4);
+    expect(summary.actions).toBe(25);
+    expect(state.period).toBe(5);
     expect(state.lastSeenAt).toBe(1000 + 25 * autoIntervalMs);
   });
 

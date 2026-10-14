@@ -1,4 +1,3 @@
-import { actionRules } from './actionRules';
 import { defaultBirthSituationId } from './birthSituations';
 import { emptyLedger } from '@game/ledger';
 import type { GameState } from '@game/state';
@@ -9,7 +8,7 @@ import type { GameState } from '@game/state';
  * équilibrer au simulateur.
  */
 export const startState: GameState = {
-  version: 22,
+  version: 23,
   characterName: 'Camille Morel',
   life: {
     startAge: 18,
@@ -22,7 +21,7 @@ export const startState: GameState = {
   period: 0,
   gauge: 0,
   gaugeSegments: [],
-  gaugeCapacity: 70,
+  gaugeCapacity: 960,
   status: 'playing',
   phase: 'youngAdult',
   lifeSlice: 'youth',
@@ -48,15 +47,9 @@ export const startState: GameState = {
   markers: [],
   markerProgress: { metier: 0, gestion: 0, intelligence: 0, endurance: 0 },
   maxMarkers: 5,
-  isSleeping: false,
-  sleepHours: actionRules.sleep.hours.default,
-  periodSleepHours: actionRules.sleep.hours.default,
-  sleepLeft: 0,
-  sleepTotal: 0,
-  sleepStepGauge: 0,
-  sleepConvertible: 0,
-  lastSleepPeriod: -1,
-  queuedActions: [],
+  sleepMoreHours: 0,
+  sleepLessHours: 0,
+  lastNightMarkers: 0,
   sleepMultiplier: 1,
 
   jobId: 'interim',

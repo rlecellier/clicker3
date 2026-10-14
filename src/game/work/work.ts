@@ -10,7 +10,7 @@ import { jobById } from '@game/jobs';
 import { grantMarker } from '@game/markers';
 import {
   isOvertime,
-  overtimeGaugeFactor,
+  overtimeDurationFactor,
   overtimeWageFactor,
 } from '@game/overtime';
 import { addGauge } from '@game/period';
@@ -88,6 +88,13 @@ const workAtCompany = (
   },
 });
 
+// Durée de la prochaine action de travail, en minutes d'éveil : la durée de
+// base, rallongée par un événement (`workSlow`) et par les heures sup.
+export const workMinutes = (state: GameState) =>
+  actionRules.work.minutes *
+  (1 + activeBonus(state, 'workSlow')) *
+  overtimeDurationFactor(state);
+
 // Gain de l'action, chance de marqueur, puis temps qui passe. `isAuto`
 // distingue l'action automatique de l'action manuelle.
 export const work = (
@@ -98,7 +105,7 @@ export const work = (
   if (!canWork(state, target)) {
     return state;
   }
-  const { gauge, markerChance } = actionRules.work;
+  const { markerChance } = actionRules.work;
   const isAtJob = target === JOB_TARGET;
   const done = isAtJob
     ? workAtJob(state, isAuto)
@@ -108,9 +115,5 @@ export const work = (
     isAtJob ? jobMarkerStat : economyRules.companyMarkerStat,
     markerChance,
   );
-  return addGauge(
-    withMarker,
-    gauge * (1 + activeBonus(state, 'workSlow')) * overtimeGaugeFactor(state),
-    'work',
-  );
+  return addGauge(withMarker, workMinutes(state), 'work');
 };

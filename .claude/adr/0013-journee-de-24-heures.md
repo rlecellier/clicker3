@@ -44,4 +44,4 @@ neuf champs.
 - Le nombre d'actions par période est `éveil / durée` : il se déduit du sommeil.
 - Les durées de départ (travail 200 min, étude 300 min) gardent à peu près le
   nombre d'actions par période d'avant ; l'équilibrage fin est une issue de suivi.
-- Sauvegarde : pas de migration (ADR 0010), la version passe à 21.
+- Sauvegarde : pas de migration (ADR 0010), la version monte d’un cran.

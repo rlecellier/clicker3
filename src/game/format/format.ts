@@ -107,7 +107,6 @@ export const statLabels: Record<StatId, string> = {
 export const activityLabels: Record<Activity, string> = {
   work: 'Au travail',
   study: 'En formation',
-  sleep: 'Dort',
   idle: 'Entre deux réunions',
   over: 'Plus joignable',
 };
@@ -233,6 +232,12 @@ export const describeEffect = (effect: UpgradeEffect): string => {
     }
     case 'housing': {
       return `Conversion du sommeil ${formatFactor(effect.sleepMultiplier)}`;
+    }
+    case 'sleepMore': {
+      return `Sommeil +${formatCount(effect.hours)} h : on apprend mieux, on a moins de temps`;
+    }
+    case 'sleepLess': {
+      return `Sommeil −${formatCount(effect.hours)} h : plus de temps, on apprend pareil`;
     }
     case 'stockCapacity': {
       return `Capacité du stock ${formatFactor(effect.factor)}`;

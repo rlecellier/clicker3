@@ -76,8 +76,7 @@ describe('simulateLife', () => {
     expect(result.deadZones).toEqual([]);
   });
 
-  // Écart connu depuis le sommeil quotidien (issue #202), à recaler dans #205.
-  it.fails('active le travail automatique à mi-vie (ADR 0005)', () => {
+  it('active le travail automatique à mi-vie (ADR 0005)', () => {
     const auto = result.milestones.find((entry) => entry.id === 'autoWork');
     expect(auto?.age).toBeGreaterThanOrEqual(35);
     expect(auto?.age).toBeLessThanOrEqual(45);
@@ -114,15 +113,6 @@ describe('chooseAction', () => {
       type: 'buyUpgrade',
       id: 'stage-posture',
     });
-  });
-
-  it('attend pendant le sommeil', () => {
-    const asleep: GameState = {
-      ...startState,
-      isSleeping: true,
-      markers: ['metier', 'metier', 'metier', 'metier', 'metier'],
-    };
-    expect(chooseAction(asleep)).toBeUndefined();
   });
 
   it('active l’automatisation dès qu’elle est possible', () => {

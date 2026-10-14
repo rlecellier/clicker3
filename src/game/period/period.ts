@@ -7,21 +7,21 @@ import {
   produceGoods,
   sellGoods,
 } from '@game/economy';
+import { awakeMinutes } from '@game/day';
 import { triggerEvents } from '@game/events';
 import { closePeriod } from '@game/ledger';
 import { payYields, rebalance } from '@game/placements';
+import { sleep } from '@game/sleep';
 import { isPlaying } from '@game/state';
 import type { GameState, GaugeKind, GaugeSegment } from '@game/state';
 import { ageOf } from '@game/time';
 
 /** Étape 4 : le personnage vieillit d'une période, et meurt à l'âge fixé. */
 export const ageCharacter = (state: GameState): GameState => {
-  // Le choix de durée du sommeil prend effet avec la période.
-  const aged = {
-    ...state,
-    period: state.period + 1,
-    periodSleepHours: state.sleepHours,
-  };
+  // Le sommeil de base suit la tranche de vie : le temps d'éveil de la période
+  // qui commence en découle.
+  const older = { ...state, period: state.period + 1 };
+  const aged = { ...older, gaugeCapacity: awakeMinutes(older) };
   return ageOf(aged) >= aged.life.deathAge ? { ...aged, status: 'dead' } : aged;
 };
 
@@ -85,7 +85,7 @@ const appendSegment = (
 export const endPeriod = (state: GameState): GameState => {
   // Le ledger se ferme avant les événements : ceux-ci surviennent au début de
   // la période suivante (ils sont datés d'elle) et s'y écrivent.
-  const charged = closePeriod(settleAccounts(state));
+  const charged = closePeriod(settleAccounts(sleep(state)));
   return triggerEvents(resetGauge(ageCharacter(charged)));
 };
 

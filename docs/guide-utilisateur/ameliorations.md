@@ -2,7 +2,7 @@
 
 [Sommaire](README.md) · Précédent : [Les actions](actions.md) · Suite : [Les autres sources de bonus](autres-bonus.md)
 
-Le jeu compte **37 améliorations**, toutes à achat unique, dans
+Le jeu compte **40 améliorations**, toutes à achat unique, dans
 [Améliorations](onglet-ameliorations.md), sous-onglet À acheter. Cette page en
 donne une entrée chacune : prix, prérequis, ce qu'elle fait et sur quoi.
 
@@ -27,6 +27,9 @@ Les repères de lecture :
 | Studio rénové                     | 800 €      | loyer +95 €        | Endurance 1                                 | Sommeil ×1,3                                         |
 | Pavillon aux Tilleuls             | 27 000 €   | loyer +700 €       | Endurance 3                                 | Sommeil ×2,6                                         |
 | Loft au Pôle d'Excellence         | 92 000 €   | loyer +1 950 €     | Endurance 5                                 | Sommeil ×3,25                                        |
+| Matelas à mémoire de forme        | 1 500 €    |                    | Endurance 1                                 | Sommeil +1 h : on apprend mieux, on a moins de temps |
+| Application de suivi du sommeil   | 6 000 €    |                    | Intelligence 2                              | Sommeil −1 h : plus de temps, on apprend pareil      |
+| Micro-siestes en réunion          | 40 000 €   |                    | Application de suivi du sommeil et Endurance 3 | Sommeil −1 h : plus de temps, on apprend pareil   |
 | Étagères en kit                   | 13 000 €   |                    | Gestion 3                                   | Capacité du stock ×120                               |
 | Entrepôt logistique               | 34 000 €   |                    | Gestion 6                                   | Capacité du stock ×18                                |
 | Agenda électronique               | 380 €      |                    | Intelligence 1                              | Chance de marqueur +30 %                             |

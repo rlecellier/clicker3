@@ -3,7 +3,6 @@ import { automationRules } from '@game/data';
 import { eventById, fireEvent } from '@game/events';
 import { isBirthdayPending } from '@game/birthday';
 import { isPromotionPending, offerPromotion } from '@game/promotion';
-import { sleepStep, sleepStepMs } from '@game/sleep';
 import { isPlaying } from '@game/state';
 import type { GameState, JournalEntry } from '@game/state';
 import { ageOf } from '@game/time';
@@ -17,21 +16,17 @@ export type AutoAction = 'work';
 export const autoIntervalMs =
   automationRules.referenceIntervalMs / automationRules.speedFactor;
 
-// Délai avant le prochain pas : plus court pendant le sommeil.
-const stepIntervalMs = (state: GameState) =>
-  state.isSleeping ? sleepStepMs(state) : autoIntervalMs;
-
 // Un interrupteur n'agit que si l'amélioration correspondante est achetée.
 export const isAutoActive = (state: GameState, action: AutoAction) =>
   state.autoWork && hasAutomation(state, action);
 
-// Le temps réel fait avancer la partie : travail automatique actif, ou
-// sommeil en cours. Sinon, le temps écoulé n'a aucun effet.
+// Le temps réel fait avancer la partie : travail automatique actif. Sinon, le
+// temps écoulé n'a aucun effet.
 // Une promotion ou un anniversaire qui attend une réponse arrête le temps.
 export const isTimeRunning = (state: GameState) =>
   !isPromotionPending(state) &&
   !isBirthdayPending(state) &&
-  (isAutoActive(state, 'work') || state.isSleeping);
+  isAutoActive(state, 'work');
 
 export const canEnableAuto = (state: GameState, action: AutoAction) =>
   isPlaying(state) && hasAutomation(state, action);
@@ -51,20 +46,14 @@ export const setAuto = (
     : { ...state, autoWork: isEnabled };
 };
 
-// Un pas du temps qui passe : un marqueur se vide pendant le sommeil, sinon
-// le travail automatique travaille à son emploi. Rend l'état inchangé s'il n'y
-// a rien à faire.
-const autoStep = (state: GameState): GameState => {
-  if (state.isSleeping) {
-    return sleepStep(state);
-  }
-  return isAutoActive(state, 'work') && canWork(state, JOB_TARGET)
+// Un pas du temps qui passe : le travail automatique travaille à son emploi.
+// Rend l'état inchangé s'il n'y a rien à faire.
+const autoStep = (state: GameState): GameState =>
+  isAutoActive(state, 'work') && canWork(state, JOB_TARGET)
     ? work(state, JOB_TARGET, true)
     : state;
-};
 
-// Joue les pas dus (travail automatique, sommeil). Sans interrupteur actif ni
-// sommeil, ou sans rien à faire, le temps n'avance pas et le temps écoulé est perdu. `onAction` voit
+// Joue les pas dus du travail automatique. Sans interrupteur actif ou sans rien à faire, le temps n'avance pas et le temps écoulé est perdu. `onAction` voit
 // chaque action jouée (avant, après). `isAway` : le joueur n'est pas là pour
 // répondre, aucune promotion n'interrompt le rattrapage (le compteur d'heures
 // sup. continue, l'offre attend le retour).
@@ -84,7 +73,7 @@ const runAuto = (
   while (
     isPlaying(current) &&
     isTimeRunning(current) &&
-    current.autoElapsed >= stepIntervalMs(current)
+    current.autoElapsed >= autoIntervalMs
   ) {
     const acted = autoStep(current);
     if (acted === current) {
@@ -105,7 +94,7 @@ const runAuto = (
     onAction?.(current, settled);
     current = {
       ...settled,
-      autoElapsed: current.autoElapsed - stepIntervalMs(current),
+      autoElapsed: current.autoElapsed - autoIntervalMs,
     };
   }
   // Le temps accumulé n'attend pas la réponse : il serait rejoué d'un coup.

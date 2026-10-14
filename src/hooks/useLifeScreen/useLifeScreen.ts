@@ -15,11 +15,17 @@ import { actionRules, reputationTiers } from '@game/data';
 import { reputationTierProgress } from '@game/reputation';
 import { isUnlocked } from '@game/requirements';
 import { statProgress } from '@game/stats';
-import { chosenSchedule, sleepGauge, sleepMarkers } from '@game/sleep';
+import {
+  actionsLeft,
+  baseSleepHours,
+  learningFactor,
+  sleepHours,
+} from '@game/day';
+import { ageOf } from '@game/time';
 import { canStudy, studiableCourses } from '@game/study';
 import { hasAutomation, nextUpgrade } from '@game/upgrades';
 import { isOvertime, overtimeWageFactor } from '@game/overtime';
-import { JOB_TARGET, canWork, jobWage } from '@game/work';
+import { JOB_TARGET, canWork, jobWage, workMinutes } from '@game/work';
 import type { GameState } from '@game/state';
 import { selectedCourse, useCourseChoice } from '@hook/useCourseChoice';
 import { useFeedback } from '@hook/useFeedback';
@@ -31,7 +37,6 @@ import { ENDED, NO_MONEY } from '@view/purchase';
 
 const START_TEXT =
   'Bienvenue dans l’euro. Votre compte est crédité de 0 €, ce qui est un bon début.';
-const QUEUED = 'Vous dormez. Cela sera fait au réveil.';
 
 type BaseAction = {
   detail?: string;
@@ -49,6 +54,32 @@ export type ActionView = BaseAction & {
 };
 
 const noop = () => {};
+
+// « encore 3 fois » : les actions qu'il reste avant la nuit, jamais une durée.
+const timesLeft = (count: number) => `encore ${count} fois`;
+
+// Le sommeil à lire dans l'onglet Vie : rythme de la journée, base de l'âge,
+// bonus des améliorations et bilan de la dernière nuit.
+const sleepSummary = (state: GameState) => {
+  const hours = sleepHours(state);
+  const bonuses = [
+    state.sleepMoreHours > 0
+      ? `+${formatDecimal(state.sleepMoreHours)} h pour mieux apprendre (apprentissage ×${formatDecimal(learningFactor(state))})`
+      : undefined,
+    state.sleepLessHours > 0
+      ? `−${formatDecimal(state.sleepLessHours)} h optimisées (apprentissage inchangé)`
+      : undefined,
+  ].filter((bonus) => bonus !== undefined);
+  return {
+    title: `Sommeil : ${formatDecimal(hours)} h par jour (éveil : ${formatDecimal(24 - hours)} h)`,
+    lines: [
+      `Base de ${formatDecimal(baseSleepHours(ageOf(state)))} h à votre âge${bonuses.length > 0 ? ` ${bonuses.join(', ')}` : ''}.`,
+      state.period === 0
+        ? 'Les marqueurs du cerveau sont convertis chaque nuit, à la fin du mois.'
+        : `Dernière nuit : ${state.lastNightMarkers} marqueur${state.lastNightMarkers > 1 ? 's' : ''} converti${state.lastNightMarkers > 1 ? 's' : ''}.`,
+    ],
+  };
+};
 
 // Prochain achat visible : l'amélioration non achetée la moins chère qui est
 // déjà débloquée, sinon la moins chère avec ce qui lui manque.
@@ -77,15 +108,11 @@ export const useLifeScreen = () => {
   const { feedback, setFeedback, say } = useFeedback();
   const { chosenCourse, setChosenCourse } = useCourseChoice();
 
-  // Pendant le sommeil, travail et étude sont gardés pour le réveil.
-  const sayOrQueue = (message: string, run: () => void) =>
-    say(state.isSleeping ? QUEUED : message, run);
-
   const outlook = periodOutlook(state);
   const objective = nextObjective(state);
   const isOver = state.status === 'dead';
   const job = jobById(state.jobId);
-  // Au-delà des 8 h de la journée, les heures sup. s'appliquent seules.
+  // Au-delà de la journée de travail normale, les heures sup. s'appliquent seules.
   const overtimeNote = isOvertime(state)
     ? ` (heures sup. +${Math.round((overtimeWageFactor(state) - 1) * 100)} %)`
     : '';
@@ -94,10 +121,10 @@ export const useLifeScreen = () => {
     detail:
       job === undefined
         ? undefined
-        : `Rapporte ${formatMoney(jobWage(state))} par clic${overtimeNote}`,
+        : `Rapporte ${formatMoney(jobWage(state))} par clic${overtimeNote} · ${timesLeft(actionsLeft(state, workMinutes(state)))}`,
     reason: isOver ? ENDED : 'Aucun emploi',
     isDisabled: !canWork(state, JOB_TARGET),
-    run: sayOrQueue(
+    run: say(
       state.jobId === 'interim' && state.period === 0
         ? 'Adéquat Intérim vous remercie de votre confiance et de votre flexibilité.'
         : 'Vous avez travaillé. Cela a été noté.',
@@ -129,15 +156,12 @@ export const useLifeScreen = () => {
     course === undefined
       ? null
       : {
-          detail: `${course.name} · ${formatMoney(course.cost)} · ${statLabels[course.stat]}`,
+          detail: `${course.name} · ${formatMoney(course.cost)} · ${statLabels[course.stat]} · ${timesLeft(actionsLeft(state, actionRules.study.minutes))}`,
           reason: isOver ? ENDED : NO_MONEY,
           isDisabled: !canStudy(state, course.id),
-          run: sayOrQueue(
-            'Vous avez étudié. Personne ne vous l’a demandé.',
-            () => {
-              actions.study(course.id);
-            },
-          ),
+          run: say('Vous avez étudié. Personne ne vous l’a demandé.', () => {
+            actions.study(course.id);
+          }),
         };
 
   // Appui long sur Travailler : active ou coupe le travail automatique, une
@@ -196,17 +220,6 @@ export const useLifeScreen = () => {
 
   const { tier, name } = reputationTierProgress(state);
 
-  // Durée du sommeil quotidien : court, moyen ou long, sous « Étudier ».
-  const schedule = chosenSchedule(state);
-  const isSleepPending = state.sleepHours !== state.periodSleepHours;
-  const sleepOptions = Object.entries(actionRules.sleep.schedule).map(
-    ([hours, { name: label }]) => ({
-      hours: Number(hours),
-      label: `${label} · ${hours} h`,
-    }),
-  );
-  const sleepEmptied = sleepMarkers(state, state.sleepHours);
-
   return {
     isOver,
     header: characterHeader(state),
@@ -229,15 +242,9 @@ export const useLifeScreen = () => {
     brain: {
       count: state.markers.length,
       max: state.maxMarkers,
-      isSleeping: state.isSleeping,
     },
     actions: { work, sellSurplus },
-    sleep: {
-      options: sleepOptions,
-      value: state.sleepHours,
-      select: actions.setSleepHours,
-      summary: `${schedule.name} : coucher ${schedule.bed} h · réveil ${schedule.wake} h. Dormir prend ${formatDecimal(sleepGauge(state, state.sleepHours))} de jauge de temps et vide jusqu’à ${sleepEmptied} marqueurs${schedule.left > 0 ? ` (${schedule.left} restent pour la nuit suivante)` : ' (tout le cerveau)'}.${isSleepPending ? ' À partir de la période suivante.' : ''}`,
-    },
+    sleep: sleepSummary(state),
     study: {
       action: studyView,
       gauge: studyGauge,

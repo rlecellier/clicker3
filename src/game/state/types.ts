@@ -169,19 +169,16 @@ export type LifeSpan = {
   startMonth: number;
 };
 
-/**
- * Tout l'état du jeu. Sérialisable (JSON), sans date ni fonction : le temps
- * vient uniquement de `period` et `gauge` (ADR 0002).
- */
-export type QueuedAction =
-  { type: 'work'; target: string } | { type: 'study'; courseId: string };
-
 /** Action qui remplit la jauge de temps (une couleur chacune à l'écran). */
-export type GaugeKind = 'study' | 'work' | 'sleep';
+export type GaugeKind = 'study' | 'work';
 
 /** Part de la jauge remplie par une action, dans l'ordre où elles ont eu lieu. */
 export type GaugeSegment = { kind: GaugeKind; amount: number };
 
+/**
+ * Tout l'état du jeu. Sérialisable (JSON), sans date ni fonction : le temps
+ * vient uniquement de `period` et `gauge` (ADR 0002).
+ */
 export type GameState = {
   version: number;
   characterName: string;
@@ -189,11 +186,11 @@ export type GameState = {
 
   /** Nombre de périodes écoulées depuis le départ. */
   period: number;
-  /** Remplissage de la jauge de temps de la période en cours. */
+  /** Minutes d'éveil déjà employées dans la période en cours. */
   gauge: number;
   /** Ce qui remplit la jauge, dans l'ordre (leur somme vaut `gauge`). */
   gaugeSegments: GaugeSegment[];
-  /** Remplissage à partir duquel une période passe. */
+  /** Temps d'éveil de la période, en minutes : la jauge passe de période à son terme (dérivé). */
   gaugeCapacity: number;
   status: GameStatus;
   phase: LifePhase;
@@ -230,24 +227,13 @@ export type GameState = {
   markerProgress: Record<StatId, number>;
   // Nombre maximum de marqueurs détenus (la capacité du cerveau).
   maxMarkers: number;
-  // Le personnage dort et vide ses marqueurs un par un (un sommeil par période).
-  isSleeping: boolean;
-  // Durée du sommeil quotidien choisie par le joueur, en heures ; elle ne
-  // sert qu'à partir de la période suivante (`periodSleepHours`).
-  sleepHours: number;
-  // Durée en vigueur pour la période en cours : coucher et coût.
-  periodSleepHours: number;
-  // Pas restants du sommeil en cours, pas du sommeil entier et jauge de temps
-  // que coûte chaque pas.
-  sleepLeft: number;
-  sleepTotal: number;
-  sleepStepGauge: number;
-  // Marqueurs que le sommeil en cours peut encore vider.
-  sleepConvertible: number;
-  // Dernière période où le personnage s'est endormi (-1 : jamais).
-  lastSleepPeriod: number;
-  // Gestes manuels faits pendant le sommeil, rejoués au réveil (dans l'ordre).
-  queuedActions: QueuedAction[];
+  // Heures de sommeil ajoutées (« dormir plus », elles améliorent l'apprentissage)
+  // et retirées (« dormir moins », il reste inchangé) par les améliorations.
+  // Dérivées par `withModifiers`.
+  sleepMoreHours: number;
+  sleepLessHours: number;
+  // Marqueurs convertis par la dernière nuit (bilan de l'onglet Vie).
+  lastNightMarkers: number;
   // Conversion du sommeil, selon le logement (studio : 1).
   sleepMultiplier: number;
 

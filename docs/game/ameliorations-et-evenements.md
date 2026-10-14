@@ -8,7 +8,9 @@
 ## Améliorations (19 achats uniques)
 
 La vingtième, l'automatisation du sommeil, a été retirée : le sommeil vient
-seul ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)).
+seul ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)). Trois
+améliorations de sommeil (« dormir mieux », « optimiser son sommeil ») ont été
+ajoutées avec la journée de 24 h ([sommeil.md](sommeil.md)).
 
 Chaque amélioration a un nom, un effet de jeu, un déblocage et une phrase de
 description. Prix : **€** (ordre de grandeur, croissance à régler). Les paliers

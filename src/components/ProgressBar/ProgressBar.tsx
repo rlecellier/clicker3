@@ -12,7 +12,7 @@ type ProgressBarProperties = {
   aside?: ReactNode;
   // Remplissage par nature, dans l'ordre : chaque part prend sa couleur. Sans
   // `segments`, la barre est d'une seule couleur (bleu).
-  segments?: { tone: 'study' | 'work' | 'sleep'; value: number }[];
+  segments?: { tone: 'study' | 'work'; value: number }[];
 };
 
 export const ProgressBar = ({

@@ -580,6 +580,40 @@ de la proposition ; les multiplicateurs de sommeil sont plus bas. Aucune
 sauvegarde ne change de forme (version 14 inchangée) ; un joueur qui possède déjà
 la camionnette garde son achat et gagne le nouvel effet.
 
+## Journée de 24 h et sommeil par améliorations (issue #261)
+
+- 2026-10-14 — La jauge de temps devient le **temps d'éveil en minutes**
+  (960 à 18 ans : 8 h de sommeil de base, 16 h d'éveil) et chaque action déclare
+  sa durée (`actionRules`). Le sommeil ne se choisit plus : base de la tranche de
+  vie (12, 10, 9, 8, 7, 7, 6 h), plus les améliorations « dormir plus » et
+  « dormir moins » ([sommeil.md](sommeil.md), ADR 0013).
+
+**Conversion des valeurs.** L'ancienne jauge (70, dont 23 de sommeil) laissait 47
+unités d'éveil : une unité vaut donc 960 / 47 ≈ 20 minutes. Travail 10 → 200
+minutes, étude 15 → 300, surplus 5 → 100, heures sup. à 600 puis 1 000 minutes
+(30 et 50 d'avant). Le nombre d'actions par période est ainsi quasi inchangé
+(4,8 travaux), et le salaire mensuel reste trois actions normales.
+
+**Améliorations de sommeil.** Matelas à mémoire de forme (1 500 €, +1 h,
+rendement d'apprentissage ×(base + 1) / base), Application de suivi du sommeil
+(6 000 €, −1 h) et Micro-siestes en réunion (40 000 €, −1 h). Les prix sont des
+points de départ.
+
+**Preuve au simulateur** (`npm run sim`, graine 1999) : 30 min 59 s de jeu actif
+(+ 8 min 49 s d'attente, 39 min 48 s au total), toutes les phases atteintes,
+travail automatique à 45 ans (minute 25,6), dernier palier d'une stat à la minute
+24,3, plus longue zone morte 1 min 24 s (le test « zone morte » reste `it.fails`
+du #202, à solder avec #205).
+
+**Garde-fous.** Les garde-fous d'utilité passent tous, sauf `matelas-memoire` : dormir
+plus ne rapporte ni recettes ni travail automatique plus tôt, son utilité est
+l'apprentissage, que ce test ne mesure pas. `stats:stats` échoue de peu (24,3
+pour un seuil de 25, marge déjà quasi nulle). Les deux sont dans
+`knownGuardrailFailures` et dans la table « Tests neutralisés » de #152, pour
+#205 (qui doit mesurer l'utilité d'une amélioration de sommeil en points de stat
+par minute plutôt qu'en recettes). Le simulateur est chaotique : un prix changé
+déplace plusieurs garde-fous à la fois.
+
 ## Validation de la v1.6 par le playtest
 
 - 2026-10-13 — Playtest humain de la v1.6 : le jeu est stable, agréable à jouer

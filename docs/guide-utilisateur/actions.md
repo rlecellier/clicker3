@@ -5,12 +5,12 @@
 Ce que vous pouvez faire dans le jeu, avec pour chaque geste son effet, son
 coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 
-| Action                         | Où                              | Temps (jauge de 70) | Coût                     |
+| Action                         | Où                              | Temps d'éveil       | Coût                     |
 | ------------------------------ | ------------------------------- | ------------------- | ------------------------ |
-| Travailler                     | [Vie](onglet-vie.md)            | 10                  | Aucun                    |
-| Étudier                        | [Vie](onglet-vie.md)            | 15                  | 20 à 260 €               |
-| Vendre le surplus              | [Vie](onglet-vie.md)            | 5                   | Aucun                    |
-| Dormir                         | Automatique, durée dans [Vie](onglet-vie.md) | 12 à 26 en tout (selon la durée) | Aucun |
+| Travailler                     | [Vie](onglet-vie.md)            | 200 min             | Aucun                    |
+| Étudier                        | [Vie](onglet-vie.md)            | 300 min             | 20 à 260 €               |
+| Vendre le surplus              | [Vie](onglet-vie.md)            | 100 min             | Aucun                    |
+| Dormir                         | Automatique, à la fin de la période | Aucun (hors jauge)  | Aucun |
 | Prendre un poste               | [Emploi](onglet-emploi.md)      | 0                   | 0 à 10 de réputation     |
 | Acheter une entreprise         | [Entreprises](onglet-entreprises.md) | 0                   | Prix de l'entreprise     |
 | Acheter un petit entrepôt      | [Entreprises](onglet-entreprises.md) | 0                   | 160 € puis +3 % chaque   |
@@ -19,7 +19,8 @@ coût et ses conditions. Chaque action est lancée depuis un onglet précis.
 | Débloquer un quartier          | Entreprises ou [Ville](onglet-ville.md) | 0              | 1, 22 ou 33 de réputation |
 
 Les achats, les changements de poste et les déblocages n'avancent pas la
-jauge : le temps ne passe que par le travail, l'étude, le surplus et le sommeil.
+jauge : le temps d'éveil ne passe que par le travail, l'étude et le surplus. Le
+sommeil, lui, n'occupe pas la jauge : il est déjà décompté de la journée.
 
 ## Travailler
 
@@ -31,16 +32,16 @@ travail que propose cette version) :
 - **Réputation** du poste (0,2 pour l'intérim), multipliée par ×1,25 avec les
   Cartes de visite.
 - **Marqueur** : 0,3 marqueur de Métier par action (un toutes les 3 à 4 actions).
-- **Temps** : 10 sur la jauge de 70.
+- **Temps** : 200 minutes d'éveil.
 - **Heures supplémentaires** : les trois premières actions de la période
-  (30 de jauge) paient les 8 h de la journée. Ensuite, sans rien débloquer,
-  chaque action est payée +25 % (jusqu'à 50 de jauge de travail) puis +35 %, et
-  remplit la jauge de 35 % de plus (13,5 au lieu de 10) : on est fatigué, le mois
+  (600 minutes) paient la journée de travail. Ensuite, sans rien débloquer,
+  chaque action est payée +25 % (jusqu'à 1 000 minutes de travail) puis +35 %, et
+  dure 35 % de plus (270 minutes au lieu de 200) : on est fatigué, le mois
   passe plus vite. Le bouton annonce « heures sup. +25 % » quand c'est le cas.
 
 À partir de 60 ans (senior), le salaire et la réputation d'une action manuelle
 sont divisés par deux. Pendant le confinement (de mars 2020 à février 2021), chaque
-action de travail remplit la jauge de 15 au lieu de 10.
+action de travail dure 300 minutes au lieu de 200.
 
 Le bouton est grisé après la mort du personnage (« Partie terminée »).
 
@@ -50,8 +51,8 @@ Disponible quand une formation est achetée, et tant qu'un cursus est utile.
 
 - **Coût** : le prix du cursus, payé à chaque séance.
 - **Marqueur** : 0,7 marqueur de la compétence du cursus par action (environ 7 marqueurs en 10 études).
-- **Temps** : 15 sur la jauge.
-- Pas de gain immédiat : le gain vient du sommeil.
+- **Temps** : 300 minutes d'éveil.
+- Pas de gain immédiat : le gain vient de la nuit (fin de période).
 
 | Cursus                       | Compétence   | Coût par séance | Formation à acheter                     |
 | ---------------------------- | ------------ | --------------- | --------------------------------------- |
@@ -86,41 +87,42 @@ progressent que par l'étude.
 
 ## Dormir
 
-Dormir n'est pas une action : le personnage dort **une fois par période**, à
-heure fixe. Une période est une journée qui commence au réveil de 7 h ; vous
-choisissez la durée de sommeil (court 4 h, moyen 6 h ou long 8 h ; long au
-départ) dans l'onglet [Vie](onglet-vie.md#le-cerveau-et-le-sommeil), sous le
-bouton Étudier.
+Dormir n'est pas une action et ne se règle pas : une période est une **journée
+de 24 h** (elle fait un mois de jeu, vous ne voyez que la date), dont une part
+est du sommeil. Le reste est le **temps d'éveil**, que mesure la jauge de temps,
+et chaque action y prend sa durée en minutes. Le sommeil de base dépend de l'âge
+(la tranche de vie) et ne bouge que par des améliorations.
 
-| Durée   | Long (8 h) | Moyen (6 h) | Court (4 h) |
-| ------- | ---------- | ----------- | ----------- |
-| Coucher | 23 h       | 1 h         | 2 h         |
-| Réveil  | 7 h        | 7 h         | 6 h         |
-| Marqueurs laissés | 0 (tout le cerveau est vidé) | 1 | 2 |
+| Tranche de vie | Âges            | Sommeil de base | Éveil |
+| -------------- | --------------- | --------------- | ----- |
+| Petite enfance | 0 à 5 ans       | 12 h            | 12 h  |
+| Enfance        | 6 à 12 ans      | 10 h            | 14 h  |
+| Adolescence    | 13 à 17 ans     | 9 h             | 15 h  |
+| Jeunesse       | 18 à 29 ans     | 8 h             | 16 h  |
+| Âge adulte     | 30 à 49 ans     | 7 h             | 17 h  |
+| Maturité       | 50 à 64 ans     | 7 h             | 17 h  |
+| Vieillesse     | 65 ans à la fin | 6 h             | 18 h  |
 
-Long vide tous les marqueurs : c'est la durée de l'apprentissage. Moyen en
-laisse un et Court deux, qui attendent le sommeil suivant (ou sont perdus si le
-cerveau est plein) : plus de temps éveillé pour gagner de l'argent, mais moins
-d'apprentissage. Quand on est riche, on dort court.
+Le nombre d'actions par période s'en déduit : une action qui dure 200 minutes
+tient 4,8 fois dans 16 h d'éveil. L'onglet [Vie](onglet-vie.md#le-cerveau-et-le-sommeil)
+affiche « Sommeil : 8 h par jour (éveil : 16 h) » et, sous chaque bouton,
+« encore N fois » : le nombre de fois que vous pouvez agir avant la nuit
+(l'action qui déborde sur la nuit compte, son surplus passe à la période suivante).
 
-1. La jauge atteint l'heure du coucher : pastille « Zzz », barre « Sommeil ». Un
-   cerveau plein ne fait plus dormir ; ses marqueurs en trop sont perdus.
-2. Le sommeil se joue en pas, un par marqueur que la durée permet de vider
-   (tout le cerveau pour long, un de moins pour moyen, deux de moins pour court ;
-   un pas au moins, même sans rien à vider).
-   Chaque pas vide le plus ancien marqueur, s'il y en a un.
-3. Chaque marqueur vidé donne des **points** à sa compétence : 1 point multiplié
-   par la conversion du logement (voir ci-dessous).
-4. Le sommeil complet coûte la durée dormie sur les 24 h de la jauge (8 h = 23,3
-   de jauge sur 70), et dure une demi-seconde.
-5. Au réveil, les gestes manuels gardés pendant le sommeil sont rejoués.
+Deux familles d'améliorations changent le sommeil :
 
-Si une action traverse l'heure du coucher et la fin de la période d'un coup, le
-sommeil manqué est rattrapé : le personnage s'endort dès le début de la période
-suivante.
+- **Dormir mieux** (Matelas à mémoire de forme : +1 h) : moins de temps éveillé,
+  mais chaque marqueur donne plus de points (le rendement vaut sommeil / base,
+  9 h au lieu de 8 donne ×1,125).
+- **Optimiser son sommeil** (Application de suivi du sommeil, Micro-siestes en
+  réunion : −1 h chacune) : une heure d'éveil de plus, donc des actions de plus,
+  et l'apprentissage ne baisse pas.
 
-Dormir moins laisse plus de temps éveillé pour travailler, mais convertit moins
-de marqueurs en points : c'est un compromis.
+À la fin de la période, la nuit convertit **tous les marqueurs** du cerveau en
+**points** de leur compétence, d'un coup, sans pause : 1 point par marqueur,
+multiplié par la conversion du logement, les coups de pouce de sommeil et le
+rendement d'apprentissage. L'onglet Vie rappelle la dernière nuit (« 3 marqueurs
+convertis »).
 
 | Logement                  | Conversion du sommeil | Loyer ajouté       |
 | ------------------------- | --------------------- | ------------------ |
@@ -128,9 +130,6 @@ de marqueurs en points : c'est un compromis.
 | Studio rénové             | ×1,3                  | +95 €              |
 | Pavillon aux Tilleuls     | ×2,6                  | +700 €             |
 | Loft au Pôle d'Excellence | ×3,25                 | +1 950 €           |
-
-Pendant le sommeil, vos clics sont mis de côté (cinquante au plus) et le
-travail automatique attend.
 
 Les loyers des logements s'**additionnent** : acheter le Pavillon sans annuler le
 Studio rénové fait payer les deux loyers, et c'est le dernier logement acheté qui
@@ -168,8 +167,8 @@ dépenser son prix en réputation. Voir [Les systèmes](systemes.md#les-quartier
 
 ## Vendre le surplus
 
-Bouton de la Vie. Vend **tout** le stock d'un coup à 4 € l'article et remplit
-la jauge de 5. L'argent est compté à part dans les Comptes (« Vente du surplus »).
+Bouton de la Vie. Vend **tout** le stock d'un coup à 4 € l'article et prend
+100 minutes d'éveil. L'argent est compté à part dans les Comptes (« Vente du surplus »).
 Voir [Les entreprises](entreprises.md#le-surplus).
 
 ## Le travail automatique
@@ -185,9 +184,8 @@ vie « Dirigeant »), le bouton Travailler peut travailler tout seul.
   seconde, à votre poste.
 - **Rendement** : chaque action automatique rapporte moitié moins qu'une action
   manuelle (160 € au lieu de 320 € pour l'intérim), salaire et réputation compris.
-  Elle remplit la jauge comme une action normale (10) et donne aussi sa chance de
+  Elle prend le temps d'une action normale (200 minutes) et donne aussi sa chance de
   marqueur.
-- **Pendant le sommeil** : l'automatique attend le réveil.
 - **Quand il tourne** : tant que la page est ouverte et visible, et pendant votre
   absence (voir [Les systèmes](systemes.md#labsence-et-le-rattrapage)). Sans
   l'automatique, le temps ne passe jamais tout seul.

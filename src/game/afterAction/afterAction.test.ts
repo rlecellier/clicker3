@@ -12,16 +12,11 @@ describe('afterAction', () => {
     expect(afterAction(state)).toBe(state);
   });
 
-  it('endort à l’heure du coucher', () => {
-    const state = start({ gauge: 60 });
-    expect(afterAction(state).isSleeping).toBe(true);
-  });
-
-  it('n’endort pas un cerveau plein avant l’heure du coucher', () => {
+  it('ne vide pas le cerveau : la nuit vient avec la fin de période', () => {
     const state = start({
       markers: ['metier', 'metier', 'metier', 'metier', 'metier'],
     });
-    expect(afterAction(state).isSleeping).toBe(false);
+    expect(afterAction(state).markers).toHaveLength(5);
   });
 
   it('fait suivre la phase de vie aux achats', () => {
