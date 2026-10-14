@@ -1,6 +1,6 @@
 # ADR 0007 — Le sommeil est passif et lié au cerveau
 
-- **Statut** : accepté
+- **Statut** : accepté (amendé par les [ADR 0011](0011-sommeil-quotidien.md) puis [ADR 0013](0013-journee-de-24-heures.md))
 - **Date** : 2026-10-11
 
 ## Contexte

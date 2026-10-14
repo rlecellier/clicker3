@@ -1,6 +1,6 @@
 # ADR 0011 — Le sommeil est quotidien, à heure fixe et configurable
 
-- **Statut** : accepté (amende l'[ADR 0007](0007-sommeil-passif.md))
+- **Statut** : accepté (amende l'[ADR 0007](0007-sommeil-passif.md) ; remplacé par l'[ADR 0013](0013-journee-de-24-heures.md))
 - **Date** : 2026-10-13
 
 ## Contexte
