@@ -1,60 +1,47 @@
 import { useGameContext } from '@context/GameContext';
 import type { ListItem } from '@component/ItemList';
-import { childAxes, childObjects, findById } from '@game/data';
-import {
-  activityPole,
-  availableActivities,
-  isChildhoodOver,
-} from '@game/earlyChildhood';
 import { MAX_FAVORITES, useFavorites } from '@hook/useFavorites';
-import { useGameActions } from '@hook/useGameActions';
+import { useFeedback } from '@hook/useFeedback';
+import { houseEntries } from '@view/houseEntries';
 
-const KNOW_HOW = 'Savoir-faire';
-
-// Onglet « Maison » : toutes les activités possibles, groupées par objet ou
-// par savoir-faire, chacune pouvant être mise en favori pour l'écran Vie.
+// Onglet « Maison » : tout ce que l'enfant peut faire, groupé par objet ou par
+// rubrique, chaque ligne pouvant être mise en favori pour l'écran Vie.
 export const useHouseScreen = () => {
-  const { state } = useGameContext();
-  const actions = useGameActions();
+  const { state, dispatch } = useGameContext();
   const { favorites, toggle, isFull } = useFavorites();
-  const isOver = isChildhoodOver(state);
+  const { feedback, say } = useFeedback();
 
   const sections = new Map<string, ListItem[]>();
-  for (const activity of availableActivities(state)) {
-    const axis = findById(childAxes, activity.axis);
-    if (axis === undefined) {
-      continue;
-    }
-    const caption =
-      activity.source.type === 'object'
-        ? (findById(childObjects, activity.source.id)?.name ?? KNOW_HOW)
-        : KNOW_HOW;
-    const isFavorite = favorites.includes(activity.id);
+  for (const entry of houseEntries(state)) {
+    const isFavorite = favorites.includes(entry.id);
+    const run = () => {
+      dispatch(entry.action);
+    };
     const item: ListItem = {
-      id: activity.id,
-      title: activity.name,
-      detail: `${axis.name} → ${activityPole(activity, axis)}`,
-      actionLabel: 'Jouer',
-      isDisabled: isOver,
-      onAction: () => {
-        actions.doActivity(activity.id);
-      },
+      id: entry.id,
+      title: entry.title,
+      detail: entry.detail,
+      actionLabel: entry.actionLabel,
+      isDisabled: entry.isDisabled,
+      reason: entry.reason,
+      onAction: entry.feedback === undefined ? run : say(entry.feedback, run),
       extraActions: [
         {
           id: 'favorite',
           label: isFavorite ? '★ Retirer' : '☆ Favori',
           isDisabled: !isFavorite && isFull,
           onAction: () => {
-            toggle(activity.id);
+            toggle(entry.id);
           },
         },
       ],
     };
-    sections.set(caption, [...(sections.get(caption) ?? []), item]);
+    sections.set(entry.group, [...(sections.get(entry.group) ?? []), item]);
   }
 
   return {
     sections: [...sections].map(([caption, items]) => ({ caption, items })),
     favoritesText: `Favoris : ${favorites.length} sur ${MAX_FAVORITES} au plus. Ils s’affichent sur l’écran Vie.`,
+    feedback,
   };
 };

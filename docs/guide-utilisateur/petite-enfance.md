@@ -35,6 +35,35 @@ Une activité vient d'un objet (« Câliner le nounours » : Lien → Câlin) ou
 de ce côté s'ouvre (« Grimper partout » pour un enfant Vif). Si l'axe repasse
 sous 25, elle se referme.
 
+## Sortir et demander
+
+Dans la Maison, deux rubriques s'ouvrent avec l'âge :
+
+- **Sortir** : « Fouiller la maison » dès **3 ans**, « Explorer dehors » dès
+  **4 ans**. Cinq fouilles rendent un objet que vous n'avez pas encore
+  (pot de confiture, casseroles, bâton, escargot…). Vous voyez les lieux, pas ce
+  qu'ils cachent.
+- **Demander** (dès 4 ans) : réclamer un vélo, un jeu de logique ou un
+  déguisement à ses parents coûte **40 d'Attention**. La réponse ne dépend pas du
+  hasard mais des moyens de la famille : « Oui » (l'objet arrive), « On verra »
+  (il arrive dans deux trimestres) ou « Non ». L'Attention des parents se
+  recharge à chaque trimestre selon leur disponibilité.
+
+Fouiller et demander se mettent en favori comme les autres activités.
+
+## Les événements
+
+Environ **4 à 7 fois** pendant la tranche (jamais deux trimestres de suite),
+une fenêtre arrête le jeu et demande un choix. Chaque réponse montre ce qu'elle
+rapporte (« Lien → Câlin · Trait : Têtu »). Les événements dépendent de ce que
+vous avez fait de votre enfant : un enfant Vif croisera l'escalier du salon, un
+enfant Appliqué le puzzle, un enfant qui a son nounours peut le perdre. Le
+premier mot (1 an) est le seul qui arrive toujours.
+
+Les choix donnent aussi des **traits** (3 au plus, au-delà il faut renoncer),
+chacun avec un avantage et un inconvénient (Têtu, Rusé, Artiste…). Ils s'affichent
+sous les axes et seront transmis à l'Enfance.
+
 À 6 ans, plus aucun geste ne joue : la petite enfance est finie.
 
 Conception : [petite-enfance.md](../game/petite-enfance.md).

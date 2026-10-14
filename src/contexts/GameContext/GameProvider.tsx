@@ -131,7 +131,14 @@ export const GameProvider = ({
 
   const startGame = useCallback(
     (jobId?: string, lifeSlice?: LifeSliceId, birthSituation?: string) => {
-      dispatch({ type: 'restart', jobId, lifeSlice, birthSituation });
+      dispatch({
+        type: 'restart',
+        jobId,
+        lifeSlice,
+        birthSituation,
+        // Le hasard de la petite enfance part d'une graine propre à chaque vie.
+        seed: Math.floor(Math.random() * 2 ** 31),
+      });
       setAbsence(null);
       setHasSave(true);
       setStartCount((count) => count + 1);

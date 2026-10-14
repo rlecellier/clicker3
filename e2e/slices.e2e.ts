@@ -82,6 +82,21 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expect(awakening).toHaveText('5');
   await expectNoOverflow(page);
 
+  // À 1 an (éveil 40), le premier mot arrête le jeu jusqu'à une réponse ; le
+  // choix montre ce qu'il rapporte, et « Maman » pousse le Lien vers Câlin.
+  const babble = page.getByRole('button', { name: 'Gazouiller' });
+  for (let index = 5; index < 40; index += 1) {
+    await babble.tap();
+  }
+  const prompt = page.getByRole('alertdialog', { name: 'Premier mot' });
+  await expect(prompt).toBeVisible();
+  await expect(prompt.getByText('Lien → Câlin', { exact: true })).toBeVisible();
+  await prompt.getByRole('button', { name: '« Maman »' }).tap();
+  await expect(prompt).toBeHidden();
+  await expect(bond).toHaveAccessibleName('Lien : Câlin');
+  await babble.tap();
+  await expect(awakening).toHaveText('41');
+
   // Un onglet du jeu complet renvoie à la Vie.
   await page.goto('/jeu/emploi');
   await expect(page).toHaveURL('/jeu/vie');

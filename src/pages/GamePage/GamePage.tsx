@@ -1,11 +1,13 @@
 import { Outlet } from 'react-router';
 import { BirthdayPrompt } from '@component/BirthdayPrompt';
+import { ChoicePrompt } from '@component/ChoicePrompt';
 import { GameHeader } from '@component/GameHeader';
 import { PromotionPrompt } from '@component/PromotionPrompt';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
 import { StartMenu } from '@component/StartMenu';
 import { Taskbar } from '@component/Taskbar';
 import { useBirthdayPrompt } from '@hook/useBirthdayPrompt';
+import { useChildEventPrompt } from '@hook/useChildEventPrompt';
 import { useCourseChoiceState } from '@hook/useCourseChoice';
 import { useFinalUpgradePrompt } from '@hook/useFinalUpgradePrompt';
 import { useGameHeader } from '@hook/useGameHeader';
@@ -35,6 +37,7 @@ export const GamePage = () => {
   const promotion = usePromotionPrompt();
   const birthday = useBirthdayPrompt();
   const finale = useFinalUpgradePrompt();
+  const childEvent = useChildEventPrompt();
   // Fenêtres à un bouton : un anniversaire passe avant la dernière amélioration.
   const notice = birthday ?? finale;
   const courseChoice = useCourseChoiceState();
@@ -79,6 +82,7 @@ export const GamePage = () => {
           }
         />
       ) : null}
+      {childEvent === null ? null : <ChoicePrompt {...childEvent} />}
       {notice ? (
         <BirthdayPrompt {...notice} />
       ) : (
