@@ -36,7 +36,7 @@ export const TitlePage = () => {
         {prompt === null ? (
           <div className={styles.actions}>
             <PageLink to={screenPaths.newLife}>Démarrer ma vie</PageLink>
-            <Note>Ou commencer plus tôt :</Note>
+            <Note>Ou commencer ailleurs dans la vie :</Note>
             {title.slices.map((slice) => (
               <Button key={slice.id} onClick={slice.start}>
                 {slice.label}

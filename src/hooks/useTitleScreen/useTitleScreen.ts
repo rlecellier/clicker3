@@ -5,13 +5,14 @@ import { lifeSlices } from '@game/data';
 import type { LifeSliceId } from '@game/state';
 import { screenPaths } from '@hook/useGameFlow';
 
-// Effacer la sauvegarde se confirme ici, de même que commencer une tranche
-// avant 18 ans par-dessus une vie en cours. Démarrer Jeunesse mène au choix du
-// premier emploi, où l'écrasement est confirmé.
+// Effacer la sauvegarde se confirme ici, de même que commencer une autre
+// tranche de vie par-dessus une vie en cours. Démarrer Jeunesse mène au choix
+// du premier emploi, où l'écrasement est confirmé.
 export type TitleConfirmation = 'erase' | 'restart';
 
-// Les tranches de vie qui démarrent directement sur l'écran de jeu.
-const earlySlices = lifeSlices.filter(({ growth }) => growth !== null);
+// Les tranches de vie qui démarrent directement sur l'écran de jeu : toutes
+// sauf Jeunesse, qui passe par le choix du premier emploi.
+const otherSlices = lifeSlices.filter(({ id }) => id !== 'youth');
 
 export const useTitleScreen = () => {
   const { state, hasSave, eraseSave, startGame } = useGameContext();
@@ -42,7 +43,7 @@ export const useTitleScreen = () => {
   return {
     hasSave,
     confirming,
-    slices: earlySlices.map(({ id, name, ages }) => ({
+    slices: otherSlices.map(({ id, name, ages }) => ({
       id,
       label: `${name} (${ages})`,
       start: () => {
