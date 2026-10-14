@@ -13,6 +13,8 @@ export type ChildCondition =
   | { type: 'event'; id: string }
   // Objet possédé.
   | { type: 'object'; id: string }
+  // Lien d'au moins `atLeast` avec une personne (un parent, un ami).
+  | { type: 'bond'; person: string; atLeast: number }
   // Étiquette de contexte de la situation de naissance (hôtel, plage…).
   | { type: 'context'; tag: string };
 
@@ -21,7 +23,11 @@ export type ChildEffect =
   | { type: 'axis'; axis: ChildAxisId; amount: number }
   | { type: 'trait'; id: string }
   | { type: 'giveObject'; id: string }
-  | { type: 'removeObject'; id: string };
+  | { type: 'removeObject'; id: string }
+  // Le lien avec une personne monte ou descend.
+  | { type: 'bond'; person: string; amount: number }
+  // Un premier ami entre dans la vie de l'enfant.
+  | { type: 'meetFriend'; name: string; bond: number };
 
 export type ChildEventChoice = {
   label: string;
@@ -58,6 +64,11 @@ const push = (id: ChildAxisId, amount: number): ChildEffect => ({
   amount,
 });
 const trait = (id: string): ChildEffect => ({ type: 'trait', id });
+const bond = (person: string, amount: number): ChildEffect => ({
+  type: 'bond',
+  person,
+  amount,
+});
 
 // Les âges sont des trimestres : 4 = 1 an. Voix administrative, comme le reste
 // du jeu (docs/game/ton-et-univers.md).
@@ -70,10 +81,10 @@ export const childEvents: readonly ChildEvent[] = [
     weight: 1,
     isMandatory: true,
     choices: [
-      { label: '« Maman »', effects: [push('bond', 6)] },
+      { label: '« Maman »', effects: [push('bond', 6), bond('mother', 8)] },
       {
         label: '« Papa »',
-        effects: [push('bond', 4), push('sociability', 2)],
+        effects: [push('bond', 4), push('sociability', 2), bond('father', 8)],
       },
       { label: '« Non »', effects: [trait('stubborn'), push('mind', 3)] },
     ],
@@ -88,7 +99,7 @@ export const childEvents: readonly ChildEvent[] = [
       { label: 'Grimper', effects: [push('energy', 6), trait('daring')] },
       {
         label: 'Appeler à l’aide',
-        effects: [push('sociability', 4), push('bond', 2)],
+        effects: [push('sociability', 4), push('bond', 2), bond('father', 3)],
       },
       {
         label: 'S’asseoir sur la première marche',
@@ -106,7 +117,7 @@ export const childEvents: readonly ChildEvent[] = [
       { label: 'Finir seul', effects: [push('mind', -6)] },
       {
         label: 'Demander de l’aide',
-        effects: [push('bond', 4), push('sociability', 3)],
+        effects: [push('bond', 4), push('sociability', 3), bond('father', 4)],
       },
       { label: 'Tout renverser', effects: [push('mind', 5), trait('artist')] },
     ],
@@ -139,7 +150,7 @@ export const childEvents: readonly ChildEvent[] = [
       },
       {
         label: 'Appeler un parent',
-        effects: [push('bond', 6), push('sociability', 2)],
+        effects: [push('bond', 6), push('sociability', 2), bond('mother', 4)],
       },
       {
         label: 'S’en passer',
@@ -156,10 +167,21 @@ export const childEvents: readonly ChildEvent[] = [
     choices: [
       {
         label: 'Hurler',
-        effects: [trait('stubborn'), push('energy', 3), push('bond', -3)],
+        effects: [
+          trait('stubborn'),
+          push('energy', 3),
+          push('bond', -3),
+          bond('mother', -4),
+        ],
       },
-      { label: 'Obéir', effects: [push('bond', 2), push('mind', -3)] },
-      { label: 'Négocier', effects: [push('sociability', 4), trait('sly')] },
+      {
+        label: 'Obéir',
+        effects: [push('bond', 2), push('mind', -3), bond('mother', 2)],
+      },
+      {
+        label: 'Négocier',
+        effects: [push('sociability', 4), trait('sly'), bond('mother', 1)],
+      },
     ],
   },
   {
@@ -170,7 +192,10 @@ export const childEvents: readonly ChildEvent[] = [
     weight: 2,
     choices: [
       { label: 'Refuser toute aide', effects: [push('bond', -6)] },
-      { label: 'Accepter un coup de main', effects: [push('bond', 3)] },
+      {
+        label: 'Accepter un coup de main',
+        effects: [push('bond', 3), bond('mother', 3)],
+      },
       { label: 'Bouder', effects: [push('mind', -2), push('bond', -3)] },
     ],
   },
@@ -208,7 +233,7 @@ export const childEvents: readonly ChildEvent[] = [
     conditions: [age(12)],
     weight: 2,
     choices: [
-      { label: 'Avouer', effects: [trait('honest')] },
+      { label: 'Avouer', effects: [trait('honest'), bond('father', 3)] },
       { label: 'S’enfuir', effects: [push('energy', 4), trait('sly')] },
       { label: 'Partager', effects: [push('sociability', 3), push('bond', 3)] },
     ],
@@ -220,8 +245,19 @@ export const childEvents: readonly ChildEvent[] = [
     conditions: [age(14)],
     weight: 2,
     choices: [
-      { label: 'Jalouser', effects: [trait('stubborn'), push('bond', -4)] },
-      { label: 'Protéger', effects: [trait('protector'), push('bond', 4)] },
+      {
+        label: 'Jalouser',
+        effects: [trait('stubborn'), push('bond', -4), bond('mother', -3)],
+      },
+      {
+        label: 'Protéger',
+        effects: [
+          trait('protector'),
+          push('bond', 4),
+          bond('mother', 3),
+          bond('father', 3),
+        ],
+      },
       { label: 'Ignorer', effects: [push('mind', 3), push('sociability', -3)] },
     ],
   },
@@ -232,14 +268,90 @@ export const childEvents: readonly ChildEvent[] = [
     conditions: [age(16)],
     weight: 2,
     choices: [
-      { label: 'Avouer', effects: [trait('honest'), push('bond', 3)] },
+      {
+        label: 'Avouer',
+        effects: [trait('honest'), push('bond', 3), bond('mother', 4)],
+      },
       {
         label: 'Accuser le chat',
-        effects: [trait('sly'), push('sociability', -2)],
+        effects: [trait('sly'), push('sociability', -2), bond('mother', -3)],
       },
       {
         label: 'Recommencer plus grand',
         effects: [trait('artist'), push('mind', 4)],
+      },
+    ],
+  },
+  {
+    id: 'firstFriend',
+    title: 'Le premier copain',
+    text: 'Un enfant de la même taille a été repéré à proximité. Il tient un jouet. Votre enfant aussi.',
+    conditions: [age(12)],
+    weight: 1,
+    isMandatory: true,
+    choices: [
+      {
+        label: 'Partager le jouet',
+        effects: [
+          { type: 'meetFriend', name: 'Noa', bond: 40 },
+          push('sociability', 4),
+        ],
+      },
+      {
+        label: 'Le garder',
+        effects: [
+          { type: 'meetFriend', name: 'Noa', bond: 20 },
+          push('mind', 3),
+        ],
+      },
+      {
+        label: 'Le casser',
+        effects: [
+          { type: 'meetFriend', name: 'Noa', bond: 5 },
+          push('energy', 3),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'bedtimeStory',
+    title: 'L’histoire du soir',
+    text: 'Une histoire est lue chaque soir par la même personne. La fin n’a pas varié depuis le onzième exemplaire.',
+    conditions: [age(8), { type: 'bond', person: 'mother', atLeast: 50 }],
+    weight: 3,
+    choices: [
+      {
+        label: 'L’écouter jusqu’au bout',
+        effects: [bond('mother', 4), push('mind', -3)],
+      },
+      {
+        label: 'En réclamer une autre',
+        effects: [bond('mother', 2), push('sociability', 3)],
+      },
+      {
+        label: 'Faire semblant de dormir',
+        effects: [bond('mother', -2), push('mind', 3)],
+      },
+    ],
+  },
+  {
+    id: 'shoulders',
+    title: 'Sur les épaules',
+    text: 'Une proposition a été formulée en hauteur : monter sur les épaules d’un adulte. Aucune assurance n’est jointe.',
+    conditions: [age(10), { type: 'bond', person: 'father', atLeast: 50 }],
+    weight: 3,
+    choices: [
+      {
+        label: 'Monter',
+        effects: [bond('father', 4), push('energy', 4)],
+      },
+      {
+        label: 'Rester au sol',
+        effects: [bond('father', -2), push('energy', -3)],
+      },
+      {
+        label: 'Demander à descendre',
+        effects: [bond('father', 1), push('bond', 2)],
       },
     ],
   },

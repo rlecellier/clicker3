@@ -17,7 +17,8 @@ export type GameTabId =
   | 'accounts'
   | 'finance'
   | 'city'
-  | 'house';
+  | 'house'
+  | 'relations';
 
 export type GameTab = { id: GameTabId; label: string; slug: string };
 
@@ -35,6 +36,7 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'city', label: 'Ville', slug: 'ville' },
   // La Maison de la petite enfance : toutes les activités, en dernier.
   { id: 'house', label: 'Maison', slug: 'maison' },
+  { id: 'relations', label: 'Relations', slug: 'relations' },
 ];
 
 // Touche qui ouvre l'onglet de ce rang (1 à 9), dans l'ordre de la sidebar ;

@@ -46,7 +46,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   ).toBeVisible();
   await page.getByRole('button', { name: 'Famille standard' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
-  await expectMenuLinks(page, 2);
+  await expectMenuLinks(page, 3);
   await expect(page.getByLabel('Ressources')).toBeHidden();
   await expect(
     page.getByRole('heading', { name: 'Petite enfance' }),
@@ -59,8 +59,8 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expect(awakening).toHaveText('1');
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('2');
-  // Pas d'objet encore : la Maison reste fermée.
-  await expectMenuLinks(page, 2);
+  // Pas d'objet encore : la Maison reste fermée (Vie, Relations, Recommencer).
+  await expectMenuLinks(page, 3);
   await expectNoOverflow(page);
 
   // Le nounours arrive à l'éveil 4 : la Maison s'ouvre. On y met « Câliner le
@@ -68,7 +68,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('4');
-  await expectMenuLinks(page, 3);
+  await expectMenuLinks(page, 4);
   await tapMenuLink(page, 'Maison');
   await expect(page).toHaveURL('/jeu/maison');
   await expect(page.getByText('Câliner le nounours')).toBeVisible();
@@ -90,7 +90,9 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   }
   const prompt = page.getByRole('alertdialog', { name: 'Premier mot' });
   await expect(prompt).toBeVisible();
-  await expect(prompt.getByText('Lien → Câlin', { exact: true })).toBeVisible();
+  await expect(
+    prompt.getByText('Lien → Câlin · Lien avec Maman +', { exact: true }),
+  ).toBeVisible();
   await prompt.getByRole('button', { name: '« Maman »' }).tap();
   await expect(prompt).toBeHidden();
   await expect(bond).toHaveAccessibleName('Lien : Câlin');

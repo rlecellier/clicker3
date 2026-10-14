@@ -10,6 +10,7 @@ import { answerBirthday, isBirthdayPending } from '@game/birthday';
 import { grow, hasGrowth, sliceGame } from '@game/lifeSlices';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
+import { initialRelations } from '@game/relations';
 import { openPlacement } from '@game/placements';
 import { addGauge } from '@game/period';
 import { acknowledgeFinalUpgrade } from '@game/finale';
@@ -38,13 +39,18 @@ export const newGame = (
   const situation =
     findById(birthSituations, birthSituation)?.id ?? startState.birthSituation;
   if (slice?.start != null) {
-    return { ...sliceGame(slice.start, lifeSlice), birthSituation: situation };
+    return {
+      ...sliceGame(slice.start, lifeSlice),
+      birthSituation: situation,
+      relations: initialRelations(situation),
+    };
   }
   if (slice?.growth != null) {
     return {
       ...startState,
       lifeSlice,
       birthSituation: situation,
+      relations: initialRelations(situation),
       child: { ...startState.child, seed },
     };
   }
@@ -52,6 +58,7 @@ export const newGame = (
     triggerEvents({
       ...startState,
       birthSituation: situation,
+      relations: initialRelations(situation),
       jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
       // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
       pendingBirthday: { age: startState.life.startAge, recap: null },

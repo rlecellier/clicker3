@@ -10,6 +10,7 @@ import type { ChildCondition, ChildEffect, ChildEvent } from '@game/data';
 import type { GameState } from '@game/state';
 import { addTrait, giveObject, pushAxis, removeObject } from './childState';
 import { nextRandom } from './random';
+import { changeBond, meetFriend, relationById } from '@game/relations';
 
 export const childEventById = (id: string | null) => findById(childEvents, id);
 
@@ -38,6 +39,11 @@ const isConditionMet = (
     }
     case 'object': {
       return child.objects.includes(condition.id);
+    }
+    case 'bond': {
+      return (
+        (relationById(state, condition.person)?.bond ?? 0) >= condition.atLeast
+      );
     }
     case 'context': {
       // Les contextes de départ viendront avec les situations (#259).
@@ -133,6 +139,12 @@ const applyEffect = (state: GameState, effect: ChildEffect): GameState => {
     case 'removeObject': {
       return removeObject(state, effect.id);
     }
+    case 'bond': {
+      return changeBond(state, effect.person, effect.amount);
+    }
+    case 'meetFriend': {
+      return meetFriend(state, effect.name, effect.bond);
+    }
   }
 };
 
@@ -161,7 +173,10 @@ export const chooseEvent = (state: GameState, index: number): GameState => {
 const objectName = (id: string) => findById(childObjects, id)?.name ?? id;
 
 // Ce que gagne ou perd un choix, en une ligne lisible (« Énergie → Vif »).
-export const describeEffect = (effect: ChildEffect): string => {
+export const describeEffect = (
+  state: GameState,
+  effect: ChildEffect,
+): string => {
   switch (effect.type) {
     case 'axis': {
       const axis = findById(childAxes, effect.axis);
@@ -178,6 +193,12 @@ export const describeEffect = (effect: ChildEffect): string => {
     }
     case 'removeObject': {
       return `Perd : ${objectName(effect.id)}`;
+    }
+    case 'bond': {
+      return `Lien avec ${relationById(state, effect.person)?.name ?? 'quelqu’un'} ${effect.amount > 0 ? '+' : '−'}`;
+    }
+    case 'meetFriend': {
+      return `Rencontre : ${effect.name}`;
     }
   }
 };

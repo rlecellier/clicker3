@@ -1,0 +1,1 @@
+export { useRelationsScreen } from './useRelationsScreen';

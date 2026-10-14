@@ -3,8 +3,8 @@
 > Statut : **validée**, en cours de développement (suivi : #253). Fait : la
 > situation de naissance (#254, « Famille standard » seule) ; les axes, les
 > objets et activités, l'onglet Maison et les favoris (#255) ; le pool d'événements,
-> les traits, l'exploration et les demandes (#256). Le reste n'est pas codé (Relations,
-> bilan, autres situations). Ce document répond à
+> les traits, l'exploration et les demandes (#256) ; le menu Relations (#257). Le reste n'est
+> pas codé (bilan, autres situations). Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
 > pour toutes les suivantes. Cadre général : [tranches-de-vie.md](tranches-de-vie.md).
