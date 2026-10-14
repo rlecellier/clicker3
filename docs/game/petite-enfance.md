@@ -94,20 +94,55 @@ Pas de bonus continu.
 Ces deux jauges remplacent l'argent, qui n'existe pas encore. Elles sont
 **liées aux relations** (§ 3), donc au contexte familial.
 
-### Les actions (le bouton devient un petit choix)
+### Les actions : un bouton, puis des objets qui en ouvrent d'autres
 
-Aujourd'hui l'onglet Vie n'a qu'un bouton « Gazouiller ». On propose **4 à 5
-actions**, qui se débloquent peu à peu :
+**Au départ, un seul bouton** : « Gazouiller ». Il ne choisit aucun pôle : il
+fait monter une jauge d'**éveil** (le compteur `growth` d'aujourd'hui) et fait
+avancer la tranche. Passé quelques paliers d'éveil, les premiers événements
+arrivent.
 
-| Action (pôle)                        | Axe poussé        | Coût / risque               |
-| ------------------------------------ | ----------------- | --------------------------- |
-| Bouger, grimper (Vif) / Observer (Posé) | Énergie        | Petit risque de chute (Vif) |
-| Appeler (Extraverti) / Jouer seul (Introverti) | Sociabilité | Aucun                  |
-| Fouiller (Touche-à-tout) / Empiler (Appliqué) | Esprit  | Fouiller consomme la Patience |
-| Câliner (Câlin) / Faire seul (Indépendant) | Lien        | Câliner gagne de l'Attention |
+**Les événements apportent des choses autour du bébé** : un nounours, des cubes,
+un hochet, un livre d'images, un ballon, un tricycle, un piano jouet, le chat de
+la maison, un grand-parent qui passe. Chacun **débloque une ou deux activités**
+(façon Sims) ; chaque activité pousse un axe vers un pôle.
 
-Chaque action est un petit choix de pôle ; « Faire une bêtise » (Touche-à-tout
-poussé fort, déclenche un événement) peut venir comme cinquième action.
+| Objet / présence    | Activité débloquée            | Axe, pôle                     |
+| ------------------- | ----------------------------- | ----------------------------- |
+| Nounours            | Câliner le nounours           | Lien, Câlin                   |
+| Nounours            | Lui apprendre à marcher       | Énergie, Vif                  |
+| Cubes               | Empiler                       | Esprit, Appliqué              |
+| Hochet / casseroles | Faire du bruit                | Sociabilité, Extraverti       |
+| Livre d'images      | Regarder seul                 | Sociabilité, Introverti       |
+| Ballon              | Courir après                  | Énergie, Vif                  |
+| Boîte à formes      | Tout essayer dans tous les trous | Esprit, Touche-à-tout      |
+| Le chat             | L'observer sans bouger        | Énergie, Posé                 |
+| Un parent           | Se faire porter / marcher seul | Lien, Câlin / Indépendant    |
+
+Un objet qui donne **deux activités de pôles opposés** (le nounours) laisse
+choisir quel enfant on devient avec la même chose.
+
+**Combien de boutons.** Le joueur a plus d'objets que de boutons : seules
+**quelques activités sont « à portée de main »**, il choisit lesquelles.
+
+- le nombre d'emplacements croît avec l'âge : **1 au départ, 2 à ~1 an, 3 à
+  ~3 ans, 4 à ~5 ans** (un enfant qui grandit sait faire plus de choses à la
+  fois) ;
+- changer d'activité à portée est gratuit et immédiat ;
+- les autres activités restent dans une liste « dans la chambre » : on n'a donc
+  jamais un mur de 10 boutons, et choisir ses 3 ou 4 activités, c'est déjà
+  choisir son enfant.
+
+**Le contexte décide ce qu'on a.** L'état de départ donne ses objets (le fils de
+millionnaire a dix jouets et peu de parents, l'enfant SDF a un nounours et un
+parent très présent). Une même activité peut aussi se perdre (jouet cassé,
+déménagement) par événement.
+
+**Les objets sont des conditions du pool** (§ 4) : « a le nounours » éligible
+pour l'événement « Le nounours perdu », « a le ballon » pour « La vitre du
+voisin ». Et un événement peut **donner** ou **retirer** un objet.
+
+Si le jeu doit rester idle, une activité à portée peut s'**automatiser** une
+fois un palier d'axe passé (le bébé qui empile tout seul).
 
 Le sommeil reste **passif** ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)) :
 la sieste rend les paliers acquis « durables » et vide les marqueurs du jour,
@@ -162,7 +197,7 @@ Une donnée (`src/game/data`), comme les événements de la v1 :
 - un **poids** (chance relative d'être tiré parmi les éligibles) ;
 - un caractère **unique** (ne se rejoue pas) ;
 - 2 ou 3 **choix**, chacun avec effet visible : un axe poussé, un lien modifié,
-  parfois un trait.
+  parfois un trait, parfois un objet donné ou retiré.
 
 Types de conditions prévus, tous lisibles dans l'état :
 
@@ -173,6 +208,7 @@ Types de conditions prévus, tous lisibles dans l'état :
 | Lien avec une personne       | lien avec la mère ≥ 50                                      |
 | Trait ou événement déjà vécu | a le trait *Têtu* ; a vécu « Premier copain »              |
 | **Contexte de départ** (plus tard) | situation *hôtel de luxe*, *plage*, *tournée*, *ferme* |
+| Objet ou présence possédé    | a le nounours, a le ballon, le chat est là                 |
 | Aucune                       | événement « de fond », éligible à tout moment              |
 
 Le **contexte** est une étiquette de la situation de naissance (hôtel, plage,
@@ -279,7 +315,7 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 1. **Situations de naissance** : donnée (`src/game/data`), choix à l'écran
    titre, parents et qualités. Une seule situation (« famille standard »)
    suffit pour la première MR.
-2. **Axes et actions** : état, reducer, paliers, jauge de temps adaptée à
+2. **Axes, objets et activités** : un bouton de départ, objets, emplacements d'activité, état, reducer, paliers, jauge de temps adaptée à
    0-5 ans, remplacement du compteur `growth` pour cette tranche.
 3. **Menu Relations / Famille** : onglet, sous-menu, liens, paliers et bonus.
 4. **Événements et traits** : moteur de choix réutilisé de `src/game/events`,
@@ -289,12 +325,9 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 
 ## 9. Questions ouvertes
 
-- **Boutons** : une action par axe avec deux variantes (8 boutons en 4 paires),
-  ou une action par axe dont on choisit le pôle ? Les paires sont plus lisibles,
-  les actions à pôle choisi plus sobres.
 - **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
-- **Combien d'actions** au départ ? On propose 5 ; 3 suffiraient si on veut
-  une tranche encore plus courte.
+- **Emplacements** : 1 / 2 / 3 / 4 selon l'âge, ou fixes (3) dès le début ?
+- **Objets** : donnés seulement par les événements, ou aussi achetables / trouvables par le joueur ?
 - **Patience / Attention** : les deux, ou une seule jauge « Attention » pour
   limiter le nombre de ressources (risque « trop d'idées d'un coup » du
   [concept](concept.md)) ?
