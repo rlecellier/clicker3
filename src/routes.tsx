@@ -16,6 +16,7 @@ import { LifeTabPage } from '@page/LifeTabPage';
 import { MailPage } from '@page/MailPage';
 import { NewLifePage } from '@page/NewLifePage';
 import { ProfilePage } from '@page/ProfilePage';
+import { RelationsPage } from '@page/RelationsPage';
 import { ScreenGuard } from '@page/ScreenGuard';
 import { TabGuard } from '@page/TabGuard';
 import { StyleguidePage } from '@page/StyleguidePage';
@@ -36,6 +37,7 @@ const tabPages: Record<GameTabId, ReactNode> = {
   finance: <FinancePage />,
   city: <CityPage />,
   house: <HousePage />,
+  relations: <RelationsPage />,
 };
 
 // Une route `/jeu/<slug>` par onglet, dans l'ordre de la sidebar.

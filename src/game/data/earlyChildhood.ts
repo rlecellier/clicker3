@@ -26,6 +26,17 @@ export const childRules = {
   laterDelay: 2,
   // Marge de moyens en dessous de laquelle la réponse est « plus tard ».
   laterMargin: 25,
+  // Les relations : le lien de départ est 30 % de l'affection du parent ;
+  // jouer avec quelqu'un le renforce de `playBond`. Aux paliers de lien, une
+  // activité s'ouvre (`activity`), la personne pousse en douce l'axe qu'elle
+  // aime à chaque trimestre (`bonus`, de `bonusAmount`) et amortit les
+  // mauvaises passes (`support` : un lien perdu est divisé par deux).
+  relations: {
+    startShare: 0.3,
+    playBond: 2,
+    tiers: { activity: 25, bonus: 50, support: 75 },
+    bonusAmount: 2,
+  },
 } as const;
 
 export type ChildAxis = {
@@ -212,7 +223,10 @@ export type ChildActivity = {
   amount: number;
   source:
     | { type: 'object'; id: string }
-    | { type: 'axis'; axis: ChildAxisId; direction: 1 | -1 };
+    | { type: 'axis'; axis: ChildAxisId; direction: 1 | -1 }
+    // Une personne dont le lien est assez fort : l'activité est tirée de ses
+    // goûts (`relationActivities`), pas de cette liste.
+    | { type: 'relation'; person: string };
 };
 
 const push = 2;

@@ -42,6 +42,17 @@ export type ChildState = {
   later: { id: string; at: number }[];
 };
 
+// Une personne qui compte pour l'enfant : un parent, puis un ami.
+export type Relation = {
+  // Un parent garde l'id de la situation de naissance (`mother`, `father`).
+  id: string;
+  name: string;
+  role: string;
+  kind: 'family' | 'friend';
+  // Lien de 0 à 100, qui monte et descend avec ce qu'on vit ensemble.
+  bond: number;
+};
+
 export type LifePhase = (typeof lifePhases)[number];
 export type LifeSliceId = (typeof lifeSliceIds)[number];
 
@@ -220,6 +231,8 @@ export type GameState = {
   birthSituation: string;
   /** Axes, objets et temps de la petite enfance. */
   child: ChildState;
+  /** Les personnes qui comptent : la famille, puis les amis. */
+  relations: Relation[];
 
   /** Euros entiers. */
   money: number;

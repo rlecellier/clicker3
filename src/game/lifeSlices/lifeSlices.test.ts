@@ -17,9 +17,14 @@ describe('tranches de vie', () => {
 
   it('ouvre tous les onglets en Jeunesse et un seul avant 18 ans', () => {
     expect(sliceTabs(newGame())).toHaveLength(9);
-    for (const id of ['earlyChildhood', 'childhood', 'adolescence'] as const) {
+    for (const id of ['childhood', 'adolescence'] as const) {
       expect(sliceTabs(newGame(undefined, id))).toEqual(['life']);
     }
+    // La petite enfance ajoute les Relations ; la Maison attend le premier objet.
+    expect(sliceTabs(newGame(undefined, 'earlyChildhood'))).toEqual([
+      'life',
+      'relations',
+    ]);
   });
 
   it('commence une tranche avant 18 ans sans emploi ni anniversaire', () => {

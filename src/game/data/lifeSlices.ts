@@ -42,7 +42,7 @@ export const lifeSlices: readonly LifeSlice[] = [
     sleepBaseHours: 12,
     name: 'Petite enfance',
     ages: '0 à 5 ans',
-    tabs: ['life', 'house'],
+    tabs: ['life', 'house', 'relations'],
     growth: { actionLabel: 'Gazouiller', counterLabel: 'Éveil' },
     start: null,
   },

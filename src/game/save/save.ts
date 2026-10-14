@@ -1,5 +1,8 @@
 import {
   birthSituations,
+  childEvents,
+  childObjects,
+  childTraits,
   companies,
   districts,
   events,
@@ -82,6 +85,9 @@ const idsOf = (list: readonly { id: string }[]) =>
   new Set(list.map((item) => item.id));
 
 const birthSituationIds = idsOf(birthSituations);
+const childEventIds = idsOf(childEvents);
+const childObjectIds = idsOf(childObjects);
+const childTraitIds = idsOf(childTraits);
 const companyIds = idsOf(companies);
 const districtIds = idsOf(districts);
 const eventIds = idsOf(events);
@@ -179,6 +185,34 @@ const isPendingBirthday = (value: unknown) =>
         value.recap,
       )));
 
+const isRelation = (value: unknown) =>
+  isRecord(value) &&
+  typeof value.id === 'string' &&
+  typeof value.name === 'string' &&
+  typeof value.role === 'string' &&
+  (value.kind === 'family' || value.kind === 'friend') &&
+  isFiniteNumber(value.bond);
+
+// Ce que l'enfant possède, a vécu et attend : ids connus, nombres finis.
+const isValidChild = (raw: RawState) => {
+  const { child } = raw;
+  return (
+    isRecord(child) &&
+    isIdList(child.objects, childObjectIds) &&
+    isIdList(child.firedEvents, childEventIds) &&
+    isIdList(child.traits, childTraitIds) &&
+    (child.pendingEvent === null ||
+      isStringIn(child.pendingEvent, childEventIds)) &&
+    Array.isArray(child.later) &&
+    child.later.every(
+      (entry) =>
+        isRecord(entry) &&
+        typeof entry.id === 'string' &&
+        isFiniteNumber(entry.at),
+    )
+  );
+};
+
 const isValidState = (raw: RawState): raw is GameState => {
   if (!hasShapeOf(shapeTemplate, raw)) {
     return false;
@@ -198,6 +232,9 @@ const isValidState = (raw: RawState): raw is GameState => {
     (lastStatement === null || isRecord(lastStatement)) &&
     (lastSeenAt === null || isFiniteNumber(lastSeenAt)) &&
     isStringIn(raw.birthSituation, birthSituationIds) &&
+    isValidChild(raw) &&
+    Array.isArray(raw.relations) &&
+    raw.relations.every((relation) => isRelation(relation)) &&
     isPendingPromotion(pendingPromotion) &&
     isPendingBirthday(pendingBirthday) &&
     (status === 'playing' || status === 'dead') &&

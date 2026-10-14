@@ -151,9 +151,12 @@ describe('petite enfance : les objets', () => {
 
   it('ouvrent la Maison au premier objet', () => {
     const withTeddy = giveObject(baby(), 'teddy');
-    expect(sliceTabs(baby())).toEqual(['life']);
-    expect(sliceTabs(withTeddy)).toEqual(['life', 'house']);
-    expect(sliceTabs(removeObject(withTeddy, 'teddy'))).toEqual(['life']);
+    expect(sliceTabs(baby())).toEqual(['life', 'relations']);
+    expect(sliceTabs(withTeddy)).toEqual(['life', 'house', 'relations']);
+    expect(sliceTabs(removeObject(withTeddy, 'teddy'))).toEqual([
+      'life',
+      'relations',
+    ]);
   });
 });
 
@@ -380,19 +383,19 @@ describe('petite enfance : les événements', () => {
   });
 
   it('décrivent chaque effet en une ligne', () => {
-    expect(describeEffect({ type: 'axis', axis: 'energy', amount: 6 })).toBe(
-      'Énergie → Vif',
-    );
-    expect(describeEffect({ type: 'axis', axis: 'mind', amount: -3 })).toBe(
-      'Esprit → Appliqué',
-    );
-    expect(describeEffect({ type: 'trait', id: 'stubborn' })).toBe(
+    expect(
+      describeEffect(baby(), { type: 'axis', axis: 'energy', amount: 6 }),
+    ).toBe('Énergie → Vif');
+    expect(
+      describeEffect(baby(), { type: 'axis', axis: 'mind', amount: -3 }),
+    ).toBe('Esprit → Appliqué');
+    expect(describeEffect(baby(), { type: 'trait', id: 'stubborn' })).toBe(
       'Trait : Têtu',
     );
-    expect(describeEffect({ type: 'giveObject', id: 'cat' })).toBe(
+    expect(describeEffect(baby(), { type: 'giveObject', id: 'cat' })).toBe(
       'Reçoit : Le chat',
     );
-    expect(describeEffect({ type: 'removeObject', id: 'teddy' })).toBe(
+    expect(describeEffect(baby(), { type: 'removeObject', id: 'teddy' })).toBe(
       'Perd : Nounours',
     );
   });
@@ -609,7 +612,8 @@ describe('petite enfance : les données', () => {
   });
 
   it('ont au plus un événement obligatoire par âge, et assez d’événements', () => {
-    expect(childEvents.filter((event) => event.isMandatory)).toHaveLength(1);
+    const mandatory = childEvents.filter((event) => event.isMandatory);
+    expect(mandatory.map(({ id }) => id)).toEqual(['firstWord', 'firstFriend']);
     expect(childEvents.length).toBeGreaterThanOrEqual(
       childRules.events.max + 4,
     );

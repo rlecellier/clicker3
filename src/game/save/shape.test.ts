@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 23,
+    version: 24,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -144,6 +144,7 @@ describe('forme de l’état', () => {
       'payrollFactor',
       'productionMultiplier',
       'promotionsOffered',
+      'relations',
       'rent',
       'rentFactor',
       'reputation',

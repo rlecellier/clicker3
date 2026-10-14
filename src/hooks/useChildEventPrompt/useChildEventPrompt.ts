@@ -15,7 +15,7 @@ export const useChildEventPrompt = () => {
     choices: event.choices.map((choice, index) => ({
       label: choice.label,
       effects: choice.effects
-        .map((effect) => describeEffect(effect))
+        .map((effect) => describeEffect(state, effect))
         .join(' · '),
       onChoose: () => {
         dispatch({ type: 'chooseEvent', choice: index });

@@ -64,6 +64,24 @@ Les choix donnent aussi des **traits** (3 au plus, au-delà il faut renoncer),
 chacun avec un avantage et un inconvénient (Têtu, Rusé, Artiste…). Ils s'affichent
 sous les axes et seront transmis à l'Enfance.
 
+## Les relations
+
+L'onglet **Relations** réunit les personnes qui comptent. Le sous-menu
+**Famille** liste les parents ; **Amis** apparaît avec le premier copain (vers
+3 ans, un événement qui arrive toujours). Chaque personne a un **lien** de 0 à
+100, qui monte quand on joue avec elle ou qu'on fait un choix qui lui plaît, et
+qui baisse quand on la brusque. Trois paliers :
+
+| Lien | Ce que ça donne                                                     |
+| ---- | ------------------------------------------------------------------- |
+| 25   | « Jouer avec… » s'ouvre dans la Maison (l'axe qu'elle aime partager) |
+| 50   | Elle pousse en douce cet axe à chaque trimestre                     |
+| 75   | Elle amortit les mauvaises passes : les pertes de lien sont divisées par deux |
+
+Au départ le lien est faible (18) : un bébé ne joue pas encore avec ses
+parents. Le lien ouvre aussi des événements (l'histoire du soir demande une mère
+proche, les épaules d'un père proche).
+
 À 6 ans, plus aucun geste ne joue : la petite enfance est finie.
 
 Conception : [petite-enfance.md](../game/petite-enfance.md).

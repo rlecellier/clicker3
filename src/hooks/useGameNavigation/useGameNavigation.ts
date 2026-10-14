@@ -12,6 +12,7 @@ const pinnedTabIds = new Set<GameTabId>([
   'jobs',
   'companies',
   'house',
+  'relations',
 ]);
 
 const startLabel = 'Démarrer';

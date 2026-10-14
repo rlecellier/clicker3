@@ -3,6 +3,7 @@ import type { ChildState, GameState } from '@game/state';
 import { deliverWishes, giveObject } from './childState';
 import { scheduleEvent } from './events';
 import { familyQualities } from './family';
+import { applyBondBonuses } from '@game/relations';
 
 // Chaque geste remplit la jauge du trimestre et fait monter l'éveil ; l'entourage
 // offre un objet à mesure que l'éveil monte. Un trimestre qui passe rend de
@@ -38,5 +39,5 @@ export const advance = (state: GameState): GameState => {
       ),
     },
   };
-  return scheduleEvent(deliverWishes(next));
+  return scheduleEvent(applyBondBonuses(deliverWishes(next)));
 };

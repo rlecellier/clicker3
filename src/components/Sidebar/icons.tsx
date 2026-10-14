@@ -13,6 +13,7 @@ export type SidebarIconId =
   | 'finance'
   | 'city'
   | 'house'
+  | 'relations'
   | 'new-life'
   | 'start';
 
@@ -94,6 +95,15 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
       <path d="M2 6h12v8H2z" />
       <path d="M1 3h14v3H1z" />
       <path d="M6.5 8h3v2h-3z" fill="var(--color-surface)" />
+    </>
+  ),
+  // Deux personnages côte à côte.
+  relations: (
+    <>
+      <circle cx="5" cy="5" r="2.5" />
+      <path d="M0 14c0-3.5 2-5 5-5s5 1.5 5 5z" />
+      <circle cx="11.5" cy="5.5" r="2" />
+      <path d="M9 14c0-2.5 1.5-4 4-4s3 1.5 3 4z" />
     </>
   ),
   city: (

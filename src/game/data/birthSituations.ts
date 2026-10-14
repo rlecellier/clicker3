@@ -1,3 +1,5 @@
+import type { ChildAxisId } from '@game/state';
+
 // Les qualités d'un parent, de 0 à 100 : elles règlent le rythme de l'Attention
 // et la réponse à une demande (docs/game/petite-enfance.md).
 export type ParentQualities = {
@@ -15,6 +17,9 @@ export type Parent = {
   // Place dans la famille (mère, père, grand-parent…).
   role: string;
   qualities: ParentQualities;
+  // Ce que ce parent aime partager : un lien assez fort pousse l'axe de l'enfant
+  // de ce côté, et ouvre une activité à faire avec lui.
+  passion: { axis: ChildAxisId; direction: 1 | -1; text: string };
 };
 
 export type BirthSituation = {
@@ -44,12 +49,14 @@ export const birthSituations: readonly BirthSituation[] = [
         name: 'Maman',
         role: 'mère',
         qualities: { availability: 50, affection: 60, means: 50 },
+        passion: { axis: 'sociability', direction: 1, text: 'aime bavarder' },
       },
       {
         id: 'father',
         name: 'Papa',
         role: 'père',
         qualities: { availability: 50, affection: 60, means: 50 },
+        passion: { axis: 'energy', direction: 1, text: 'aime courir dehors' },
       },
     ],
     objects: [],
