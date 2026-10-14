@@ -2,7 +2,6 @@ import { jobs, startState } from '@game/data';
 import { gainReputation } from '@game/reputation';
 import type { GameState } from '@game/state';
 import { reduce } from '@game/reducer';
-import { settleSleep, sleepStep } from '@game/sleep';
 import { changeJob, monthlyWage, startingJobs } from './jobs';
 
 describe('données des emplois', () => {
@@ -21,7 +20,7 @@ describe('données des emplois', () => {
 });
 
 describe('monthlyWage', () => {
-  it('paie les 8 h de la journée : trois actions de travail', () => {
+  it('paie la journée de travail normale : trois actions de travail', () => {
     const first = jobs[0];
     expect(first).toBeDefined();
     if (first === undefined) {
@@ -63,11 +62,7 @@ describe('premier emploi', () => {
         state = reduce(state, { type: 'answerPromotion', isAccepted: false });
         continue;
       }
-      state = settleSleep(
-        state.isSleeping
-          ? sleepStep(state)
-          : reduce(state, { type: 'work', target: 'job' }),
-      );
+      state = reduce(state, { type: 'work', target: 'job' });
       lowest = Math.min(lowest, state.money);
     }
     expect(lowest).toBeGreaterThanOrEqual(0);

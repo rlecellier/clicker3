@@ -125,15 +125,6 @@ const isActiveEffect = (value: unknown) =>
   isFiniteNumber(value.value) &&
   isFiniteNumber(value.until);
 
-const isQueue = (value: unknown) =>
-  Array.isArray(value) &&
-  value.every(
-    (item) =>
-      isRecord(item) &&
-      ((item.type === 'work' && typeof item.target === 'string') ||
-        (item.type === 'study' && typeof item.courseId === 'string')),
-  );
-
 // Contenu des champs « vides » du modèle (objets, tableaux) : types des
 // éléments et ids contre les données du jeu.
 const hasValidContent = (raw: RawState) =>
@@ -144,7 +135,6 @@ const hasValidContent = (raw: RawState) =>
   isNumberRecord(raw.jobSalaryFactors, jobIds) &&
   isNumberRecord(raw.overtimeActions, jobIds) &&
   isNumberRecord(raw.promotionsOffered, jobIds) &&
-  isQueue(raw.queuedActions) &&
   isRecord(raw.flags) &&
   Object.values(raw.flags).every((flag) => typeof flag === 'boolean') &&
   isIdList(raw.upgrades, upgradeIds) &&

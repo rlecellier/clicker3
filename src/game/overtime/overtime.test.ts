@@ -3,9 +3,9 @@ import type { GameState } from '@game/state';
 import { jobWage, work } from '@game/work';
 import {
   isOvertime,
-  overtimeGaugeFactor,
+  overtimeDurationFactor,
   overtimeWageFactor,
-  workGaugeDone,
+  workMinutesDone,
 } from './overtime';
 
 const { overtime } = actionRules.work;
@@ -18,33 +18,33 @@ const withWork = (amount: number): GameState => ({
 
 const salary = jobs[0]?.salary ?? 0;
 
-describe('workGaugeDone', () => {
+describe('workMinutesDone', () => {
   it('ne compte que le travail de la période', () => {
     const mixed: GameState = {
       ...startState,
-      gauge: 55,
+      gauge: 530,
       gaugeSegments: [
-        { kind: 'sleep', amount: 25 },
-        { kind: 'work', amount: 20 },
-        { kind: 'study', amount: 10 },
+        { kind: 'work', amount: 200 },
+        { kind: 'study', amount: 300 },
+        { kind: 'work', amount: 30 },
       ],
     };
-    expect(workGaugeDone(mixed)).toBe(20);
-    expect(workGaugeDone(startState)).toBe(0);
+    expect(workMinutesDone(mixed)).toBe(230);
+    expect(workMinutesDone(startState)).toBe(0);
   });
 });
 
 describe('heures supplémentaires', () => {
-  it('paient les 8 h de la journée au salaire de base', () => {
-    const state = withWork(overtime.regularGauge - 1);
+  it('paient la journée de travail normale au salaire de base', () => {
+    const state = withWork(overtime.regularMinutes - 1);
     expect(isOvertime(state)).toBe(false);
     expect(overtimeWageFactor(state)).toBe(1);
-    expect(overtimeGaugeFactor(state)).toBe(1);
+    expect(overtimeDurationFactor(state)).toBe(1);
     expect(jobWage(state)).toBe(salary);
   });
 
   it('s’appliquent seules une fois la journée faite, sans déblocage', () => {
-    const state = withWork(overtime.regularGauge);
+    const state = withWork(overtime.regularMinutes);
     expect(startState.upgrades).toEqual([]);
     expect(isOvertime(state)).toBe(true);
     expect(overtimeWageFactor(state)).toBe(1.25);
@@ -52,24 +52,24 @@ describe('heures supplémentaires', () => {
   });
 
   it('montent à la tranche suivante', () => {
-    const state = withWork(50);
+    const state = withWork(overtime.tiers[1]?.from ?? 0);
     const rate = overtime.tiers[1]?.wage ?? 1;
     expect(rate).toBeGreaterThan(overtime.tiers[0]?.wage ?? 1);
     expect(overtimeWageFactor(state)).toBe(rate);
     expect(jobWage(state)).toBe(Math.round(salary * rate));
   });
 
-  it('fatiguent : l’action coûte plus de jauge', () => {
+  it('fatiguent : l’action dure plus longtemps', () => {
     const base = work(startState);
-    const tired = work(withWork(30));
-    expect(base.gauge).toBe(actionRules.work.gauge);
-    expect(tired.gauge - 30).toBeCloseTo(
-      actionRules.work.gauge * (1 + overtime.gaugeSurcharge),
+    const tired = work(withWork(overtime.regularMinutes));
+    expect(base.gauge).toBe(actionRules.work.minutes);
+    expect(tired.gauge - overtime.regularMinutes).toBeCloseTo(
+      actionRules.work.minutes * (1 + overtime.gaugeSurcharge),
     );
   });
 
   it('verse exactement ce que jobWage annonce', () => {
-    for (const done of [0, 29, 30, 49, 50, 55]) {
+    for (const done of [0, 599, 600, 650]) {
       const state = withWork(done);
       const after = work(state);
       const paid = Object.values(after.wagesDue).reduce(
@@ -81,18 +81,18 @@ describe('heures supplémentaires', () => {
   });
 
   it('repartent de zéro avec la période suivante', () => {
-    const next = work(withWork(60));
+    const next = work(withWork(startState.gaugeCapacity - 1));
     expect(next.period).toBe(1);
-    expect(workGaugeDone(next)).toBeLessThan(overtime.regularGauge);
+    expect(workMinutesDone(next)).toBeLessThan(overtime.regularMinutes);
     expect(isOvertime(next)).toBe(false);
   });
 
-  it('ne comptent ni le sommeil ni les études', () => {
-    const rested: GameState = {
+  it('ne comptent pas les études', () => {
+    const studied: GameState = {
       ...startState,
-      gauge: 40,
-      gaugeSegments: [{ kind: 'sleep', amount: 40 }],
+      gauge: 700,
+      gaugeSegments: [{ kind: 'study', amount: 700 }],
     };
-    expect(isOvertime(rested)).toBe(false);
+    expect(isOvertime(studied)).toBe(false);
   });
 });

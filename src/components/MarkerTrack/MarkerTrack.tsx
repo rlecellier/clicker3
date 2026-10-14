@@ -1,19 +1,12 @@
-import { Badge } from '@component/Badge';
 import styles from './MarkerTrack.module.css';
 
 type MarkerTrackProperties = {
   count: number;
   max: number;
-  isSleeping: boolean;
 };
 
-// Le cerveau et ses marqueurs (x/max). Au sommeil, il se vide marqueur par
-// marqueur.
-export const MarkerTrack = ({
-  count,
-  max,
-  isSleeping,
-}: MarkerTrackProperties) => (
+// Le cerveau et ses marqueurs (x/max). La nuit, il se vide d'un coup.
+export const MarkerTrack = ({ count, max }: MarkerTrackProperties) => (
   <div className={styles.track}>
     <span>
       Cerveau {count}/{max}
@@ -26,6 +19,5 @@ export const MarkerTrack = ({
         />
       ))}
     </span>
-    {isSleeping ? <Badge tone="alert">Zzz</Badge> : null}
   </div>
 );

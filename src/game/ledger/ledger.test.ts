@@ -356,10 +356,18 @@ describe('invariants sur une partie jouée', () => {
 
   it('remet à zéro la « dernière période » à chaque période', () => {
     let state = rich;
-    state = reduce(state, { type: 'addGauge', amount: 100, kind: 'work' });
+    state = reduce(state, {
+      type: 'addGauge',
+      amount: rich.gaugeCapacity,
+      kind: 'work',
+    });
     const first = lastPeriodReport(state);
     expect(first.rent).toBe(startState.rent);
-    state = reduce(state, { type: 'addGauge', amount: 100, kind: 'work' });
+    state = reduce(state, {
+      type: 'addGauge',
+      amount: rich.gaugeCapacity,
+      kind: 'work',
+    });
     expect(lastPeriodReport(state).rent).toBe(startState.rent);
     expect(totals(state).rent).toBe(2 * startState.rent);
   });
@@ -371,7 +379,7 @@ describe('invariants sur une partie jouée', () => {
     };
     const after = reduce(before, {
       type: 'addGauge',
-      amount: 100,
+      amount: rich.gaugeCapacity,
       kind: 'work',
     });
     const report = lastPeriodReport(after);

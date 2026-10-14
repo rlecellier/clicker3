@@ -69,9 +69,9 @@ const idsOf = (requirement: Requirement): string[] => {
 };
 
 describe('intégrité des données', () => {
-  it('compte 37 améliorations aux ids uniques', () => {
-    expect(upgrades).toHaveLength(37);
-    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(37);
+  it('compte 40 améliorations aux ids uniques', () => {
+    expect(upgrades).toHaveLength(40);
+    expect(new Set(upgrades.map((upgrade) => upgrade.id)).size).toBe(40);
   });
 
   it('ne référence que des ids existants', () => {

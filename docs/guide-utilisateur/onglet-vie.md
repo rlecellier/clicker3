@@ -24,8 +24,10 @@ les trois gestes de tous les jours et l'état de votre cerveau.
    « Cerveau 2/5 » et les cases remplies, compacts entre les deux boutons : agir
    les remplit, étudier les consomme), puis Étudier. La barre de la compétence
    étudiée est au-dessus du bouton Étudier.
-5. **Le sommeil** : trois cases Court (4 h), Moyen (6 h) et Long (8 h), et une
-   phrase qui dit l'horaire, la jauge de temps et les marqueurs vidés.
+5. **Le sommeil** : « Sommeil : 8 h par jour (éveil : 16 h) », la base de votre
+   âge, les bonus des améliorations de sommeil, et le bilan de la dernière nuit.
+   Il n'y a rien à régler. Sous chaque bouton d'action, « encore N fois » dit
+   combien de fois vous pouvez agir avant la nuit.
 
 ## Les trois boutons
 
@@ -74,19 +76,13 @@ Voir [Les entreprises](entreprises.md#le-surplus).
 
 ## Le cerveau et le sommeil
 
-Les marqueurs obtenus s'accumulent dans le cerveau, 5 au maximum au départ.
-Une fois par période, à l'heure du coucher, le personnage s'endort : une
-pastille « Zzz » apparaît, la barre passe sur « Sommeil » et les marqueurs se
-vident un à un, en transformant chacun en point de compétence. Le sommeil
-complet dure environ une demi-seconde. Sa durée se règle sous le bouton
-Étudier, avec les trois cases Court, Moyen et Long (le choix s'applique à
-partir de la période suivante ; la phrase le rappelle). Moins vous dormez,
-plus il reste de temps éveillé, mais moins de marqueurs sont convertis en
-points. Voir [Les actions](actions.md#dormir).
-
-Pendant le sommeil, vos clics sur Travailler et Étudier ne sont pas perdus : le
-message « Vous dormez. Cela sera fait au réveil. » apparaît et les gestes sont
-rejoués au réveil, dans l'ordre (cinquante au plus).
+Les marqueurs obtenus s'accumulent dans le cerveau, 5 au maximum au départ. À la
+fin de chaque période (quand le temps d'éveil est écoulé), la nuit les convertit
+tous d'un coup en points de compétence, sans pause ni barre. Votre sommeil ne se
+règle pas : 8 h de base à 18 ans (16 h d'éveil), moins en vieillissant, et il ne
+change que par les améliorations « Dormir mieux » (+1 h, on apprend mieux) et
+« Optimiser son sommeil » (−1 h, on apprend pareil et on peut agir plus
+souvent). Voir [Les actions](actions.md#dormir).
 
 ## Appui maintenu
 

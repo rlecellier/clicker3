@@ -11,7 +11,7 @@ describe('sellSurplus', () => {
   });
 
   it('prend un peu de temps', () => {
-    expect(sellSurplus(stocked).gauge).toBe(economyRules.surplusGauge);
+    expect(sellSurplus(stocked).gauge).toBe(economyRules.surplusMinutes);
   });
 
   it('refuse sans stock ou quand le personnage est mort', () => {

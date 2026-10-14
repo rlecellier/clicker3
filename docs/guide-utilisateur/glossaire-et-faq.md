@@ -32,7 +32,7 @@
 | Senior               | À partir de 60 ans : les gains des actions manuelles sont divisés par deux                                        |
 | Sidebar              | La barre de navigation à gauche : les neuf onglets et « Recommencer ». Sur petit écran, remplacée par la barre des tâches |
 | Démarrer             | Sur petit écran, le bouton en bas à gauche qui ouvre le menu de tous les onglets et de « Recommencer »             |
-| Sommeil              | Une fois par période, à l'heure du coucher ; convertit les marqueurs en points                             |
+| Sommeil              | Décompté de la journée de 24 h (8 h au départ) ; à la fin de la période, convertit les marqueurs en points |
 | Stock                | Les articles en entrepôt                                                                                          |
 | Surplus              | Le stock qu'on vend d'un coup à 4 € l'article                                                                     |
 | Tableau de bord      | L'amélioration qui détaille les Comptes                                                                           |
@@ -42,8 +42,7 @@
 ### Pourquoi rien ne se passe quand je ne fais rien ?
 
 Le temps du jeu n'avance que par vos actions. Pas d'action, pas de mois qui passe, pas
-de loyer. Seuls le travail automatique et le sommeil font avancer le temps tout
-seuls.
+de loyer. Seul le travail automatique fait avancer le temps tout seul.
 
 ### D'où vient l'argent qui disparaît chaque mois ?
 
@@ -97,7 +96,7 @@ d'abord embaucher votre premier collaborateur. Ensuite, un appui long de
 
 ### Pourquoi mes marqueurs ont-ils disparu ?
 
-Ils ne disparaissent pas : cerveau plein, le personnage dort et les convertit en
+Ils ne disparaissent pas : à la fin de la période, la nuit les convertit en
 points de compétence. Regardez les barres de [Profil](onglet-profil.md).
 
 ### Je peux annuler un achat ?

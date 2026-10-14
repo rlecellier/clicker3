@@ -7,11 +7,11 @@ import type { GameState } from '@game/state';
 
 export const jobById = (id: string | null) => findById(jobs, id);
 
-// Salaire d'un mois (une journée type) : les 8 h de travail, au tarif normal,
-// sans heures supplémentaires ni malus d'âge.
+// Salaire d'un mois (une journée type) : la journée de travail normale, au tarif
+// normal, sans heures supplémentaires ni malus d'âge.
 export const monthlyWage = (job: Job) =>
-  (job.salary * actionRules.work.overtime.regularGauge) /
-  actionRules.work.gauge;
+  (job.salary * actionRules.work.overtime.regularMinutes) /
+  actionRules.work.minutes;
 
 // Les emplois proposés au début d'une vie : ni prérequis ni réputation à payer.
 export const startingJobs = jobs.filter(

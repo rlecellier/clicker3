@@ -81,8 +81,8 @@ describe('jobWage et balance de la période', () => {
       money: 100,
       upgrades: ['stage-posture'],
     };
-    // Trois heures normales et deux heures sup. : la période n'est pas finie.
-    for (let click = 0; click < 5; click += 1) {
+    // Trois actions normales et une en heures sup. : la période n'est pas finie.
+    for (let click = 0; click < 4; click += 1) {
       state = work(state);
     }
     const announced = periodOutlook(state).money;
@@ -159,14 +159,14 @@ describe('work', () => {
   });
 
   it('remplit la jauge du coût de l’action', () => {
-    expect(work(startState).gauge).toBe(actionRules.work.gauge);
+    expect(work(startState).gauge).toBe(actionRules.work.minutes);
   });
 
   it('peut terminer la période', () => {
     const almostFull = { ...startState, gauge: startState.gaugeCapacity - 1 };
     const next = work(almostFull);
     expect(next.period).toBe(1);
-    expect(next.gauge).toBe(actionRules.work.gauge - 1);
+    expect(next.gauge).toBe(actionRules.work.minutes - 1);
   });
 
   it('donne des marqueurs de Métier, sans dépasser le maximum', () => {
@@ -201,7 +201,7 @@ describe('work', () => {
     expect(next.workBoosts).toEqual({ atelier: 1 });
     expect(next.money).toBe(0);
     expect(next.reputation).toBe(0);
-    expect(next.gauge).toBe(actionRules.work.gauge);
+    expect(next.gauge).toBe(actionRules.work.minutes);
   });
 
   it('travailler dans une entreprise donne des marqueurs de Gestion', () => {

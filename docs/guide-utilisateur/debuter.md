@@ -43,7 +43,7 @@ argent et la date, dont la barre se remplit à mesure que vous agissez. Dans la
 Vie, trois boutons vous attendent. Au début, seuls deux servent :
 
 1. **Travailler** : vous gagnez 320 € (le salaire de votre poste) et un peu de
-   réputation. Une action de travail remplit la jauge de temps de 10 sur 70.
+   réputation. Une action de travail prend 200 minutes sur les 960 d'éveil de la période.
 2. **Vendre le surplus** : grisé, vous n'avez pas de stock.
 3. **Étudier** : absent. Il apparaîtra quand vous aurez acheté une formation.
 
@@ -74,20 +74,20 @@ Ce n'est qu'un chemin parmi d'autres : [Les actions](actions.md) et
 ## La jauge de temps
 
 La barre de l'en-tête porte la date du mois en cours (« janvier 1999 ») et, à
-sa droite, ce que fait votre personnage : au travail, en formation, endormi.
-Elle se
-remplit par les actions, jamais toute seule, sauf en mode automatique ou
-pendant le sommeil. Capacité d'une période : **70**.
+sa droite, ce que fait votre personnage : au travail, en formation. Elle se
+remplit par les actions, jamais toute seule, sauf en mode automatique. Elle
+mesure votre **temps d'éveil** de la période, en minutes : 960 à 18 ans (16 h
+d'éveil, 8 h de sommeil). Chaque action y prend sa durée.
 
-| Geste                       | Remplit la jauge de |
-| --------------------------- | ------------------- |
-| Travailler                  | 10                  |
-| Étudier                     | 15                  |
-| Dormir (sommeil complet)    | 12 à 26 (8 h : 23)  |
-| Vendre le surplus           | 5                   |
+| Geste                       | Prend (minutes d'éveil) |
+| --------------------------- | ----------------------- |
+| Travailler                  | 200                     |
+| Étudier                     | 300                     |
+| Vendre le surplus           | 100                     |
 
-Quand la jauge atteint 70, le mois se termine dans cet ordre :
+Quand la jauge est pleine, le mois se termine dans cet ordre :
 
+0. la nuit convertit tous vos marqueurs en points de compétence ;
 1. les entreprises de production versent leur production dans le stock ;
 2. les commerces vendent le stock et rapportent de l'argent ;
 3. le loyer, le train de vie et les salaires de vos employés sont prélevés ;

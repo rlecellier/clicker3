@@ -1,0 +1,13 @@
+.summary {
+  margin: 0;
+  padding: 0;
+}
+
+.title {
+  margin: 0 0 var(--space);
+  font-weight: bold;
+}
+
+.line {
+  margin: 0;
+}

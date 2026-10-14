@@ -14,7 +14,7 @@ import { ItemList } from '@component/ItemList';
 import { LedgerSection } from '@component/LedgerSection';
 import { LedgerTable } from '@component/LedgerTable';
 import { MarkerTrack } from '@component/MarkerTrack';
-import { SleepPicker } from '@component/SleepPicker';
+import { SleepSummary } from '@component/SleepSummary';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
 import { PageLink } from '@component/PageLink';
@@ -69,7 +69,6 @@ export const StyleguidePage = () => (
           segments: [
             { tone: 'study', value: 2 },
             { tone: 'work', value: 3 },
-            { tone: 'sleep', value: 1 },
           ],
         }}
       />
@@ -79,7 +78,7 @@ export const StyleguidePage = () => (
           stock: { value: '50k / 50k', exact: '50 000 / 50 000' },
         }}
         date="décembre 2026"
-        activity="Dort"
+        activity="Au travail"
         gauge={{ value: 10, max: 10, segments: [{ tone: 'work', value: 10 }] }}
       />
       <dl className={styles.stats}>
@@ -93,17 +92,14 @@ export const StyleguidePage = () => (
         date="janvier 1999"
         phase="Jeune actif"
       />
-      <MarkerTrack count={3} max={5} isSleeping={false} />
-      <MarkerTrack count={5} max={5} isSleeping />
-      <SleepPicker
-        options={[
-          { hours: 4, label: 'Court · 4 h' },
-          { hours: 6, label: 'Moyen · 6 h' },
-          { hours: 8, label: 'Long · 8 h' },
+      <MarkerTrack count={3} max={5} />
+      <MarkerTrack count={5} max={5} />
+      <SleepSummary
+        title="Sommeil : 8 h par jour (éveil : 16 h)"
+        lines={[
+          'Base de 8 h pour votre âge.',
+          'Dernière nuit : 3 marqueurs convertis.',
         ]}
-        value={8}
-        onChange={() => {}}
-        summary="Long : coucher 23 h · réveil 7 h."
       />
       <ActionButton
         label="Travailler"

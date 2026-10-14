@@ -1,5 +1,5 @@
 import { actionRules, startState } from '@game/data';
-import { sleepStep } from '@game/sleep';
+import { sleep } from '@game/sleep';
 import type { GameState } from '@game/state';
 import { study } from '@game/study';
 import { buyBoost, canBuyBoost, isBoostActive } from './boosts';
@@ -42,13 +42,9 @@ describe('effets des coups de pouce', () => {
   it('la clinique double la conversion du sommeil', () => {
     const asleep: GameState = {
       ...buyBoost(rich, 'clinique-sommeil'),
-      markers: ['metier', 'metier', 'metier', 'metier', 'metier'],
-      isSleeping: true,
-      sleepLeft: 5,
-      sleepTotal: 5,
-      sleepConvertible: 5,
+      markers: ['metier'],
     };
-    expect(sleepStep(asleep).stats.metier).toBe(
+    expect(sleep(asleep).stats.metier).toBe(
       actionRules.sleep.pointsPerMarker * 2,
     );
   });

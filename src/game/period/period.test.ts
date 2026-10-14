@@ -1,4 +1,5 @@
 import { companies, startState } from '@game/data';
+import type { GameState } from '@game/state';
 import { fixedExpensesOf } from '@game/economy';
 import { ageOf } from '@game/time';
 import { deepFreeze } from '@test/deepFreeze';
@@ -12,11 +13,29 @@ const shop = companies.find((company) => company.id === 'boutique');
 const workshopOutput = workshop?.kind === 'production' ? workshop.output : 0;
 const shopCapacity = shop?.kind === 'commerce' ? shop.capacity : 0;
 
-describe('durée du sommeil', () => {
-  it('prend effet avec la période suivante', () => {
-    const chosen = { ...startState, sleepHours: 6 };
-    expect(chosen.periodSleepHours).toBe(8);
-    expect(endPeriod(chosen).periodSleepHours).toBe(6);
+describe('la nuit', () => {
+  it('convertit tous les marqueurs en points de stat à la clôture', () => {
+    const brain = {
+      ...startState,
+      markers: ['metier', 'gestion', 'metier'] as GameState['markers'],
+    };
+    const next = endPeriod(brain);
+    expect(next.markers).toEqual([]);
+    expect(next.lastNightMarkers).toBe(3);
+    expect(next.stats.metier).toBe(2);
+    expect(next.stats.gestion).toBe(1);
+  });
+
+  it('garde la capacité d’éveil tant que la tranche de vie ne change pas', () => {
+    expect(endPeriod(startState).gaugeCapacity).toBe(960);
+  });
+
+  it('réduit l’éveil quand la vie passe à l’âge adulte (7 h de sommeil)', () => {
+    const before = {
+      ...startState,
+      period: (30 - startState.life.startAge) * 12 - 1,
+    };
+    expect(endPeriod(before).gaugeCapacity).toBe((24 - 7) * 60);
   });
 });
 
@@ -57,10 +76,14 @@ describe('addGauge', () => {
 
   it('meurt à l’âge fixé dans les données et s’arrête là', () => {
     const lastPeriod = (75 - 18) * 12 - 1;
-    const before = addGauge(startState, capacity * lastPeriod, 'work');
+    // La capacité change avec la tranche de vie : on avance jusqu'à la dernière période.
+    let before = startState;
+    while (before.period < lastPeriod) {
+      before = addGauge(before, before.gaugeCapacity, 'work');
+    }
     expect(before.status).toBe('playing');
 
-    const dead = addGauge(before, capacity * 5, 'work');
+    const dead = addGauge(before, before.gaugeCapacity * 5, 'work');
     expect(dead.status).toBe('dead');
     expect(ageOf(dead)).toBe(75);
     expect(dead.period).toBe(lastPeriod + 1);
@@ -162,12 +185,11 @@ describe('segments de la jauge', () => {
   it('garde la nature de chaque part, fusionnée si consécutive', () => {
     let state = addGauge(startState, 10, 'study');
     state = addGauge(state, 5, 'study');
-    state = addGauge(state, 20, 'sleep');
+    state = addGauge(state, 20, 'work');
     state = addGauge(state, 3, 'work');
     expect(state.gaugeSegments).toEqual([
       { kind: 'study', amount: 15 },
-      { kind: 'sleep', amount: 20 },
-      { kind: 'work', amount: 3 },
+      { kind: 'work', amount: 23 },
     ]);
   });
 

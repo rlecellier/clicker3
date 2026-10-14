@@ -9,6 +9,10 @@ export type UpgradeEffect =
   | { type: 'housing'; housingId: string; sleepMultiplier: number }
   | { type: 'stockCapacity'; factor: number }
   | { type: 'maxMarkers'; add: number }
+  // Dormir `hours` de plus : moins d'éveil, apprentissage meilleur.
+  | { type: 'sleepMore'; hours: number }
+  // Dormir `hours` de moins : plus d'éveil, apprentissage inchangé.
+  | { type: 'sleepLess'; hours: number }
   // Chance de marqueur relevée de ce bonus (0,3 : 30 % de plus).
   | { type: 'markerChance'; bonus: number }
   // Production +x, de tout le monde ou d'un seul type d'entreprise.
@@ -137,6 +141,44 @@ export const upgrades: readonly Upgrade[] = [
     effects: [
       { type: 'housing', housingId: 'loft-pole', sleepMultiplier: 3.25 },
     ],
+  },
+  // Sommeil : dormir mieux (plus d'apprentissage, moins d'éveil) ou l'optimiser
+  // (plus d'éveil, même apprentissage), docs/game/sommeil.md.
+  {
+    id: 'matelas-memoire',
+    scope: 'person',
+    name: 'Matelas à mémoire de forme',
+    description:
+      'Une heure de sommeil de plus, et il retient tout. Vous, un peu moins.',
+    price: 1500,
+    requirement: stat('endurance', 1),
+    effects: [{ type: 'sleepMore', hours: 1 }],
+  },
+  {
+    id: 'application-sommeil',
+    scope: 'person',
+    name: 'Application de suivi du sommeil',
+    description:
+      'Elle prouve que sept heures suffisent. Elle ne dit pas pour quoi faire.',
+    price: 6000,
+    requirement: stat('intelligence', 2),
+    effects: [{ type: 'sleepLess', hours: 1 }],
+  },
+  {
+    id: 'micro-siestes',
+    scope: 'person',
+    name: 'Micro-siestes en réunion',
+    description:
+      'Dix minutes les yeux ouverts. Personne ne vous a vu, vous avez hoché la tête.',
+    price: 40_000,
+    requirement: {
+      type: 'all',
+      of: [
+        { type: 'upgrade', id: 'application-sommeil' },
+        stat('endurance', 3),
+      ],
+    },
+    effects: [{ type: 'sleepLess', hours: 1 }],
   },
   // Entrepôt et marqueurs
   {

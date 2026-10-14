@@ -1,23 +1,32 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { actionRules } from '@game/data';
 import { SAVE_KEY, closeBirthday, expectNoOverflow, openTab } from './helpers';
 
-// Fait mourir le personnage sauvegardé au prochain chargement (après la
-// sauvegarde de sortie de la page courante, qui l'écraserait sinon).
-const killCharacterOnNextLoad = async (page: Page) => {
+// Change la partie sauvegardée au prochain chargement (après la sauvegarde de
+// sortie de la page courante, qui l'écraserait sinon).
+const patchSaveOnNextLoad = async (
+  page: Page,
+  patch: Record<string, unknown>,
+) => {
   await page.addInitScript((key) => {
-    if (sessionStorage.getItem('kill') === null) {
+    const raw = sessionStorage.getItem('patch');
+    if (raw === null) {
       return;
     }
-    sessionStorage.removeItem('kill');
+    sessionStorage.removeItem('patch');
     const save = JSON.parse(localStorage.getItem(key) ?? '{}');
-    save.state.status = 'dead';
+    Object.assign(save.state, JSON.parse(raw));
     localStorage.setItem(key, JSON.stringify(save));
   }, SAVE_KEY);
-  await page.evaluate(() => {
-    sessionStorage.setItem('kill', '1');
-  });
+  await page.evaluate((text) => {
+    sessionStorage.setItem('patch', text);
+  }, JSON.stringify(patch));
 };
+
+// Fait mourir le personnage sauvegardé au prochain chargement.
+const killCharacterOnNextLoad = (page: Page) =>
+  patchSaveOnNextLoad(page, { status: 'dead' });
 
 test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   page,
@@ -98,16 +107,43 @@ test('une vie : titre, partie, rechargement, mort, rejouer, effacer', async ({
   await openTab(page, 'ameliorations');
   await openTab(page, 'profil');
   await openTab(page, 'vie');
-  // La durée du sommeil se règle au toucher, sous Étudier ; l'horaire annoncé suit.
-  await expect(
-    page.getByRole('status').filter({ hasText: 'Long : coucher 23 h' }),
-  ).toBeVisible();
-  await page.getByLabel('Court').tap();
-  await expect(
-    page
-      .getByRole('status')
-      .filter({ hasText: 'Court : coucher 2 h · réveil 6 h' }),
-  ).toBeVisible();
+  // Le sommeil s'affiche sans réglage : 8 h de base, donc 16 h d'éveil. Le
+  // bouton annonce combien d'actions tiennent avant la nuit, sans horloge.
+  const sleepInfo = page.getByRole('region', { name: 'Sommeil' });
+  await expect(sleepInfo).toContainText(
+    'Sommeil : 8 h par jour (éveil : 16 h)',
+  );
+  await expect(page.getByLabel('Durée du sommeil')).toBeHidden();
+  const work = page.getByRole('button', { name: /Travailler/ });
+  const timesLeft = async () =>
+    Number(
+      /encore (\d+) fois/.exec(
+        (await page
+          .getByText(/encore \d+ fois/)
+          .first()
+          .textContent()) ?? '',
+      )?.[1],
+    );
+  const withEightHours = await timesLeft();
+  // Un tap vaut une action de moins avant la nuit.
+  await work.tap();
+  expect(await timesLeft()).toBe(withEightHours - 1);
+  // Une heure de sommeil en moins (amélioration) : une action de plus.
+  await patchSaveOnNextLoad(page, {
+    upgrades: ['application-sommeil'],
+    sleepLessHours: 1,
+    gaugeCapacity: 1020,
+    gauge: 0,
+    gaugeSegments: [],
+  });
+  await page.reload();
+  await expect(sleepInfo).toContainText(
+    'Sommeil : 7 h par jour (éveil : 17 h)',
+  );
+  expect(await timesLeft()).toBe(Math.ceil(1020 / actionRules.work.minutes));
+  expect(withEightHours).toBeLessThanOrEqual(
+    Math.ceil(960 / actionRules.work.minutes),
+  );
   await openTab(page, 'emploi');
   await openTab(page, 'comptes');
   await openTab(page, 'finance');

@@ -27,8 +27,12 @@ describe('départ', () => {
   it('fête les 18 ans, sans bilan, et arrête le jeu', () => {
     expect(started.pendingBirthday).toEqual({ age: 18, recap: null });
     expect(reduce(started, { type: 'work', target: 'job' })).toBe(started);
-    const sleeping = { ...started, isSleeping: true };
-    expect(autoTick(sleeping, 10_000)).toEqual(sleeping);
+    const automated = {
+      ...started,
+      upgrades: ['procedure-travail'],
+      autoWork: true,
+    };
+    expect(autoTick(automated, 10_000)).toEqual(automated);
   });
 
   it('reprend après la fermeture de la fenêtre', () => {

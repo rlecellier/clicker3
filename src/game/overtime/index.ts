@@ -1,7 +1,7 @@
 export {
   isOvertime,
-  overtimeGaugeFactor,
+  overtimeDurationFactor,
   overtimeTier,
   overtimeWageFactor,
-  workGaugeDone,
+  workMinutesDone,
 } from './overtime';

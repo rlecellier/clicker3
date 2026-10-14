@@ -24,18 +24,8 @@ describe('currentActivity', () => {
     );
   });
 
-  it('dort tant que le cerveau se vide, quoi qu’il ait fait avant', () => {
-    const state = {
-      ...withSegments([{ kind: 'work', amount: 10 }]),
-      isSleeping: true,
-    };
-    expect(currentActivity(state)).toBe('sleep');
-  });
-
-  it('ne travaille plus une fois réveillé après un sommeil seul', () => {
-    expect(currentActivity(withSegments([{ kind: 'sleep', amount: 5 }]))).toBe(
-      'idle',
-    );
+  it('ne fait rien de particulier sans action dans la période', () => {
+    expect(currentActivity(withSegments([]))).toBe('idle');
   });
 
   it('est terminé à la mort', () => {

@@ -1,299 +1,76 @@
-import { wagesDueOf } from '@game/economy';
 import { actionRules, startState } from '@game/data';
-import {
-  bedtimeGauge,
-  fallAsleep,
-  queueAction,
-  setSleepHours,
-  settleSleep,
-  sleepGauge,
-  sleepMarkers,
-  sleepStep,
-  sleepStepMs,
-} from './sleep';
+import type { GameState } from '@game/state';
+import { withModifiers } from '@game/upgrades';
+import { sleep } from './sleep';
 
-const markers = [
-  'metier',
-  'metier',
-  'gestion',
-  'gestion',
-  'gestion',
-] as typeof startState.markers;
-const full = { ...startState, markers };
-// 8 h : cinq pas, une heure de coucher à 16/24 de la jauge.
-const asleep = {
-  ...full,
-  isSleeping: true,
-  sleepLeft: 5,
-  sleepTotal: 5,
-  sleepStepGauge: sleepGauge(startState) / 5,
-  sleepConvertible: 5,
-};
-const bedtime = { ...startState, gauge: bedtimeGauge(startState) };
-
-// L'état qui dort `hours` heures dans la période en cours.
-const sleepingFor = (state: typeof startState, hours: number) => ({
-  ...state,
-  sleepHours: hours,
-  periodSleepHours: hours,
+const brain = (markers: GameState['markers']): GameState => ({
+  ...startState,
+  markers,
 });
 
-const count = (hours: number) => sleepMarkers(sleepingFor(startState, hours));
+// Points de Métier qu'un seul marqueur donne après la nuit.
+const points = (state: GameState) =>
+  sleep({ ...state, markers: ['metier'] }).stats.metier;
 
-describe('horaire', () => {
-  it('place le coucher sur l’horloge, depuis le réveil de 7 h', () => {
-    const at = (hours: number) => bedtimeGauge(sleepingFor(startState, hours));
-    const { gaugeCapacity } = startState;
-    expect(at(8)).toBeCloseTo((16 * gaugeCapacity) / 24);
-    expect(at(6)).toBeCloseTo((18 * gaugeCapacity) / 24);
-    expect(at(4)).toBeCloseTo((19 * gaugeCapacity) / 24);
+const owning = (...upgrades: string[]) =>
+  withModifiers({ ...startState, upgrades });
+
+describe('sleep', () => {
+  it('convertit tous les marqueurs d’un coup, sans pause', () => {
+    const next = sleep(brain(['metier', 'metier', 'gestion']));
+    expect(next.markers).toEqual([]);
+    expect(next.stats.metier).toBe(2 * actionRules.sleep.pointsPerMarker);
+    expect(next.stats.gestion).toBe(actionRules.sleep.pointsPerMarker);
+    expect(next.lastNightMarkers).toBe(3);
   });
 
-  it('couche plus tard et réveille plus tôt quand on dort moins', () => {
-    const { schedule } = actionRules.sleep;
-    for (const [h, { bed, wake }] of Object.entries(schedule)) {
-      expect((wake - bed + 24) % 24).toBe(Number(h));
-    }
+  it('garde le bilan d’une nuit sans marqueur', () => {
+    const next = sleep({ ...brain([]), lastNightMarkers: 4 });
+    expect(next.lastNightMarkers).toBe(0);
+    expect(next.stats).toEqual(startState.stats);
   });
 
-  it('propose trois durées : court, normal et long', () => {
-    const { schedule, hours } = actionRules.sleep;
-    expect(Object.keys(schedule).map(Number)).toEqual([4, 6, 8]);
-    expect(Object.values(schedule).map(({ name }) => name)).toEqual([
-      'Court',
-      'Moyen',
-      'Long',
-    ]);
-    expect(hours).toEqual({ min: 4, max: 8, default: 8 });
+  it('applique le logement', () => {
+    const housed = { ...brain(['metier']), sleepMultiplier: 2.5 };
+    expect(sleep(housed).stats.metier).toBe(2.5);
   });
 
-  it('coûte les heures dormies sur les 24 de la jauge', () => {
-    expect(sleepGauge(startState)).toBeCloseTo(
-      (8 * startState.gaugeCapacity) / 24,
-    );
-    expect(sleepGauge(sleepingFor(startState, 6))).toBeCloseTo(
-      (6 * startState.gaugeCapacity) / 24,
-    );
-  });
-
-  it('vide plus de marqueurs quand on dort plus', () => {
-    // Long vide tout le cerveau, moyen en laisse un, court deux.
-    expect(count(8)).toBe(startState.maxMarkers);
-    expect([4, 6, 8].map((hours) => count(hours))).toEqual([3, 4, 5]);
-
-    // Et suit le maximum du cerveau quand une amélioration le relève.
-    const bigger = sleepingFor({ ...startState, maxMarkers: 8 }, 8);
-    expect(sleepMarkers(bigger)).toBe(8);
-  });
-});
-
-describe('setSleepHours', () => {
-  it('choisit court, normal ou long', () => {
-    expect(setSleepHours(startState, 6).sleepHours).toBe(6);
-    expect(setSleepHours(startState, 4).sleepHours).toBe(4);
-  });
-
-  it('ne sert qu’à la période suivante : rien ne change dans celle-ci', () => {
-    const chosen = setSleepHours(startState, 4);
-    expect(chosen.periodSleepHours).toBe(8);
-    expect(bedtimeGauge(chosen)).toBe(bedtimeGauge(startState));
-    // Même passé le nouveau coucher, on ne s'endort pas avant l'ancien.
-    const late = { ...chosen, gauge: bedtimeGauge(startState) - 1 };
-    expect(fallAsleep(late)).toBe(late);
-  });
-
-  it('refuse une durée hors bornes ou fractionnaire', () => {
-    for (const hours of [3, 5, 7, 9, 7.5, NaN]) {
-      expect(setSleepHours(startState, hours)).toBe(startState);
-    }
-  });
-
-  it('reste possible pendant un sommeil, sans le changer', () => {
-    const next = setSleepHours(asleep, 6);
-    expect(next.sleepHours).toBe(6);
-    expect(next.sleepStepGauge).toBe(asleep.sleepStepGauge);
-    expect(next.sleepTotal).toBe(asleep.sleepTotal);
-  });
-});
-
-describe('fallAsleep', () => {
-  it('endort à l’heure du coucher, même cerveau vide', () => {
-    const next = fallAsleep(bedtime);
-    expect(next.isSleeping).toBe(true);
-    expect(next.sleepLeft).toBe(5);
-    expect(next.sleepTotal).toBe(5);
-    expect(next.sleepConvertible).toBe(5);
-    expect(next.sleepStepGauge).toBeCloseTo(sleepGauge(startState) / 5);
-    expect(next.lastSleepPeriod).toBe(0);
-  });
-
-  it('laisse éveillé avant l’heure du coucher, cerveau plein ou non', () => {
-    expect(fallAsleep(startState)).toBe(startState);
-    expect(fallAsleep(full)).toBe(full);
-  });
-
-  it('dort une seule fois par période', () => {
-    const slept = { ...bedtime, lastSleepPeriod: 0 };
-    expect(fallAsleep(slept)).toBe(slept);
-    expect(fallAsleep({ ...slept, period: 1 }).isSleeping).toBe(true);
-  });
-
-  it('couche plus tard quand on dort moins', () => {
-    const short = {
-      ...sleepingFor(startState, 6),
-      gauge: bedtimeGauge(bedtime),
+  it('applique un coup de pouce de sommeil', () => {
+    const boosted: GameState = {
+      ...brain(['metier']),
+      activeEffects: [
+        { eventId: 'clinique-sommeil', kind: 'sleepBoost', value: 1, until: 5 },
+      ],
     };
-    expect(fallAsleep(short)).toBe(short);
+    expect(sleep(boosted).stats.metier).toBe(2);
   });
 
-  it('rattrape une période entière sans sommeil, au réveil', () => {
-    // Une action a traversé le coucher et la fin de période : la période 0 n'a
-    // pas eu de sommeil.
-    const skipped = { ...startState, period: 1, gauge: 3 };
-    const next = fallAsleep(skipped);
-    expect(next.isSleeping).toBe(true);
-    expect(next.lastSleepPeriod).toBe(1);
-  });
-
-  it('ne rattrape rien au départ', () => {
-    expect(fallAsleep(startState)).toBe(startState);
-  });
-
-  it('ne change rien quand le personnage dort déjà', () => {
-    expect(fallAsleep(asleep)).toBe(asleep);
-  });
-
-  it('n’endort pas un personnage mort', () => {
-    const dead = { ...bedtime, status: 'dead' as const };
-    expect(fallAsleep(dead)).toBe(dead);
-  });
-});
-
-describe('sleepStep', () => {
-  it('convertit le premier marqueur en points de stat', () => {
-    const next = sleepStep(asleep);
-    expect(next.markers).toEqual(['metier', 'gestion', 'gestion', 'gestion']);
-    expect(next.stats.metier).toBe(1);
-    expect(next.stats.gestion).toBe(0);
-  });
-
-  it('fait passer le temps, un pas après l’autre', () => {
-    expect(sleepStep(asleep).gauge).toBeCloseTo(sleepGauge(asleep) / 5);
-  });
-
-  it('applique le multiplicateur du logement', () => {
-    const next = sleepStep({ ...asleep, sleepMultiplier: 2.5 });
-    expect(next.stats.metier).toBe(2.5);
-  });
-
-  it('se réveille au dernier pas, après un sommeil complet', () => {
-    let state = asleep;
-    for (let index = 0; index < 4; index++) {
-      state = sleepStep(state);
-      expect(state.isSleeping).toBe(true);
-    }
-    state = sleepStep(state);
-    expect(state.isSleeping).toBe(false);
-    expect(state.markers).toEqual([]);
-    expect(state.gauge).toBeCloseTo(sleepGauge(asleep));
-    expect(state.stats.metier).toBe(2);
-    expect(state.stats.gestion).toBe(3);
-  });
-
-  it('dort moins : moins de marqueurs vidés, moins de jauge', () => {
-    const short = sleepingFor(full, 6);
-    // Jauge ramenée à 0 : un sommeil qui finit la période la remettrait à 0.
-    let state = {
-      ...fallAsleep({ ...short, gauge: bedtimeGauge(short) }),
-      gauge: 0,
+  it('ne dort pas une fois le personnage mort', () => {
+    const dead: GameState = {
+      ...brain(['metier']),
+      status: 'dead',
     };
-    while (state.isSleeping) {
-      state = sleepStep(state);
-    }
-    expect(state.markers).toHaveLength(
-      full.markers.length - sleepMarkers(short),
-    );
-    expect(state.gauge).toBeCloseTo(sleepGauge(short));
-    expect(sleepGauge(short)).toBeLessThan(sleepGauge(full));
+    expect(sleep(dead)).toBe(dead);
   });
 
-  it('prend du temps même sans marqueur à vider', () => {
-    let state = fallAsleep(bedtime);
-    const before = state.gauge;
-    while (state.isSleeping) {
-      state = sleepStep(state);
-    }
-    // Le sommeil traverse la fin de la période : la jauge repart de zéro.
-    expect(state.period).toBe(1);
-    expect(state.gauge + startState.gaugeCapacity - before).toBeCloseTo(
-      sleepGauge(startState),
-    );
-  });
-
-  it('ne fait rien quand le personnage est éveillé', () => {
-    expect(sleepStep(full)).toBe(full);
-  });
-
-  it('ne fait rien quand le personnage est mort', () => {
-    const dead = { ...asleep, status: 'dead' as const };
-    expect(sleepStep(dead)).toBe(dead);
-  });
-
-  it('peut terminer la période', () => {
-    const almostFull = { ...asleep, gauge: asleep.gaugeCapacity - 1 };
-    expect(sleepStep(almostFull).period).toBe(1);
-  });
-});
-
-describe('sleepStepMs', () => {
-  it('répartit une demi-seconde sur les pas', () => {
-    expect(sleepStepMs(asleep) * asleep.sleepTotal).toBe(500);
-    expect(sleepStepMs({ ...asleep, sleepTotal: 10 })).toBe(50);
-  });
-});
-
-describe('gestes gardés', () => {
-  const work = { type: 'work', target: 'job' } as const;
-
-  it('garde un geste dans l’ordre', () => {
-    const next = queueAction(queueAction(asleep, work), {
-      type: 'study',
-      courseId: 'metier',
+  describe('rendement d’apprentissage', () => {
+    it('vaut 1 à la base de sommeil', () => {
+      expect(points(startState)).toBe(1);
     });
-    expect(next.queuedActions).toEqual([
-      work,
-      { type: 'study', courseId: 'metier' },
-    ]);
-  });
 
-  it('ne garde rien quand le personnage est mort', () => {
-    const dead = { ...asleep, status: 'dead' as const };
-    expect(queueAction(dead, work)).toBe(dead);
-  });
+    it('monte quand on dort plus : 9 h au lieu de 8 apprennent mieux', () => {
+      expect(points(owning('matelas-memoire'))).toBeCloseTo(9 / 8);
+    });
 
-  it('plafonne la file', () => {
-    let state = asleep;
-    for (let index = 0; index < 80; index++) {
-      state = queueAction(state, work);
-    }
-    expect(state.queuedActions).toHaveLength(50);
-  });
+    it('ne baisse pas quand on dort moins : on apprend pareil', () => {
+      const optimized = owning('application-sommeil');
+      expect(optimized.sleepLessHours).toBe(1);
+      expect(points(optimized)).toBe(1);
+    });
 
-  it('rejoue la file au réveil, le travail change l’état', () => {
-    const woke = {
-      ...startState,
-      queuedActions: [work, work],
-    };
-    const next = settleSleep(woke);
-    expect(next.queuedActions).toEqual([]);
-    expect(wagesDueOf(next)).toBeGreaterThan(0);
-  });
-
-  it('garde la file tant que le personnage dort', () => {
-    const queued = { ...asleep, queuedActions: [work] };
-    const next = settleSleep(queued);
-    expect(next.isSleeping).toBe(true);
-    expect(next.queuedActions).toEqual([work]);
-    expect(next.money).toBe(0);
+    it('se compose : dormir plus puis moins garde le gain', () => {
+      const both = owning('matelas-memoire', 'application-sommeil');
+      expect(points(both)).toBeCloseTo(9 / 8);
+    });
   });
 });

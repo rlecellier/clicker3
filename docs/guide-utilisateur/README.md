@@ -45,7 +45,7 @@ Les montants du guide ont été relevés dans le jeu lui-même. Si vous constate
 
 | Page                                              | Contenu                                                                                  |
 | ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [Les actions](actions.md)                         | Travailler, étudier, dormir, marqueurs, emplois, achats, automatique, appui maintenu     |
+| [Les actions](actions.md)                         | Travailler, étudier, sommeil, marqueurs, emplois, achats, automatique, appui maintenu     |
 | [Les améliorations](ameliorations.md)             | Les 19 achats uniques, une entrée chacun : coût, prérequis, effet                        |
 | [Les autres sources de bonus](autres-bonus.md)    | Compétences, réputation, quartiers, événements                                           |
 | [Les entreprises](entreprises.md)                 | Les six types, le stock, l'entrepôt, les ventes                                          |

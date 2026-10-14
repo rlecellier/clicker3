@@ -41,7 +41,7 @@ export const study = (state: GameState, courseId: string): GameState => {
   if (course === undefined || !canStudy(state, courseId)) {
     return state;
   }
-  const { gauge, markerChance } = actionRules.study;
+  const { minutes, markerChance } = actionRules.study;
   const paid = withRecord(
     { ...state, money: state.money - course.cost },
     { studies: course.cost, studiesBy: { [course.id]: course.cost } },
@@ -52,5 +52,5 @@ export const study = (state: GameState, courseId: string): GameState => {
   for (let attempt = 0; attempt < attempts; attempt++) {
     withMarker = grantMarker(withMarker, course.stat, markerChance);
   }
-  return addGauge(withMarker, gauge, 'study');
+  return addGauge(withMarker, minutes, 'study');
 };

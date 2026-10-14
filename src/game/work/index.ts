@@ -1,1 +1,1 @@
-export { JOB_TARGET, canWork, jobWage, work } from './work';
+export { JOB_TARGET, canWork, jobWage, work, workMinutes } from './work';

@@ -83,8 +83,8 @@ describe('chargement et rattrapage', () => {
     clock.time = START + 10 * autoIntervalMs;
     const { result } = setup(storage);
     expect(result.current.state.period).toBeGreaterThan(automated.period);
-    // Cinq actions de travail, cinq pas de sommeil, puis quatre actions.
-    expect(result.current.absence?.actions).toBe(14);
+    // Une action de travail à chaque délai.
+    expect(result.current.absence?.actions).toBe(10);
     act(() => {
       result.current.dismissAbsence();
     });
@@ -112,11 +112,11 @@ describe('boucle automatique', () => {
     const storage = createMemoryStorage(serialize(automated, START));
     const { result } = setup(storage);
     setHidden(true);
-    advance(5 * autoIntervalMs);
+    advance(3 * autoIntervalMs);
     expect(wagesDueOf(result.current.state)).toBe(0);
     setHidden(false);
     expect(wagesDueOf(result.current.state)).toBeGreaterThan(0);
-    expect(result.current.absence?.actions).toBe(5);
+    expect(result.current.absence?.actions).toBe(3);
   });
 });
 

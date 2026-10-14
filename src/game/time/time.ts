@@ -4,7 +4,7 @@ export const PERIODS_PER_YEAR = 12;
 
 export type GameDate = { year: number; month: number };
 
-export const ageOf = (state: GameState) =>
+export const ageOf = (state: Pick<GameState, 'life' | 'period'>) =>
   state.life.startAge + Math.floor(state.period / PERIODS_PER_YEAR);
 
 // Date d'une période quelconque de la vie (journal, relevés passés).

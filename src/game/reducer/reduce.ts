@@ -15,7 +15,6 @@ import { addGauge } from '@game/period';
 import { acknowledgeFinalUpgrade } from '@game/finale';
 import { answerPromotion, isPromotionPending } from '@game/promotion';
 import { triggerEvents } from '@game/events';
-import { queueAction, setSleepHours } from '@game/sleep';
 import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
 import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
@@ -63,14 +62,10 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return unlockDistrict(state, action.id);
     }
     case 'work': {
-      return state.isSleeping
-        ? queueAction(state, action)
-        : work(state, action.target);
+      return work(state, action.target);
     }
     case 'study': {
-      return state.isSleeping
-        ? queueAction(state, action)
-        : study(state, action.courseId);
+      return study(state, action.courseId);
     }
     case 'changeJob': {
       return changeJob(state, action.id);
@@ -95,9 +90,6 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     }
     case 'setAuto': {
       return setAuto(state, action.action, action.isEnabled);
-    }
-    case 'setSleepHours': {
-      return setSleepHours(state, action.hours);
     }
     case 'autoTick': {
       return autoTick(state, action.elapsedMs);

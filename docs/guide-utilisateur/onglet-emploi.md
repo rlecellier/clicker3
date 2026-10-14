@@ -31,9 +31,9 @@ travail.
 | 4   | Directeur adjoint de la transformation  | 2 000 €            | 0,8                          | 9                  | Palier 3 de Métier (41 points), palier 2 de réputation (100 gagnés) et amélioration « Directeur de la transformation » |
 
 Les salaires sont ceux d'une action de travail à l'âge adulte, avant tout
-bonus ou malus. Une période est une journée type de 24 h (8 h de travail, 8 h
-de sommeil, 8 h libres) comptée comme un mois : le salaire mensuel paie les
-trois premières actions de la période. Les suivantes sont des **heures
+bonus ou malus. Une période est une journée type de 24 h (8 h de sommeil, 16 h d'éveil)
+comptée comme un mois : le salaire mensuel paie les trois premières actions de
+la période (600 minutes de travail). Les suivantes sont des **heures
 supplémentaires**, payées automatiquement (+25 %, puis +35 %) mais plus
 fatigantes (voir [Actions](actions.md#travailler)).
 

@@ -282,7 +282,7 @@ export const chooseAction = (
   if (purchase !== undefined) {
     return purchase;
   }
-  if (state.isSleeping || isAutoActive(state, 'work')) {
+  if (isAutoActive(state, 'work')) {
     return undefined;
   }
   const stat = neededStat(state, excluded);

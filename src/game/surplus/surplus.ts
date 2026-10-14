@@ -22,5 +22,5 @@ export const sellSurplus = (state: GameState): GameState => {
       stockOut: { surplus: state.stock },
     },
   );
-  return addGauge(sold, economyRules.surplusGauge, 'work');
+  return addGauge(sold, economyRules.surplusMinutes, 'work');
 };

@@ -1,3 +1,4 @@
+import { awakeMinutes } from '@game/day';
 import { economyRules, findById, startState, upgrades } from '@game/data';
 import type { Upgrade, UpgradeEffect } from '@game/data';
 import type { GameState } from '@game/state';
@@ -16,6 +17,9 @@ export type DerivedFields = Pick<
   | 'maxMarkers'
   | 'housingId'
   | 'sleepMultiplier'
+  | 'sleepMoreHours'
+  | 'sleepLessHours'
+  | 'gaugeCapacity'
   | 'rent'
   | 'payroll'
 >;
@@ -49,6 +53,14 @@ const addEffect = (derived: DerivedFields, effect: UpgradeEffect) => {
     case 'housing': {
       derived.housingId = effect.housingId;
       derived.sleepMultiplier = effect.sleepMultiplier;
+      return;
+    }
+    case 'sleepMore': {
+      derived.sleepMoreHours += effect.hours;
+      return;
+    }
+    case 'sleepLess': {
+      derived.sleepLessHours += effect.hours;
       return;
     }
     case 'maxMarkers': {
@@ -118,6 +130,9 @@ export const derivedFields = (state: GameState): DerivedFields => {
     maxMarkers: startState.maxMarkers,
     housingId: startState.housingId,
     sleepMultiplier: startState.sleepMultiplier,
+    sleepMoreHours: 0,
+    sleepLessHours: 0,
+    gaugeCapacity: startState.gaugeCapacity,
     rent: 0,
     payroll: 0,
   };
@@ -134,6 +149,8 @@ export const derivedFields = (state: GameState): DerivedFields => {
     (startState.stockCapacity +
       state.warehouses * economyRules.warehouse.capacity) *
     stockCapacityFactor(state);
+  // Le temps d'éveil suit le sommeil : base de l'âge et améliorations.
+  derived.gaugeCapacity = awakeMinutes({ ...state, ...derived });
   derived.rent = Math.round(rent * state.rentFactor);
   derived.payroll = Math.round(payroll * state.payrollFactor);
   return derived;
