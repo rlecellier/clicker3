@@ -18,6 +18,13 @@ export { districts } from './districts';
 export type { District } from './districts';
 export { findById } from './findById';
 export { economyRules, ledgerHistoryLength } from './economyRules';
+export {
+  childActivities,
+  childAxes,
+  childObjects,
+  childRules,
+} from './earlyChildhood';
+export type { ChildActivity, ChildAxis, ChildObject } from './earlyChildhood';
 export { events, journalLimit } from './events';
 export { impactRules } from './impactRules';
 export type { EventEffect, GameEvent } from './events';

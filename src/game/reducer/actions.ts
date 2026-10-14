@@ -39,6 +39,8 @@ export type GameAction =
   // choisi (un emploi de départ, voir `startingJobs`).
   // Le bouton d'une tranche avant 18 ans : le compteur monte d'un cran.
   | { type: 'grow' }
+  // Une activité de la petite enfance : un axe se déplace vers son pôle.
+  | { type: 'doActivity'; id: string }
   // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
   // `birthSituation` : la situation de naissance (famille standard par défaut).
   | {

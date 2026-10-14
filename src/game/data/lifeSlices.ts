@@ -36,7 +36,7 @@ export const lifeSlices: readonly LifeSlice[] = [
     id: 'earlyChildhood',
     name: 'Petite enfance',
     ages: '0 à 5 ans',
-    tabs: ['life'],
+    tabs: ['life', 'house'],
     growth: { actionLabel: 'Gazouiller', counterLabel: 'Éveil' },
     start: null,
   },

@@ -1,3 +1,4 @@
+import type { childAxisIds } from './child';
 import type { lifePhases } from './lifePhases';
 import type { lifeSliceIds } from './lifeSlices';
 import type { placementIds } from './placements';
@@ -8,6 +9,20 @@ export type GameStatus = 'playing' | 'dead';
 export type StatId = (typeof statIds)[number];
 
 export type PlacementId = (typeof placementIds)[number];
+
+export type ChildAxisId = (typeof childAxisIds)[number];
+
+// État de la petite enfance (0 à 5 ans). Inerte dans les autres tranches.
+export type ChildState = {
+  // Chaque axe va de −100 (pôle négatif) à +100 (pôle positif), 0 au départ.
+  axes: Record<ChildAxisId, number>;
+  // Objets possédés (ids de `childObjects`), dans l'ordre où ils sont arrivés.
+  objects: string[];
+  // Trimestres écoulés depuis la naissance (24 = 6 ans).
+  quarter: number;
+  // Remplissage de la jauge du trimestre en cours.
+  fill: number;
+};
 
 export type LifePhase = (typeof lifePhases)[number];
 export type LifeSliceId = (typeof lifeSliceIds)[number];
@@ -188,6 +203,8 @@ export type GameState = {
   growth: number;
   /** Situation de naissance (id de `birthSituations`), la même pour toute la vie. */
   birthSituation: string;
+  /** Axes, objets et temps de la petite enfance. */
+  child: ChildState;
 
   /** Euros entiers. */
   money: number;
