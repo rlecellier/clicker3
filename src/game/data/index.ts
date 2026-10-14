@@ -23,6 +23,8 @@ export { placements } from './placements';
 export type { Placement } from './placements';
 export { reputationTiers } from './reputationTiers';
 export type { ReputationTier } from './reputationTiers';
+export { adulthoodStart, maturityStart, oldAgeStart } from './sliceStarts';
+export type { SliceStart } from './sliceStarts';
 export { startState } from './startState';
 export { statTierThresholds } from './statTiers';
 export { upgrades } from './upgrades';
