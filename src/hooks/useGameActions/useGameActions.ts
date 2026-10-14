@@ -6,6 +6,9 @@ export const useGameActions = () => {
   const { dispatch } = useGameContext();
   return useMemo(
     () => ({
+      grow: () => {
+        dispatch({ type: 'grow' });
+      },
       work: (target: string) => {
         dispatch({ type: 'work', target });
       },

@@ -16,6 +16,11 @@ const prompts: Record<TitleConfirmation, { message: string; confirm: string }> =
       message: 'Effacer la sauvegarde ? Votre exercice sera clos sans bilan.',
       confirm: 'Effacer',
     },
+    restart: {
+      message:
+        'Une vie est déjà en cours. La recommencer l’archivera sans délai.',
+      confirm: 'Recommencer',
+    },
   };
 
 // Orchestrateur : branche `useTitleScreen` sur les composants visuels.
@@ -31,6 +36,12 @@ export const TitlePage = () => {
         {prompt === null ? (
           <div className={styles.actions}>
             <PageLink to={screenPaths.newLife}>Démarrer ma vie</PageLink>
+            <Note>Ou commencer plus tôt :</Note>
+            {title.slices.map((slice) => (
+              <Button key={slice.id} onClick={slice.start}>
+                {slice.label}
+              </Button>
+            ))}
             {title.hasSave ? (
               <>
                 <PageLink to={screenPaths.game}>Reprendre</PageLink>

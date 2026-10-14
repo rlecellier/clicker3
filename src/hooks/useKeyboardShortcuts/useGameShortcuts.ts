@@ -6,6 +6,7 @@ import { JOB_TARGET, canWork } from '@game/work';
 import { selectedCourse } from '@hook/useCourseChoice';
 import { useGameActions } from '@hook/useGameActions';
 import { tabPath } from '@hook/useGameTabs';
+import { hasGrowth } from '@game/lifeSlices';
 import type { GameTabId } from '@hook/useGameTabs';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
@@ -22,13 +23,17 @@ export const useGameShortcuts = (chosenCourse: string | null) => {
         void navigate(tabPath(tab));
       },
       work: () => {
-        if (canWork(state, JOB_TARGET)) {
+        if (!hasGrowth(state) && canWork(state, JOB_TARGET)) {
           actions.work(JOB_TARGET);
         }
       },
       study: () => {
         const course = selectedCourse(state, chosenCourse);
-        if (course !== undefined && canStudy(state, course.id)) {
+        if (
+          course !== undefined &&
+          !hasGrowth(state) &&
+          canStudy(state, course.id)
+        ) {
           actions.study(course.id);
         }
       },
