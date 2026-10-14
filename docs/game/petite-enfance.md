@@ -8,7 +8,7 @@
 ## Idée en une phrase
 
 **Un bébé ne choisit ni son monde ni ses parents : il les explore.** Le joueur
-développe quatre éveils, tisse des liens avec une famille qu'il n'a pas choisie
+développe quatre axes à deux pôles, tisse des liens avec une famille qu'il n'a pas choisie
 et fait une poignée de choix qui forment un caractère. Il en sort avec des
 stats, des traits et des relations qui servent à toutes les tranches suivantes.
 
@@ -45,24 +45,43 @@ qui permet des **départs situationnels** plutôt que des départs par âge.
 
 ## 2. Ce qu'on développe
 
-### Quatre éveils (les stats)
+### Quatre axes à deux pôles (les stats)
 
-Ils montent par l'action, jamais par le hasard (le joueur voit ce qu'il gagne).
+Chaque stat est un **axe entre deux pôles**, pas une jauge qui ne fait que
+monter. Les deux pôles ont une valeur : aucun n'est « le mauvais ». Chaque
+action pousse l'axe d'un côté (de −100 à +100, 0 au départ) ; plus l'axe
+s'éloigne de 0, plus le pôle est marqué.
 
-| Éveil         | Ce que c'est                | Prépare surtout                          |
-| ------------- | --------------------------- | ---------------------------------------- |
-| **Corps**     | Motricité, équilibre, santé | Sport, résistance, travail physique      |
-| **Parole**    | Babil, mots, phrases        | Études, négociation, relations           |
-| **Curiosité** | Toucher, comprendre         | Études, créativité, débrouille           |
-| **Attachement** | Confiance, émotions       | Qualité des relations, moral             |
+| Axe          | Pôle A                         | Pôle B                          | Ce qu'il prépare                       |
+| ------------ | ------------------------------ | ------------------------------- | -------------------------------------- |
+| **Énergie**  | Vif (bouge, grimpe, fonce)     | Posé (observe, attend, choisit) | Sport et endurance / patience et soin  |
+| **Sociabilité** | Extraverti (appelle, rejoint) | Introverti (joue seul, écoute) | Réseau, charisme / concentration       |
+| **Esprit**   | Touche-à-tout (essaie tout)    | Appliqué (répète, range, finit) | Créativité, débrouille / études, rigueur |
+| **Lien**     | Câlin (cherche le contact)     | Indépendant (se débrouille)     | Relations profondes / autonomie        |
 
-Comme en v1, **un palier débloque** : à chaque seuil, une nouvelle action ou un
-nouvel événement apparaît. Pas de bonus continu.
+« Agile / pas agile » est rejeté (un pôle y est une insulte). Pour l'Énergie,
+**Vif ↔ Posé** est la proposition ; d'autres paires possibles : *Fonceur ↔
+Prudent*, *Remuant ↔ Tranquille*. Le nom se tranche au moment du texte.
 
-- Corps : se retourner → ramper → **marcher** → courir / grimper.
-- Parole : babiller → **premiers mots** → phrases → poser des questions.
-- Curiosité : attraper → mettre à la bouche → ouvrir les tiroirs → démonter.
-- Attachement : sourire → s'accrocher → faire un câlin → consoler.
+**Pourquoi des axes.** À la tranche suivante, chaque axe se **transforme en
+vraies stats** : la position (A ou B) choisit *quelle* stat naît, la distance à
+0 en donne la valeur. Un enfant très Extraverti reçoit une stat de charisme, un
+très Introverti une stat de concentration ; un enfant à 0 reçoit les deux, à
+petite valeur. Le choix de chaque instant est donc déjà un choix de
+personnage, sans écran de création.
+
+Comme en v1, **un palier débloque** : en passant un seuil de l'axe (par
+exemple ±25, ±50, ±75), une nouvelle action, un événement ou un trait apparaît.
+Pas de bonus continu.
+
+- Énergie : se retourner → ramper → **marcher** → courir / grimper (Vif), ou
+  observer longuement → choisir son jouet → ranger (Posé).
+- Sociabilité : appeler → **premiers mots** → rejoindre un groupe (Extraverti),
+  ou jouer à côté → écouter → inventer un ami imaginaire (Introverti).
+- Esprit : attraper → ouvrir les tiroirs → démonter (Touche-à-tout), ou empiler
+  → recommencer → finir un puzzle (Appliqué).
+- Lien : sourire → s'accrocher → consoler (Câlin), ou manger seul → « moi
+  tout seul » → faire ses lacets (Indépendant).
 
 ### Les ressources
 
@@ -80,16 +99,18 @@ Ces deux jauges remplacent l'argent, qui n'existe pas encore. Elles sont
 Aujourd'hui l'onglet Vie n'a qu'un bouton « Gazouiller ». On propose **4 à 5
 actions**, qui se débloquent peu à peu :
 
-| Action               | Effet principal                          | Coût / risque               |
-| -------------------- | ---------------------------------------- | --------------------------- |
-| Gazouiller / Parler  | Parole, un peu d'Attachement             | Aucun                       |
-| Bouger (ramper, marcher) | Corps                                | Petit risque de chute       |
-| Fouiller / Toucher à tout | Curiosité                           | Consomme la Patience        |
-| Câliner / Sourire    | Attachement, Attention gagnée            | Aucun                       |
-| Faire une bêtise     | Curiosité forte, déclenche un événement  | Patience, lien qui baisse   |
+| Action (pôle)                        | Axe poussé        | Coût / risque               |
+| ------------------------------------ | ----------------- | --------------------------- |
+| Bouger, grimper (Vif) / Observer (Posé) | Énergie        | Petit risque de chute (Vif) |
+| Appeler (Extraverti) / Jouer seul (Introverti) | Sociabilité | Aucun                  |
+| Fouiller (Touche-à-tout) / Empiler (Appliqué) | Esprit  | Fouiller consomme la Patience |
+| Câliner (Câlin) / Faire seul (Indépendant) | Lien        | Câliner gagne de l'Attention |
+
+Chaque action est un petit choix de pôle ; « Faire une bêtise » (Touche-à-tout
+poussé fort, déclenche un événement) peut venir comme cinquième action.
 
 Le sommeil reste **passif** ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)) :
-la sieste rend les éveils acquis « durables » et vide les marqueurs du jour,
+la sieste rend les paliers acquis « durables » et vide les marqueurs du jour,
 comme à l'âge adulte. Les actions pourront s'**automatiser** (règle idle du
 concept) : un bébé qui babille tout seul une fois le palier atteint.
 
@@ -115,8 +136,8 @@ lien se gagne en agissant *avec* elle et se perd en l'ignorant ou en la poussant
 
 Apports (repris du backlog « Relations », ordre de priorité) :
 
-1. **Bonus passifs par palier de lien** : un parent proche accélère l'éveil qu'il
-   aime (le parent qui lit → Parole). Un palier **débloque**, comme ailleurs.
+1. **Bonus passifs par palier de lien** : un parent proche pousse l'axe qu'il
+   aime (le parent qui lit → Extraverti). Un palier **débloque**, comme ailleurs.
 2. **Soutien en cas de crise** : un lien fort amortit une mauvaise chute ou un
    mauvais choix.
 3. **Déblocage d'opportunités** à la tranche suivante (un parent musicien offre
@@ -126,38 +147,96 @@ Apports (repris du backlog « Relations », ordre de priorité) :
 Les relations sont **sérialisables** et passent d'une tranche à l'autre : c'est
 le principal « acquis » avec les traits.
 
-## 4. Les événements : des choix qui forment un caractère
+## 4. Les événements : un pool, tirés selon ce qui se passe
 
-Cinq à six événements, déclenchés par **seuils d'âge ou d'éveil**, uniques.
-Chacun propose 2 ou 3 réponses, **chacune avec un coût et un gain visibles**
-(pas de piège caché). Chaque réponse modifie un éveil, un lien et parfois donne
-un **trait**.
+On n'écrit pas une suite d'événements fixe. On écrit un **pool** d'événements
+(une vingtaine), dont la tranche **en joue quelques-uns**, tirés au hasard parmi
+ceux dont les **conditions** sont remplies. Deux enfants différents ne vivent
+donc pas les mêmes scènes.
 
-| Âge | Événement                          | Choix possibles                                                         |
-| --- | ---------------------------------- | ----------------------------------------------------------------------- |
-| ~1 an | **Premier mot**                  | « Maman » / « Papa » / « Non » → lien vers un parent, ou trait *Têtu*    |
-| ~1-2 | **Premiers pas**                  | Vers le parent (Attachement) / vers la prise (Curiosité, risque) / vers le chat (trait *Tendre*) |
-| ~2 ans | **La crise au supermarché**     | Hurler (Attention, Patience en baisse) / obéir / négocier (Parole)       |
-| ~3 ans | **Le premier copain**           | Partager le jouet / le garder / le casser → **ouvre l'onglet Amis**      |
-| ~4 ans | **Un petit frère ou une petite sœur** | Jalousie / protéger / ignorer → lien, trait *Protecteur* ou *Solitaire* |
-| ~5 ans | **Le dessin sur le mur**        | Avouer / accuser le chat / recommencer plus grand → trait *Honnête*, *Rusé* ou *Artiste* |
+### Un événement
 
-La situation **recolore** l'événement (le supermarché devient un tour bus, un
-foyer d'accueil, un restaurant étoilé) sans changer ses choix.
+Une donnée (`src/game/data`), comme les événements de la v1 :
+
+- des **conditions** (toutes vraies pour être éligible) ;
+- un **poids** (chance relative d'être tiré parmi les éligibles) ;
+- un caractère **unique** (ne se rejoue pas) ;
+- 2 ou 3 **choix**, chacun avec effet visible : un axe poussé, un lien modifié,
+  parfois un trait.
+
+Types de conditions prévus, tous lisibles dans l'état :
+
+| Condition                    | Exemple                                                    |
+| ---------------------------- | ---------------------------------------------------------- |
+| Âge                          | entre 2 et 3 ans                                           |
+| Axe poussé d'un côté         | Énergie ≥ +25 (Vif), Sociabilité ≤ −25 (Introverti)        |
+| Lien avec une personne       | lien avec la mère ≥ 50                                      |
+| Trait ou événement déjà vécu | a le trait *Têtu* ; a vécu « Premier copain »              |
+| **Contexte de départ** (plus tard) | situation *hôtel de luxe*, *plage*, *tournée*, *ferme* |
+| Aucune                       | événement « de fond », éligible à tout moment              |
+
+Le **contexte** est une étiquette de la situation de naissance (hôtel, plage,
+tour bus…). Il n'est pas implémenté au début : le moteur accepte dès le départ
+des conditions de n'importe quel type, les contextes viendront avec les
+situations. La première MR n'a qu'âge, axe, lien et événement déjà vécu.
+
+### Exemples du pool
+
+| Événement                    | Conditions                      | Choix                                          |
+| ---------------------------- | ------------------------------- | ---------------------------------------------- |
+| Premier mot                  | âge ≈ 1 an (obligatoire)        | « Maman » / « Papa » / « Non »                 |
+| L'escalier du salon          | Énergie ≥ +25, âge ≥ 1 an       | Grimper / appeler / s'asseoir                  |
+| Le puzzle de 24 pièces       | Esprit ≤ −25 (Appliqué)         | Finir seul / demander de l'aide / tout renverser |
+| Le camarade bruyant          | Sociabilité ≥ +25, âge ≥ 3 ans  | Le rejoindre / l'imiter / l'éviter             |
+| Le coin du jardin            | Sociabilité ≤ −25               | Y rester / en parler / inviter quelqu'un       |
+| La crise au supermarché      | âge ≈ 2 ans                     | Hurler / obéir / négocier                      |
+| Un petit frère, une petite sœur | âge ≈ 4 ans                  | Jalousie / protéger / ignorer                  |
+| Le doudou perdu              | Lien ≥ +25 (Câlin)              | Le chercher / appeler un parent / s'en passer  |
+| « Moi tout seul ! »          | Lien ≤ −25 (Indépendant)        | Refuser l'aide / accepter / bouder             |
+| Le dessin sur le mur         | âge ≥ 4 ans                     | Avouer / accuser le chat / recommencer plus grand |
+| Le hall de l'hôtel (plus tard) | contexte *hôtel de luxe*      | Courir / se cacher / saluer le concierge       |
+
+Les événements « d'âge » (premier mot, première rentrée) servent de jalons ; les
+autres dépendent de ce que le joueur a fait de son enfant.
+
+### Combien, et quand
+
+Le tirage est piloté par la tranche, pas par les événements :
+
+- **Minimum et maximum** par tranche : par exemple **4 à 7 événements** en
+  petite enfance. Les valeurs sont des données de la tranche (`lifeSlices`).
+- **Au plus un événement par période** (trimestre), avec un **espacement
+  minimum** (par exemple 2 périodes) pour que le joueur respire.
+- **À chaque période**, la tranche demande : « un événement maintenant ? ». Oui
+  si le maximum n'est pas atteint, que l'espacement est respecté, et que le
+  tirage passe. La probabilité monte si le minimum risque de ne pas être
+  atteint ; si le nombre de périodes restantes égale le nombre d'événements
+  encore dus pour le minimum, le tirage est **forcé**.
+- **Choix de l'événement** : tirage pondéré parmi les éligibles. S'il n'y en a
+  aucun, on passe (les événements « de fond » évitent ce cas).
+- **Le hasard vient de l'état** : une graine stockée dans la sauvegarde, pas de
+  `Math.random()` dans les règles. Le même état redonne le même tirage, donc le
+  simulateur et les tests restent déterministes. Le hasard n'agit que sur
+  *quelle scène*, jamais sur ce que rapporte un choix.
+
+Le moteur d'événements de la v1 (`src/game/events`) est conçu autour de dates ;
+il faudra voir s'il se généralise (conditions + poids + graine) ou si la
+petite enfance reçoit son propre module. À trancher à la première MR du moteur.
 
 ### Les traits
 
-Un trait donne un **avantage et un inconvénient** (jamais l'un sans l'autre),
-conformément à l'esprit « départs situationnels » : on en garde **3 au plus**
-à la sortie, ce qui oblige à renoncer.
+Les **pôles marqués** font déjà le gros du caractère. Les **traits** viennent en
+plus des choix d'événements, pour les cas qui ne se réduisent pas à un axe. Un
+trait donne un **avantage et un inconvénient** (jamais l'un sans l'autre), et
+on en garde **3 au plus** à la sortie, ce qui oblige à renoncer.
 
 | Trait        | Avantage                       | Inconvénient                 |
 | ------------ | ------------------------------ | ---------------------------- |
 | Têtu         | Résiste à la pression          | Se fâche plus vite           |
-| Câlin        | Liens qui montent plus vite    | Supporte mal la solitude     |
-| Fonceur      | Corps et Curiosité accélérés   | Plus de chutes               |
-| Timide       | Observe, Parole stable         | Premier ami plus tardif      |
+| Tendre       | Liens qui montent plus vite    | Supporte mal la solitude     |
+| Téméraire    | Progresse vite en Énergie      | Plus de chutes               |
 | Rusé         | Sort des situations tendues    | Perd la confiance si on le voit |
+| Artiste      | Esprit créatif                 | Désordre, peu de patience    |
 
 ## 5. Durée et rythme
 
@@ -186,7 +265,8 @@ monde réaliste, une voix pince-sans-rire. Les textes sont des extraits de
 La petite enfance ne rend **ni argent ni emploi**. Elle transmet un objet de
 données unique, sérialisable :
 
-- les quatre éveils (valeurs finales) ;
+- les quatre axes (valeur finale entre −100 et +100), que la tranche suivante
+  transforme en stats ;
 - jusqu'à 3 traits ;
 - les relations (famille, premier ami) et leur lien ;
 - la situation de naissance, qui reste le contexte des tranches suivantes.
@@ -199,16 +279,20 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 1. **Situations de naissance** : donnée (`src/game/data`), choix à l'écran
    titre, parents et qualités. Une seule situation (« famille standard »)
    suffit pour la première MR.
-2. **Éveils et actions** : état, reducer, paliers, jauge de temps adaptée à
+2. **Axes et actions** : état, reducer, paliers, jauge de temps adaptée à
    0-5 ans, remplacement du compteur `growth` pour cette tranche.
 3. **Menu Relations / Famille** : onglet, sous-menu, liens, paliers et bonus.
 4. **Événements et traits** : moteur de choix réutilisé de `src/game/events`,
-   les six événements, trait et limite à 3.
+   pool d'événements avec conditions, poids, minimum / maximum et graine ; traits et limite à 3.
 5. **Bilan et passage vers l'Enfance** : écran de fin, objet transmis.
 6. **Autres situations** (millionnaire, rock, SDF…) : données uniquement.
 
 ## 9. Questions ouvertes
 
+- **Boutons** : une action par axe avec deux variantes (8 boutons en 4 paires),
+  ou une action par axe dont on choisit le pôle ? Les paires sont plus lisibles,
+  les actions à pôle choisi plus sobres.
+- **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
 - **Combien d'actions** au départ ? On propose 5 ; 3 suffiraient si on veut
   une tranche encore plus courte.
 - **Patience / Attention** : les deux, ou une seule jauge « Attention » pour
