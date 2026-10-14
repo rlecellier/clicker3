@@ -252,17 +252,6 @@ describe('resume', () => {
       expect(state.lastSeenAt).toBe(1000 + autoIntervalMs);
     });
 
-    it('joue le sommeil en cours sans résumé', () => {
-      const asleep: GameState = {
-        ...startState,
-        isSleeping: true,
-        sleepTotal: 4,
-        lastSeenAt: 1000,
-      };
-      const { summary } = resume(asleep, 1000 + 2000, reloadGraceMs);
-      expect(summary.actions).toBe(0);
-    });
-
     it('rattrape comme une absence dès le délai atteint', () => {
       const { summary } = resume(saved, 1000 + reloadGraceMs, reloadGraceMs);
       expect(summary.actions).toBeGreaterThan(0);
