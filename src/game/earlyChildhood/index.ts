@@ -16,6 +16,7 @@ export {
   eligibleEvents,
   scheduleEvent,
 } from './events';
+export { canEnterChildhood, childCarry, enterChildhood } from './report';
 export { explore, isPlaceOpen, remainingFinds } from './exploration';
 export { familyQualities } from './family';
 export { nextRandom } from './random';

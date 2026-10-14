@@ -42,6 +42,17 @@ export type ChildState = {
   later: { id: string; at: number }[];
 };
 
+// Ce que la petite enfance transmet à l'Enfance : le caractère formé (axes
+// finaux, traits), ce qu'on possède et le nombre d'événements vécus. Les
+// relations et la situation de naissance restent dans l'état. L'Enfance en
+// tirera ses stats (docs/game/petite-enfance.md § 7).
+export type ChildCarry = {
+  axes: Record<ChildAxisId, number>;
+  traits: string[];
+  objects: string[];
+  events: number;
+};
+
 // Une personne qui compte pour l'enfant : un parent, puis un ami.
 export type Relation = {
   // Un parent garde l'id de la situation de naissance (`mother`, `father`).
@@ -233,6 +244,8 @@ export type GameState = {
   child: ChildState;
   /** Les personnes qui comptent : la famille, puis les amis. */
   relations: Relation[];
+  /** Hérité de la petite enfance, une fois entré en Enfance (`null` sinon). */
+  carry: ChildCarry | null;
 
   /** Euros entiers. */
   money: number;

@@ -93,7 +93,7 @@ fait monter le compteur d'un cran ; il ne sert à rien d'autre pour l'instant.
   La petite enfance a une proposition : [petite-enfance.md](petite-enfance.md)
   (suivi : #253 ; la situation de naissance est en place, #254).
 - Aucun équilibrage propre aux départs en cours de vie.
-- Pas de passage automatique d'une tranche à la suivante.
+- Pas de passage automatique d'une tranche à la suivante (seule la petite enfance a un bouton « Entrer en Enfance », #258).
 - Pas de modèle d'état commun refondu : `GameState` porte la tranche
   (`lifeSlice`) et le compteur (`growth`), le reste est celui de Jeunesse. On
   refactorisera quand on enchaînera les tranches ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md)).

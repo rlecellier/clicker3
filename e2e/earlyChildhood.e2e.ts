@@ -105,3 +105,48 @@ test('petite enfance : fouiller, réclamer, mettre en favori et jouer, au touche
   await expect(page.getByText('Lien : 32 sur 100')).toBeVisible();
   await expectNoOverflow(page);
 });
+
+test('petite enfance : une vie de 0 à 6 ans au toucher, du choix de la famille à l’Enfance', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Petite enfance/ }).tap();
+  await page.getByRole('button', { name: 'Famille standard' }).tap();
+  await expect(page).toHaveURL('/jeu/vie');
+
+  // Le joueur gazouille, et répond au premier choix de chaque événement, jusqu'au bilan.
+  const babble = page.getByRole('button', { name: 'Gazouiller' });
+  const prompt = page.getByRole('alertdialog');
+  const report = page.getByRole('heading', { name: 'Carnet de santé' });
+  let answered = 0;
+  for (let step = 0; step < 800 && (await report.count()) === 0; step += 1) {
+    if ((await prompt.count()) > 0) {
+      await prompt.getByRole('button').first().tap();
+      answered += 1;
+    } else {
+      await babble.tap();
+    }
+  }
+  await expect(report).toBeVisible();
+  // Entre 4 et 7 événements, le premier mot et le premier copain compris.
+  expect(answered).toBeGreaterThanOrEqual(4);
+  expect(answered).toBeLessThanOrEqual(7);
+  await expect(page.getByText('Énergie')).toBeVisible();
+  await expect(page.getByText('Événements vécus')).toBeVisible();
+  await expect(page.getByText('Maman (mère)')).toBeVisible();
+  await expect(page.getByText('Noa (ami)')).toBeVisible();
+  await expectNoOverflow(page);
+
+  // Entrer en Enfance : les traits et le caractère sont rappelés.
+  await page.getByRole('button', { name: 'Entrer en Enfance' }).tap();
+  await expect(page.getByRole('heading', { name: 'Enfance' })).toBeVisible();
+  await expect(page.getByText('Hérité de la petite enfance :')).toBeVisible();
+  await expect(page.getByText('Énergie')).toBeVisible();
+  await page.getByRole('button', { name: 'Jouer' }).tap();
+  await expect(
+    page
+      .getByText('Curiosité', { exact: true })
+      .locator('xpath=following-sibling::dd[1]'),
+  ).toHaveText('1');
+  await expectNoOverflow(page);
+});

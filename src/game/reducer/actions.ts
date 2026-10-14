@@ -50,6 +50,8 @@ export type GameAction =
   | { type: 'explore'; place: ChildPlaceId }
   | { type: 'askFor'; wishId: string }
   | { type: 'chooseEvent'; choice: number }
+  // Fin de la petite enfance : entre en Enfance avec ce qu'elle a transmis.
+  | { type: 'enterChildhood' }
   // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
   // `birthSituation` : la situation de naissance (famille standard par défaut).
   | {
