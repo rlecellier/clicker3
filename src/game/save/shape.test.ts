@@ -15,7 +15,7 @@ describe('forme de l’état', () => {
       : [prefix];
 
   const frozen = {
-    version: 19,
+    version: 20,
     keys: [
       'activeEffects',
       'autoElapsed',
@@ -36,11 +36,13 @@ describe('forme de l’état', () => {
       'gauge',
       'gaugeCapacity',
       'gaugeSegments',
+      'growth',
       'housingId',
       'isSleeping',
       'jobId',
       'jobSalaryFactors',
       'lastSeenAt',
+      'lifeSlice',
       'lastSleepPeriod',
       'lastStatement',
       'ledger.current.charges',

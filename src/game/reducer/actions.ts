@@ -1,4 +1,4 @@
-import type { GaugeKind, PlacementId } from '@game/state';
+import type { GaugeKind, LifeSliceId, PlacementId } from '@game/state';
 import type { NoveltyTab } from '@game/novelty';
 
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
@@ -37,4 +37,7 @@ export type GameAction =
   | { type: 'markSeen'; tab: NoveltyTab }
   // Recommence une vie neuve depuis l'état de départ, avec le premier emploi
   // choisi (un emploi de départ, voir `startingJobs`).
-  | { type: 'restart'; jobId?: string };
+  // Le bouton d'une tranche avant 18 ans : le compteur monte d'un cran.
+  | { type: 'grow' }
+  // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
+  | { type: 'restart'; jobId?: string; lifeSlice?: LifeSliceId };

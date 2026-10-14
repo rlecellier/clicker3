@@ -6,6 +6,7 @@ import { findById, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { answerBirthday, isBirthdayPending } from '@game/birthday';
+import { grow } from '@game/lifeSlices';
 import { readMail } from '@game/mail';
 import { markAllSeen, markSeen } from '@game/novelty';
 import { openPlacement } from '@game/placements';
@@ -18,20 +19,26 @@ import { study } from '@game/study';
 import { sellSurplus } from '@game/surplus';
 import { buyUpgrade, cancelUpgrade } from '@game/upgrades';
 import { work } from '@game/work';
-import type { GameState } from '@game/state';
+import type { GameState, LifeSliceId } from '@game/state';
 import type { GameAction } from './actions';
 
 // Nouvelle vie : l'état de départ, ses 18 ans à fêter, avec les événements déjà présents au départ.
 // Un emploi qui n'est pas un emploi de départ est ignoré (on garde celui par défaut).
-export const newGame = (jobId?: string): GameState =>
-  markAllSeen(
-    triggerEvents({
-      ...startState,
-      jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
-      // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
-      pendingBirthday: { age: startState.life.startAge, recap: null },
-    }),
-  );
+// Une tranche avant 18 ans n'a ni emploi, ni événement, ni anniversaire : seulement son compteur.
+export const newGame = (
+  jobId?: string,
+  lifeSlice: LifeSliceId = startState.lifeSlice,
+): GameState =>
+  lifeSlice === startState.lifeSlice
+    ? markAllSeen(
+        triggerEvents({
+          ...startState,
+          jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
+          // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
+          pendingBirthday: { age: startState.life.startAge, recap: null },
+        }),
+      )
+    : { ...startState, lifeSlice };
 
 const applyAction = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
@@ -99,8 +106,11 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
     case 'markSeen': {
       return markSeen(state, action.tab);
     }
+    case 'grow': {
+      return grow(state);
+    }
     case 'restart': {
-      return newGame(action.jobId);
+      return newGame(action.jobId, action.lifeSlice);
     }
   }
 };
