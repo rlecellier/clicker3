@@ -150,3 +150,40 @@ test('petite enfance : une vie de 0 à 6 ans au toucher, du choix de la famille 
   ).toHaveText('1');
   await expectNoOverflow(page);
 });
+
+test('petite enfance : une autre famille change le départ', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Petite enfance/ }).tap();
+
+  // Les familles sont proposées avec leur description.
+  await expect(
+    page.getByText('Dans quelle famille naissez-vous ?'),
+  ).toBeVisible();
+  for (const name of [
+    'Famille standard',
+    'Fils ou fille de millionnaire',
+    'Fils ou fille de star du rock',
+    'Sans domicile fixe',
+    'Parents enseignants',
+    'Ferme familiale',
+  ]) {
+    await expect(page.getByRole('button', { name })).toBeVisible();
+  }
+  await expectNoOverflow(page);
+
+  // Un enfant de millionnaire naît avec des jouets (la Maison est ouverte dès
+  // le départ) et des parents au lien timide.
+  await page
+    .getByRole('button', { name: 'Fils ou fille de millionnaire' })
+    .tap();
+  const bar = page.getByRole('navigation', { name: 'Navigation du jeu' });
+  await expect(bar.getByRole('link', { name: 'Maison' })).toBeVisible();
+  await bar.getByRole('link', { name: 'Maison' }).tap();
+  await expect(page.getByText('Câliner le nounours')).toBeVisible();
+  await expect(page.getByText('Empiler les cubes')).toBeVisible();
+  await bar.getByRole('link', { name: 'Relations' }).tap();
+  await expect(page.getByText('Lien : 12 sur 100').first()).toBeVisible();
+  await expect(page.getByText('Papa (père)')).toBeVisible();
+});

@@ -1,5 +1,9 @@
 import { useGameContext } from '@context/GameContext';
-import { childEventById, describeEffect } from '@game/earlyChildhood';
+import {
+  childEventById,
+  childEventText,
+  describeEffect,
+} from '@game/earlyChildhood';
 
 // Événement de la petite enfance qui attend un choix : null tant qu'il n'y en
 // a pas. Chaque choix affiche ce qu'il change ; le jeu est arrêté entre-temps.
@@ -11,7 +15,7 @@ export const useChildEventPrompt = () => {
   }
   return {
     title: event.title,
-    message: event.text,
+    message: childEventText(state, event),
     choices: event.choices.map((choice, index) => ({
       label: choice.label,
       effects: choice.effects
