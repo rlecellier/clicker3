@@ -1,0 +1,246 @@
+import type { ChildAxisId } from '@game/state';
+
+// Condition d'éligibilité d'un événement de la petite enfance, toutes vraies.
+// Un type de condition de plus s'ajoute ici (le contexte de départ, le lien
+// avec une personne) sans toucher au moteur du tirage.
+export type ChildCondition =
+  // Âge en trimestres.
+  | { type: 'age'; min?: number; max?: number }
+  // Axe marqué d'au moins `atLeast` du côté `direction`.
+  | { type: 'axis'; axis: ChildAxisId; direction: 1 | -1; atLeast: number }
+  | { type: 'trait'; id: string }
+  // Événement déjà vécu.
+  | { type: 'event'; id: string }
+  // Objet possédé.
+  | { type: 'object'; id: string }
+  // Étiquette de contexte de la situation de naissance (hôtel, plage…).
+  | { type: 'context'; tag: string };
+
+export type ChildEffect =
+  // `amount` est signé : positif vers le pôle positif de l'axe.
+  | { type: 'axis'; axis: ChildAxisId; amount: number }
+  | { type: 'trait'; id: string }
+  | { type: 'giveObject'; id: string }
+  | { type: 'removeObject'; id: string };
+
+export type ChildEventChoice = {
+  label: string;
+  effects: readonly ChildEffect[];
+};
+
+export type ChildEvent = {
+  id: string;
+  title: string;
+  text: string;
+  conditions: readonly ChildCondition[];
+  // Chance relative d'être tiré parmi les événements éligibles.
+  weight: number;
+  // Se produit dès que ses conditions sont remplies, avant tout tirage.
+  isMandatory?: boolean;
+  choices: readonly ChildEventChoice[];
+};
+
+const age = (min: number, max?: number): ChildCondition => ({
+  type: 'age',
+  min,
+  max,
+});
+// Un axe marqué d'au moins 25 d'un côté (le seuil des savoir-faire).
+const axis = (id: ChildAxisId, direction: 1 | -1): ChildCondition => ({
+  type: 'axis',
+  axis: id,
+  direction,
+  atLeast: 25,
+});
+const push = (id: ChildAxisId, amount: number): ChildEffect => ({
+  type: 'axis',
+  axis: id,
+  amount,
+});
+const trait = (id: string): ChildEffect => ({ type: 'trait', id });
+
+// Les âges sont des trimestres : 4 = 1 an. Voix administrative, comme le reste
+// du jeu (docs/game/ton-et-univers.md).
+export const childEvents: readonly ChildEvent[] = [
+  {
+    id: 'firstWord',
+    title: 'Premier mot',
+    text: 'Votre enfant a prononcé son premier mot. Le service prend acte et attend de savoir lequel.',
+    conditions: [age(4)],
+    weight: 1,
+    isMandatory: true,
+    choices: [
+      { label: '« Maman »', effects: [push('bond', 6)] },
+      {
+        label: '« Papa »',
+        effects: [push('bond', 4), push('sociability', 2)],
+      },
+      { label: '« Non »', effects: [trait('stubborn'), push('mind', 3)] },
+    ],
+  },
+  {
+    id: 'stairs',
+    title: 'L’escalier du salon',
+    text: 'Un escalier est apparu dans la vie de votre enfant. Il n’a pas été consulté.',
+    conditions: [age(5), axis('energy', 1)],
+    weight: 2,
+    choices: [
+      { label: 'Grimper', effects: [push('energy', 6), trait('daring')] },
+      {
+        label: 'Appeler à l’aide',
+        effects: [push('sociability', 4), push('bond', 2)],
+      },
+      {
+        label: 'S’asseoir sur la première marche',
+        effects: [push('energy', -4), push('mind', -3)],
+      },
+    ],
+  },
+  {
+    id: 'puzzle',
+    title: 'Le puzzle de 24 pièces',
+    text: 'Un puzzle de 24 pièces a été remis à votre enfant. Il en manque une. Elle est probablement sous le canapé.',
+    conditions: [age(6), axis('mind', -1)],
+    weight: 2,
+    choices: [
+      { label: 'Finir seul', effects: [push('mind', -6)] },
+      {
+        label: 'Demander de l’aide',
+        effects: [push('bond', 4), push('sociability', 3)],
+      },
+      { label: 'Tout renverser', effects: [push('mind', 5), trait('artist')] },
+    ],
+  },
+  {
+    id: 'cat',
+    title: 'Un chat s’invite',
+    text: 'Un chat est entré dans le foyer sans formulaire. Il s’est installé sur le meilleur coussin.',
+    conditions: [age(6)],
+    weight: 1,
+    choices: [
+      {
+        label: 'L’adopter',
+        effects: [{ type: 'giveObject', id: 'cat' }, push('bond', 3)],
+      },
+      { label: 'Lui courir après', effects: [push('energy', 4)] },
+      { label: 'L’observer de loin', effects: [push('energy', -3)] },
+    ],
+  },
+  {
+    id: 'lostTeddy',
+    title: 'Le nounours perdu',
+    text: 'Le nounours est introuvable. L’enquête est confiée à la personne la plus petite de la maison.',
+    conditions: [age(7), { type: 'object', id: 'teddy' }, axis('bond', 1)],
+    weight: 2,
+    choices: [
+      {
+        label: 'Le chercher partout',
+        effects: [push('bond', 5), push('energy', 2)],
+      },
+      {
+        label: 'Appeler un parent',
+        effects: [push('bond', 6), push('sociability', 2)],
+      },
+      {
+        label: 'S’en passer',
+        effects: [push('bond', -6), { type: 'removeObject', id: 'teddy' }],
+      },
+    ],
+  },
+  {
+    id: 'supermarket',
+    title: 'La crise au supermarché',
+    text: 'Au rayon des céréales, un désaccord de portée nationale éclate. Il porte sur un paquet à l’effigie d’un lapin.',
+    conditions: [age(8, 11)],
+    weight: 2,
+    choices: [
+      {
+        label: 'Hurler',
+        effects: [trait('stubborn'), push('energy', 3), push('bond', -3)],
+      },
+      { label: 'Obéir', effects: [push('bond', 2), push('mind', -3)] },
+      { label: 'Négocier', effects: [push('sociability', 4), trait('sly')] },
+    ],
+  },
+  {
+    id: 'meOnly',
+    title: '« Moi tout seul ! »',
+    text: 'Votre enfant a déclaré qu’il ferait seul. Aucun élément ne permet de dire qu’il en est capable.',
+    conditions: [age(8), axis('bond', -1)],
+    weight: 2,
+    choices: [
+      { label: 'Refuser toute aide', effects: [push('bond', -6)] },
+      { label: 'Accepter un coup de main', effects: [push('bond', 3)] },
+      { label: 'Bouder', effects: [push('mind', -2), push('bond', -3)] },
+    ],
+  },
+  {
+    id: 'loudKid',
+    title: 'Le camarade bruyant',
+    text: 'Un camarade fait du bruit à proximité. Il semble en avoir beaucoup.',
+    conditions: [age(10), axis('sociability', 1)],
+    weight: 2,
+    choices: [
+      { label: 'Le rejoindre', effects: [push('sociability', 6)] },
+      { label: 'L’imiter', effects: [push('mind', 4), push('sociability', 2)] },
+      { label: 'L’éviter', effects: [push('sociability', -5)] },
+    ],
+  },
+  {
+    id: 'corner',
+    title: 'Le coin du jardin',
+    text: 'Un coin du jardin est resté sans affectation. Votre enfant l’a remarqué avant le propriétaire.',
+    conditions: [age(10), axis('sociability', -1)],
+    weight: 2,
+    choices: [
+      { label: 'Y rester', effects: [push('sociability', -6)] },
+      { label: 'En parler', effects: [push('sociability', 4)] },
+      {
+        label: 'Y inviter quelqu’un',
+        effects: [push('sociability', 3), push('bond', 3)],
+      },
+    ],
+  },
+  {
+    id: 'jam',
+    title: 'Pot de confiture',
+    text: 'Un pot de confiture a été vidé de façon inexpliquée. Votre enfant a de la confiture jusqu’aux coudes.',
+    conditions: [age(12)],
+    weight: 2,
+    choices: [
+      { label: 'Avouer', effects: [trait('honest')] },
+      { label: 'S’enfuir', effects: [push('energy', 4), trait('sly')] },
+      { label: 'Partager', effects: [push('sociability', 3), push('bond', 3)] },
+    ],
+  },
+  {
+    id: 'sibling',
+    title: 'Un petit frère, une petite sœur',
+    text: 'La famille compte une personne de plus, de moins de cinquante centimètres. Elle n’a rien demandé non plus.',
+    conditions: [age(14)],
+    weight: 2,
+    choices: [
+      { label: 'Jalouser', effects: [trait('stubborn'), push('bond', -4)] },
+      { label: 'Protéger', effects: [trait('protector'), push('bond', 4)] },
+      { label: 'Ignorer', effects: [push('mind', 3), push('sociability', -3)] },
+    ],
+  },
+  {
+    id: 'wall',
+    title: 'Le dessin sur le mur',
+    text: 'Une fresque est apparue dans le couloir, à hauteur d’enfant. Elle n’est pas signée.',
+    conditions: [age(16)],
+    weight: 2,
+    choices: [
+      { label: 'Avouer', effects: [trait('honest'), push('bond', 3)] },
+      {
+        label: 'Accuser le chat',
+        effects: [trait('sly'), push('sociability', -2)],
+      },
+      {
+        label: 'Recommencer plus grand',
+        effects: [trait('artist'), push('mind', 4)],
+      },
+    ],
+  },
+];

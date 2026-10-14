@@ -1,4 +1,9 @@
-import type { GaugeKind, LifeSliceId, PlacementId } from '@game/state';
+import type {
+  ChildPlaceId,
+  GaugeKind,
+  LifeSliceId,
+  PlacementId,
+} from '@game/state';
 import type { NoveltyTab } from '@game/novelty';
 
 /** Actions du jeu. Les issues suivantes ajoutent leurs variantes ici. */
@@ -40,6 +45,11 @@ export type GameAction =
   | { type: 'grow' }
   // Une activité de la petite enfance : un axe se déplace vers son pôle.
   | { type: 'doActivity'; id: string }
+  // Fouille un lieu (dès 3 ans), réclame un objet à ses parents (dès 4 ans),
+  // répond à l'événement ouvert (index du choix).
+  | { type: 'explore'; place: ChildPlaceId }
+  | { type: 'askFor'; wishId: string }
+  | { type: 'chooseEvent'; choice: number }
   // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
   // `birthSituation` : la situation de naissance (famille standard par défaut).
   | {
@@ -47,4 +57,6 @@ export type GameAction =
       jobId?: string;
       lifeSlice?: LifeSliceId;
       birthSituation?: string;
+      // Graine du hasard de la petite enfance (fournie par l'appelant).
+      seed?: number;
     };
