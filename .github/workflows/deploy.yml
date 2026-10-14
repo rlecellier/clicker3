@@ -8,60 +8,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read
   contents: read
   pages: write
   id-token: write
-  deployments: read
 
 jobs:
-  # Ne déploie que si le jeu a changé depuis le dernier déploiement réussi :
-  # une modification de docs, de CI ou de tests e2e ne change pas le site.
-  changes:
+  deploy:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push')
-    runs-on: ubuntu-latest
-    outputs:
-      game: ${{ steps.diff.outputs.game }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-          fetch-depth: 0
-      - id: diff
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          game=true
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            # Dernier commit réellement publié : un run dont le deploy est
-            # skippé ou annulé ne compte pas, seul un déploiement réussi compte.
-            last=""
-            for id in $(gh api "repos/${{ github.repository }}/deployments?environment=github-pages&per_page=10" --jq '.[].id'); do
-              state=$(gh api "repos/${{ github.repository }}/deployments/$id/statuses" --jq '.[0].state // empty')
-              if [ "$state" = "success" ]; then
-                last=$(gh api "repos/${{ github.repository }}/deployments/$id" --jq '.sha')
-                break
-              fi
-            done
-            if [ -n "$last" ] && git cat-file -e "$last^{commit}" 2>/dev/null; then
-              if git diff --quiet "$last" HEAD -- \
-                src index.html package.json package-lock.json \
-                vite.config.ts tsconfig.json .github/workflows/deploy.yml; then
-                game=false
-              fi
-            fi
-          fi
-          echo "game=$game" >> "$GITHUB_OUTPUT"
-          echo "Le jeu a changé : $game"
-
-  deploy:
-    needs: changes
-    if: needs.changes.outputs.game == 'true'
-    # La concurrence est ici et pas sur le workflow : un run qui skippe le
-    # deploy ne doit pas annuler un déploiement en cours.
+    # Deux déploiements de suite : le plus récent annule celui en cours.
     concurrency:
       group: pages
       cancel-in-progress: true
