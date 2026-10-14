@@ -2,7 +2,7 @@
 
 - **Statut** : accepté
 - **Date** : 2026-10-14
-- **Issue** : #242
+- **Issues** : #242, #244
 
 ## Contexte
 
@@ -32,6 +32,15 @@ les mêmes onglets.
 - **Le mini-jeu est l'action `grow`**, règle pure de `src/game/lifeSlices/`, sans
   effet hors d'une tranche d'avant 18 ans. Le travail et l'étude y sont
   neutralisés côté raccourcis clavier.
+
+- **Les départs en cours de vie sont des données** (`SliceStart`,
+  `src/game/data/sliceStarts.ts`) construites par `sliceGame` : l'état de départ
+  liste ce qui se possède, tout ce qui en dérive est recalculé par
+  `withModifiers`. Le temps reste continu (le compteur de périodes avance, l'âge
+  de départ de la vie ne change pas) et les événements uniques déjà déclenchés à
+  cet âge sont marqués sans effet ni courrier. Chaque état se vérifie en données
+  (éléments existants, conditions remplies) et en simulation (le joueur virtuel
+  va jusqu'à la mort).
 
 ## Conséquences
 
