@@ -1,4 +1,5 @@
 import {
+  birthSituations,
   childAxes,
   childEvents,
   childObjects,
@@ -46,8 +47,11 @@ const isConditionMet = (
       );
     }
     case 'context': {
-      // Les contextes de départ viendront avec les situations (#259).
-      return false;
+      return (
+        findById(birthSituations, state.birthSituation)?.contexts.includes(
+          condition.tag,
+        ) ?? false
+      );
     }
   }
 };
@@ -168,6 +172,16 @@ export const chooseEvent = (state: GameState, index: number): GameState => {
     next = applyEffect(next, effect);
   }
   return next;
+};
+
+// Le texte de l'événement : la variante du contexte de départ s'il y en a une.
+export const childEventText = (state: GameState, event: ChildEvent): string => {
+  const contexts =
+    findById(birthSituations, state.birthSituation)?.contexts ?? [];
+  return (
+    event.variants?.find(({ context }) => contexts.includes(context))?.text ??
+    event.text
+  );
 };
 
 const objectName = (id: string) => findById(childObjects, id)?.name ?? id;

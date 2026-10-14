@@ -4,7 +4,8 @@
 > situation de naissance (#254, « Famille standard » seule) ; les axes, les
 > objets et activités, l'onglet Maison et les favoris (#255) ; le pool d'événements,
 > les traits, l'exploration et les demandes (#256) ; le menu Relations (#257) ; le bilan et le passage en
-> Enfance (#258). Le reste n'est pas codé (autres situations). Ce document répond à
+> Enfance (#258) ; les cinq autres situations de naissance (#259). Reste à écrire :
+> les stats de l'Enfance, qui lira l'objet transmis. Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
 > pour toutes les suivantes. Cadre général : [tranches-de-vie.md](tranches-de-vie.md).
@@ -378,7 +379,7 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 ## 8. Découpage proposé (une issue = une branche = une MR)
 
 1. **Situations de naissance** : donnée (`src/game/data`), choix à l'écran
-   titre, parents et qualités. Une seule situation (« famille standard »)
+   titre, parents et qualités. Six situations
    suffit pour la première MR.
 2. **Axes, objets et activités** : un bouton de départ, objets, onglet Maison et favoris, état, reducer, paliers, jauge de temps adaptée à
    0-5 ans, remplacement du compteur `growth` pour cette tranche.

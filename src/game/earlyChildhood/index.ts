@@ -12,11 +12,13 @@ export { addTrait, giveObject, pushAxis, removeObject } from './childState';
 export {
   chooseEvent,
   childEventById,
+  childEventText,
   describeEffect,
   eligibleEvents,
   scheduleEvent,
 } from './events';
 export { canEnterChildhood, childCarry, enterChildhood } from './report';
+export { newChild } from './start';
 export { explore, isPlaceOpen, remainingFinds } from './exploration';
 export { familyQualities } from './family';
 export { nextRandom } from './random';

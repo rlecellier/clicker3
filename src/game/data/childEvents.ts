@@ -43,6 +43,9 @@ export type ChildEvent = {
   weight: number;
   // Se produit dès que ses conditions sont remplies, avant tout tirage.
   isMandatory?: boolean;
+  // Le même événement raconté autrement selon le contexte de départ (le texte
+  // de la première variante dont l'étiquette est présente remplace `text`).
+  variants?: readonly { context: string; text: string }[];
   choices: readonly ChildEventChoice[];
 };
 
@@ -63,6 +66,7 @@ const push = (id: ChildAxisId, amount: number): ChildEffect => ({
   axis: id,
   amount,
 });
+const context = (tag: string): ChildCondition => ({ type: 'context', tag });
 const trait = (id: string): ChildEffect => ({ type: 'trait', id });
 const bond = (person: string, amount: number): ChildEffect => ({
   type: 'bond',
@@ -163,6 +167,24 @@ export const childEvents: readonly ChildEvent[] = [
     title: 'La crise au supermarché',
     text: 'Au rayon des céréales, un désaccord de portée nationale éclate. Il porte sur un paquet à l’effigie d’un lapin.',
     conditions: [age(8, 11)],
+    variants: [
+      {
+        context: 'hotel',
+        text: 'Au restaurant de l’hôtel, un désaccord de portée nationale éclate. Il porte sur la couleur du verre à dents.',
+      },
+      {
+        context: 'tour',
+        text: 'Dans la loge, un désaccord éclate avant le concert. Il porte sur un casque de chantier à oreilles de lapin.',
+      },
+      {
+        context: 'shelter',
+        text: 'Dans la file de la distribution, un désaccord éclate. Il porte sur un paquet de biscuits à l’effigie d’un lapin.',
+      },
+      {
+        context: 'farm',
+        text: 'Au marché, un désaccord éclate à l’étal des fromages. Il porte sur la couleur d’une vache en plastique.',
+      },
+    ],
     weight: 2,
     choices: [
       {
@@ -231,6 +253,16 @@ export const childEvents: readonly ChildEvent[] = [
     title: 'Pot de confiture',
     text: 'Un pot de confiture a été vidé de façon inexpliquée. Votre enfant a de la confiture jusqu’aux coudes.',
     conditions: [age(12)],
+    variants: [
+      {
+        context: 'farm',
+        text: 'Un seau de lait a été vidé de façon inexpliquée. Votre enfant a du lait jusqu’aux coudes, et le chat aussi.',
+      },
+      {
+        context: 'hotel',
+        text: 'Un pot de caviar a été vidé de façon inexpliquée. Le room service a pris acte.',
+      },
+    ],
     weight: 2,
     choices: [
       { label: 'Avouer', effects: [trait('honest'), bond('father', 3)] },
@@ -266,6 +298,16 @@ export const childEvents: readonly ChildEvent[] = [
     title: 'Le dessin sur le mur',
     text: 'Une fresque est apparue dans le couloir, à hauteur d’enfant. Elle n’est pas signée.',
     conditions: [age(16)],
+    variants: [
+      {
+        context: 'tour',
+        text: 'Une fresque est apparue sur la coulisse du camion de matériel, à hauteur d’enfant. Elle est déjà dédicacée.',
+      },
+      {
+        context: 'shelter',
+        text: 'Une fresque est apparue sur le mur du foyer, à hauteur d’enfant. L’éducatrice la trouve très réussie, ce qui ne règle rien.',
+      },
+    ],
     weight: 2,
     choices: [
       {
@@ -352,6 +394,96 @@ export const childEvents: readonly ChildEvent[] = [
       {
         label: 'Demander à descendre',
         effects: [bond('father', 1), push('bond', 2)],
+      },
+    ],
+  },
+  {
+    id: 'hotelHall',
+    title: 'Le hall de l’hôtel',
+    text: 'Le hall de l’hôtel mesure quatre-vingts mètres de marbre. Un concierge vous attend à l’autre bout.',
+    conditions: [age(6), context('hotel')],
+    weight: 4,
+    choices: [
+      { label: 'Courir', effects: [push('energy', 5), trait('daring')] },
+      {
+        label: 'Se cacher derrière la plante',
+        effects: [push('sociability', -4)],
+      },
+      {
+        label: 'Saluer le concierge',
+        effects: [push('sociability', 5), push('mind', 2)],
+      },
+    ],
+  },
+  {
+    id: 'tourBus',
+    title: 'Le tour bus',
+    text: 'Le tour bus dessert douze villes en neuf jours. Il n’a pas de salle de bains pour enfants.',
+    conditions: [age(5), context('tour')],
+    weight: 4,
+    choices: [
+      {
+        label: 'Dormir dans la soute à instruments',
+        effects: [push('energy', -4), push('mind', -2)],
+      },
+      {
+        label: 'Appuyer sur tous les boutons du pupitre',
+        effects: [push('mind', 5), trait('artist')],
+      },
+      {
+        label: 'Chanter avec le groupe',
+        effects: [push('sociability', 6), bond('mother', 3)],
+      },
+    ],
+  },
+  {
+    id: 'shelterNight',
+    title: 'La nuit au foyer',
+    text: 'Le foyer a trente lits et un seul interrupteur. La nuit est organisée en dortoirs.',
+    conditions: [age(8), context('shelter')],
+    weight: 4,
+    choices: [
+      {
+        label: 'Aider à plier les couvertures',
+        effects: [push('mind', -4), trait('protector')],
+      },
+      {
+        label: 'Partager sa couverture avec un autre enfant',
+        effects: [push('sociability', 5), push('bond', 3)],
+      },
+      {
+        label: 'Rester contre sa mère',
+        effects: [push('bond', 5), bond('mother', 5)],
+      },
+    ],
+  },
+  {
+    id: 'henHouse',
+    title: 'Les poules',
+    text: 'Les poules sont sorties du poulailler. Elles n’ont pas laissé de mot.',
+    conditions: [age(6), context('farm')],
+    weight: 4,
+    choices: [
+      { label: 'Les poursuivre', effects: [push('energy', 5)] },
+      { label: 'Les nourrir', effects: [push('bond', 4), push('energy', -2)] },
+      { label: 'Les compter', effects: [push('mind', -5)] },
+    ],
+  },
+  {
+    id: 'bookShelf',
+    title: 'La bibliothèque des parents',
+    text: 'La bibliothèque couvre un mur entier, jusqu’au plafond. Le bas est à votre portée, le reste à titre d’espoir.',
+    conditions: [age(6), context('books')],
+    weight: 4,
+    choices: [
+      { label: 'Lire à l’envers', effects: [push('mind', 5)] },
+      {
+        label: 'Empiler les livres',
+        effects: [push('mind', -4), push('energy', 2)],
+      },
+      {
+        label: 'Demander qu’on lise',
+        effects: [push('bond', 3), bond('mother', 4)],
       },
     ],
   },
