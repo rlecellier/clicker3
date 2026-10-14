@@ -121,28 +121,43 @@ la maison, un grand-parent qui passe. Chacun **débloque une ou deux activités*
 Un objet qui donne **deux activités de pôles opposés** (le nounours) laisse
 choisir quel enfant on devient avec la même chose.
 
-**Combien de boutons.** Le joueur a plus d'objets que de boutons : seules
-**quelques activités sont « à portée de main »**, il choisit lesquelles.
+### Où vivent les actions : Vie, Maison, Relations
 
-- le nombre d'emplacements croît avec l'âge : **1 au départ, 2 à ~1 an, 3 à
-  ~3 ans, 4 à ~5 ans** (un enfant qui grandit sait faire plus de choses à la
-  fois) ;
-- changer d'activité à portée est gratuit et immédiat ;
-- les autres activités restent dans une liste « dans la chambre » : on n'a donc
-  jamais un mur de 10 boutons, et choisir ses 3 ou 4 activités, c'est déjà
-  choisir son enfant.
+Les actions ne s'entassent pas toutes sur l'écran principal. On sépare **ce
+qu'on a sous la main** de **tout ce qu'on peut faire** :
 
-**Les emplacements, en clair.** Les chiffres 1, 2, 3, 4 sont le nombre de
-**boutons d'activité** affichés en même temps (en plus de « Gazouiller », qui
-reste toujours disponible). À 1 an, deux activités à portée ; à 3 ans, trois ;
-à 5 ans, quatre. Le joueur possède souvent plus d'objets que cela, d'où le choix.
+| Onglet        | Contenu                                                              |
+| ------------- | -------------------------------------------------------------------- |
+| **Vie**       | L'écran principal : l'enfant et ce qu'il a **autour de lui**. Le bouton « Gazouiller » et les **actions favorites**. Axes, jauge d'éveil, événements en cours. |
+| **Maison**    | **Toutes** les activités possibles ici, sans limite de nombre (25 s'il le faut), groupées par objet ou par présence (le nounours, la cuisine, le chat, papa). Chacune se **marque en favori** (étoile). |
+| **Relations** | Famille, puis Amis (§ 3).                                            |
+
+- **Favoris limités.** Le joueur ne peut avoir en favori qu'un petit nombre
+  d'actions, et c'est elles qui s'affichent sur Vie : **1 au départ, 2 vers
+  1 an, 3 vers 3 ans, 4 vers 5 ans**. Mettre une étoile à une activité de la
+  Maison, c'est la poser sur l'écran principal ; une 5ᵉ étoile oblige à en
+  retirer une. Changer de favori est gratuit et immédiat.
+- **La Maison n'est pas limitée**, donc rien ne se perd : un objet débloqué reste
+  dans la Maison même s'il n'est pas favori. Le choix porte seulement sur ce
+  qu'on joue *en ce moment*, ce qui est un choix de caractère à lui seul.
+- **« Gazouiller »** reste en haut de Vie, hors favoris.
+- **Une activité automatisable** (palier d'axe passé) continue seule depuis la
+  Maison, même sans étoile.
+- **Perdre un objet** retire ses activités de la Maison et des favoris.
+- L'onglet Maison apparaît au **premier objet** reçu (avant, il n'y a rien à
+  y faire). Sur Vie, l'écran des deux premières minutes reste donc un seul bouton.
+
+**Ce que ça généralise.** « Maison » est le premier **lieu**. L'école (4-5 ans),
+le jardin, plus tard le bureau ou l'hôtel seraient d'autres lieux du même type :
+un onglet qui liste *toutes* les actions du lieu, avec des favoris vers l'écran
+principal. Les favoris de Vie se mélangent, tous lieux confondus.
 
 ### Trouver des choses soi-même
 
 Au début, **rien ne se trouve** : un bébé de 8 mois ne va nulle part, tout vient
 des événements. Le joueur gagne ensuite deux façons d'obtenir des objets, qui
-sont de **vraies actions** (elles occupent un emplacement, donc explorer, c'est
-renoncer à une activité à portée).
+sont de **vraies actions** (elles sont dans la Maison, et peuvent être mises en favori
+comme les autres).
 
 **Explorer (à partir de 3 ans).** L'enfant marche, il est autonome : il part
 fouiller la maison. Chaque appui remplit une jauge de fouille ; à 100 %, il
@@ -186,9 +201,6 @@ déménagement) par événement.
 **Les objets sont des conditions du pool** (§ 4) : « a le nounours » éligible
 pour l'événement « Le nounours perdu », « a le ballon » pour « La vitre du
 voisin ». Et un événement peut **donner** ou **retirer** un objet.
-
-Si le jeu doit rester idle, une activité à portée peut s'**automatiser** une
-fois un palier d'axe passé (le bébé qui empile tout seul).
 
 Le sommeil reste **passif** ([ADR 0007](../../.claude/adr/0007-sommeil-passif.md)) :
 la sieste rend les paliers acquis « durables » et vide les marqueurs du jour,
@@ -361,7 +373,7 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 1. **Situations de naissance** : donnée (`src/game/data`), choix à l'écran
    titre, parents et qualités. Une seule situation (« famille standard »)
    suffit pour la première MR.
-2. **Axes, objets et activités** : un bouton de départ, objets, emplacements d'activité, état, reducer, paliers, jauge de temps adaptée à
+2. **Axes, objets et activités** : un bouton de départ, objets, onglet Maison et favoris, état, reducer, paliers, jauge de temps adaptée à
    0-5 ans, remplacement du compteur `growth` pour cette tranche.
 3. **Menu Relations / Famille** : onglet, sous-menu, liens, paliers et bonus.
 4. **Événements et traits** : moteur de choix réutilisé de `src/game/events`,
@@ -372,9 +384,9 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 ## 9. Questions ouvertes
 
 - **Nom du pôle d'Énergie** : *Vif ↔ Posé*, *Fonceur ↔ Prudent* ou autre ?
-- **Emplacements** : 1 / 2 / 3 / 4 selon l'âge, ou fixes (3) dès le début ?
-- **Explorer et réclamer** prennent-ils un emplacement (choix : on renonce à
-  jouer), ou sont-ils des boutons à part ?
+- **Favoris** : 1 / 2 / 3 / 4 selon l'âge, ou fixes (3) dès le début ?
+- **Explorer et réclamer** : en favori comme les autres (et donc en concurrence
+  avec jouer), ou toujours visibles dans Vie ?
 - **Trouvailles** : le tirage au hasard est-il acceptable, ou le joueur doit-il
   voir ce qu'il va trouver ?
 - **Patience / Attention** : les deux, ou une seule jauge « Attention » pour
