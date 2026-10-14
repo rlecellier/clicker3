@@ -8,7 +8,7 @@ import type { GameState } from '@game/state';
  * équilibrer au simulateur.
  */
 export const startState: GameState = {
-  version: 24,
+  version: 25,
   characterName: 'Camille Morel',
   life: {
     startAge: 18,
@@ -28,6 +28,7 @@ export const startState: GameState = {
   growth: 0,
   birthSituation: defaultBirthSituationId,
   relations: [],
+  carry: null,
   child: {
     axes: { energy: 0, sociability: 0, mind: 0, bond: 0 },
     objects: [],

@@ -1,4 +1,7 @@
 import { ActionButton } from '@component/ActionButton';
+import { Button } from '@component/Button';
+import { FigureList } from '@component/FigureList';
+import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
@@ -9,6 +12,27 @@ import styles from './EarlyChildhoodPage.module.css';
 // Onglet « Vie » de la petite enfance : orchestrateur de `useEarlyChildhoodScreen`.
 export const EarlyChildhoodPage = () => {
   const screen = useEarlyChildhoodScreen();
+
+  // À 6 ans, le carnet de santé remplace le jeu.
+  if (screen.report !== null) {
+    return (
+      <Window title={screen.report.title}>
+        <Note>{screen.report.intro}</Note>
+        <FigureList figures={screen.report.figures} />
+        {screen.report.traits.length === 0 ? (
+          <Note>Aucun trait relevé.</Note>
+        ) : (
+          <ItemList caption="Traits" items={screen.report.traits} />
+        )}
+        <ItemList caption="Entourage" items={screen.report.people} />
+        <div className={styles.actions}>
+          <Button variant="primary" size="large" onClick={screen.report.enter}>
+            {screen.report.enterLabel}
+          </Button>
+        </div>
+      </Window>
+    );
+  }
 
   return (
     <Window title={screen.title}>
@@ -65,7 +89,6 @@ export const EarlyChildhoodPage = () => {
           Ouvrez la Maison pour mettre vos activités préférées en favori.
         </Note>
       ) : null}
-      {screen.isOver ? <Note>{screen.overText}</Note> : null}
     </Window>
   );
 };

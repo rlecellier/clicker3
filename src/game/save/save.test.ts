@@ -56,6 +56,42 @@ describe('serialize / deserialize', () => {
     });
   });
 
+  it('conserve une petite enfance en cours et l’héritage de l’Enfance', () => {
+    const child: GameState = {
+      ...startState,
+      lifeSlice: 'earlyChildhood',
+      relations: [
+        { id: 'mother', name: 'Maman', role: 'mère', kind: 'family', bond: 30 },
+      ],
+      child: {
+        ...startState.child,
+        objects: ['teddy'],
+        traits: ['stubborn'],
+        firedEvents: ['firstWord'],
+        pendingEvent: 'puzzle',
+        later: [{ id: 'bike', at: 18 }],
+      },
+    };
+    expect(deserialize(serialize(child, 5))).toEqual({
+      ok: true,
+      state: { ...child, lastSeenAt: 5 },
+    });
+    const inherited: GameState = {
+      ...startState,
+      lifeSlice: 'childhood',
+      carry: {
+        axes: { energy: 40, sociability: -10, mind: 0, bond: 22 },
+        traits: ['sly'],
+        objects: ['cat'],
+        events: 5,
+      },
+    };
+    expect(deserialize(serialize(inherited, 7))).toEqual({
+      ok: true,
+      state: { ...inherited, lastSeenAt: 7 },
+    });
+  });
+
   it('écrit le numéro de version', () => {
     const parsed: unknown = JSON.parse(serialize(startState, 0));
     expect(parsed).toMatchObject({
@@ -128,6 +164,17 @@ describe('contenu corrompu', () => {
     ['un événement unique inconnu', { firedEvents: ['fantome'] }],
     ['un emploi inconnu', { jobId: 'roi' }],
     ['une situation de naissance inconnue', { birthSituation: 'roi' }],
+    [
+      'un objet d’enfant inconnu',
+      { child: { ...startState.child, objects: ['x'] } },
+    ],
+    ['un trait inconnu', { child: { ...startState.child, traits: ['x'] } }],
+    [
+      'un événement en attente inconnu',
+      { child: { ...startState.child, pendingEvent: 'x' } },
+    ],
+    ['une personne sans lien', { relations: [{ id: 'a' }] }],
+    ['un héritage incomplet', { carry: { events: 1 } }],
     [
       'une ligne de journal sans texte',
       { events: [{ period: 1, id: 'euro' }] },

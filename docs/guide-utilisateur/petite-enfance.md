@@ -2,11 +2,11 @@
 
 La petite enfance se choisit à l'écran titre, sous « Ou commencer ailleurs dans
 la vie : », puis on choisit sa famille. Elle dure 24 trimestres (6 ans), soit
-240 gestes : environ **4 minutes** à un geste par seconde.
+336 gestes et quelques événements : **6 à 8 minutes**.
 
 ## L'écran Vie
 
-- **Âge** : « 1 an et 3 mois ». Un trimestre se remplit en 10 gestes.
+- **Âge** : « 1 an et 3 mois ». Un trimestre se remplit en 14 gestes.
 - **Éveil** : le nombre de gestes faits. À mesure qu'il monte, l'entourage vous
   donne des objets (nounours à 4, hochet à 10…).
 - **Quatre axes à deux pôles**, de −100 à +100, sans bon ni mauvais côté :
@@ -82,6 +82,12 @@ Au départ le lien est faible (18) : un bébé ne joue pas encore avec ses
 parents. Le lien ouvre aussi des événements (l'histoire du soir demande une mère
 proche, les épaules d'un père proche).
 
-À 6 ans, plus aucun geste ne joue : la petite enfance est finie.
+## Le carnet de santé
+
+À 6 ans (24 trimestres de 14 gestes, soit 6 à 8 minutes), plus aucun geste ne
+joue : l'onglet Vie affiche le **carnet de santé** : le caractère final (« Énergie :
+Vif (34) »), le nombre d'événements vécus, les objets, les traits et l'entourage
+avec leur lien. **Entrer en Enfance** lance la tranche suivante, qui rappelle ce
+caractère et ces traits. Ils servent de base aux stats de l'Enfance (à venir).
 
 Conception : [petite-enfance.md](../game/petite-enfance.md).

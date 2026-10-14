@@ -213,6 +213,14 @@ const isValidChild = (raw: RawState) => {
   );
 };
 
+const isCarry = (value: unknown) =>
+  value === null ||
+  (isRecord(value) &&
+    hasShapeOf(startState.child.axes, value.axes) &&
+    isIdList(value.objects, childObjectIds) &&
+    isIdList(value.traits, childTraitIds) &&
+    isFiniteNumber(value.events));
+
 const isValidState = (raw: RawState): raw is GameState => {
   if (!hasShapeOf(shapeTemplate, raw)) {
     return false;
@@ -233,6 +241,7 @@ const isValidState = (raw: RawState): raw is GameState => {
     (lastSeenAt === null || isFiniteNumber(lastSeenAt)) &&
     isStringIn(raw.birthSituation, birthSituationIds) &&
     isValidChild(raw) &&
+    isCarry(raw.carry) &&
     Array.isArray(raw.relations) &&
     raw.relations.every((relation) => isRelation(relation)) &&
     isPendingPromotion(pendingPromotion) &&
