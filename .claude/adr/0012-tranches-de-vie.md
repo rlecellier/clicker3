@@ -18,6 +18,10 @@ les mêmes onglets.
   des tranches d'avant 18 ans). Pas de sous-état par tranche tant qu'on ne sait
   pas comment elles s'enchaînent. La version de l'état passe à 20, sans
   migration (ADR 0010).
+- **La situation de naissance est une donnée de l'état** (#254) : `GameState.birthSituation`
+  (id de `birthSituations`, `standard` par défaut), choisie à l'écran titre pour la
+  petite enfance et conservée pour toute la vie. `restart` l'accepte ; une
+  situation inconnue est ignorée. La version passe à 21, sans migration.
 - **Les tranches sont des données** (`lifeSlices`) : id, nom, âges, onglets
   ouverts, et le libellé du bouton et du compteur pour les tranches d'avant 18
   ans. Ajouter une tranche ne demande pas de code propre à cette tranche.

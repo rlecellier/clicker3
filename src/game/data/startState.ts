@@ -1,4 +1,5 @@
 import { actionRules } from './actionRules';
+import { defaultBirthSituationId } from './birthSituations';
 import { emptyLedger } from '@game/ledger';
 import type { GameState } from '@game/state';
 
@@ -8,7 +9,7 @@ import type { GameState } from '@game/state';
  * équilibrer au simulateur.
  */
 export const startState: GameState = {
-  version: 20,
+  version: 21,
   characterName: 'Camille Morel',
   life: {
     startAge: 18,
@@ -26,6 +27,7 @@ export const startState: GameState = {
   phase: 'youngAdult',
   lifeSlice: 'youth',
   growth: 0,
+  birthSituation: defaultBirthSituationId,
 
   money: 0,
   placements: { savings: 0, ldds: 0, pel: 0, stocks: 0 },

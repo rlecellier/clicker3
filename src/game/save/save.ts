@@ -1,4 +1,5 @@
 import {
+  birthSituations,
   companies,
   districts,
   events,
@@ -80,6 +81,7 @@ const isStringIn = (value: unknown, ids: ReadonlySet<string>) =>
 const idsOf = (list: readonly { id: string }[]) =>
   new Set(list.map((item) => item.id));
 
+const birthSituationIds = idsOf(birthSituations);
 const companyIds = idsOf(companies);
 const districtIds = idsOf(districts);
 const eventIds = idsOf(events);
@@ -205,6 +207,7 @@ const isValidState = (raw: RawState): raw is GameState => {
     (jobId === null || isStringIn(jobId, jobIds)) &&
     (lastStatement === null || isRecord(lastStatement)) &&
     (lastSeenAt === null || isFiniteNumber(lastSeenAt)) &&
+    isStringIn(raw.birthSituation, birthSituationIds) &&
     isPendingPromotion(pendingPromotion) &&
     isPendingBirthday(pendingBirthday) &&
     (status === 'playing' || status === 'dead') &&

@@ -2,6 +2,12 @@ export { actionRules, jobMarkerStat } from './actionRules';
 export { automationRules } from './automationRules';
 export { birthdays } from './birthdays';
 export type { Birthday } from './birthdays';
+export { birthSituations, defaultBirthSituationId } from './birthSituations';
+export type {
+  BirthSituation,
+  Parent,
+  ParentQualities,
+} from './birthSituations';
 export { boosts } from './boosts';
 export type { Boost } from './boosts';
 export { companies } from './companies';

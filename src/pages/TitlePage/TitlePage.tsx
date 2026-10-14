@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@component/Button';
 import { ConfirmPrompt } from '@component/ConfirmPrompt';
 import { Note } from '@component/Note';
@@ -23,43 +24,77 @@ const prompts: Record<TitleConfirmation, { message: string; confirm: string }> =
     },
   };
 
+type Title = ReturnType<typeof useTitleScreen>;
+
+const BirthChoice = ({
+  title,
+  choices,
+}: {
+  title: Title;
+  choices: NonNullable<Title['birthChoice']>;
+}) => (
+  <div className={styles.actions}>
+    <Note>Dans quelle famille naissez-vous ?</Note>
+    {choices.map((situation) => (
+      <Button key={situation.id} onClick={situation.start}>
+        {situation.name}
+      </Button>
+    ))}
+    {choices.map((situation) => (
+      <Note key={situation.id}>
+        {situation.name} : {situation.description}
+      </Note>
+    ))}
+    <Button onClick={title.cancel}>Retour</Button>
+  </div>
+);
+
+const Menu = ({ title }: { title: Title }) => (
+  <div className={styles.actions}>
+    <PageLink to={screenPaths.newLife}>Démarrer ma vie</PageLink>
+    <Note>Ou commencer ailleurs dans la vie :</Note>
+    {title.slices.map((slice) => (
+      <Button key={slice.id} onClick={slice.start}>
+        {slice.label}
+      </Button>
+    ))}
+    {title.hasSave ? (
+      <>
+        <PageLink to={screenPaths.game}>Reprendre</PageLink>
+        <Button variant="danger" onClick={title.askErase}>
+          Effacer la sauvegarde
+        </Button>
+      </>
+    ) : null}
+  </div>
+);
+
 // Orchestrateur : branche `useTitleScreen` sur les composants visuels.
 export const TitlePage = () => {
   const title = useTitleScreen();
   const prompt = title.confirming === null ? null : prompts[title.confirming];
+
+  let content: ReactNode = <Menu title={title} />;
+  if (prompt !== null) {
+    content = (
+      <ConfirmPrompt
+        message={prompt.message}
+        confirmLabel={prompt.confirm}
+        cancelLabel="Annuler"
+        onConfirm={title.confirm}
+        onCancel={title.cancel}
+      />
+    );
+  } else if (title.birthChoice !== null) {
+    content = <BirthChoice title={title} choices={title.birthChoice} />;
+  }
 
   return (
     <ScreenPage>
       <Window title="Sainte-Croissance">
         <Title>Sainte-Croissance</Title>
         <Note>Ville en mouvement.</Note>
-        {prompt === null ? (
-          <div className={styles.actions}>
-            <PageLink to={screenPaths.newLife}>Démarrer ma vie</PageLink>
-            <Note>Ou commencer ailleurs dans la vie :</Note>
-            {title.slices.map((slice) => (
-              <Button key={slice.id} onClick={slice.start}>
-                {slice.label}
-              </Button>
-            ))}
-            {title.hasSave ? (
-              <>
-                <PageLink to={screenPaths.game}>Reprendre</PageLink>
-                <Button variant="danger" onClick={title.askErase}>
-                  Effacer la sauvegarde
-                </Button>
-              </>
-            ) : null}
-          </div>
-        ) : (
-          <ConfirmPrompt
-            message={prompt.message}
-            confirmLabel={prompt.confirm}
-            cancelLabel="Annuler"
-            onConfirm={title.confirm}
-            onCancel={title.cancel}
-          />
-        )}
+        {content}
       </Window>
     </ScreenPage>
   );

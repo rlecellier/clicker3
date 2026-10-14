@@ -186,6 +186,8 @@ export type GameState = {
   lifeSlice: LifeSliceId;
   /** Compteur du bouton d'une tranche avant 18 ans (0 ailleurs). */
   growth: number;
+  /** Situation de naissance (id de `birthSituations`), la même pour toute la vie. */
+  birthSituation: string;
 
   /** Euros entiers. */
   money: number;

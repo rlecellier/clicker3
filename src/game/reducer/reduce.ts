@@ -2,7 +2,7 @@ import { afterAction } from '@game/afterAction';
 import { autoTick, setAuto } from '@game/automation';
 import { buyBoost } from '@game/boosts';
 import { buyCompany, buyWarehouse } from '@game/companies';
-import { findById, lifeSlices, startState } from '@game/data';
+import { birthSituations, findById, lifeSlices, startState } from '@game/data';
 import { unlockDistrict } from '@game/districts';
 import { changeJob, startingJobs } from '@game/jobs';
 import { answerBirthday, isBirthdayPending } from '@game/birthday';
@@ -30,17 +30,22 @@ import type { GameAction } from './actions';
 export const newGame = (
   jobId?: string,
   lifeSlice: LifeSliceId = startState.lifeSlice,
+  birthSituation?: string,
 ): GameState => {
   const slice = findById(lifeSlices, lifeSlice);
+  // Une situation inconnue est ignorée (on garde celle par défaut).
+  const situation =
+    findById(birthSituations, birthSituation)?.id ?? startState.birthSituation;
   if (slice?.start != null) {
-    return sliceGame(slice.start, lifeSlice);
+    return { ...sliceGame(slice.start, lifeSlice), birthSituation: situation };
   }
   if (slice?.growth != null) {
-    return { ...startState, lifeSlice };
+    return { ...startState, lifeSlice, birthSituation: situation };
   }
   return markAllSeen(
     triggerEvents({
       ...startState,
+      birthSituation: situation,
       jobId: findById(startingJobs, jobId)?.id ?? startState.jobId,
       // Le départ est le premier anniversaire : 18 ans, pas encore de bilan.
       pendingBirthday: { age: startState.life.startAge, recap: null },
@@ -118,7 +123,7 @@ const applyAction = (state: GameState, action: GameAction): GameState => {
       return grow(state);
     }
     case 'restart': {
-      return newGame(action.jobId, action.lifeSlice);
+      return newGame(action.jobId, action.lifeSlice, action.birthSituation);
     }
   }
 };

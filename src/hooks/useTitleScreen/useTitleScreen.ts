@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useGameContext } from '@context/GameContext';
-import { lifeSlices } from '@game/data';
+import { birthSituations, lifeSlices } from '@game/data';
 import type { LifeSliceId } from '@game/state';
 import { screenPaths } from '@hook/useGameFlow';
 
@@ -14,16 +14,24 @@ export type TitleConfirmation = 'erase' | 'restart';
 // sauf Jeunesse, qui passe par le choix du premier emploi.
 const otherSlices = lifeSlices.filter(({ id }) => id !== 'youth');
 
+// Les tranches où le joueur choisit sa situation de naissance avant de jouer ;
+// les autres gardent la famille standard.
+const birthChoiceSlices = new Set<LifeSliceId>(['earlyChildhood']);
+
+type PendingStart = { lifeSlice: LifeSliceId; birthSituation?: string };
+
 export const useTitleScreen = () => {
   const { state, hasSave, eraseSave, startGame } = useGameContext();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState<TitleConfirmation | null>(null);
-  const [pending, setPending] = useState<LifeSliceId | null>(null);
+  const [pending, setPending] = useState<PendingStart | null>(null);
+  // La tranche dont on choisit la situation de naissance, ou `null`.
+  const [choosing, setChoosing] = useState<LifeSliceId | null>(null);
   const isReplacingLife = hasSave && state.status === 'playing';
 
   const begin = useCallback(
-    (lifeSlice: LifeSliceId) => {
-      startGame(undefined, lifeSlice);
+    ({ lifeSlice, birthSituation }: PendingStart) => {
+      startGame(undefined, lifeSlice, birthSituation);
       void navigate(screenPaths.game);
     },
     [startGame, navigate],
@@ -40,6 +48,20 @@ export const useTitleScreen = () => {
     setPending(null);
   }, [confirming, pending, eraseSave, begin]);
 
+  // Lance la vie, après confirmation si elle en écrase une en cours.
+  const launch = useCallback(
+    (start: PendingStart) => {
+      setChoosing(null);
+      if (isReplacingLife) {
+        setPending(start);
+        setConfirming('restart');
+      } else {
+        begin(start);
+      }
+    },
+    [isReplacingLife, begin],
+  );
+
   return {
     hasSave,
     confirming,
@@ -47,14 +69,25 @@ export const useTitleScreen = () => {
       id,
       label: `${name} (${ages})`,
       start: () => {
-        if (isReplacingLife) {
-          setPending(id);
-          setConfirming('restart');
+        if (birthChoiceSlices.has(id)) {
+          setChoosing(id);
         } else {
-          begin(id);
+          launch({ lifeSlice: id });
         }
       },
     })),
+    // Le choix de la situation de naissance, quand une tranche le demande.
+    birthChoice:
+      choosing === null
+        ? null
+        : birthSituations.map(({ id, name, description }) => ({
+            id,
+            name,
+            description,
+            start: () => {
+              launch({ lifeSlice: choosing, birthSituation: id });
+            },
+          })),
     askErase: () => {
       setConfirming('erase');
     },
@@ -62,6 +95,7 @@ export const useTitleScreen = () => {
     cancel: () => {
       setConfirming(null);
       setPending(null);
+      setChoosing(null);
     },
   };
 };

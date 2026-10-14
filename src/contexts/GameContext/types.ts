@@ -17,7 +17,11 @@ export type GameContextValue = {
   hasSave: boolean;
   // Commence une vie neuve avec ce premier emploi (ou dans cette tranche de
   // vie, Jeunesse par défaut) et la sauvegarde.
-  startGame: (jobId?: string, lifeSlice?: LifeSliceId) => void;
+  startGame: (
+    jobId?: string,
+    lifeSlice?: LifeSliceId,
+    birthSituation?: string,
+  ) => void;
   // Efface la sauvegarde et revient à une vie neuve non sauvegardée.
   eraseSave: () => void;
 };

@@ -90,7 +90,8 @@ fait monter le compteur d'un cran ; il ne sert à rien d'autre pour l'instant.
 
 - Aucune règle propre aux tranches d’avant 18 ans (stats, lieux, durée) : elles
   viendront une à une.
-  La petite enfance a une proposition : [petite-enfance.md](petite-enfance.md).
+  La petite enfance a une proposition : [petite-enfance.md](petite-enfance.md)
+  (suivi : #253 ; la situation de naissance est en place, #254).
 - Aucun équilibrage propre aux départs en cours de vie.
 - Pas de passage automatique d'une tranche à la suivante.
 - Pas de modèle d'état commun refondu : `GameState` porte la tranche

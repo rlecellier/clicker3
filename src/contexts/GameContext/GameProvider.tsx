@@ -129,12 +129,15 @@ export const GameProvider = ({
     }
   }, [startCount, save]);
 
-  const startGame = useCallback((jobId?: string, lifeSlice?: LifeSliceId) => {
-    dispatch({ type: 'restart', jobId, lifeSlice });
-    setAbsence(null);
-    setHasSave(true);
-    setStartCount((count) => count + 1);
-  }, []);
+  const startGame = useCallback(
+    (jobId?: string, lifeSlice?: LifeSliceId, birthSituation?: string) => {
+      dispatch({ type: 'restart', jobId, lifeSlice, birthSituation });
+      setAbsence(null);
+      setHasSave(true);
+      setStartCount((count) => count + 1);
+    },
+    [],
+  );
 
   const eraseSave = useCallback(() => {
     storage.clear();

@@ -127,6 +127,7 @@ describe('contenu corrompu', () => {
     ['un quartier inconnu', { districts: ['atlantide'] }],
     ['un événement unique inconnu', { firedEvents: ['fantome'] }],
     ['un emploi inconnu', { jobId: 'roi' }],
+    ['une situation de naissance inconnue', { birthSituation: 'roi' }],
     [
       'une ligne de journal sans texte',
       { events: [{ period: 1, id: 'euro' }] },

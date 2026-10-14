@@ -10,7 +10,7 @@ mouvement. ».
 | Bouton                    | Quand il apparaît           | Effet                                                                                      |
 | ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
 | Démarrer ma vie           | Toujours                    | Mène au choix du premier emploi                                                            |
-| Petite enfance, Enfance, Adolescence | Toujours (sous « Ou commencer ailleurs dans la vie : ») | Commence une tranche de vie d'avant 18 ans : un seul onglet, Vie, avec un bouton et un compteur. Demande confirmation si une vie est en cours |
+| Petite enfance, Enfance, Adolescence | Toujours (sous « Ou commencer ailleurs dans la vie : ») | Commence une tranche de vie d'avant 18 ans : un seul onglet, Vie, avec un bouton et un compteur. Pour la petite enfance, on choisit d'abord sa famille (« Famille standard » pour l'instant). Demande confirmation si une vie est en cours |
 | Âge adulte, Maturité, Vieillesse | Toujours (au même endroit) | Reprend le jeu complet à 30, 50 ou 65 ans, avec ce que le personnage possède à cet âge. Demande confirmation si une vie est en cours |
 | Reprendre                 | Si une partie est sauvegardée | Reprend la vie en cours là où vous l'avez laissée                                          |
 | Effacer la sauvegarde     | Si une partie est sauvegardée | Demande confirmation (« Votre exercice sera clos sans bilan »), puis supprime la sauvegarde |
