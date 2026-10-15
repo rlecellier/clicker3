@@ -77,6 +77,28 @@ export const longPress = async (page: Page, target: Locator) => {
   await page.mouse.up();
 };
 
+// Appui long d'un doigt (touchstart, attente, touchend), sans horloge simulée :
+// l'ordre réel des événements tactiles d'un téléphone.
+export const holdTouch = async (page: Page, target: Locator) => {
+  await target.scrollIntoViewIfNeeded();
+  const box = await target.boundingBox();
+  if (box === null) {
+    throw new Error('Bouton introuvable pour un appui long');
+  }
+  const point = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  const client = await page.context().newCDPSession(page);
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [point],
+  });
+  await page.waitForTimeout(LONG_PRESS_MS + 200);
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchEnd',
+    touchPoints: [],
+  });
+  await client.detach();
+};
+
 // Ferme la fenêtre d'anniversaire (celle des 18 ans, au début d'une vie).
 export const closeBirthday = async (page: Page, title: string | RegExp) => {
   const dialog = page.getByRole('alertdialog');

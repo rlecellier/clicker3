@@ -1,4 +1,7 @@
 import { ActionButton } from '@component/ActionButton';
+import type { PressHandlers } from '@component/ActionButton';
+import { ActionList } from '@component/ActionList';
+import { AxisActions } from '@component/AxisActions';
 import { Badge } from '@component/Badge';
 import { Button } from '@component/Button';
 import { CharacterHeader } from '@component/CharacterHeader';
@@ -16,6 +19,9 @@ import { LedgerTable } from '@component/LedgerTable';
 import { MarkerTrack } from '@component/MarkerTrack';
 import { SleepSummary } from '@component/SleepSummary';
 import { Note } from '@component/Note';
+import { ObjectDetail } from '@component/ObjectDetail';
+import { ObjectGrid } from '@component/ObjectGrid';
+import { ObjectStrip } from '@component/ObjectStrip';
 import { GameHeader } from '@component/GameHeader';
 import { PageLink } from '@component/PageLink';
 import { PolarGauge } from '@component/PolarGauge';
@@ -42,6 +48,23 @@ const rows = [
 ];
 
 // Page de revue visuelle, réservée au développement (voir routes.tsx).
+const noPress: PressHandlers = {
+  onPointerDown: () => {},
+  onPointerUp: () => {},
+  onPointerLeave: () => {},
+  onPointerCancel: () => {},
+  onKeyDown: () => {},
+  onContextMenu: () => {},
+};
+
+const demoAction = (id: string, label: string) => ({
+  id,
+  label,
+  isDisabled: false,
+  press: noPress,
+  onClick: () => {},
+});
+
 export const StyleguidePage = () => (
   <main className={styles.page}>
     <Window
@@ -174,6 +197,45 @@ export const StyleguidePage = () => (
       />
       <ProgressBar label="Progression" value={6} max={10} />
       <ProgressBar label="Métier · palier 1" value={6} max={10} size="small" />
+      <ObjectStrip
+        label="Objets"
+        items={[
+          { id: 'teddy', name: 'Nounours', icon: '🧸' },
+          { id: 'ball', name: 'Ballon', icon: '⚽' },
+        ]}
+        more={{ to: '/styleguide', label: 'Ouvrir l’inventaire' }}
+      />
+      <ObjectGrid
+        label="Inventaire"
+        items={[
+          { id: 'teddy', name: 'Nounours', icon: '🧸' },
+          { id: 'ball', name: 'Ballon', icon: '⚽' },
+        ]}
+        selectedId="teddy"
+        onSelect={() => {}}
+      />
+      <ObjectDetail
+        icon="🧸"
+        name="Nounours"
+        description="Un nounours à l’effigie de personne."
+        unlocks={[{ caption: 'Débloque', items: ['Câliner le nounours'] }]}
+      />
+      <AxisActions
+        name="Tempérament"
+        negativePole="Raison"
+        positivePole="Sentiment"
+        negative={[demoAction('sort', 'Classer les cubes')]}
+        positive={[demoAction('cuddle', '★ Câliner le nounours')]}
+      />
+      <ActionList
+        caption="Sortir"
+        actions={[
+          {
+            ...demoAction('home', 'Fouiller la maison'),
+            detail: 'Fouille : 1 sur 5',
+          },
+        ]}
+      />
       <PolarGauge
         name="Énergie"
         label="Énergie : Vif"

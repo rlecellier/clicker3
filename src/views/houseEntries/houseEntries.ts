@@ -1,6 +1,5 @@
 import {
   childAxes,
-  childObjects,
   childPlaces,
   childRules,
   childWishes,
@@ -17,14 +16,17 @@ import {
   wishAnswer,
 } from '@game/earlyChildhood';
 import type { GameAction } from '@game/reducer';
-import type { GameState } from '@game/state';
+import type { ChildAxisId, GameState } from '@game/state';
 
 // Une ligne de la Maison : tout ce que l'enfant peut faire ici. L'écran Vie
 // reprend celles qu'on a mises en favori.
 export type HouseEntry = {
   id: string;
-  // Rubrique : un objet, « Savoir-faire », « Sortir » ou « Demander ».
+  // Rubrique d'une action qui ne pousse aucun axe : « Sortir » ou « Demander ».
   group: string;
+  // L'axe qu'une activité pousse, et vers quel pôle (+1 ou −1).
+  axis?: ChildAxisId;
+  direction?: 1 | -1;
   title: string;
   detail: string;
   actionLabel: string;
@@ -35,20 +37,17 @@ export type HouseEntry = {
   action: GameAction;
 };
 
-const KNOW_HOW = 'Savoir-faire';
 const GO_OUT = 'Sortir';
 const ASK = 'Demander';
 
 const activityEntries = (state: GameState): HouseEntry[] =>
   availableActivities(state).map((activity) => {
     const axis = findById(childAxes, activity.axis);
-    const group =
-      activity.source.type === 'object'
-        ? (findById(childObjects, activity.source.id)?.name ?? KNOW_HOW)
-        : KNOW_HOW;
     return {
       id: activity.id,
-      group,
+      group: axis?.name ?? '',
+      axis: activity.axis,
+      direction: activity.direction,
       title: activity.name,
       detail:
         axis === undefined
@@ -112,3 +111,50 @@ export const houseEntries = (state: GameState): HouseEntry[] =>
         ...placeEntries(state),
         ...wishEntries(state),
       ];
+
+// Une section de la Maison par axe : à gauche les actions du pôle négatif, à
+// droite celles du pôle positif.
+export type AxisSection = {
+  axisId: ChildAxisId;
+  name: string;
+  negativePole: string;
+  positivePole: string;
+  negative: HouseEntry[];
+  positive: HouseEntry[];
+};
+
+// Les actions qui ne poussent aucun axe, par rubrique (« Sortir », « Demander »).
+export type OtherSection = { caption: string; entries: HouseEntry[] };
+
+export type HouseLayout = { axes: AxisSection[]; others: OtherSection[] };
+
+// Range les lignes de la Maison par statistique (dans l'ordre des axes, sans
+// les axes qui n'ont aucune action), puis par rubrique.
+export const houseLayout = (entries: readonly HouseEntry[]): HouseLayout => {
+  const axes = childAxes
+    .map((axis): AxisSection => {
+      const own = entries.filter(({ axis: id }) => id === axis.id);
+      return {
+        axisId: axis.id,
+        name: axis.name,
+        negativePole: axis.negative,
+        positivePole: axis.positive,
+        negative: own.filter(({ direction }) => direction === -1),
+        positive: own.filter(({ direction }) => direction === 1),
+      };
+    })
+    .filter(({ negative, positive }) => negative.length + positive.length > 0);
+  const others = new Map<string, HouseEntry[]>();
+  for (const entry of entries) {
+    if (entry.axis === undefined) {
+      others.set(entry.group, [...(others.get(entry.group) ?? []), entry]);
+    }
+  }
+  return {
+    axes,
+    others: [...others].map(([caption, grouped]) => ({
+      caption,
+      entries: grouped,
+    })),
+  };
+};

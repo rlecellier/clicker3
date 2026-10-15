@@ -1,0 +1,37 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--font-size);
+}
+
+/* Deux colonnes de même largeur, aussi quand l'une est vide. */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space);
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  min-width: 0;
+}
+
+.pole {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--color-text-muted);
+}
+
+/* Colonne de droite : le nom du pôle s'aligne sur le bord, comme le curseur. */
+.column:last-child .pole {
+  text-align: right;
+}

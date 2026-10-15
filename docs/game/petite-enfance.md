@@ -141,7 +141,7 @@ qu'on a sous la main** de **tout ce qu'on peut faire** :
 | ------------- | -------------------------------------------------------------------- |
 | **Vie**       | L'écran principal : l'enfant et ce qu'il a **autour de lui**. Le bouton « Gazouiller » et les **actions favorites**. Jauge d'éveil, Attention des parents, événements en cours. |
 | **Caractère** | Les quatre axes en curseurs à deux pôles et les traits. Il sort de Vie pour l'alléger et remplit la barre du bas sur téléphone (Vie, Caractère, Maison, Relations). |
-| **Maison**    | **Toutes** les activités possibles ici, sans limite de nombre (25 s'il le faut), groupées par objet ou par présence (le nounours, la cuisine, le chat, papa). Chacune se **marque en favori** (étoile). |
+| **Maison**    | **Toutes** les activités possibles ici, sans limite de nombre (25 s'il le faut), rangées **par axe** : une section par axe, le pôle négatif à gauche et le pôle positif à droite (puis « Sortir » et « Demander », qui ne poussent aucun axe). En haut, une bande d'icônes des objets récupérés, terminée par un « + » qui ouvre la page **Inventaire** (grille de tous les objets ; un tap affiche leur description, les activités et événements qu'ils ouvrent). Chaque action se **met en favori par un appui long** (un appui court la joue). |
 | **Relations** | Famille, puis Amis (§ 3).                                            |
 
 - **Favoris limités, par l'interface.** Le joueur ne peut avoir en favori qu'un
@@ -149,7 +149,7 @@ qu'on a sous la main** de **tout ce qu'on peut faire** :
   lisible sur téléphone. C'est une **contrainte d'UX**, pas une règle du jeu :
   elle ne dépend ni de l'âge, ni des axes, ni de la situation. Les règles de
   `src/game/` ne la connaissent pas ; elle vit dans l'interface (constante et
-  hook de favoris). Une 5ᵉ étoile oblige à en retirer une ; changer de favori est
+  hook de favoris). Un 5ᵉ appui long oblige à en retirer un ; changer de favori est
   gratuit et immédiat.
 - **La Maison n'est pas limitée**, donc rien ne se perd : un objet débloqué reste
   dans la Maison même s'il n'est pas favori. Le choix porte seulement sur ce

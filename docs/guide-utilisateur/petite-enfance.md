@@ -47,10 +47,18 @@ activités. Les traits (3 au plus) s'y affichent aussi.
 
 ## La Maison
 
-L'onglet **Maison** s'ouvre avec le premier objet. Il liste **toutes** les
-activités possibles, groupées par objet. Chacune se joue sur place, et
-« ☆ Favori » la pose sur l'écran Vie (4 au plus : en retirer une pour en
-ajouter une autre).
+L'onglet **Maison** s'ouvre avec le premier objet. En haut, une **bande d'icônes**
+montre les objets récupérés ; le **+** au bout ouvre l'**Inventaire**.
+
+Dessous, **toutes** les activités possibles sont rangées **par axe** : une
+section par axe, avec à gauche les activités du pôle de gauche et à droite celles
+du pôle de droite. Un **appui court** joue l'activité. Un **appui long** la met
+en favori (★) pour l'écran Vie, sans la jouer (4 au plus : en retirer une par un
+nouvel appui long pour en ajouter une autre).
+
+L'**Inventaire** montre en bas tous les objets, en grille ; toucher un objet
+affiche en haut ce qu'il est, les activités qu'il débloque et les événements
+qu'il rend possibles.
 
 Une activité vient d'un objet (« Câliner le nounours » : Tempérament → Sentiment) ou d'un
 **savoir-faire** : quand un axe est marqué à 25 ou plus d'un côté, une activité
@@ -71,7 +79,7 @@ Dans la Maison, deux rubriques s'ouvrent avec l'âge :
   (il arrive dans deux trimestres) ou « Non ». L'Attention des parents se
   recharge à chaque trimestre selon leur disponibilité.
 
-Fouiller et demander se mettent en favori comme les autres activités.
+Fouiller et demander se mettent en favori comme les autres activités (appui long).
 
 ## Les événements
 
