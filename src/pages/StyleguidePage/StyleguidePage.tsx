@@ -18,6 +18,7 @@ import { SleepSummary } from '@component/SleepSummary';
 import { Note } from '@component/Note';
 import { GameHeader } from '@component/GameHeader';
 import { PageLink } from '@component/PageLink';
+import { PolarGauge } from '@component/PolarGauge';
 import { ProgressBar } from '@component/ProgressBar';
 import { ReputationStars } from '@component/ReputationStars';
 import { Sidebar, SidebarIcon } from '@component/Sidebar';
@@ -173,6 +174,24 @@ export const StyleguidePage = () => (
       />
       <ProgressBar label="Progression" value={6} max={10} />
       <ProgressBar label="Métier · palier 1" value={6} max={10} size="small" />
+      <PolarGauge
+        name="Énergie"
+        label="Énergie : Vif"
+        negativePole="Posé"
+        positivePole="Vif"
+        value={34}
+        max={100}
+        marks={[25, 50, 75]}
+      />
+      <PolarGauge
+        name="Tempérament"
+        label="Tempérament : Neutre"
+        negativePole="Raison"
+        positivePole="Sentiment"
+        value={0}
+        max={100}
+        marks={[25, 50, 75]}
+      />
       <dl className={styles.stats}>
         <Stat label="Argent" value="1,2k €" balance="+120 €" />
         <Stat label="Âge" value="23 ans" />
