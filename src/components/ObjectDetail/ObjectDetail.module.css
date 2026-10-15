@@ -1,0 +1,23 @@
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space);
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size);
+}
+
+.description,
+.unlock {
+  margin: 0;
+}
+
+.unlock {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}

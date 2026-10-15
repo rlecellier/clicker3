@@ -72,6 +72,11 @@ export const childAxes: readonly ChildAxis[] = [
 export type ChildObject = {
   id: string;
   name: string;
+  // Pictogramme de la bande d'objets et de l'inventaire.
+  icon: string;
+  // Ce que c'est, dans la voix du jeu ; ce qu'il débloque se déduit des
+  // activités et des événements.
+  description: string;
   // Éveil (nombre d'actions) auquel l'entourage le donne ; absent pour un objet
   // qu'on trouve en fouillant ou qu'on réclame.
   giftAt?: number;
@@ -80,28 +85,143 @@ export type ChildObject = {
 // Les premiers objets, offerts à mesure que l'éveil monte. Les événements
 // (issue suivante) en donneront d'autres.
 export const childObjects: readonly ChildObject[] = [
-  { id: 'teddy', name: 'Nounours', giftAt: 4 },
-  { id: 'rattle', name: 'Hochet', giftAt: 10 },
-  { id: 'cubes', name: 'Cubes', giftAt: 18 },
-  { id: 'books', name: 'Livre d’images', giftAt: 28 },
-  { id: 'spoon', name: 'Cuillère', giftAt: 38 },
-  { id: 'ball', name: 'Ballon', giftAt: 50 },
-  { id: 'shapeBox', name: 'Boîte à formes', giftAt: 64 },
-  { id: 'cat', name: 'Le chat', giftAt: 80 },
+  {
+    id: 'teddy',
+    name: 'Nounours',
+    icon: '🧸',
+    description:
+      'Un nounours à l’effigie de personne. Il écoute, ne répond jamais et accepte les décisions les plus discutables.',
+    giftAt: 4,
+  },
+  {
+    id: 'rattle',
+    name: 'Hochet',
+    icon: '🔔',
+    description:
+      'Un hochet. Il produit du bruit sur demande, ce qui en fait le premier outil de communication du foyer.',
+    giftAt: 10,
+  },
+  {
+    id: 'cubes',
+    name: 'Cubes',
+    icon: '🧱',
+    description:
+      'Des cubes. Leur seule fonction connue est d’être empilés, puis renversés, dans cet ordre.',
+    giftAt: 18,
+  },
+  {
+    id: 'books',
+    name: 'Livre d’images',
+    icon: '📖',
+    description:
+      'Un livre d’images. Le texte n’est pas lu, mais le service constate un intérêt pour les images.',
+    giftAt: 28,
+  },
+  {
+    id: 'spoon',
+    name: 'Cuillère',
+    icon: '🥄',
+    description: 'Une cuillère. Elle ne se rend pas toujours à destination.',
+    giftAt: 38,
+  },
+  {
+    id: 'ball',
+    name: 'Ballon',
+    icon: '⚽',
+    description: 'Un ballon. Il roule, l’enfant court, personne ne gagne.',
+    giftAt: 50,
+  },
+  {
+    id: 'shapeBox',
+    name: 'Boîte à formes',
+    icon: '🔷',
+    description:
+      'Une boîte à formes. Chaque forme a son trou. L’enfant n’a pas pris connaissance de la règle.',
+    giftAt: 64,
+  },
+  {
+    id: 'cat',
+    name: 'Le chat',
+    icon: '🐱',
+    description:
+      'Le chat. Il n’a pas été consulté sur son rôle dans la famille.',
+    giftAt: 80,
+  },
   // Trouvailles de la maison.
-  { id: 'jamJar', name: 'Pot de confiture' },
-  { id: 'pots', name: 'Casseroles' },
-  { id: 'remote', name: 'Télécommande' },
-  { id: 'shoes', name: 'Chaussures de papa' },
+  {
+    id: 'jamJar',
+    name: 'Pot de confiture',
+    icon: '🍓',
+    description: 'Un pot de confiture, entamé à l’insu de tous.',
+  },
+  {
+    id: 'pots',
+    name: 'Casseroles',
+    icon: '🍳',
+    description: 'Des casseroles. Une fanfare à un seul musicien.',
+  },
+  {
+    id: 'remote',
+    name: 'Télécommande',
+    icon: '📺',
+    description:
+      'Une télécommande. Elle ne commande plus rien d’utile depuis son adoption.',
+  },
+  {
+    id: 'shoes',
+    name: 'Chaussures de papa',
+    icon: '👞',
+    description: 'Les chaussures de papa. Taille 44. Tout est dit.',
+  },
   // Trouvailles du dehors.
-  { id: 'stick', name: 'Bâton' },
-  { id: 'snail', name: 'Escargot' },
-  { id: 'chalk', name: 'Craies' },
-  { id: 'treasure', name: 'Trésor de la cour' },
+  {
+    id: 'stick',
+    name: 'Bâton',
+    icon: '🪵',
+    description: 'Un bâton. Il a trouvé son enfant.',
+  },
+  {
+    id: 'snail',
+    name: 'Escargot',
+    icon: '🐌',
+    description:
+      'Un escargot. Il n’est pas pressé. L’enfant non plus, désormais.',
+  },
+  {
+    id: 'chalk',
+    name: 'Craies',
+    icon: '🖍️',
+    description: 'Des craies. Le sol de la cour a changé de propriétaire.',
+  },
+  {
+    id: 'treasure',
+    name: 'Trésor de la cour',
+    icon: '💎',
+    description:
+      'Un trésor de la cour : un caillou. Sa valeur est sentimentale.',
+  },
   // Objets réclamés aux parents.
-  { id: 'bike', name: 'Vélo' },
-  { id: 'logicGame', name: 'Jeu de logique' },
-  { id: 'costume', name: 'Déguisement' },
+  {
+    id: 'bike',
+    name: 'Vélo',
+    icon: '🚲',
+    description:
+      'Un vélo. Les roues stabilisatrices sont comprises, la dignité non.',
+  },
+  {
+    id: 'logicGame',
+    name: 'Jeu de logique',
+    icon: '🧩',
+    description:
+      'Un jeu de logique. Il récompense la patience, ce que les parents apprécient aussi.',
+  },
+  {
+    id: 'costume',
+    name: 'Déguisement',
+    icon: '🎭',
+    description:
+      'Un déguisement. Il permet d’être quelqu’un d’autre sans formulaire.',
+  },
 ];
 
 // Un lieu de fouille : débloqué à un âge, il rend un objet toutes les `steps`

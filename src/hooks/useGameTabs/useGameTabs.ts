@@ -54,6 +54,10 @@ const slugOf = (id: GameTabId) => findById(gameTabs, id)?.slug ?? '';
 // Route d'un onglet de l'écran de jeu (`/jeu/<slug>`).
 export const tabPath = (id: GameTabId) => `${screenPaths.game}/${slugOf(id)}`;
 
+// L'inventaire, page de la Maison.
+export const inventorySlug = `${slugOf('house')}/inventaire`;
+export const inventoryPath = `${screenPaths.game}/${inventorySlug}`;
+
 // Ancres des sections de Comptes visées depuis la balance de la période.
 export type AccountsSection = 'money' | 'stock';
 

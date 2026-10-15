@@ -5,6 +5,7 @@ import {
   closeBirthday,
   counter,
   expectNoOverflow,
+  holdTouch,
 } from './helpers';
 
 type Page = import('@playwright/test').Page;
@@ -73,8 +74,32 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await tapMenuLink(page, 'Maison');
   await expect(page).toHaveURL('/jeu/maison');
   await expect(page.getByText('Câliner le nounours')).toBeVisible();
-  await page.getByRole('button', { name: '☆ Favori' }).first().tap();
-  await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
+  // Un appui long met « Câliner le nounours » en favori, sans jouer l'action.
+  await holdTouch(
+    page,
+    page.getByRole('button', { name: 'Câliner le nounours' }),
+  );
+  await expect(
+    page.getByRole('button', { name: '★ Câliner le nounours' }),
+  ).toBeVisible();
+  // Les actions sont rangées par axe : Tempérament, pôle Sentiment.
+  await expect(page.getByRole('region', { name: 'Tempérament' })).toContainText(
+    'Sentiment',
+  );
+  // La bande d'objets mène à l'inventaire : la description de l'objet choisi.
+  await expect(
+    page.getByRole('list', { name: 'Objets' }).getByTitle('Nounours'),
+  ).toBeVisible();
+  await page.getByRole('link', { name: 'Ouvrir l’inventaire' }).tap();
+  await expect(page).toHaveURL('/jeu/maison/inventaire');
+  await expect(page.getByText('Touchez un objet')).toBeVisible();
+  await page.getByRole('button', { name: 'Nounours' }).tap();
+  await expect(page.getByRole('article', { name: 'Nounours' })).toContainText(
+    'Câliner le nounours',
+  );
+  await expectNoOverflow(page);
+  await page.getByRole('link', { name: '← Maison' }).tap();
+  await expect(page).toHaveURL('/jeu/maison');
   await tapMenuLink(page, 'Vie');
   // Les axes vivent dans l'onglet Caractère, épinglé dans la barre du bas.
   const bar = page.getByRole('navigation', { name: 'Navigation du jeu' });

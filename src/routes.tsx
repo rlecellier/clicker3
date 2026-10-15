@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react';
 import { createBrowserRouter, Navigate, Outlet } from 'react-router';
 import { GameProvider } from '@context/GameContext';
-import { DEFAULT_TAB, gameTabs, tabPath } from '@hook/useGameTabs';
+import {
+  DEFAULT_TAB,
+  gameTabs,
+  inventorySlug,
+  tabPath,
+} from '@hook/useGameTabs';
 import type { GameTabId } from '@hook/useGameTabs';
 import { AbsencePage } from '@page/AbsencePage';
 import { AccountsPage } from '@page/AccountsPage';
@@ -12,6 +17,7 @@ import { FinancePage } from '@page/FinancePage';
 import { GamePage } from '@page/GamePage';
 import { CharacterPage } from '@page/CharacterPage';
 import { HousePage } from '@page/HousePage';
+import { InventoryPage } from '@page/InventoryPage';
 import { JobsPage } from '@page/JobsPage';
 import { LifeTabPage } from '@page/LifeTabPage';
 import { MailPage } from '@page/MailPage';
@@ -47,6 +53,16 @@ const tabRoutes = gameTabs.map((tab) => ({
   path: tab.slug,
   element: <TabGuard tab={tab.id}>{tabPages[tab.id]}</TabGuard>,
 }));
+
+// L'inventaire est une page de la Maison : `/jeu/maison/inventaire`.
+const inventoryRoute = {
+  path: inventorySlug,
+  element: (
+    <TabGuard tab="house">
+      <InventoryPage />
+    </TabGuard>
+  ),
+};
 
 // `/styleguide` n'existe qu'en développement.
 const developmentRoutes = import.meta.env.DEV
@@ -94,6 +110,7 @@ export const router = createBrowserRouter(
               children: [
                 { index: true, element: toDefaultTab },
                 ...tabRoutes,
+                inventoryRoute,
                 // Onglet inconnu : retour à l'onglet par défaut.
                 { path: '*', element: toDefaultTab },
               ],

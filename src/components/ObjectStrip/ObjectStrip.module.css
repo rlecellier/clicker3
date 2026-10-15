@@ -1,0 +1,48 @@
+.strip {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0 0 4px;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.item,
+.more {
+  flex-shrink: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+  font-size: 1.5rem;
+}
+
+/* Le nom ne sert qu'aux technologies d'assistance : l'icône parle seule. */
+.name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  background: var(--color-surface);
+  box-shadow: var(--bevel-out);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+}

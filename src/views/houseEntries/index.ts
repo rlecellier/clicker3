@@ -1,2 +1,7 @@
-export { houseEntries } from './houseEntries';
-export type { HouseEntry } from './houseEntries';
+export { houseEntries, houseLayout } from './houseEntries';
+export type {
+  AxisSection,
+  HouseEntry,
+  HouseLayout,
+  OtherSection,
+} from './houseEntries';

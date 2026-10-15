@@ -4,6 +4,8 @@ export {
   accountsPath,
   accountsSectionIds,
   gameTabs,
+  inventoryPath,
+  inventorySlug,
   upgradePath,
   tabPath,
   tabShortcut,

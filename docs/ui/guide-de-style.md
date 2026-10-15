@@ -70,6 +70,11 @@ sur `/styleguide` (pas de capture versionnée : la page fait foi).
 | `Button`      | `variant` (`default`, `primary`, `danger`), `size` (`normal`, `large`), `isDisabled`, `isPending`, `onClick`, `type`, `shortcut?` (`aria-keyshortcuts`) ; base `@base-ui/react/button` | Action simple sans détail ni raison de blocage |
 | `ProgressBar` | `label`, `value`, `max`, `segments?` (parts colorées par action), `size?` (`normal`, `small` : mini sous un bouton, libellé court) ; Base UI Progress                                                                                                       | Jauge (temps, compétence)                      |
 | `PolarGauge` | `name`, `label` (nom accessible), `negativePole`, `positivePole`, `value` (de −`max` à +`max`, 0 au milieu), `max`, `marks?` (repères en distance à 0) ; `role="meter"` | Axe à deux pôles sans « mauvais » côté (caractère de l'enfant) |
+| `AxisActions` | `name`, `negativePole`, `positivePole`, `negative`, `positive` (actions : `label`, `detail?`, `reason?`, `isDisabled`, `press`, `onClick`) ; réutilise `ActionButton` | Actions d'un axe sur deux colonnes, pôle négatif à gauche |
+| `ActionList` | `caption`, `actions` (comme `AxisActions`) | Actions sur une colonne, sans axe (sortir, demander) |
+| `ObjectStrip` | `label`, `items` (`id`, `name`, `icon`), `more` (`to`, `label`) | Bande d'icônes sur une ligne, terminée par un « + » vers l'inventaire |
+| `ObjectGrid` | `label`, `items`, `selectedId`, `onSelect` ; `aria-pressed` | Grille d'objets à choisir |
+| `ObjectDetail` | `icon`, `name`, `description`, `unlocks` | Fiche de l'objet choisi |
 | `DataTable`   | `caption`, `columns` (`id`, `header`, `isNumeric?`), `rows` (`id`, `cells`)                                                                         | Données tabulaires                             |
 | `Badge`       | `tone` (`neutral`, `info`, `alert`), `children`                                                                                                     | Étiquette courte (palier, état), compteur de la sidebar |
 | `InfoPanel`   | `content`, `children` (un seul élément déclencheur) ; Base UI Tooltip                                                                               | Aide au survol ou au focus                     |
