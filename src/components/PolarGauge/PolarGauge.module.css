@@ -1,0 +1,82 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Pôle négatif à gauche, nom de l'axe au centre, pôle positif à droite. */
+.head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space);
+  min-width: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.head > * {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.head > [data-side='end'] {
+  text-align: right;
+}
+
+.name {
+  color: var(--color-text);
+}
+
+/* Le pôle vers lequel penche l'axe. */
+.active {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+/* La marge laisse la poignée déborder aux extrémités sans sortir du cadre. */
+.track {
+  position: relative;
+  height: 1rem;
+  margin: 0 6px;
+  background: var(--color-paper);
+  box-shadow: var(--bevel-in);
+}
+
+.fill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  background: var(--color-primary);
+}
+
+.center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--color-text-muted);
+}
+
+/* Repères des paliers (±25, ±50, ±75). */
+.mark {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  width: 1px;
+  background: var(--color-text-muted);
+}
+
+.thumb {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 12px;
+  margin-left: -6px;
+  background: var(--color-surface);
+  box-shadow: var(--bevel-out);
+}

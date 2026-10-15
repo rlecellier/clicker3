@@ -75,12 +75,12 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: '☆ Favori' }).first().tap();
   await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
   await tapMenuLink(page, 'Vie');
-  const temperament = page.getByRole('progressbar', {
-    name: /^Tempérament : /,
-  });
+  const temperament = page.getByRole('meter', { name: /^Tempérament : / });
   await expect(temperament).toHaveAccessibleName('Tempérament : Neutre');
   await page.getByRole('button', { name: /Câliner le nounours/ }).tap();
   await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
+  // Le curseur part du milieu : l'activité le pousse de 2 vers Sentiment.
+  await expect(temperament).toHaveAttribute('aria-valuenow', '2');
   await expect(awakening).toHaveText('5');
   await expectNoOverflow(page);
 

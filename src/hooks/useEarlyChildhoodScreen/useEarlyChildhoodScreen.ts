@@ -23,6 +23,12 @@ const formatChildAge = (years: number, months: number) => {
   return parts.length === 0 ? 'Nouveau-né' : parts.join(' et ');
 };
 
+// Les paliers qui débloquent, en distance à 0 : ±25, ±50, ±75.
+const axisMarks = Array.from(
+  { length: Math.floor(childRules.axisLimit / childRules.axisThreshold) },
+  (_, index) => (index + 1) * childRules.axisThreshold,
+);
+
 // Onglet « Vie » de la petite enfance : l'éveil, les quatre axes, « Gazouiller »
 // et les lignes de la Maison mises en favori.
 export const useEarlyChildhoodScreen = () => {
@@ -46,12 +52,17 @@ export const useEarlyChildhoodScreen = () => {
     awakening: formatCount(state.growth),
     isOver,
     axes: childAxes.map((axis) => {
-      const { pole, amount } = axisReading(axis, state.child.axes[axis.id]);
+      const value = state.child.axes[axis.id];
+      const { pole } = axisReading(axis, value);
       return {
         id: axis.id,
+        name: axis.name,
         label: `${axis.name} : ${pole}`,
-        value: amount,
+        negativePole: axis.negative,
+        positivePole: axis.positive,
+        value,
         max: childRules.axisLimit,
+        marks: axisMarks,
       };
     }),
     attention: {
