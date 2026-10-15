@@ -17,6 +17,7 @@ export type GameTabId =
   | 'accounts'
   | 'finance'
   | 'city'
+  | 'character'
   | 'house'
   | 'relations';
 
@@ -34,6 +35,8 @@ export const gameTabs: readonly GameTab[] = [
   { id: 'accounts', label: 'Comptes', slug: 'comptes' },
   { id: 'finance', label: 'Finance', slug: 'finance' },
   { id: 'city', label: 'Ville', slug: 'ville' },
+  // Le caractère de l'enfant : avant la Maison, pour ne pas décaler les raccourcis.
+  { id: 'character', label: 'Caractère', slug: 'caractere' },
   // La Maison de la petite enfance : toutes les activités, en dernier.
   { id: 'house', label: 'Maison', slug: 'maison' },
   { id: 'relations', label: 'Relations', slug: 'relations' },

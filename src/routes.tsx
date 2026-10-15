@@ -10,6 +10,7 @@ import { CityPage } from '@page/CityPage';
 import { EndPage } from '@page/EndPage';
 import { FinancePage } from '@page/FinancePage';
 import { GamePage } from '@page/GamePage';
+import { CharacterPage } from '@page/CharacterPage';
 import { HousePage } from '@page/HousePage';
 import { JobsPage } from '@page/JobsPage';
 import { LifeTabPage } from '@page/LifeTabPage';
@@ -36,6 +37,7 @@ const tabPages: Record<GameTabId, ReactNode> = {
   accounts: <AccountsPage />,
   finance: <FinancePage />,
   city: <CityPage />,
+  character: <CharacterPage />,
   house: <HousePage />,
   relations: <RelationsPage />,
 };

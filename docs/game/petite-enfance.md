@@ -132,14 +132,15 @@ la maison, un grand-parent qui passe. Chacun **débloque une ou deux activités*
 Un objet qui donne **deux activités de pôles opposés** (le nounours) laisse
 choisir quel enfant on devient avec la même chose.
 
-### Où vivent les actions : Vie, Maison, Relations
+### Où vivent les actions : Vie, Caractère, Maison, Relations
 
 Les actions ne s'entassent pas toutes sur l'écran principal. On sépare **ce
 qu'on a sous la main** de **tout ce qu'on peut faire** :
 
 | Onglet        | Contenu                                                              |
 | ------------- | -------------------------------------------------------------------- |
-| **Vie**       | L'écran principal : l'enfant et ce qu'il a **autour de lui**. Le bouton « Gazouiller » et les **actions favorites**. Axes, jauge d'éveil, événements en cours. |
+| **Vie**       | L'écran principal : l'enfant et ce qu'il a **autour de lui**. Le bouton « Gazouiller » et les **actions favorites**. Jauge d'éveil, Attention des parents, événements en cours. |
+| **Caractère** | Les quatre axes en curseurs à deux pôles et les traits. Il sort de Vie pour l'alléger et remplit la barre du bas sur téléphone (Vie, Caractère, Maison, Relations). |
 | **Maison**    | **Toutes** les activités possibles ici, sans limite de nombre (25 s'il le faut), groupées par objet ou par présence (le nounours, la cuisine, le chat, papa). Chacune se **marque en favori** (étoile). |
 | **Relations** | Famille, puis Amis (§ 3).                                            |
 

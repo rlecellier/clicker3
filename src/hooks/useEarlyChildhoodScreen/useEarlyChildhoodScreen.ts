@@ -1,7 +1,7 @@
 import { useGameContext } from '@context/GameContext';
-import { childAxes, childRules, childTraits, findById } from '@game/data';
+import { childRules } from '@game/data';
 import type { InfoListItem } from '@component/ItemList';
-import { axisReading, childAge, isChildhoodOver } from '@game/earlyChildhood';
+import { childAge, isChildhoodOver } from '@game/earlyChildhood';
 import { formatCount } from '@game/format';
 import { useFavorites } from '@hook/useFavorites';
 import { useFeedback } from '@hook/useFeedback';
@@ -23,13 +23,7 @@ const formatChildAge = (years: number, months: number) => {
   return parts.length === 0 ? 'Nouveau-né' : parts.join(' et ');
 };
 
-// Les paliers qui débloquent, en distance à 0 : ±25, ±50, ±75.
-const axisMarks = Array.from(
-  { length: Math.floor(childRules.axisLimit / childRules.axisThreshold) },
-  (_, index) => (index + 1) * childRules.axisThreshold,
-);
-
-// Onglet « Vie » de la petite enfance : l'éveil, les quatre axes, « Gazouiller »
+// Onglet « Vie » de la petite enfance : l'éveil, « Gazouiller »
 // et les lignes de la Maison mises en favori.
 export const useEarlyChildhoodScreen = () => {
   const { state, dispatch } = useGameContext();
@@ -51,29 +45,12 @@ export const useEarlyChildhoodScreen = () => {
     age: formatChildAge(years, months),
     awakening: formatCount(state.growth),
     isOver,
-    axes: childAxes.map((axis) => {
-      const value = state.child.axes[axis.id];
-      const { pole } = axisReading(axis, value);
-      return {
-        id: axis.id,
-        name: axis.name,
-        label: `${axis.name} : ${pole}`,
-        negativePole: axis.negative,
-        positivePole: axis.positive,
-        value,
-        max: childRules.axisLimit,
-        marks: axisMarks,
-      };
-    }),
     attention: {
       value: Math.round(state.child.attention),
       max: childRules.attentionMax,
       // Elle ne sert qu'à réclamer, donc à partir de 4 ans.
       isVisible: entries.some(({ id }) => id.startsWith('ask:')),
     },
-    traits: state.child.traits
-      .map((id) => findById(childTraits, id)?.name)
-      .filter((name) => name !== undefined),
     babble: { run: babblePress.onClick, press: babblePress.press },
     favorites: favorites
       .map((id) => entries.find((entry) => entry.id === id))

@@ -12,6 +12,7 @@ export type SidebarIconId =
   | 'accounts'
   | 'finance'
   | 'city'
+  | 'character'
   | 'house'
   | 'relations'
   | 'new-life'
@@ -89,6 +90,20 @@ const glyphs: Record<SidebarIconId, ReactNode> = {
     </>
   ),
   // Repère de carte : le plan de la ville.
+  // Visage : le caractère.
+  character: (
+    <>
+      <circle cx="8" cy="8" r="7" />
+      <circle cx="5.5" cy="6.5" r="1.1" fill="var(--color-surface)" />
+      <circle cx="10.5" cy="6.5" r="1.1" fill="var(--color-surface)" />
+      <path
+        d="M4.5 10c1 1.8 5 1.8 7 0"
+        fill="none"
+        stroke="var(--color-surface)"
+        strokeWidth="1.3"
+      />
+    </>
+  ),
   // Coffre à jouets.
   house: (
     <>
