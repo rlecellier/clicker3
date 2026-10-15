@@ -77,7 +77,7 @@ const atQuarter = (quarter: number, seed?: number): GameState => {
   return { ...state, child: { ...state.child, quarter } };
 };
 
-// Famille standard : moyens 50.
+// Situation `medium` : moyens 50.
 const asker = (): GameState => atQuarter(16);
 
 const wishAt = (id: string) => required(findById(childWishes, id));
@@ -576,10 +576,10 @@ const livedIn = (situation: string) =>
   );
 
 describe('petite enfance : les situations de naissance', () => {
-  it('donnent à chacune un départ visiblement différent de la famille standard', () => {
-    const standard = newGame(undefined, 'earlyChildhood', 'standard');
+  it('donnent à chacune un départ visiblement différent de la situation médiane', () => {
+    const standard = newGame(undefined, 'earlyChildhood', 'medium');
     for (const situation of birthSituations) {
-      if (situation.id === 'standard') {
+      if (situation.id === 'medium') {
         continue;
       }
       const state = newGame(undefined, 'earlyChildhood', situation.id);
@@ -593,25 +593,25 @@ describe('petite enfance : les situations de naissance', () => {
   });
 
   it('posent les objets, les traits et les axes de la situation', () => {
-    const homeless = newGame(undefined, 'earlyChildhood', 'homeless');
-    expect(homeless.child.objects).toEqual(['teddy']);
-    expect(homeless.child.traits).toEqual(['resourceful']);
-    expect(homeless.child.axes).toEqual({
-      energy: -10,
+    const low = newGame(undefined, 'earlyChildhood', 'low');
+    expect(low.child.objects).toEqual(['teddy']);
+    expect(low.child.traits).toEqual(['resourceful']);
+    expect(low.child.axes).toEqual({
+      energy: -6,
       sociability: 0,
-      mind: 12,
-      bond: 0,
+      mind: 0,
+      bond: 8,
     });
     // Un seul parent, très présent.
-    expect(homeless.relations.map(({ id }) => id)).toEqual(['mother']);
-    const rich = newGame(undefined, 'earlyChildhood', 'millionaire');
+    expect(low.relations.map(({ id }) => id)).toEqual(['mother']);
+    const rich = newGame(undefined, 'earlyChildhood', 'high');
     expect(rich.child.objects).toHaveLength(4);
     expect(sliceTabs(rich)).toContain('house');
   });
 
   it('donnent des liens et de l’Attention selon la disponibilité des parents', () => {
-    const rich = newGame(undefined, 'earlyChildhood', 'millionaire');
-    const poor = newGame(undefined, 'earlyChildhood', 'homeless');
+    const rich = newGame(undefined, 'earlyChildhood', 'high');
+    const poor = newGame(undefined, 'earlyChildhood', 'low');
     // Un parent présent et tendre : un lien de départ plus fort.
     expect(firstBond(poor)).toBeGreaterThan(firstBond(rich));
     expect(untilQuarter(poor, 8).child.attention).toBeGreaterThan(
@@ -623,44 +623,43 @@ describe('petite enfance : les situations de naissance', () => {
     const bike = wishAt('bike');
     const answer = (situation: string) =>
       wishAnswer(newGame(undefined, 'earlyChildhood', situation), bike);
-    expect(answer('millionaire')).toBe('yes');
-    expect(answer('standard')).toBe('no');
-    expect(answer('homeless')).toBe('no');
-    expect(answer('farm')).toBe('no');
+    expect(answer('high')).toBe('yes');
+    expect(answer('medium')).toBe('no');
+    expect(answer('low')).toBe('no');
   });
 
   it('racontent un même événement autrement selon le contexte', () => {
     const supermarket = required(
       childEvents.find(({ id }) => id === 'supermarket'),
     );
-    const texts = ['millionaire', 'rockStar', 'homeless', 'farm'].map(
-      (situation) =>
-        childEventText(
-          newGame(undefined, 'earlyChildhood', situation),
-          supermarket,
-        ),
+    const texts = ['low', 'high'].map((situation) =>
+      childEventText(
+        newGame(undefined, 'earlyChildhood', situation),
+        supermarket,
+      ),
     );
-    expect(new Set(texts).size).toBe(4);
+    expect(new Set(texts).size).toBe(2);
     expect(texts).not.toContain(supermarket.text);
-    for (const situation of ['standard', 'teachers']) {
-      expect(
-        childEventText(
-          newGame(undefined, 'earlyChildhood', situation),
-          supermarket,
-        ),
-      ).toBe(supermarket.text);
-    }
+    expect(
+      childEventText(
+        newGame(undefined, 'earlyChildhood', 'medium'),
+        supermarket,
+      ),
+    ).toBe(supermarket.text);
   });
 
   it('ouvrent leurs événements de contexte, et seulement ceux-là', () => {
-    const rich = livedIn('millionaire');
-    expect(rich.has('hotelHall')).toBe(true);
-    expect(rich.has('tourBus')).toBe(false);
-    expect(livedIn('rockStar').has('tourBus')).toBe(true);
-    expect(livedIn('homeless').has('shelterNight')).toBe(true);
-    expect(livedIn('farm').has('henHouse')).toBe(true);
-    expect(livedIn('teachers').has('bookShelf')).toBe(true);
-    expect(livedIn('standard').has('hotelHall')).toBe(false);
+    const rich = livedIn('high');
+    expect(rich.has('estateHall')).toBe(true);
+    expect(rich.has('flatEvening')).toBe(false);
+    expect(livedIn('low').has('flatEvening')).toBe(true);
+    expect(livedIn('medium').has('houseGarden')).toBe(true);
+    expect(livedIn('medium').has('estateHall')).toBe(false);
+  });
+
+  it('ne donnent un petit frère ou une petite sœur qu’aux enfants uniques', () => {
+    expect(livedIn('medium').has('sibling')).toBe(false);
+    expect(livedIn('low').has('sibling')).toBe(true);
   });
 
   it('se jouent jusqu’au bilan avec 4 à 8 événements, quelle que soit la graine', () => {

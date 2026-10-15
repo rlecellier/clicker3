@@ -53,7 +53,7 @@ export type GameAction =
   // Fin de la petite enfance : entre en Enfance avec ce qu'elle a transmis.
   | { type: 'enterChildhood' }
   // `lifeSlice` : la tranche de vie où commencer (Jeunesse par défaut).
-  // `birthSituation` : la situation de naissance (famille standard par défaut).
+  // `birthSituation` : la situation de naissance (`medium` par défaut).
   | {
       type: 'restart';
       jobId?: string;

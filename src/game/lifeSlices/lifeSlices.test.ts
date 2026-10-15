@@ -69,23 +69,23 @@ describe('tranches de vie', () => {
   });
 
   it('range la situation de naissance choisie, dans toute tranche', () => {
-    expect(newGame().birthSituation).toBe('standard');
+    expect(newGame().birthSituation).toBe('medium');
     for (const lifeSlice of lifeSliceIds) {
-      const state = newGame(undefined, lifeSlice, 'standard');
-      expect(state.birthSituation, lifeSlice).toBe('standard');
+      const state = newGame(undefined, lifeSlice, 'medium');
+      expect(state.birthSituation, lifeSlice).toBe('medium');
     }
   });
 
   it('ignore une situation inconnue et la garde au recommencement', () => {
     expect(
       newGame(undefined, 'earlyChildhood', 'inconnue').birthSituation,
-    ).toBe('standard');
+    ).toBe('medium');
     const restarted = reduce(newGame(), {
       type: 'restart',
       lifeSlice: 'earlyChildhood',
-      birthSituation: 'standard',
+      birthSituation: 'medium',
     });
     expect(restarted.lifeSlice).toBe('earlyChildhood');
-    expect(restarted.birthSituation).toBe('standard');
+    expect(restarted.birthSituation).toBe('medium');
   });
 });

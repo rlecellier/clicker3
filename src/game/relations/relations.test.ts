@@ -37,7 +37,7 @@ const bondOf = (state: GameState, id: string) =>
 
 describe('relations : le départ', () => {
   it('viennent des parents de la situation, avec un lien timide', () => {
-    const relations = initialRelations('standard');
+    const relations = initialRelations('medium');
     expect(relations.map(({ id, kind }) => [id, kind])).toEqual([
       ['mother', 'family'],
       ['father', 'family'],
@@ -189,7 +189,7 @@ describe('relations : les événements', () => {
 
   it('ne citent que des personnes qui existent dans la situation', () => {
     const people = new Set([
-      ...initialRelations('standard').map(({ id }) => id),
+      ...initialRelations('medium').map(({ id }) => id),
       'friend',
     ]);
     for (const event of childEvents) {

@@ -15,7 +15,7 @@ export type TitleConfirmation = 'erase' | 'restart';
 const otherSlices = lifeSlices.filter(({ id }) => id !== 'youth');
 
 // Les tranches où le joueur choisit sa situation de naissance avant de jouer ;
-// les autres gardent la famille standard.
+// les autres gardent la situation par défaut (`medium`).
 const birthChoiceSlices = new Set<LifeSliceId>(['earlyChildhood']);
 
 type PendingStart = { lifeSlice: LifeSliceId; birthSituation?: string };

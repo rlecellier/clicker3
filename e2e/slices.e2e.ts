@@ -44,7 +44,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expect(
     page.getByText('Dans quelle famille naissez-vous ?'),
   ).toBeVisible();
-  await page.getByRole('button', { name: 'Famille standard' }).tap();
+  await page.getByRole('button', { name: 'Privilégié' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
   await expectMenuLinks(page, 3);
   await expect(page.getByLabel('Ressources')).toBeHidden();

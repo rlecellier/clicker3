@@ -10,7 +10,7 @@ const fourYearsOld = {
   growth: 160,
   // Maman est assez proche pour jouer avec ; un copain est déjà là.
   relations: [
-    ...initialRelations('standard').map((relation) =>
+    ...initialRelations('medium').map((relation) =>
       relation.id === 'mother' ? { ...relation, bond: 30 } : relation,
     ),
     {
@@ -111,7 +111,7 @@ test('petite enfance : une vie de 0 à 6 ans au toucher, du choix de la famille 
 }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Petite enfance/ }).tap();
-  await page.getByRole('button', { name: 'Famille standard' }).tap();
+  await page.getByRole('button', { name: 'Privilégié' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
 
   // Le joueur gazouille, et répond au premier choix de chaque événement, jusqu'au bilan.
@@ -161,23 +161,14 @@ test('petite enfance : une autre famille change le départ', async ({
   await expect(
     page.getByText('Dans quelle famille naissez-vous ?'),
   ).toBeVisible();
-  for (const name of [
-    'Famille standard',
-    'Fils ou fille de millionnaire',
-    'Fils ou fille de star du rock',
-    'Sans domicile fixe',
-    'Parents enseignants',
-    'Ferme familiale',
-  ]) {
+  for (const name of ['Pas de chance', 'Privilégié', 'Self-made']) {
     await expect(page.getByRole('button', { name })).toBeVisible();
   }
   await expectNoOverflow(page);
 
-  // Un enfant de millionnaire naît avec des jouets (la Maison est ouverte dès
+  // Un enfant de Self-made naît avec des jouets (la Maison est ouverte dès
   // le départ) et des parents au lien timide.
-  await page
-    .getByRole('button', { name: 'Fils ou fille de millionnaire' })
-    .tap();
+  await page.getByRole('button', { name: 'Self-made' }).tap();
   const bar = page.getByRole('navigation', { name: 'Navigation du jeu' });
   await expect(bar.getByRole('link', { name: 'Maison' })).toBeVisible();
   await bar.getByRole('link', { name: 'Maison' }).tap();
