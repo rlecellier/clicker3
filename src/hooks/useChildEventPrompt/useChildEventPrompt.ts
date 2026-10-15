@@ -1,4 +1,5 @@
 import { useGameContext } from '@context/GameContext';
+import { useIgnoreEarlyTaps } from '@hook/useIgnoreEarlyTaps';
 import {
   childEventById,
   childEventText,
@@ -10,6 +11,7 @@ import {
 export const useChildEventPrompt = () => {
   const { state, dispatch } = useGameContext();
   const event = childEventById(state.child.pendingEvent);
+  const guard = useIgnoreEarlyTaps(event?.id ?? null);
   if (event === undefined) {
     return null;
   }
@@ -21,9 +23,10 @@ export const useChildEventPrompt = () => {
       effects: choice.effects
         .map((effect) => describeEffect(state, effect))
         .join(' · '),
-      onChoose: () => {
+      // Le click de l'appui qui a ouvert la fenêtre ne répond pas à sa place.
+      onChoose: guard(() => {
         dispatch({ type: 'chooseEvent', choice: index });
-      },
+      }),
     })),
   };
 };
