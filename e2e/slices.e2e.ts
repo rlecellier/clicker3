@@ -75,15 +75,17 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: '☆ Favori' }).first().tap();
   await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
   await tapMenuLink(page, 'Vie');
-  const bond = page.getByRole('progressbar', { name: /^Lien : / });
-  await expect(bond).toHaveAccessibleName('Lien : Neutre');
+  const temperament = page.getByRole('progressbar', {
+    name: /^Tempérament : /,
+  });
+  await expect(temperament).toHaveAccessibleName('Tempérament : Neutre');
   await page.getByRole('button', { name: /Câliner le nounours/ }).tap();
-  await expect(bond).toHaveAccessibleName('Lien : Câlin');
+  await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
   await expect(awakening).toHaveText('5');
   await expectNoOverflow(page);
 
   // À 1 an (éveil 56), le premier mot arrête le jeu jusqu'à une réponse ; le
-  // choix montre ce qu'il rapporte, et « Maman » pousse le Lien vers Câlin.
+  // choix montre ce qu'il rapporte, et « Maman » pousse le Tempérament vers Sentiment.
   const babble = page.getByRole('button', { name: 'Gazouiller' });
   for (let index = 5; index < 56; index += 1) {
     await babble.tap();
@@ -91,11 +93,13 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   const prompt = page.getByRole('alertdialog', { name: 'Premier mot' });
   await expect(prompt).toBeVisible();
   await expect(
-    prompt.getByText('Lien → Câlin · Lien avec Maman +', { exact: true }),
+    prompt.getByText('Tempérament → Sentiment · Lien avec Maman +', {
+      exact: true,
+    }),
   ).toBeVisible();
   await prompt.getByRole('button', { name: '« Maman »' }).tap();
   await expect(prompt).toBeHidden();
-  await expect(bond).toHaveAccessibleName('Lien : Câlin');
+  await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
   await babble.tap();
   await expect(awakening).toHaveText('57');
 

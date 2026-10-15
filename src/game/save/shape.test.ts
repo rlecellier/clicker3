@@ -29,7 +29,7 @@ describe('forme de l’état', () => {
       'birthdayBase.upgrades',
       'carry',
       'characterName',
-      'child.axes.bond',
+      'child.axes.temperament',
       'child.axes.energy',
       'child.axes.mind',
       'child.axes.sociability',

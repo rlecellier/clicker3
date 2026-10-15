@@ -80,7 +80,7 @@ describe('serialize / deserialize', () => {
       ...startState,
       lifeSlice: 'childhood',
       carry: {
-        axes: { energy: 40, sociability: -10, mind: 0, bond: 22 },
+        axes: { energy: 40, sociability: -10, mind: 0, temperament: 22 },
         traits: ['sly'],
         objects: ['cat'],
         events: 5,

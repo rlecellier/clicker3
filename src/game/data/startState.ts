@@ -30,7 +30,7 @@ export const startState: GameState = {
   relations: [],
   carry: null,
   child: {
-    axes: { energy: 0, sociability: 0, mind: 0, bond: 0 },
+    axes: { energy: 0, sociability: 0, mind: 0, temperament: 0 },
     objects: [],
     quarter: 0,
     fill: 0,

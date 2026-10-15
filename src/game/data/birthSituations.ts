@@ -135,7 +135,7 @@ export const birthSituations: readonly BirthSituation[] = [
         name: 'Maman',
         role: 'mère',
         qualities: { availability: 90, affection: 85, means: 5 },
-        passion: { axis: 'bond', direction: 1, text: 'aime les câlins' },
+        passion: { axis: 'temperament', direction: 1, text: 'aime les câlins' },
       },
     ],
     objects: ['teddy'],
