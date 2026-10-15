@@ -1,10 +1,10 @@
 # Petite enfance (0 à 5 ans)
 
 > Statut : **validée**, en cours de développement (suivi : #253). Fait : la
-> situation de naissance (#254, « Famille standard » seule) ; les axes, les
+> situation de naissance (#254) ; les axes, les
 > objets et activités, l'onglet Maison et les favoris (#255) ; le pool d'événements,
 > les traits, l'exploration et les demandes (#256) ; le menu Relations (#257) ; le bilan et le passage en
-> Enfance (#258) ; les cinq autres situations de naissance (#259). Reste à écrire :
+> Enfance (#258) ; les situations de naissance, réduites à trois (#259, #278). Reste à écrire :
 > les stats de l'Enfance, qui lira l'objet transmis. Ce document répond à
 > quatre questions : que développe-t-on à cet âge, quel gameplay, quels choix,
 > quelle durée. Il pose aussi le menu **Relations**, utile dès cette tranche et
@@ -35,17 +35,23 @@ Chaque situation décrit :
 - un **trait de départ** imposé ;
 - la **voix** des événements (un même événement a une variante par situation).
 
-| Situation        | Avantage                              | Inconvénient                           |
-| ---------------- | ------------------------------------- | -------------------------------------- |
-| Famille standard | Équilibrée, sert de référence         | Aucun relief (la partie « tutoriel »)  |
-| Fils·fille de millionnaire | Moyens énormes, jouets, nounou | Parents absents, lien rare             |
-| Fils·fille de star du rock | Éveil musical, monde sans règles | Instabilité, tournées, coucher à 4 h |
-| Sans domicile fixe | Débrouillardise, parent très présent | Moyens nuls, déménagements, santé fragile |
-| Parents enseignants | Langage et curiosité accélérés   | Pression, peu d'argent                 |
-| Ferme / commerce familial | Motricité, grand air, grands-parents | Peu de jeux, beaucoup de travail |
+Trois situations, ordonnées par le niveau de vie de la famille. **L'id du code
+est neutre** (`low`, `medium`, `high`) ; le **libellé** est ce que le joueur lit
+et peut changer sans toucher au code ni aux tests (un nom dans la donnée, jamais
+dans une condition).
+
+| Id       | Libellé       | Famille                                           | Avantage                                  | Inconvénient                              |
+| -------- | ------------- | ------------------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| `low`    | Pas de chance | Un seul parent, au SMIC                           | Parent très présent, débrouillardise      | Moyens faibles, Énergie réduite           |
+| `medium` | Privilégié    | Deux parents, un frère ou une sœur, un peu plus que le SMIC | Équilibrée, sert de référence (la partie « tutoriel ») | Aucun relief             |
+| `high`   | Self-made     | Deux parents PDG d'entreprise ou actionnaires     | Moyens énormes, jouets, nounou            | Parents absents, lien rare                |
+
+`medium` est la situation par défaut. Son frère ou sa sœur est une donnée
+(l'étiquette de contexte `sibling`) : les deux autres ont `onlyChild`, qui seule
+ouvre l'événement « Un petit frère, une petite sœur ».
 
 Les situations s'ajoutent sans toucher aux règles. Elles se réutilisent telles
-quelles pour les autres tranches (le fils de millionnaire à 12 ans) : c'est ce
+quelles pour les autres tranches (l'enfant « Self-made » à 12 ans) : c'est ce
 qui permet des **départs situationnels** plutôt que des départs par âge.
 
 ## 2. Ce qu'on développe
@@ -190,8 +196,8 @@ choisit un objet de sa **liste de souhaits** (un vélo, un jeu de logique, un
 déguisement) et un parent à qui le demander. La réponse **ne dépend pas du
 hasard** mais de choses lisibles :
 
-- le **lien** avec ce parent et ses **moyens** (le fils de millionnaire a
-  presque toujours oui, l'enfant SDF presque toujours « on verra ») ;
+- le **lien** avec ce parent et ses **moyens** (l'enfant « Self-made » a
+  presque toujours oui, l'enfant « Pas de chance » presque toujours non) ;
 - l'**Attention** que le joueur dépense (insister coûte, et peut user la
   Patience du parent) ;
 - la réponse est **oui**, **plus tard** (l'objet arrive après un nombre
@@ -200,8 +206,8 @@ hasard** mais de choses lisibles :
 L'école (4-5 ans) élargit enfin la liste de souhaits : on réclame ce qu'on a vu
 chez les copains.
 
-**Le contexte décide ce qu'on a.** L'état de départ donne ses objets (le fils de
-millionnaire a dix jouets et peu de parents, l'enfant SDF a un nounours et un
+**Le contexte décide ce qu'on a.** L'état de départ donne ses objets (l'enfant « Self-made »
+a quatre jouets et peu de parents, l'enfant « Pas de chance » a un nounours et un
 parent très présent). Une même activité peut aussi se perdre (jouet cassé,
 déménagement) par événement.
 
@@ -379,15 +385,15 @@ simple compteur `growth` ([ADR 0012](../../.claude/adr/0012-tranches-de-vie.md))
 ## 8. Découpage proposé (une issue = une branche = une MR)
 
 1. **Situations de naissance** : donnée (`src/game/data`), choix à l'écran
-   titre, parents et qualités. Six situations
-   suffit pour la première MR.
+   titre, parents et qualités.
 2. **Axes, objets et activités** : un bouton de départ, objets, onglet Maison et favoris, état, reducer, paliers, jauge de temps adaptée à
    0-5 ans, remplacement du compteur `growth` pour cette tranche.
 3. **Menu Relations / Famille** : onglet, sous-menu, liens, paliers et bonus.
 4. **Événements et traits** : moteur de choix réutilisé de `src/game/events`,
    pool d'événements avec conditions, poids, minimum / maximum et graine ; traits et limite à 3.
 5. **Bilan et passage vers l'Enfance** : écran de fin, objet transmis.
-6. **Autres situations** (millionnaire, rock, SDF…) : données uniquement.
+6. **Autres situations** : `low` et `high` (données uniquement), réduites à trois
+   situations en tout (#278).
 
 ## 9. Décisions prises et questions ouvertes
 

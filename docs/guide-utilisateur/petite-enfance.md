@@ -8,17 +8,16 @@ la vie : », puis on choisit sa famille. Elle dure 24 trimestres (6 ans), soit
 
 Avant de jouer, on choisit sa famille. Chacune change le départ :
 
-| Famille                       | Ce qu'elle apporte                                                      | Ce qui manque                              |
-| ----------------------------- | ----------------------------------------------------------------------- | ------------------------------------------ |
-| Famille standard              | La référence, sans relief                                               | Rien ne dépasse                            |
-| Fils ou fille de millionnaire | Quatre jouets dès la naissance, des moyens énormes (on obtient un vélo) | Des parents absents : liens faibles, Attention lente à revenir |
-| Fils ou fille de star du rock | Sociabilité et Esprit d'avance, hochet et casseroles, tournées          | Instabilité                                |
-| Sans domicile fixe            | Un parent très présent, le trait Débrouillard, Esprit d'avance          | Peu de moyens, Énergie réduite, un seul parent |
-| Parents enseignants           | Livres et cubes, Esprit Appliqué et Sociabilité d'avance                | Moyens modestes                            |
-| Ferme familiale               | Énergie Vive, un bâton et un chat                                       | Peu de jouets                              |
+| Famille       | Ce qu'elle apporte                                                       | Ce qui manque                                  |
+| ------------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
+| Pas de chance | Un parent très présent, un nounours, le trait Débrouillard, Lien d'avance | Peu de moyens (au SMIC), un seul parent, Énergie réduite |
+| Privilégié    | Deux parents, un frère ou une sœur ; la référence, sans relief           | Rien ne dépasse                                |
+| Self-made     | Quatre jouets dès la naissance, des moyens énormes (on obtient un vélo) | Des parents absents : liens faibles, Attention lente à revenir |
 
-Chaque famille a aussi ses événements : l'hôtel, le tour bus, le foyer d'accueil,
-le poulailler, la bibliothèque. Les autres événements sont racontés à sa façon.
+Chaque famille a aussi son événement : le soir à l'appartement, le jardin du
+pavillon, le hall du siège. Les autres événements sont racontés à sa façon. Le
+« Privilégié » a déjà un frère ou une sœur : il ne reçoit pas l'événement du
+petit frère.
 
 ## L'écran Vie
 
