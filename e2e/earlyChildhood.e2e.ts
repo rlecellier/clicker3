@@ -118,21 +118,26 @@ test('petite enfance : une vie de 0 à 6 ans au toucher, du choix de la famille 
   const babble = page.getByRole('button', { name: 'Gazouiller' });
   const prompt = page.getByRole('alertdialog');
   const report = page.getByRole('heading', { name: 'Carnet de santé' });
-  let answered = 0;
   for (let step = 0; step < 800 && (await report.count()) === 0; step += 1) {
     if ((await prompt.count()) > 0) {
       await prompt.getByRole('button').first().tap();
-      answered += 1;
     } else {
       await babble.tap();
     }
   }
   await expect(report).toBeVisible();
   // Entre 4 et 7 événements, le premier mot et le premier copain compris.
-  expect(answered).toBeGreaterThanOrEqual(4);
-  expect(answered).toBeLessThanOrEqual(7);
+  // Le chiffre du carnet fait foi : un tap trop vite après l'ouverture d'une
+  // fenêtre est ignoré, donc le nombre de taps ne compte pas les événements.
+  const lived = Number(
+    await page
+      .getByText('Événements vécus')
+      .locator('xpath=following-sibling::dd[1]')
+      .textContent(),
+  );
+  expect(lived).toBeGreaterThanOrEqual(4);
+  expect(lived).toBeLessThanOrEqual(7);
   await expect(page.getByText('Énergie')).toBeVisible();
-  await expect(page.getByText('Événements vécus')).toBeVisible();
   await expect(page.getByText('Maman (mère)')).toBeVisible();
   await expect(page.getByText('Noa (ami)')).toBeVisible();
   await expectNoOverflow(page);

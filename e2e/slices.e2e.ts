@@ -97,8 +97,12 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
       exact: true,
     }),
   ).toBeVisible();
-  await prompt.getByRole('button', { name: '« Maman »' }).tap();
-  await expect(prompt).toBeHidden();
+  // Un tap trop vite après l'ouverture est ignoré (le click de l'appui qui l'a
+  // ouverte tombe sur le premier choix) : le joueur réessaie.
+  await expect(async () => {
+    await prompt.getByRole('button', { name: '« Maman »' }).tap();
+    await expect(prompt).toBeHidden({ timeout: 500 });
+  }).toPass();
   await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
   await babble.tap();
   await expect(awakening).toHaveText('57');
