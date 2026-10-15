@@ -62,11 +62,17 @@ s'éloigne de 0, plus le pôle est marqué.
 | **Énergie**  | Vif (bouge, grimpe, fonce)     | Posé (observe, attend, choisit) | Sport et endurance / patience et soin  |
 | **Sociabilité** | Extraverti (appelle, rejoint) | Introverti (joue seul, écoute) | Réseau, charisme / concentration       |
 | **Esprit**   | Touche-à-tout (essaie tout)    | Appliqué (répète, range, finit) | Créativité, débrouille / études, rigueur |
-| **Lien**     | Câlin (cherche le contact)     | Indépendant (se débrouille)     | Relations profondes / autonomie        |
+| **Tempérament** | Sentiment (ressent, câline, s'émeut) | Raison (demande pourquoi, classe, négocie) | Empathie, créativité / logique, sang-froid |
 
 « Agile / pas agile » est rejeté (un pôle y est une insulte). Pour l'Énergie,
 **Vif ↔ Posé** est la proposition ; d'autres paires possibles : *Fonceur ↔
 Prudent*, *Remuant ↔ Tranquille*. Le nom se tranche au moment du texte.
+
+**Sociabilité et Tempérament ne se recouvrent pas.** Sociabilité dit *vers qui*
+l'enfant va (les autres ou lui-même) ; Tempérament dit *comment* il réagit (en
+ressentant ou en raisonnant). Un enfant peut être extraverti et très raisonné,
+ou introverti et très sensible. Le lien avec chaque personne (menu Relations)
+n'est pas un axe : c'est une jauge par personne.
 
 **Pourquoi des axes.** À la tranche suivante, chaque axe se **transforme en
 vraies stats** : la position (A ou B) choisit *quelle* stat naît, la distance à
@@ -85,8 +91,8 @@ Pas de bonus continu.
   ou jouer à côté → écouter → inventer un ami imaginaire (Introverti).
 - Esprit : attraper → ouvrir les tiroirs → démonter (Touche-à-tout), ou empiler
   → recommencer → finir un puzzle (Appliqué).
-- Lien : sourire → s'accrocher → consoler (Câlin), ou manger seul → « moi
-  tout seul » → faire ses lacets (Indépendant).
+- Tempérament : sourire → s'accrocher → consoler (Sentiment), ou compter ses
+  bouchées → demander « pourquoi ? » → dresser la liste des réponses (Raison).
 
 ### Les ressources
 
@@ -113,7 +119,7 @@ la maison, un grand-parent qui passe. Chacun **débloque une ou deux activités*
 
 | Objet / présence    | Activité débloquée            | Axe, pôle                     |
 | ------------------- | ----------------------------- | ----------------------------- |
-| Nounours            | Câliner le nounours           | Lien, Câlin                   |
+| Nounours            | Câliner le nounours           | Tempérament, Sentiment        |
 | Nounours            | Lui apprendre à marcher       | Énergie, Vif                  |
 | Cubes               | Empiler                       | Esprit, Appliqué              |
 | Hochet / casseroles | Faire du bruit                | Sociabilité, Extraverti       |
@@ -121,7 +127,7 @@ la maison, un grand-parent qui passe. Chacun **débloque une ou deux activités*
 | Ballon              | Courir après                  | Énergie, Vif                  |
 | Boîte à formes      | Tout essayer dans tous les trous | Esprit, Touche-à-tout      |
 | Le chat             | L'observer sans bouger        | Énergie, Posé                 |
-| Un parent           | Se faire porter / marcher seul | Lien, Câlin / Indépendant    |
+| Les cubes           | Classer par couleur           | Tempérament, Raison           |
 
 Un objet qui donne **deux activités de pôles opposés** (le nounours) laisse
 choisir quel enfant on devient avec la même chose.
@@ -292,8 +298,8 @@ situations. La première MR n'a qu'âge, axe, lien et événement déjà vécu.
 | Le coin du jardin            | Sociabilité ≤ −25               | Y rester / en parler / inviter quelqu'un       |
 | La crise au supermarché      | âge ≈ 2 ans                     | Hurler / obéir / négocier                      |
 | Un petit frère, une petite sœur | âge ≈ 4 ans                  | Jalousie / protéger / ignorer                  |
-| Le doudou perdu              | Lien ≥ +25 (Câlin)              | Le chercher / appeler un parent / s'en passer  |
-| « Moi tout seul ! »          | Lien ≤ −25 (Indépendant)        | Refuser l'aide / accepter / bouder             |
+| Le doudou perdu              | Tempérament ≥ +25 (Sentiment)   | Le chercher / appeler un parent / s'en passer  |
+| « Pourquoi ? »               | Tempérament ≤ −25 (Raison)      | Exiger une explication / se contenter d'un « parce que » / dresser la liste |
 | Le dessin sur le mur         | âge ≥ 4 ans                     | Avouer / accuser le chat / recommencer plus grand |
 | Le hall de l'hôtel (plus tard) | contexte *hôtel de luxe*      | Courir / se cacher / saluer le concierge       |
 

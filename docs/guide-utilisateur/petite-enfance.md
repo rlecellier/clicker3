@@ -32,7 +32,7 @@ le poulailler, la bibliothèque. Les autres événements sont racontés à sa fa
 | Énergie     | Vif           | Posé           |
 | Sociabilité | Extraverti    | Introverti     |
 | Esprit      | Touche-à-tout | Appliqué       |
-| Lien        | Câlin         | Indépendant    |
+| Tempérament | Sentiment     | Raison         |
 
 - **Gazouiller** : le bouton de départ. Il fait monter l'éveil sans choisir de
   pôle. Un appui maintenu le répète.
@@ -46,7 +46,7 @@ activités possibles, groupées par objet. Chacune se joue sur place, et
 « ☆ Favori » la pose sur l'écran Vie (4 au plus : en retirer une pour en
 ajouter une autre).
 
-Une activité vient d'un objet (« Câliner le nounours » : Lien → Câlin) ou d'un
+Une activité vient d'un objet (« Câliner le nounours » : Tempérament → Sentiment) ou d'un
 **savoir-faire** : quand un axe est marqué à 25 ou plus d'un côté, une activité
 de ce côté s'ouvre (« Grimper partout » pour un enfant Vif). Si l'axe repasse
 sous 25, elle se referme.
@@ -71,7 +71,7 @@ Fouiller et demander se mettent en favori comme les autres activités.
 
 Environ **4 à 7 fois** pendant la tranche (jamais deux trimestres de suite),
 une fenêtre arrête le jeu et demande un choix. Chaque réponse montre ce qu'elle
-rapporte (« Lien → Câlin · Trait : Têtu »). Les événements dépendent de ce que
+rapporte (« Tempérament → Sentiment · Trait : Têtu »). Les événements dépendent de ce que
 vous avez fait de votre enfant : un enfant Vif croisera l'escalier du salon, un
 enfant Appliqué le puzzle, un enfant qui a son nounours peut le perdre. Le
 premier mot (1 an) est le seul qui arrive toujours.

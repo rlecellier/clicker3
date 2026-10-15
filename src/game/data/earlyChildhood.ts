@@ -61,7 +61,12 @@ export const childAxes: readonly ChildAxis[] = [
     positive: 'Touche-à-tout',
     negative: 'Appliqué',
   },
-  { id: 'bond', name: 'Lien', positive: 'Câlin', negative: 'Indépendant' },
+  {
+    id: 'temperament',
+    name: 'Tempérament',
+    positive: 'Sentiment',
+    negative: 'Raison',
+  },
 ];
 
 export type ChildObject = {
@@ -242,7 +247,7 @@ export const childActivities: readonly ChildActivity[] = [
   {
     id: 'cuddleTeddy',
     name: 'Câliner le nounours',
-    axis: 'bond',
+    axis: 'temperament',
     direction: 1,
     amount: push,
     source: { type: 'object', id: 'teddy' },
@@ -264,6 +269,14 @@ export const childActivities: readonly ChildActivity[] = [
     source: { type: 'object', id: 'rattle' },
   },
   {
+    id: 'sortCubes',
+    name: 'Classer les cubes par couleur',
+    axis: 'temperament',
+    direction: -1,
+    amount: push,
+    source: { type: 'object', id: 'cubes' },
+  },
+  {
     id: 'stackCubes',
     name: 'Empiler les cubes',
     axis: 'mind',
@@ -280,9 +293,9 @@ export const childActivities: readonly ChildActivity[] = [
     source: { type: 'object', id: 'books' },
   },
   {
-    id: 'eatAlone',
-    name: 'Manger tout seul',
-    axis: 'bond',
+    id: 'countBites',
+    name: 'Manger en comptant les bouchées',
+    axis: 'temperament',
     direction: -1,
     amount: push,
     source: { type: 'object', id: 'spoon' },
@@ -451,17 +464,17 @@ export const childActivities: readonly ChildActivity[] = [
   {
     id: 'console',
     name: 'Consoler quelqu’un',
-    axis: 'bond',
+    axis: 'temperament',
     direction: 1,
     amount: habit,
-    source: { type: 'axis', axis: 'bond', direction: 1 },
+    source: { type: 'axis', axis: 'temperament', direction: 1 },
   },
   {
-    id: 'dressAlone',
-    name: 'S’habiller seul',
-    axis: 'bond',
+    id: 'askWhy',
+    name: 'Demander « pourquoi ? » à tout',
+    axis: 'temperament',
     direction: -1,
     amount: habit,
-    source: { type: 'axis', axis: 'bond', direction: -1 },
+    source: { type: 'axis', axis: 'temperament', direction: -1 },
   },
 ];

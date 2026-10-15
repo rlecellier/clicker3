@@ -16,7 +16,7 @@ export const newChild = (situationId: string, seed: number): ChildState => {
       energy: clamp(situation?.axes.energy ?? 0),
       sociability: clamp(situation?.axes.sociability ?? 0),
       mind: clamp(situation?.axes.mind ?? 0),
-      bond: clamp(situation?.axes.bond ?? 0),
+      temperament: clamp(situation?.axes.temperament ?? 0),
     },
     objects: [...(situation?.objects ?? [])],
     traits: [...(situation?.traits ?? [])],

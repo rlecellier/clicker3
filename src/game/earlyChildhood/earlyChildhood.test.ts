@@ -178,11 +178,11 @@ describe('petite enfance : les activités', () => {
 
   it('poussent un axe vers un pôle, sans hasard, et avancent le temps', () => {
     const state = doActivity(giveObject(baby(), 'teddy'), 'cuddleTeddy');
-    expect(state.child.axes.bond).toBe(2);
+    expect(state.child.axes.temperament).toBe(2);
     expect(state.child.fill).toBe(1);
     expect(state.growth).toBe(1);
-    const other = doActivity(giveObject(baby(), 'spoon'), 'eatAlone');
-    expect(other.child.axes.bond).toBe(-2);
+    const other = doActivity(giveObject(baby(), 'spoon'), 'countBites');
+    expect(other.child.axes.temperament).toBe(-2);
   });
 
   it('refusent une activité qu’on n’a pas', () => {
@@ -196,7 +196,7 @@ describe('petite enfance : les activités', () => {
     for (let index = 0; index < 80; index += 1) {
       state = settle(doActivity(state, 'cuddleTeddy'));
     }
-    expect(state.child.axes.bond).toBe(childRules.axisLimit);
+    expect(state.child.axes.temperament).toBe(childRules.axisLimit);
   });
 
   it('débloquent un savoir-faire quand l’axe est assez marqué du bon côté', () => {
@@ -211,7 +211,7 @@ describe('petite enfance : les activités', () => {
     const ids = availableActivities(state).map(({ id }) => id);
     expect(ids).toContain('console');
     // Le pôle opposé reste fermé.
-    expect(ids).not.toContain('dressAlone');
+    expect(ids).not.toContain('askWhy');
   });
 
   it('referment un savoir-faire quand l’axe repasse sous le seuil', () => {
@@ -221,11 +221,11 @@ describe('petite enfance : les activités', () => {
     }
     expect(availableActivities(state).map(({ id }) => id)).toContain('console');
     for (let index = 0; index < 30; index += 1) {
-      state = settle(doActivity(state, 'eatAlone'));
+      state = settle(doActivity(state, 'countBites'));
     }
     const ids = availableActivities(state).map(({ id }) => id);
     expect(ids).not.toContain('console');
-    expect(ids).toContain('dressAlone');
+    expect(ids).toContain('askWhy');
   });
 
   it('se rejouent par le reducer', () => {
@@ -319,7 +319,7 @@ describe('petite enfance : les événements', () => {
     const base = atQuarter(7);
     const bonded = {
       ...base,
-      child: { ...base.child, axes: { ...base.child.axes, bond: 30 } },
+      child: { ...base.child, axes: { ...base.child.axes, temperament: 30 } },
     };
     expect(eligibleEvents(bonded).map(({ id }) => id)).not.toContain(
       'lostTeddy',
@@ -600,7 +600,7 @@ describe('petite enfance : les situations de naissance', () => {
       energy: -10,
       sociability: 0,
       mind: 12,
-      bond: 0,
+      temperament: 0,
     });
     // Un seul parent, très présent.
     expect(homeless.relations.map(({ id }) => id)).toEqual(['mother']);
@@ -729,7 +729,7 @@ describe('petite enfance : les données', () => {
   });
 
   it('offrent les deux pôles de chaque axe', () => {
-    for (const axis of ['energy', 'sociability', 'mind', 'bond']) {
+    for (const axis of ['energy', 'sociability', 'mind', 'temperament']) {
       for (const direction of [1, -1]) {
         const fromObject = childActivities.some(
           (activity) =>

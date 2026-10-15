@@ -85,10 +85,17 @@ export const childEvents: readonly ChildEvent[] = [
     weight: 1,
     isMandatory: true,
     choices: [
-      { label: '« Maman »', effects: [push('bond', 6), bond('mother', 8)] },
+      {
+        label: '« Maman »',
+        effects: [push('temperament', 6), bond('mother', 8)],
+      },
       {
         label: '« Papa »',
-        effects: [push('bond', 4), push('sociability', 2), bond('father', 8)],
+        effects: [
+          push('temperament', 4),
+          push('sociability', 2),
+          bond('father', 8),
+        ],
       },
       { label: '« Non »', effects: [trait('stubborn'), push('mind', 3)] },
     ],
@@ -103,7 +110,11 @@ export const childEvents: readonly ChildEvent[] = [
       { label: 'Grimper', effects: [push('energy', 6), trait('daring')] },
       {
         label: 'Appeler à l’aide',
-        effects: [push('sociability', 4), push('bond', 2), bond('father', 3)],
+        effects: [
+          push('sociability', 4),
+          push('temperament', 2),
+          bond('father', 3),
+        ],
       },
       {
         label: 'S’asseoir sur la première marche',
@@ -121,7 +132,11 @@ export const childEvents: readonly ChildEvent[] = [
       { label: 'Finir seul', effects: [push('mind', -6)] },
       {
         label: 'Demander de l’aide',
-        effects: [push('bond', 4), push('sociability', 3), bond('father', 4)],
+        effects: [
+          push('temperament', 4),
+          push('sociability', 3),
+          bond('father', 4),
+        ],
       },
       { label: 'Tout renverser', effects: [push('mind', 5), trait('artist')] },
     ],
@@ -135,7 +150,7 @@ export const childEvents: readonly ChildEvent[] = [
     choices: [
       {
         label: 'L’adopter',
-        effects: [{ type: 'giveObject', id: 'cat' }, push('bond', 3)],
+        effects: [{ type: 'giveObject', id: 'cat' }, push('temperament', 3)],
       },
       { label: 'Lui courir après', effects: [push('energy', 4)] },
       { label: 'L’observer de loin', effects: [push('energy', -3)] },
@@ -145,20 +160,31 @@ export const childEvents: readonly ChildEvent[] = [
     id: 'lostTeddy',
     title: 'Le nounours perdu',
     text: 'Le nounours est introuvable. L’enquête est confiée à la personne la plus petite de la maison.',
-    conditions: [age(7), { type: 'object', id: 'teddy' }, axis('bond', 1)],
+    conditions: [
+      age(7),
+      { type: 'object', id: 'teddy' },
+      axis('temperament', 1),
+    ],
     weight: 2,
     choices: [
       {
         label: 'Le chercher partout',
-        effects: [push('bond', 5), push('energy', 2)],
+        effects: [push('temperament', 5), push('energy', 2)],
       },
       {
         label: 'Appeler un parent',
-        effects: [push('bond', 6), push('sociability', 2), bond('mother', 4)],
+        effects: [
+          push('temperament', 6),
+          push('sociability', 2),
+          bond('mother', 4),
+        ],
       },
       {
         label: 'S’en passer',
-        effects: [push('bond', -6), { type: 'removeObject', id: 'teddy' }],
+        effects: [
+          push('temperament', -6),
+          { type: 'removeObject', id: 'teddy' },
+        ],
       },
     ],
   },
@@ -192,33 +218,44 @@ export const childEvents: readonly ChildEvent[] = [
         effects: [
           trait('stubborn'),
           push('energy', 3),
-          push('bond', -3),
+          push('temperament', 3),
           bond('mother', -4),
         ],
       },
       {
         label: 'Obéir',
-        effects: [push('bond', 2), push('mind', -3), bond('mother', 2)],
+        effects: [push('temperament', -2), push('mind', -3), bond('mother', 2)],
       },
       {
         label: 'Négocier',
-        effects: [push('sociability', 4), trait('sly'), bond('mother', 1)],
+        effects: [
+          push('sociability', 4),
+          push('temperament', -3),
+          trait('sly'),
+          bond('mother', 1),
+        ],
       },
     ],
   },
   {
-    id: 'meOnly',
-    title: '« Moi tout seul ! »',
-    text: 'Votre enfant a déclaré qu’il ferait seul. Aucun élément ne permet de dire qu’il en est capable.',
-    conditions: [age(8), axis('bond', -1)],
+    id: 'why',
+    title: '« Pourquoi ? »',
+    text: 'Votre enfant a posé une question. Puis une autre. Le service a cessé de compter à la quarantième.',
+    conditions: [age(8), axis('temperament', -1)],
     weight: 2,
     choices: [
-      { label: 'Refuser toute aide', effects: [push('bond', -6)] },
       {
-        label: 'Accepter un coup de main',
-        effects: [push('bond', 3), bond('mother', 3)],
+        label: 'Exiger une vraie explication',
+        effects: [push('temperament', -6), push('mind', -2)],
       },
-      { label: 'Bouder', effects: [push('mind', -2), push('bond', -3)] },
+      {
+        label: 'Se contenter d’un « parce que »',
+        effects: [push('temperament', 3), bond('mother', 3)],
+      },
+      {
+        label: 'Dresser la liste des réponses',
+        effects: [push('mind', -2), push('temperament', -3)],
+      },
     ],
   },
   {
@@ -244,7 +281,7 @@ export const childEvents: readonly ChildEvent[] = [
       { label: 'En parler', effects: [push('sociability', 4)] },
       {
         label: 'Y inviter quelqu’un',
-        effects: [push('sociability', 3), push('bond', 3)],
+        effects: [push('sociability', 3), push('temperament', 3)],
       },
     ],
   },
@@ -267,7 +304,10 @@ export const childEvents: readonly ChildEvent[] = [
     choices: [
       { label: 'Avouer', effects: [trait('honest'), bond('father', 3)] },
       { label: 'S’enfuir', effects: [push('energy', 4), trait('sly')] },
-      { label: 'Partager', effects: [push('sociability', 3), push('bond', 3)] },
+      {
+        label: 'Partager',
+        effects: [push('sociability', 3), push('temperament', 3)],
+      },
     ],
   },
   {
@@ -279,18 +319,29 @@ export const childEvents: readonly ChildEvent[] = [
     choices: [
       {
         label: 'Jalouser',
-        effects: [trait('stubborn'), push('bond', -4), bond('mother', -3)],
+        effects: [
+          trait('stubborn'),
+          push('temperament', 4),
+          bond('mother', -3),
+        ],
       },
       {
         label: 'Protéger',
         effects: [
           trait('protector'),
-          push('bond', 4),
+          push('temperament', 4),
           bond('mother', 3),
           bond('father', 3),
         ],
       },
-      { label: 'Ignorer', effects: [push('mind', 3), push('sociability', -3)] },
+      {
+        label: 'Ignorer',
+        effects: [
+          push('mind', 3),
+          push('sociability', -3),
+          push('temperament', -2),
+        ],
+      },
     ],
   },
   {
@@ -312,7 +363,7 @@ export const childEvents: readonly ChildEvent[] = [
     choices: [
       {
         label: 'Avouer',
-        effects: [trait('honest'), push('bond', 3), bond('mother', 4)],
+        effects: [trait('honest'), push('temperament', 3), bond('mother', 4)],
       },
       {
         label: 'Accuser le chat',
@@ -393,7 +444,7 @@ export const childEvents: readonly ChildEvent[] = [
       },
       {
         label: 'Demander à descendre',
-        effects: [bond('father', 1), push('bond', 2)],
+        effects: [bond('father', 1), push('temperament', 2)],
       },
     ],
   },
@@ -449,11 +500,11 @@ export const childEvents: readonly ChildEvent[] = [
       },
       {
         label: 'Partager sa couverture avec un autre enfant',
-        effects: [push('sociability', 5), push('bond', 3)],
+        effects: [push('sociability', 5), push('temperament', 3)],
       },
       {
         label: 'Rester contre sa mère',
-        effects: [push('bond', 5), bond('mother', 5)],
+        effects: [push('temperament', 5), bond('mother', 5)],
       },
     ],
   },
@@ -465,8 +516,14 @@ export const childEvents: readonly ChildEvent[] = [
     weight: 4,
     choices: [
       { label: 'Les poursuivre', effects: [push('energy', 5)] },
-      { label: 'Les nourrir', effects: [push('bond', 4), push('energy', -2)] },
-      { label: 'Les compter', effects: [push('mind', -5)] },
+      {
+        label: 'Les nourrir',
+        effects: [push('temperament', 4), push('energy', -2)],
+      },
+      {
+        label: 'Les compter',
+        effects: [push('mind', -5), push('temperament', -2)],
+      },
     ],
   },
   {
@@ -483,7 +540,7 @@ export const childEvents: readonly ChildEvent[] = [
       },
       {
         label: 'Demander qu’on lise',
-        effects: [push('bond', 3), bond('mother', 4)],
+        effects: [push('temperament', 3), bond('mother', 4)],
       },
     ],
   },
