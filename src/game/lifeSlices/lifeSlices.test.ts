@@ -20,9 +20,11 @@ describe('tranches de vie', () => {
     for (const id of ['childhood', 'adolescence'] as const) {
       expect(sliceTabs(newGame(undefined, id))).toEqual(['life']);
     }
-    // La petite enfance ajoute les Relations ; la Maison attend le premier objet.
+    // La petite enfance ajoute le Caractère et les Relations ; la Maison attend
+    // le premier objet.
     expect(sliceTabs(newGame(undefined, 'earlyChildhood'))).toEqual([
       'life',
+      'character',
       'relations',
     ]);
   });

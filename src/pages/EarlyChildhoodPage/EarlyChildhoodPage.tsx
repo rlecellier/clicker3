@@ -3,7 +3,6 @@ import { Button } from '@component/Button';
 import { FigureList } from '@component/FigureList';
 import { ItemList } from '@component/ItemList';
 import { Note } from '@component/Note';
-import { PolarGauge } from '@component/PolarGauge';
 import { ProgressBar } from '@component/ProgressBar';
 import { Stat } from '@component/Stat';
 import { Window } from '@component/Window';
@@ -43,31 +42,16 @@ export const EarlyChildhoodPage = () => {
       <dl className={styles.counter}>
         <Stat label="Éveil" value={screen.awakening} />
       </dl>
-      <section aria-label="Caractère" className={styles.axes}>
-        {screen.axes.map((axis) => (
-          <PolarGauge
-            key={axis.id}
-            name={axis.name}
-            label={axis.label}
-            negativePole={axis.negativePole}
-            positivePole={axis.positivePole}
-            value={axis.value}
-            max={axis.max}
-            marks={axis.marks}
-          />
-        ))}
-        {screen.attention.isVisible ? (
+      {screen.attention.isVisible ? (
+        <div className={styles.gauges}>
           <ProgressBar
             label="Attention des parents"
             value={screen.attention.value}
             max={screen.attention.max}
             size="small"
           />
-        ) : null}
-      </section>
-      {screen.traits.length === 0 ? null : (
-        <Note>Traits : {screen.traits.join(', ')}</Note>
-      )}
+        </div>
+      ) : null}
       <div className={styles.actions}>
         <ActionButton
           label="Gazouiller"

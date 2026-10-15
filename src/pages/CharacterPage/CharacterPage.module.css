@@ -1,0 +1,6 @@
+.axes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  margin-bottom: var(--space);
+}

@@ -25,7 +25,18 @@ le poulailler, la bibliothèque. Les autres événements sont racontés à sa fa
 - **Âge** : « 1 an et 3 mois ». Un trimestre se remplit en 14 gestes.
 - **Éveil** : le nombre de gestes faits. À mesure qu'il monte, l'entourage vous
   donne des objets (nounours à 4, hochet à 10…).
-- **Quatre axes à deux pôles**, de −100 à +100, sans bon ni mauvais côté :
+- **Attention des parents** : elle sert à réclamer des objets (dès 4 ans).
+- **Gazouiller** : le bouton de départ. Il fait monter l'éveil sans choisir de
+  pôle. Un appui maintenu le répète.
+- **Les favoris** : jusqu'à 4 activités mises en favori dans la Maison. Un tap =
+  une activité = l'axe bouge de 2 (3 pour un savoir-faire) vers son pôle.
+
+## Le Caractère
+
+L'onglet **Caractère** montre **quatre axes à deux pôles**, de −100 à +100, sans
+bon ni mauvais côté. Chaque curseur part du milieu et glisse d'un côté ou de
+l'autre ; les repères marquent les paliers (25, 50 et 75) qui débloquent des
+activités. Les traits (3 au plus) s'y affichent aussi.
 
 | Axe         | Un pôle       | L'autre pôle   |
 | ----------- | ------------- | -------------- |
@@ -33,11 +44,6 @@ le poulailler, la bibliothèque. Les autres événements sont racontés à sa fa
 | Sociabilité | Extraverti    | Introverti     |
 | Esprit      | Touche-à-tout | Appliqué       |
 | Tempérament | Sentiment     | Raison         |
-
-- **Gazouiller** : le bouton de départ. Il fait monter l'éveil sans choisir de
-  pôle. Un appui maintenu le répète.
-- **Les favoris** : jusqu'à 4 activités mises en favori dans la Maison. Un tap =
-  une activité = l'axe bouge de 2 (3 pour un savoir-faire) vers son pôle.
 
 ## La Maison
 

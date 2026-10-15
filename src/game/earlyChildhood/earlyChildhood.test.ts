@@ -158,10 +158,16 @@ describe('petite enfance : les objets', () => {
 
   it('ouvrent la Maison au premier objet', () => {
     const withTeddy = giveObject(baby(), 'teddy');
-    expect(sliceTabs(baby())).toEqual(['life', 'relations']);
-    expect(sliceTabs(withTeddy)).toEqual(['life', 'house', 'relations']);
+    expect(sliceTabs(baby())).toEqual(['life', 'character', 'relations']);
+    expect(sliceTabs(withTeddy)).toEqual([
+      'life',
+      'character',
+      'house',
+      'relations',
+    ]);
     expect(sliceTabs(removeObject(withTeddy, 'teddy'))).toEqual([
       'life',
+      'character',
       'relations',
     ]);
   });

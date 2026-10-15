@@ -46,7 +46,7 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   ).toBeVisible();
   await page.getByRole('button', { name: 'Famille standard' }).tap();
   await expect(page).toHaveURL('/jeu/vie');
-  await expectMenuLinks(page, 3);
+  await expectMenuLinks(page, 4);
   await expect(page.getByLabel('Ressources')).toBeHidden();
   await expect(
     page.getByRole('heading', { name: 'Petite enfance' }),
@@ -59,8 +59,9 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await expect(awakening).toHaveText('1');
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('2');
-  // Pas d'objet encore : la Maison reste fermée (Vie, Relations, Recommencer).
-  await expectMenuLinks(page, 3);
+  // Pas d'objet encore : la Maison reste fermée (Vie, Caractère, Relations,
+  // Recommencer).
+  await expectMenuLinks(page, 4);
   await expectNoOverflow(page);
 
   // Le nounours arrive à l'éveil 4 : la Maison s'ouvre. On y met « Câliner le
@@ -68,20 +69,27 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await page.getByRole('button', { name: 'Gazouiller' }).tap();
   await expect(awakening).toHaveText('4');
-  await expectMenuLinks(page, 4);
+  await expectMenuLinks(page, 5);
   await tapMenuLink(page, 'Maison');
   await expect(page).toHaveURL('/jeu/maison');
   await expect(page.getByText('Câliner le nounours')).toBeVisible();
   await page.getByRole('button', { name: '☆ Favori' }).first().tap();
   await expect(page.getByRole('button', { name: '★ Retirer' })).toHaveCount(1);
   await tapMenuLink(page, 'Vie');
+  // Les axes vivent dans l'onglet Caractère, épinglé dans la barre du bas.
+  const bar = page.getByRole('navigation', { name: 'Navigation du jeu' });
   const temperament = page.getByRole('meter', { name: /^Tempérament : / });
+  await bar.getByRole('link', { name: 'Caractère' }).tap();
+  await expect(page).toHaveURL('/jeu/caractere');
   await expect(temperament).toHaveAccessibleName('Tempérament : Neutre');
+  await bar.getByRole('link', { name: 'Vie' }).tap();
   await page.getByRole('button', { name: /Câliner le nounours/ }).tap();
-  await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
-  // Le curseur part du milieu : l'activité le pousse de 2 vers Sentiment.
-  await expect(temperament).toHaveAttribute('aria-valuenow', '2');
   await expect(awakening).toHaveText('5');
+  // Le curseur part du milieu : l'activité le pousse de 2 vers Sentiment.
+  await bar.getByRole('link', { name: 'Caractère' }).tap();
+  await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
+  await expect(temperament).toHaveAttribute('aria-valuenow', '2');
+  await bar.getByRole('link', { name: 'Vie' }).tap();
   await expectNoOverflow(page);
 
   // À 1 an (éveil 56), le premier mot arrête le jeu jusqu'à une réponse ; le
@@ -103,7 +111,9 @@ test('tranches de vie : commencer enfant, adulte, vieux, puis repartir en Jeunes
     await prompt.getByRole('button', { name: '« Maman »' }).tap();
     await expect(prompt).toBeHidden({ timeout: 500 });
   }).toPass();
+  await bar.getByRole('link', { name: 'Caractère' }).tap();
   await expect(temperament).toHaveAccessibleName('Tempérament : Sentiment');
+  await bar.getByRole('link', { name: 'Vie' }).tap();
   await babble.tap();
   await expect(awakening).toHaveText('57');
 
